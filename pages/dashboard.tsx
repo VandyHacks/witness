@@ -1,4 +1,48 @@
+import { Table } from 'antd';
+import React from 'react';
+import OnDeck from '../components/onDeck';
 import Outline from '../components/outline';
+
+const dataSource = [
+	{
+		key: '1',
+		name: 'Mike',
+		age: 32,
+		address: '10 Downing Street',
+	},
+	{
+		key: '2',
+		name: 'John',
+		age: 42,
+		address: '10 Downing Street',
+	},
+];
+
+const columns = [
+	{
+		title: 'Name',
+		dataIndex: 'name',
+		key: 'name',
+	},
+	{
+		title: 'Age',
+		dataIndex: 'age',
+		key: 'age',
+	},
+	{
+		title: 'Address',
+		dataIndex: 'address',
+		key: 'address',
+	},
+];
+
+const myTeam = {
+	projectName: 'witness',
+	members: ['John Aden', 'Lassy Gableson', 'Arjun Kabaddi', 'Genevra Justins'],
+	devpostURL: new URL('https://samlee.dev'),
+};
+
+const myJudges = ['Gretchen Miller', 'Abe Lichtenstein', 'Bob Jones'];
 
 export default function Dashboard() {
 	return (
@@ -23,6 +67,15 @@ export default function Dashboard() {
 				modify the schedule (swap teams, change timeslots, etc.)
 			</p>
 			<p>Only organizers get complete table of all hackers with comments and everything.</p>
+			<OnDeck
+				time={11111}
+				projectName="witness"
+				teamMembers={myTeam.members}
+				devpostURL={myTeam.devpostURL}
+				judges={myJudges}
+				zoomURL={new URL('https://github.com')}
+			/>
+			{/* <Table dataSource={dataSource} columns={columns} />; */}
 		</Outline>
 	);
 }
