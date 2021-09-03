@@ -2,7 +2,7 @@
 
 VandyHacks's streamlined hackathon judging solution.
 
-This is an open source project, and we welcome contributions! See our [Notion page](https://vandyhacks.notion.site/Witness-c1f3395eb60547779f96d5057f56f3d2) for documentation and open issues.
+This is an open source project, and we welcome contributions! See our [Notion page](https://vandyhacks.notion.site/Witness-c1f3395eb60547779f96d5057f56f3d2) for documentation and open issues, and check out our [Contribution guidelines](https://github.com/VandyHacks/witness/blob/main/.github/CONTRIBUTING.md).
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
