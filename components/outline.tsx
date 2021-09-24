@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Outline.module.css';
 import React, { FunctionComponent } from 'react';
-import { Layout, Menu, Breadcrumb } from 'antd';
+import { Layout, Menu, Breadcrumb, Space } from 'antd';
 const { Header, Content, Footer } = Layout;
 
 export default function Outline({ children, home }: { children: React.ReactNode; home?: boolean }) {
@@ -20,7 +20,9 @@ export default function Outline({ children, home }: { children: React.ReactNode;
 				</Menu>
 			</Header>
 			<Content style={{ padding: '0 50px' }}>
-				<div className={styles.siteLayoutContent}>{children}</div>
+				<Space direction="vertical" className={styles.siteLayoutContent}>
+					{children}
+				</Space>
 			</Content>
 			<Footer className={styles.footer}>
 				<a

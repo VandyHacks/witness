@@ -1,23 +1,42 @@
+import { Card } from 'antd';
 import styles from '../styles/Dashboard.module.css';
+import { JudgingData } from '../types/types';
 
-interface OnDeckProps {
-	time: number;
-	projectName: string;
-	teamMembers: string[];
-	devpostURL: URL;
-	judges: string[];
-	zoomURL: URL;
-}
-
-export default function OnDeck(props: OnDeckProps) {
+export default function OnDeck(props: JudgingData) {
 	return (
-		<div className={styles.onDeck}>
-			{/* TODO: fill this in with actual formatting */}
-			<span>{'Project: ' + props.projectName}</span>
-			<span>{'Team: ' + props.teamMembers}</span>
-			<span>{'Judges: ' + props.judges}</span>
-			<span>{'Devpost: ' + props.devpostURL}</span>
-			<span>{'Zoom: ' + props.zoomURL}</span>
-		</div>
+		// TODO: make this nicer format
+		<Card title="Up Next">
+			<div className={styles.onDeck}>
+				<h1>{props.team.projectName}</h1>
+				<span>
+					<strong>Team: </strong>
+					<ul>
+						{props.team.members.map(member => (
+							<li key={member}>{member}</li>
+						))}
+					</ul>
+				</span>
+				<span>
+					<strong>Judges: </strong>
+					<ul>
+						{props.judges.map(judge => (
+							<li key={judge}>{judge}</li>
+						))}
+					</ul>
+				</span>
+				<span>
+					<strong>Devpost: </strong>
+					<a href={props.team.devpostURL.toString()} target="_blank" rel="noreferrer">
+						{props.team.devpostURL.toString()}
+					</a>
+				</span>
+				<span>
+					<strong>Zoom: </strong>
+					<a href={props.zoomURL.toString()} target="_blank" rel="noreferrer">
+						{props.zoomURL.toString()}
+					</a>
+				</span>
+			</div>
+		</Card>
 	);
 }
