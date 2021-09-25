@@ -1,4 +1,4 @@
-import { Select } from 'antd';
+import { Select, Space } from 'antd';
 const { Option, OptGroup } = Select;
 
 interface TeamSelectProps {
@@ -7,8 +7,8 @@ interface TeamSelectProps {
 export default function TeamSelect(props: TeamSelectProps) {
 	const { handleChange } = props;
 	return (
-		<>
-			<h2>Select a Team</h2>
+		<Space direction="horizontal" align="center">
+			<strong>Select a Team</strong>
 			<Select defaultValue="lucy" style={{ width: 200 }} onChange={handleChange}>
 				<OptGroup label="My Teams">
 					<Option value="jack">Jack</Option>
@@ -18,6 +18,6 @@ export default function TeamSelect(props: TeamSelectProps) {
 					<Option value="Yiminghe">yiminghe</Option>
 				</OptGroup>
 			</Select>
-		</>
+		</Space>
 	);
 }
