@@ -1,12 +1,22 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import Image from 'next/image';
 import styles from '../styles/Outline.module.css';
 import React, { FunctionComponent } from 'react';
 import { Layout, Menu, Breadcrumb, Space } from 'antd';
 const { Header, Content, Footer } = Layout;
+import Link from 'next/link';
 
 export default function Outline({ children, home }: { children: React.ReactNode; home?: boolean }) {
+	const menuOptions = [
+		{
+			"name": "Dashboard",
+			"link": "/dashboard"
+		},
+		{
+			"name": "Forms",
+			"link": "/forms"
+		}
+	]
 	return (
 		<Layout className={styles.layout}>
 			<Header>

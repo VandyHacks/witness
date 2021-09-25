@@ -4,7 +4,7 @@ import JudgingForm from '../components/judgingForm';
 import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 
-export default function Form() {
+export default function Forms() {
 	return (
 		<Outline>
 			<h1>Judging Form</h1>
