@@ -16,7 +16,7 @@ export default function JudgingForm() {
 			<Form.Item name="creativity" label="Creativity" rules={[{ required: true }]}>
 				<ScoreInput />
 			</Form.Item>
-			<Form.Item name="presentation" label="Utility" rules={[{ required: true }]}>
+			<Form.Item name="utility" label="Utility" rules={[{ required: true }]}>
 				<ScoreInput />
 			</Form.Item>
 			<Form.Item name="presentation" label="Presentation" rules={[{ required: true }]}>
@@ -26,7 +26,10 @@ export default function JudgingForm() {
 				<ScoreInput />
 			</Form.Item>
 			<Form.Item name="comments" label= "Comments" >
-				<TextArea rows={4} />
+				<TextArea />
+			</Form.Item>
+			<Form.Item name="feedback" label= "Feedback" extra="this will be shared with the team">
+				<TextArea />
 			</Form.Item>
 			<Button type="primary" htmlType="submit" className="ant-col-offset-12">
 				Submit
