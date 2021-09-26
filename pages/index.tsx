@@ -1,10 +1,11 @@
 import { signIn, signOut, useSession } from "next-auth/client"
+import Outline from '../components/outline';
 
 export default function Page() {
   const [session, loading] = useSession()
 
   return (
-    <>
+    <Outline>
       {!session && (
         <>
           Not signed in <br />
@@ -17,6 +18,6 @@ export default function Page() {
           <button onClick={() => signOut()}>Sign out</button>
         </>
       )}
-    </>
+    </Outline>
   )
 }
