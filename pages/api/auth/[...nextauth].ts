@@ -9,6 +9,10 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET,
       scope: "read:user",
     }),
+    Providers.Google({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+    })
     // ...add more providers here
   ],
 
