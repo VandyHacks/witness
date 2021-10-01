@@ -6,7 +6,7 @@ import TeamSelect from '../components/teamSelect';
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
-import { TeamsList } from './api/team-select';
+import { TeamsData } from './api/team-select';
 
 function handleSubmitSuccess() {
 	notification['success']({
@@ -50,9 +50,8 @@ export default function Forms() {
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
 		const res = await fetch(url, { method: 'GET' });
-		return (await res.json()) as TeamsList;
+		return (await res.json()) as TeamsData;
 	});
-
 	// Get data for form component, formData will be falsy if teamID is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
@@ -118,7 +117,7 @@ export default function Forms() {
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
-				<TeamSelect handleChange={() => {}} />
+				<TeamSelect teamsData={teamsData} handleChange={() => {}} />
 				<Divider />
 				{formSection}
 			</Space>
