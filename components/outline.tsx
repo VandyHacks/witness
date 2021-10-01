@@ -7,16 +7,6 @@ const { Header, Content, Footer } = Layout;
 import Link from 'next/link';
 
 export default function Outline({ children, home }: { children: React.ReactNode; home?: boolean }) {
-	const menuOptions = [
-		{
-			"name": "Dashboard",
-			"link": "/dashboard"
-		},
-		{
-			"name": "Forms",
-			"link": "/forms"
-		}
-	]
 	return (
 		<Layout className={styles.layout}>
 			<Header>
@@ -25,7 +15,7 @@ export default function Outline({ children, home }: { children: React.ReactNode;
 				</div>
 				<Menu className={styles.menu} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
 					<Menu.Item key="dashboard"><Link href="/dashboard">Dashboard</Link></Menu.Item>
-					<Menu.Item key="form"><Link href="/form">Form</Link></Menu.Item>
+					<Menu.Item key="form"><Link href="/forms">Form</Link></Menu.Item>
 					<Menu.Item key="uwu"><Link href="/uwu">uwu</Link></Menu.Item>
 					<Menu.Item key="owo"><Link href="/owo">owo</Link></Menu.Item>
 				</Menu>
