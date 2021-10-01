@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import JudgingForm from '../components/judgingForm';
 import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
 import { TeamsData } from './api/team-select';
+import { ScopedMutator } from 'swr/dist/types';
 
 function handleSubmitSuccess() {
 	notification['success']({
@@ -23,7 +24,7 @@ function handleSubmitFailure() {
 	});
 }
 
-async function onSubmit(formData: JudgingFormData) {
+async function onSubmit(formData: JudgingFormData, mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/judging-form', {
 		method: 'POST',
 		headers: {
@@ -32,8 +33,10 @@ async function onSubmit(formData: JudgingFormData) {
 		body: JSON.stringify(formData),
 	});
 
-	if (res.ok) handleSubmitSuccess();
-	else handleSubmitFailure();
+	if (res.ok) {
+		mutate('/api/team-select');
+		handleSubmitSuccess();
+	} else handleSubmitFailure();
 }
 
 export default function Forms() {
@@ -59,6 +62,8 @@ export default function Forms() {
 			return (await res.json()) as JudgingFormData;
 		}
 	);
+	// Get mutate function to reload teams list with updated data on form submission.
+	const { mutate } = useSWRConfig();
 
 	let pageContent;
 	if (teamsError) {
@@ -91,7 +96,7 @@ export default function Forms() {
 			formSection = <Skeleton />;
 		} else {
 			// everything succeeded, show judging form
-			formSection = <JudgingForm formData={formData} onSubmit={onSubmit} />;
+			formSection = <JudgingForm formData={formData} onSubmit={formData => onSubmit(formData, mutate)} />;
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
