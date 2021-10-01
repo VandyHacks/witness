@@ -1,7 +1,4 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
-import useSWR from 'swr';
-import { TeamsList } from '../pages/api/team-select';
-import { Skeleton, Alert } from 'antd';
 import { Select, Space, Row } from 'antd';
 const { Option, OptGroup } = Select;
 
@@ -19,20 +16,6 @@ function showCompletedInDropdown(value: string) {
 }
 export default function TeamSelect(props: TeamSelectProps) {
 	const { handleChange } = props;
-	const { data, error } = useSWR('/api/team-select', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		return (await res.json()) as TeamsList;
-	});
-
-	if (error)
-		return (
-			<Alert
-				message="An unknown error has occured in when loading the judging form. Please try again or reach out to an organizer."
-				type="error"
-			/>
-		);
-	// Loading screen
-	if (!data) return <Skeleton />;
 	return (
 		<Space direction="horizontal" align="center">
 			<strong>Select a Team</strong>
