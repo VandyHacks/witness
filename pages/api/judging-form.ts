@@ -10,7 +10,7 @@ export type JudgingFormData = {
 	feedback: string;
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | null>): void {
+export default function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | ''>): void {
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
 		const teamID = req.query.id;
@@ -34,10 +34,20 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Judgin
 				comments: 'I love VandyHacks.',
 				feedback: 'Aadi suxx booty.',
 			});
+		} else if (teamID == '3') {
+			res.status(200).json({
+				technicalability: 0,
+				creativity: 1,
+				utility: 0,
+				presentation: 1,
+				wowfactor: 0,
+				comments: 'I hate VandyHacks.',
+				feedback: 'Aadi suxx no booty.',
+			});
 		} else {
-			res.status(404).send(null);
+			res.status(404).send('');
 		}
 	} else if (req.method === 'POST') {
-		res.status(200).send(null);
+		res.status(200).send('');
 	}
 }

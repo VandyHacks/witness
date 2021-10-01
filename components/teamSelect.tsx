@@ -1,12 +1,13 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Select, Space, Row } from 'antd';
+import { Dispatch, SetStateAction } from 'react';
 import { TeamsData } from '../pages/api/team-select';
 const { Option, OptGroup } = Select;
 
 interface TeamSelectProps {
 	teamsData: TeamsData;
 	currentTeamID: string | undefined;
-	handleChange: (teamID: string) => Promise<void>;
+	handleChange: Dispatch<SetStateAction<string | undefined>>;
 }
 
 function withCheckMark(value: string) {
@@ -19,11 +20,10 @@ function withCheckMark(value: string) {
 }
 export default function TeamSelect(props: TeamSelectProps) {
 	const { teamsData, currentTeamID, handleChange } = props;
-	console.log('Current Team ID:', currentTeamID);
 	return (
 		<Space direction="horizontal" align="center">
 			<strong>Team:</strong>
-			<Select defaultValue={currentTeamID} style={{ width: 200 }} onChange={handleChange}>
+			<Select value={currentTeamID} style={{ width: 200 }} onChange={handleChange}>
 				<OptGroup label="My Teams">
 					{teamsData
 						.filter(team => team.isMine)
