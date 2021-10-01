@@ -7,14 +7,7 @@ interface ScoreInputProps {
 
 export default function ScoreInput(props: ScoreInputProps) {
 	const { value, onChange } = props;
-	// const [value, setValue] = useState(1);
 	const [min, max] = [0, 7];
-	// const onChange = (val: number) => {
-	// 	// console.log("Val:", val)
-	// 	if (val !== null) {
-	// 		setValue(val);
-	// 	}
-	// };
 	return (
 		<Row>
 			<Col span={20}>
