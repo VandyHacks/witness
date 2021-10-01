@@ -1,10 +1,9 @@
-import Head from 'next/head';
-import Link from 'next/link';
 import Image from 'next/image';
 import styles from '../styles/Outline.module.css';
-import React, { FunctionComponent } from 'react';
-import { Layout, Menu, Breadcrumb, Space } from 'antd';
+import React from 'react';
+import { Layout, Menu, Space } from 'antd';
 const { Header, Content, Footer } = Layout;
+import Link from 'next/link';
 
 export default function Outline({ children, home }: { children: React.ReactNode; home?: boolean }) {
 	return (
@@ -14,10 +13,12 @@ export default function Outline({ children, home }: { children: React.ReactNode;
 					<Image src="/vhlogo-white.svg" alt="VH Logo" width={36} height={36} />
 				</div>
 				<Menu className={styles.menu} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-					<Menu.Item key="dashboard"><Link href="/dashboard">Dashboard</Link></Menu.Item>
-					<Menu.Item key="form"><Link href="/form">Form</Link></Menu.Item>
-					<Menu.Item key="uwu"><Link href="/uwu">uwu</Link></Menu.Item>
-					<Menu.Item key="owo"><Link href="/owo">owo</Link></Menu.Item>
+					<Menu.Item key="dashboard">
+						<Link href="/dashboard">Dashboard</Link>
+					</Menu.Item>
+					<Menu.Item key="forms">
+						<Link href="/forms">Forms</Link>
+					</Menu.Item>
 				</Menu>
 			</Header>
 			<Content style={{ padding: '0 50px' }}>
