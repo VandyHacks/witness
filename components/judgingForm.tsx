@@ -1,39 +1,15 @@
-import useSWR from 'swr';
-import { JudgingFormData } from '../pages/api/judging-form';
 import ScoreInput from './scoreInput';
-import { Form, Input, Button, Skeleton, Alert, notification } from 'antd';
+import { Form, Input, Button } from 'antd';
+import { JudgingFormData } from '../pages/api/judging-form';
 const { TextArea } = Input;
 
-function handleSuccess() {
-	notification['success']({
-		message: 'Successfully submitted!',
-		placement: 'bottomRight',
-	});
+export interface JudgingFormProps {
+	formData: JudgingFormData;
+	onSubmit: (value: JudgingFormData) => Promise<void>;
 }
 
-function handleFailure() {
-	notification['error']({
-		message: 'Oops, something went wrong!',
-		description: 'Please try again or contact an organizer if the problem persists.',
-		placement: 'bottomRight',
-	});
-}
-
-async function submitForm(formData: JudgingFormData) {
-	console.log(formData);
-	const res = await fetch('/api/judging-form', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(formData),
-	});
-
-	if (res.ok) handleSuccess();
-	else handleFailure();
-}
-
-export default function JudgingForm() {
+export default function JudgingForm(props: JudgingFormProps) {
+	const { formData, onSubmit } = props;
 	const layout = {
 		labelCol: { span: 7 },
 		wrapperCol: { span: 24 },
@@ -48,29 +24,15 @@ export default function JudgingForm() {
 		{ name: 'wowfactor', label: 'WOW Factor' },
 	];
 
-	const { data, error } = useSWR('/api/judging-form', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		return (await res.json()) as JudgingFormData;
-	});
-
 	const [form] = Form.useForm();
 
-	if (error)
-		return (
-			<Alert
-				message="An unknown error has occured in when loading the judging form. Please try again or reach out to an organizer."
-				type="error"
-			/>
-		);
-	// Loading screen
-	if (!data) return <Skeleton />;
 	return (
-		<Form {...layout} labelAlign="left" form={form} initialValues={data} onFinish={submitForm}>
+		<Form {...layout} labelAlign="left" form={form} initialValues={formData} onFinish={onSubmit}>
 			{scoreInputsConfig.map(config => (
 				<Form.Item name={config.name} label={config.label} key={config.name}>
 					<ScoreInput
 						// TODO: it would be great to get the value from the containing Form.Item instead of grabbing it manually
-						value={data[config.name as keyof typeof data] as number}
+						value={formData[config.name as keyof typeof formData] as number}
 						onChange={val => form.setFieldsValue({ [config.name]: val })}></ScoreInput>
 				</Form.Item>
 			))}
