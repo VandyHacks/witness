@@ -1,8 +1,7 @@
-import { Form, Input, Button, Skeleton, Alert, notification } from 'antd';
 import useSWR from 'swr';
-import { Data } from '../pages/api/judgingform';
+import { JudgingFormData } from '../pages/api/judging-form';
 import ScoreInput from './scoreInput';
-
+import { Form, Input, Button, Skeleton, Alert, notification } from 'antd';
 const { TextArea } = Input;
 
 function handleSuccess() {
@@ -20,9 +19,9 @@ function handleFailure() {
 	});
 }
 
-async function submitForm(formData: Data) {
+async function submitForm(formData: JudgingFormData) {
 	console.log(formData);
-	const res = await fetch('/api/judgingForm', {
+	const res = await fetch('/api/judging-form', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -49,9 +48,9 @@ export default function JudgingForm() {
 		{ name: 'wowfactor', label: 'WOW Factor' },
 	];
 
-	const { data, error } = useSWR('/api/judgingForm', async url => {
+	const { data, error } = useSWR('/api/judging-form', async url => {
 		const res = await fetch(url, { method: 'GET' });
-		return (await res.json()) as Data;
+		return (await res.json()) as JudgingFormData;
 	});
 
 	const [form] = Form.useForm();
@@ -59,7 +58,7 @@ export default function JudgingForm() {
 	if (error)
 		return (
 			<Alert
-				message="An unknown error has occured. Please try again or reach out to an organizer."
+				message="An unknown error has occured in when loading the judging form. Please try again or reach out to an organizer."
 				type="error"
 			/>
 		);

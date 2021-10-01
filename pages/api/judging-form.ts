@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export type Data = {
+export type JudgingFormData = {
 	technicalability: number;
 	creativity: number;
 	utility: number;
@@ -10,7 +10,7 @@ export type Data = {
 	feedback: string;
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<Data | string>): void {
+export default function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | null>): void {
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
 		res.status(200).json({
@@ -23,6 +23,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data |
 			feedback: 'Great job!',
 		});
 	} else if (req.method === 'POST') {
-		res.status(200).send('');
+		res.status(200).send(null);
 	}
 }
