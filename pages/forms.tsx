@@ -85,6 +85,7 @@ export default function Forms() {
 	// }
 	let pageContent;
 	if (teamsError) {
+		// if error fetching teams, everything dies
 		pageContent = (
 			<Alert
 				message="An unknown error has occured. Please try again or reach out to an organizer."
@@ -92,12 +93,16 @@ export default function Forms() {
 			/>
 		);
 	} else if (!teamsData) {
+		// otherwise, wait for teamsData to load
 		pageContent = <Skeleton />;
 	} else {
+		// teamsData loaded, moving on
 		let formSection;
 		if (!teamID) {
+			// if no team selected, show default screen
 			formSection = <Empty description="No team selected." />;
 		} else if (formError) {
+			// if team selected but error in getting team's form, show error
 			formSection = (
 				<Alert
 					message="Cannot get form for selected team. Please try again or reach out to an organizer."
@@ -105,8 +110,10 @@ export default function Forms() {
 				/>
 			);
 		} else if (!formData) {
+			// team selected without error, wait for loading
 			formSection = <Skeleton />;
 		} else {
+			// everything succeeded, show judging form
 			formSection = <JudgingForm formData={formData} onSubmit={onSubmit} />;
 		}
 		pageContent = (
