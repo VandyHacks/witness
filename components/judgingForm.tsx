@@ -4,16 +4,12 @@ import ScoreInput from './scoreInput';
 
 const { TextArea } = Input;
 
-// function submitForm(formData) {
-// 	console.log(formData);
-// }
-
-// function stupidFunction(stuff) {
-// 	console.log(stuff);
-// }
+function submitForm(formData) {
+	console.log(formData);
+}
 
 function getInitialValues() {
-	// Replace this!
+	// TODO: Replace this!
 	return {
 		technicalability: 5,
 		creativity: 2,
@@ -31,9 +27,6 @@ export default function JudgingForm() {
 		wrapperCol: { span: 24 },
 		labelAlign: 'left',
 	};
-
-	const [form] = Form.useForm();
-
 	const scoreInputsConfig = [
 		{ name: 'technicalability', label: 'Technical Ability' },
 		{ name: 'creativity', label: 'Creativity' },
@@ -41,32 +34,19 @@ export default function JudgingForm() {
 		{ name: 'presentation', label: 'Presentation' },
 		{ name: 'wowfactor', label: 'WOW Factor' },
 	];
-
 	const initialValues = getInitialValues();
+	const [form] = Form.useForm();
+
 	return (
-		<Form {...layout} labelAlign="left" form={form} initialValues={initialValues}>
+		<Form {...layout} labelAlign="left" form={form} initialValues={initialValues} onFinish={submitForm}>
 			{scoreInputsConfig.map(config => (
 				<Form.Item name={config.name} label={config.label} key={config.name}>
 					<ScoreInput
+						// TODO: it would be great to get the value from the containing Form.Item instead of grabbing it manually
 						value={initialValues[config.name as keyof typeof initialValues] as number}
 						onChange={val => form.setFieldsValue({ [config.name]: val })}></ScoreInput>
 				</Form.Item>
 			))}
-			{/* <Form.Item name="technicalability" label="Technical Ability">
-				<ScoreInput />
-			</Form.Item>
-			<Form.Item name="creativity" label="Creativity">
-				<ScoreInput onChange={val: number => form.setFieldsValue({ creativity: val })} />
-			</Form.Item>
-			<Form.Item name="utility" label="Utility">
-				<ScoreInput />
-			</Form.Item>
-			<Form.Item name="presentation" label="Presentation">
-				<ScoreInput />
-			</Form.Item>
-			<Form.Item name="wowfactor" label="WOW Factor">
-				<ScoreInput />
-			</Form.Item> */}
 			<Form.Item name="comments" label="Comments">
 				<TextArea />
 			</Form.Item>
