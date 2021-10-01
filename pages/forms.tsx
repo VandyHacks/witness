@@ -109,7 +109,7 @@ export default function Forms() {
 
 	return (
 		<Outline>
-			<h1>Judging Form</h1>
+			<h1>Judging</h1>
 			{pageContent}
 		</Outline>
 	);

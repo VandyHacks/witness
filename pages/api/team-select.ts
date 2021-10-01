@@ -22,7 +22,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<TeamsD
 				teamID: '1',
 				teamName: 'Vaken',
 				isMine: false,
-				judgingReceived: false,
+				judgingReceived: true,
 			},
 			{
 				teamID: '2',
@@ -32,7 +32,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<TeamsD
 			},
 			{
 				teamID: '3',
-				teamName: 'Booty',
+				teamName: 'This will throw error',
 				isMine: true,
 				judgingReceived: false,
 			},

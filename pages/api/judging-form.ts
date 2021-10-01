@@ -14,7 +14,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Judgin
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
 		const teamID = req.query.id;
-		if (teamID == '1') {
+		if (teamID == '0') {
 			res.status(200).json({
 				technicalability: 5,
 				creativity: 2,
@@ -24,7 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Judgin
 				comments: 'This project sucked.',
 				feedback: 'Great job!',
 			});
-		} else if (teamID == '2') {
+		} else if (teamID == '1') {
 			res.status(200).json({
 				technicalability: 1,
 				creativity: 3,
@@ -34,7 +34,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Judgin
 				comments: 'I love VandyHacks.',
 				feedback: 'Aadi suxx booty.',
 			});
-		} else if (teamID == '3') {
+		} else if (teamID == '2') {
 			res.status(200).json({
 				technicalability: 0,
 				creativity: 1,

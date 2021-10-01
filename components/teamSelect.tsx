@@ -23,7 +23,10 @@ export default function TeamSelect(props: TeamSelectProps) {
 	return (
 		<Space direction="horizontal" align="center">
 			<strong>Team:</strong>
-			<Select value={currentTeamID} style={{ width: 200 }} onChange={handleChange}>
+			<Select
+				value={currentTeamID ? currentTeamID : 'Select a team'}
+				style={{ width: 200 }}
+				onChange={handleChange}>
 				<OptGroup label="My Teams">
 					{teamsData
 						.filter(team => team.isMine)
