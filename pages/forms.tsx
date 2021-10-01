@@ -37,7 +37,7 @@ async function onSubmit(formData: JudgingFormData) {
 	else handleSubmitFailure();
 }
 
-async function onChooseTeam(teamID: number) {
+async function onChooseTeam(teamID: string) {
 	console.log('teamID:', teamID);
 }
 
@@ -45,7 +45,6 @@ export default function Forms() {
 	// Use query string to get team ID
 	const router = useRouter();
 	const { id: teamID } = router.query;
-	console.log('Team ID:', teamID);
 
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
@@ -56,10 +55,12 @@ export default function Forms() {
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
 		async (url, id) => {
-			const res = await fetch(`${url}/id=${id}`, { method: 'GET' });
+			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
 			return (await res.json()) as JudgingFormData;
 		}
 	);
+	console.log('Team ID!:', teamID);
+	console.log('formData:', formData, 'formError:', formError);
 
 	// let content;
 	// if (formError || teamsError) {
@@ -117,7 +118,11 @@ export default function Forms() {
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
-				<TeamSelect teamsData={teamsData} handleChange={() => {}} />
+				<TeamSelect
+					teamsData={teamsData}
+					currentTeamID={teamID as string | undefined}
+					handleChange={onChooseTeam}
+				/>
 				<Divider />
 				{formSection}
 			</Space>

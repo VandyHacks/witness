@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export type TeamsData = {
-	teamID: number;
+	teamID: string;
 	teamName: string;
 	isMine: boolean;
 	judgingReceived: boolean;
@@ -13,25 +13,25 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<TeamsD
 		res.status(200).json([
 			// TODO: figure out how to deal with team IDs smartly.
 			{
-				teamID: 0,
+				teamID: '0',
 				teamName: 'Witness',
 				isMine: true,
 				judgingReceived: true,
 			},
 			{
-				teamID: 1,
+				teamID: '1',
 				teamName: 'Vaken',
 				isMine: false,
 				judgingReceived: false,
 			},
 			{
-				teamID: 2,
+				teamID: '2',
 				teamName: 'Waken',
 				isMine: false,
 				judgingReceived: true,
 			},
 			{
-				teamID: 3,
+				teamID: '3',
 				teamName: 'Booty',
 				isMine: true,
 				judgingReceived: false,
