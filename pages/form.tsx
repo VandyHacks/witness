@@ -8,8 +8,8 @@ export default function Form() {
 	return (
 		<Outline>
 			<h1>Judging Form</h1>
-			<Space direction="vertical" style={{ width: "100%" }}>
-				<TeamSelect handleChange={() => {}}/>
+			<Space direction="vertical" style={{ width: '100%' }}>
+				<TeamSelect handleChange={() => {}} />
 				<Divider />
 				<JudgingForm />
 			</Space>

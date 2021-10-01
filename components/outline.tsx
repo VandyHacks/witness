@@ -14,10 +14,18 @@ export default function Outline({ children, home }: { children: React.ReactNode;
 					<Image src="/vhlogo-white.svg" alt="VH Logo" width={36} height={36} />
 				</div>
 				<Menu className={styles.menu} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
-					<Menu.Item key="dashboard"><Link href="/dashboard">Dashboard</Link></Menu.Item>
-					<Menu.Item key="form"><Link href="/form">Form</Link></Menu.Item>
-					<Menu.Item key="uwu"><Link href="/uwu">uwu</Link></Menu.Item>
-					<Menu.Item key="owo"><Link href="/owo">owo</Link></Menu.Item>
+					<Menu.Item key="dashboard">
+						<Link href="/dashboard">Dashboard</Link>
+					</Menu.Item>
+					<Menu.Item key="form">
+						<Link href="/form">Form</Link>
+					</Menu.Item>
+					<Menu.Item key="uwu">
+						<Link href="/uwu">uwu</Link>
+					</Menu.Item>
+					<Menu.Item key="owo">
+						<Link href="/owo">owo</Link>
+					</Menu.Item>
 				</Menu>
 			</Header>
 			<Content style={{ padding: '0 50px' }}>
