@@ -24,9 +24,6 @@ async function dbConnect() {
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 			bufferCommands: false,
-			bufferMaxEntries: 0,
-			useFindAndModify: true,
-			useCreateIndex: true,
 		};
 
 		cached.promise = mongoose.connect(DATABASE_URL as string, options).then(mongoose => {

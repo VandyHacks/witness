@@ -6,4 +6,4 @@ const Schema = mongoose.Schema;
 const HackerSchema = new Schema({}, { strict: false });
 
 // prevent recompilation of model if it already exists
-export default mongoose.models.Hacker || mongoose.model('Hacker', HackerSchema, 'Hackers');
+export const Hacker = mongoose.models.Hacker || mongoose.model('Hacker', HackerSchema, 'Hackers');
