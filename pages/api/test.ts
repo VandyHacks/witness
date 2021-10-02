@@ -1,5 +1,5 @@
 import dbConnect from "../../middleware/database";
-import { Hacker } from "../../models/hacker";
+import Hacker from "../../models/hacker";
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface Data {
