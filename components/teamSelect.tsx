@@ -32,18 +32,14 @@ export default function TeamSelect(props: TeamSelectProps) {
 						.filter(team => team.isMine)
 						.map(team => (
 							<Option value={team.teamID} key={team.teamID}>
-								{team.judgingReceived
-									? withCheckMark(`${team.teamID} - ${team.teamName}`)
-									: `${team.teamID} - ${team.teamName}`}
+								{team.judgingReceived ? withCheckMark(team.projectName) : team.projectName}
 							</Option>
 						))}
 				</OptGroup>
 				<OptGroup label="All Teams">
 					{teamsData.map(team => (
 						<Option value={team.teamID} key={`${team.teamID}ALL`}>
-							{team.judgingReceived
-								? withCheckMark(`${team.teamID} - ${team.teamName}`)
-								: `${team.teamID} - ${team.teamName}`}
+							{team.judgingReceived ? withCheckMark(team.projectName) : team.projectName}
 						</Option>
 					))}
 				</OptGroup>
