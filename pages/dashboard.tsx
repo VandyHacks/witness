@@ -92,7 +92,6 @@ export default function Dashboard() {
 					onScheduleAdvance={() => {
 						setNextJudgingSession(getScheduleItem('next', scheduleData));
 						setCurrentJudgingSession(getScheduleItem('current', scheduleData));
-						console.log('ADASDASDASDASDSA');
 					}}
 				/>
 			</>
