@@ -1,11 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export interface JudgingFormData {
-	technicalability: number;
+	technicalAbility: number;
 	creativity: number;
 	utility: number;
 	presentation: number;
-	wowfactor: number;
+	wowFactor: number;
 	comments: string;
 	feedback: string;
 }
@@ -16,31 +16,31 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Judgin
 		const teamID = req.query.id;
 		if (teamID == '0') {
 			res.status(200).json({
-				technicalability: 5,
+				technicalAbility: 5,
 				creativity: 2,
 				utility: 7,
 				presentation: 4,
-				wowfactor: 1,
+				wowFactor: 1,
 				comments: 'This project sucked.',
 				feedback: 'Great job!',
 			});
 		} else if (teamID == '1') {
 			res.status(200).json({
-				technicalability: 1,
+				technicalAbility: 1,
 				creativity: 3,
 				utility: 2,
 				presentation: 7,
-				wowfactor: 7,
+				wowFactor: 7,
 				comments: 'I love VandyHacks.',
 				feedback: 'Aadi suxx booty.',
 			});
 		} else if (teamID == '2') {
 			res.status(200).json({
-				technicalability: 0,
+				technicalAbility: 0,
 				creativity: 1,
 				utility: 0,
 				presentation: 1,
-				wowfactor: 0,
+				wowFactor: 0,
 				comments: 'I hate VandyHacks.',
 				feedback: 'Aadi suxx no booty.',
 			});
