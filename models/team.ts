@@ -8,10 +8,12 @@ const TeamSchema = new Schema(
 		name: {
 			type: String,
 			required: true,
+            unique: true,
 		},
 		joinCode: {
 			type: String,
 			required: true,
+            unique: true,
 		},
 		devpost: {
 			type: String,
