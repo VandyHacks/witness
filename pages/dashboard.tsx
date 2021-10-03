@@ -1,4 +1,4 @@
-import { Alert, Divider, Skeleton } from 'antd';
+import { Alert, Col, Divider, Row, Skeleton } from 'antd';
 import React from 'react';
 import useSWR from 'swr';
 import { Current, UpNext } from '../components/scheduleItem';
@@ -10,13 +10,17 @@ import { ScheduleData } from './api/schedule';
 const userID = '0';
 const userType = 'JUDGE';
 
-function getUpNext(schedule: ScheduleData[]): ScheduleData | undefined {
+function getScheduleItem(type: 'next' | 'current', schedule: ScheduleData[]): ScheduleData | undefined {
 	// TODO: currently only configured for judge. Should do for user.
 	const now = new Date().getTime();
 	let myJudgingSession;
 	schedule.some(judgingSession => {
 		// TODO: judges is hard coded.
-		if (judgingSession.startTime > now && judgingSession['judges'].map(person => person.id).includes(userID)) {
+		if (
+			((type === 'next' && judgingSession.startTime > now) ||
+				(type === 'current' && judgingSession.startTime > now && judgingSession.startTime < now)) &&
+			judgingSession['judges'].map(person => person.id).includes(userID)
+		) {
 			console.log('HERE!', judgingSession.startTime);
 			myJudgingSession = judgingSession;
 			return true;
@@ -43,12 +47,24 @@ export default function Dashboard() {
 	} else if (!scheduleData) {
 		pageContent = <Skeleton />;
 	} else {
-		const nextJudgingSession = getUpNext(scheduleData);
-
+		const nextJudgingSession = getScheduleItem('next', scheduleData);
+		const currentJudgingSession = getScheduleItem('next', scheduleData);
 		pageContent = (
 			<>
-				<UpNext {...(nextJudgingSession as ScheduleData)} />
 				<Divider>Schedule</Divider>
+				{currentJudgingSession ? (
+					<Row gutter={16}>
+						<Col className="gutter-row" flex={1}>
+							<Current {...(currentJudgingSession as ScheduleData)} />
+						</Col>
+						<Col className="gutter-row" flex={1}>
+							<UpNext {...(nextJudgingSession as ScheduleData)} />
+						</Col>
+					</Row>
+				) : (
+					<UpNext {...(nextJudgingSession as ScheduleData)} />
+				)}
+
 				{/* <Schedule data={scheduleData} /> */}
 			</>
 		);

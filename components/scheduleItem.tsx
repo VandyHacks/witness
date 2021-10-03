@@ -10,7 +10,7 @@ export type ScheduleItemProps = ScheduleData & {
 function ScheduleCard(props: ScheduleItemProps) {
 	return (
 		// TODO: make this nicer format
-		<Card title={props.title}>
+		<Card title={props.title} type="inner">
 			<div className={styles.ScheduleItem}>
 				<h1>{props.projectName}</h1>
 				<span>
