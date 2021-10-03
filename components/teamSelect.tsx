@@ -5,7 +5,7 @@ import { TeamsData } from '../pages/api/team-select';
 const { Option, OptGroup } = Select;
 
 interface TeamSelectProps {
-	teamsData: TeamsData;
+	teamsData: TeamsData[];
 	currentTeamID: string | undefined;
 	handleChange: Dispatch<SetStateAction<string | undefined>>;
 }
