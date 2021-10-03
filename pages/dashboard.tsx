@@ -1,99 +1,63 @@
-import { Divider } from 'antd';
+import { Alert, Divider, Skeleton } from 'antd';
 import React from 'react';
-import OnDeck from '../components/onDeck';
+import useSWR from 'swr';
+import { Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
 import Schedule from '../components/schedule';
+import { ScheduleData } from './api/schedule';
 
-//********************************************************************************
-// Mock data
-const dataSource = [
-	{
-		key: '1',
-		name: 'Mike',
-		age: 32,
-		address: '10 Downing Street',
-	},
-	{
-		key: '2',
-		name: 'John',
-		age: 42,
-		address: '10 Downing Street',
-	},
-];
+// TODO: stub
+const userID = '0';
+const userType = 'JUDGE';
 
-const columns = [
-	{
-		title: 'Name',
-		dataIndex: 'name',
-		key: 'name',
-	},
-	{
-		title: 'Age',
-		dataIndex: 'age',
-		key: 'age',
-	},
-	{
-		title: 'Address',
-		dataIndex: 'address',
-		key: 'address',
-	},
-];
+function getUpNext(schedule: ScheduleData[]): ScheduleData | undefined {
+	// TODO: currently only configured for judge. Should do for user.
+	const now = new Date().getTime();
+	let myJudgingSession;
+	schedule.some(judgingSession => {
+		// TODO: judges is hard coded.
+		if (judgingSession.startTime > now && judgingSession['judges'].map(person => person.id).includes(userID)) {
+			console.log('HERE!', judgingSession.startTime);
+			myJudgingSession = judgingSession;
+			return true;
+		}
+	});
+	return myJudgingSession;
+}
 
-const myTeam = {
-	projectName: 'witness',
-	members: ['John Aden', 'Lassy Gableson', 'Arjun Kabaddi', 'Genevra Justins'],
-	devpostURL: new URL('https://vandyhacks.org'),
-};
-
-const myJudges = ['Gretchen Miller', 'Abe Lichtenstein', 'Bob Jones'];
-
-//********************************************************************************
-
-const getSchedule = () => {
-	return [
-		{
-			time: 1632440052,
-			team: {
-				...myTeam,
-				members: ['member1', 'member2'],
-			},
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-		{
-			time: 1632440052,
-			team: {
-				...myTeam,
-				members: ['member1', 'member2', 'asdf'],
-			},
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-		{
-			time: 1632440052,
-			team: myTeam,
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-		{
-			time: 1632440052,
-			team: {
-				...myTeam,
-				members: ['member1', 'member2', 'fff'],
-			},
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-	];
-};
 export default function Dashboard() {
-	const scheduleData = getSchedule();
+	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) throw new Error('Failed to get list of teams.');
+		return (await res.json()) as ScheduleData[];
+	});
+
+	let pageContent;
+	if (scheduleError) {
+		pageContent = (
+			<Alert
+				message="An unknown error has occured. Please try again or reach out to an organizer."
+				type="error"
+			/>
+		);
+	} else if (!scheduleData) {
+		pageContent = <Skeleton />;
+	} else {
+		const nextJudgingSession = getUpNext(scheduleData);
+
+		pageContent = (
+			<>
+				<UpNext {...(nextJudgingSession as ScheduleData)} />
+				<Divider>Schedule</Divider>
+				{/* <Schedule data={scheduleData} /> */}
+			</>
+		);
+	}
+	// const scheduleData = getSchedule();
 	return (
 		<Outline>
-			<h1>Shared Dashboard</h1>
-			<OnDeck {...scheduleData[0]} />
-			<Divider>Schedule</Divider>
-			<Schedule data={scheduleData} />
+			<h1>Dashboard</h1>
+			{pageContent}
 		</Outline>
 	);
 }

@@ -56,7 +56,7 @@ export type ScheduleData = {
 };
 
 const mockSchedule: ScheduleData[] = [];
-let timestamp = 1633186800000;
+let timestamp = new Date().getTime() - 1000;
 while (mockTeams.length > 0) {
 	const teamsInThisTimeSlot = Math.floor(1 + Math.random() * 5);
 	const judges = [...mockJudges];
@@ -82,6 +82,7 @@ while (mockTeams.length > 0) {
 export default function handler(req: NextApiRequest, res: NextApiResponse<ScheduleData[] | null>): void {
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
+		// Note: schedule data should be sorted by time.
 		res.status(200).json(mockSchedule);
 	} else if (req.method === 'POST') {
 		res.status(200).send(null);

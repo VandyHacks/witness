@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@ant-design/icons": "^4.7.0",
 		"antd": "^4.16.13",
+		"luxon": "^2.0.2",
 		"mongoose": "^6.0.8",
 		"next": "11.0.1",
 		"next-auth": "^3.29.0",
@@ -21,6 +22,7 @@
 	},
 	"devDependencies": {
 		"@types/faker": "^5.5.8",
+		"@types/luxon": "^2.0.4",
 		"@types/react": "17.0.15",
 		"eslint": "7.31.0",
 		"eslint-config-next": "11.0.1",
