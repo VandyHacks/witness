@@ -4,11 +4,10 @@ import { TeamsData } from './team-select';
 // TODO: get rid of this or move to a test file
 import faker from 'faker';
 
-let judgeID = 0;
 const mockJudges = Array(17)
 	.fill(null)
-	.map(_ => ({
-		id: (judgeID++).toString(),
+	.map((_, judgeID) => ({
+		id: judgeID.toString(),
 		name: faker.name.findName(),
 	}));
 
@@ -56,7 +55,7 @@ export type ScheduleData = {
 };
 
 const mockSchedule: ScheduleData[] = [];
-let timestamp = new Date().getTime() - 1000;
+let timestamp = new Date().getTime() - 3.6e6;
 while (mockTeams.length > 0) {
 	const teamsInThisTimeSlot = Math.floor(1 + Math.random() * 5);
 	const judges = [...mockJudges];

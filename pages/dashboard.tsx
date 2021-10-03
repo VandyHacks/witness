@@ -1,5 +1,5 @@
-import { Alert, Col, Divider, Row, Skeleton } from 'antd';
-import React from 'react';
+import { Alert, Col, Divider, Row, Skeleton, Switch } from 'antd';
+import React, { useState } from 'react';
 import useSWR from 'swr';
 import { Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
@@ -21,7 +21,6 @@ function getScheduleItem(type: 'next' | 'current', schedule: ScheduleData[]): Sc
 				(type === 'current' && judgingSession.startTime > now && judgingSession.startTime < now)) &&
 			judgingSession['judges'].map(person => person.id).includes(userID)
 		) {
-			console.log('HERE!', judgingSession.startTime);
 			myJudgingSession = judgingSession;
 			return true;
 		}
@@ -48,10 +47,9 @@ export default function Dashboard() {
 		pageContent = <Skeleton />;
 	} else {
 		const nextJudgingSession = getScheduleItem('next', scheduleData);
-		const currentJudgingSession = getScheduleItem('next', scheduleData);
+		const currentJudgingSession = getScheduleItem('current', scheduleData);
 		pageContent = (
 			<>
-				<Divider>Schedule</Divider>
 				{currentJudgingSession ? (
 					<Row gutter={16}>
 						<Col className="gutter-row" flex={1}>
@@ -64,8 +62,8 @@ export default function Dashboard() {
 				) : (
 					<UpNext {...(nextJudgingSession as ScheduleData)} />
 				)}
-
-				{/* <Schedule data={scheduleData} /> */}
+				<Divider>Schedule</Divider>
+				<Schedule data={scheduleData} />
 			</>
 		);
 	}
