@@ -60,6 +60,7 @@ export default function Dashboard() {
 						</Col>
 					</Row>
 				) : (
+					// TODO: figure out why the cast is necessary here when UpNext's props allow undefined
 					<UpNext {...(nextJudgingSession as ScheduleData)} />
 				)}
 				<Divider>Schedule</Divider>

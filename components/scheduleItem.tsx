@@ -55,7 +55,7 @@ export function Current(props: ScheduleData | undefined) {
 }
 
 export function UpNext(props: ScheduleData | undefined) {
-	return props ? (
+	return props && Object.keys(props).length > 0 ? (
 		<ScheduleCard {...(props as ScheduleData)} title="Up Next" />
 	) : (
 		<Card title={'Mission Complete'}>
