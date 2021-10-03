@@ -10,6 +10,8 @@ import { ScheduleData } from './api/schedule';
 const userID = '0';
 const userType = 'JUDGE';
 
+export const judgingLength = 600000;
+
 function getScheduleItem(type: 'next' | 'current', schedule: ScheduleData[]): ScheduleData | undefined {
 	// TODO: currently only configured for judge. Should do for user.
 	const now = new Date().getTime();
@@ -18,7 +20,9 @@ function getScheduleItem(type: 'next' | 'current', schedule: ScheduleData[]): Sc
 		// TODO: judges is hard coded.
 		if (
 			((type === 'next' && judgingSession.startTime > now) ||
-				(type === 'current' && judgingSession.startTime > now && judgingSession.startTime < now)) &&
+				(type === 'current' &&
+					judgingSession.startTime + judgingLength > now &&
+					judgingSession.startTime < now)) &&
 			judgingSession['judges'].map(person => person.id).includes(userID)
 		) {
 			myJudgingSession = judgingSession;
@@ -68,7 +72,6 @@ export default function Dashboard() {
 			</>
 		);
 	}
-	// const scheduleData = getSchedule();
 	return (
 		<Outline>
 			<h1>Dashboard</h1>

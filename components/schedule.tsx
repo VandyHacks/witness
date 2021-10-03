@@ -2,6 +2,7 @@ import { Space, Table, Collapse, Tag, Typography, Switch, Skeleton } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react';
 import { ScheduleData } from '../pages/api/schedule';
 import { DateTime } from 'luxon';
+import { judgingLength } from '../pages/dashboard';
 
 const { Panel } = Collapse;
 const { Link } = Typography;
@@ -87,27 +88,25 @@ export default function Schedule(props: ScheduleProps) {
 
 	// Keeps track of where in the overall schedule we currently are
 	const [currentIndex, setCurrentIndex] = useState(0);
-	const [nextTimeStamp, setNextTimeStamp] = useState(data[1].startTime);
+	const [stillJudging, setStillJudging] = useState(true);
 	// Prevents a flash of full schedule before filtering only to future events
 	const [dataLoaded, setDataLoaded] = useState(false);
 	// Keep track of where the top of the schedule show point to.
 	useEffect(() => {
 		const interval = setInterval(() => {
 			const now = Date.now();
-			if (now > nextTimeStamp) {
-				// Handle case where we've reached the end of the judging period
-				if (now > tableData[tableData.length - 1].time) {
-					setCurrentIndex(tableData.length - 1);
-					setNextTimeStamp(2147483647);
-				} else {
-					// Search for next satisfying timestamp. Should usually just be the next one except for the initial case.
-					tableData.slice(currentIndex).some((timeSlot, index) => {
-						if (timeSlot.time > now) {
-							setNextTimeStamp(timeSlot.time);
-							setCurrentIndex(index - 1);
+			if (stillJudging && now > tableData[currentIndex].time + judgingLength) {
+				// Search for next satisfying timestamp. If none exists, we are done judging and should no longer update.
+				if (
+					!tableData.slice(currentIndex).some((timeSlot, index) => {
+						if (timeSlot.time + judgingLength > now) {
+							setCurrentIndex(index);
 							return true;
 						}
-					});
+					})
+				) {
+					setCurrentIndex(tableData.length);
+					setStillJudging(false);
 				}
 			}
 			setDataLoaded(true);
