@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export type JudgingFormData = {
+export interface JudgingFormData {
 	technicalability: number;
 	creativity: number;
 	utility: number;
@@ -8,7 +8,7 @@ export type JudgingFormData = {
 	wowfactor: number;
 	comments: string;
 	feedback: string;
-};
+}
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | ''>): void {
 	if (req.method === 'GET') {
