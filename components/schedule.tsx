@@ -9,6 +9,7 @@ const { Link } = Typography;
 
 interface ScheduleProps {
 	data: ScheduleData[];
+	onScheduleAdvance: () => void;
 }
 
 // Data should include everything in ScheduleData except for startTime and zoomURL
@@ -47,7 +48,7 @@ function TableCell(data: Omit<ScheduleData, 'startTime' | 'zoomURL'> | null) {
 }
 
 export default function Schedule(props: ScheduleProps) {
-	const { data } = props;
+	const { data, onScheduleAdvance } = props;
 	const [showPast, setShowPast] = useState(false);
 
 	// TODO: this is kinda dumb, might be good to just get the rooms directly from db
@@ -80,11 +81,12 @@ export default function Schedule(props: ScheduleProps) {
 			const { startTime, zoomURL, ...rest } = judgingSession;
 			dataAsMap.get(startTime)[zoomURL] = rest;
 		});
+		onScheduleAdvance(); // Load card data when schedule is first available without upsetting React (too much).
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],
 			...pair[1],
 		}));
-	}, [data, rooms]);
+	}, [data, rooms]); // Not including onScheduleAdvance as that causes memory leak.
 
 	// Keeps track of where in the overall schedule we currently are
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -101,6 +103,7 @@ export default function Schedule(props: ScheduleProps) {
 					!tableData.slice(currentIndex).some((timeSlot, index) => {
 						if (timeSlot.time + judgingLength > now) {
 							setCurrentIndex(index);
+							onScheduleAdvance(); // Reload card data every 10 minutes.
 							return true;
 						}
 					})

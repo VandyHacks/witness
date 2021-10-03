@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { TeamsData } from './team-select';
 
 // TODO: get rid of this or move to a test file
 import faker from 'faker';
@@ -10,6 +9,8 @@ const mockJudges = Array(17)
 		id: judgeID.toString(),
 		name: faker.name.findName(),
 	}));
+
+mockJudges[0].name = 'Saadi Lejpai'; // For testing
 
 let teamID = 100;
 let hackerID = 1000;
@@ -31,14 +32,6 @@ const mockZoomRooms = [
 	'https://example.com/4',
 	'https://example.com/5',
 ];
-
-// export type scheduleRow = {
-// 	room: number;
-// 	judges: Person[];
-// 	projectName: string;
-// 	teamMembers: Person[];
-// 	devpostURL: string;
-// }[];
 
 export interface Person {
 	id: string;

@@ -2,6 +2,7 @@ import { Card } from 'antd';
 import { ScheduleData } from '../pages/api/schedule';
 import styles from '../styles/Dashboard.module.css';
 import { DateTime } from 'luxon';
+import React from 'react';
 
 export type ScheduleItemProps = ScheduleData & {
 	title: string;
@@ -50,14 +51,16 @@ function ScheduleCard(props: ScheduleItemProps) {
 	);
 }
 
-export function Current(props: ScheduleData | undefined) {
+export function Current(props: ScheduleData | any) {
 	return <ScheduleCard {...(props as ScheduleData)} title="Current" />;
 }
 
-export function UpNext(props: ScheduleData | undefined) {
-	return props && Object.keys(props).length > 0 ? (
-		<ScheduleCard {...(props as ScheduleData)} title="Up Next" />
-	) : (
+export function UpNext(props: ScheduleData | any) {
+	return <ScheduleCard {...(props as ScheduleData)} title="Next Up" />;
+}
+
+export function AllDone() {
+	return (
 		<Card title={'Mission Complete'}>
 			<h1>You are all done! Thank you for participating in VandyHacks VIII!</h1>
 		</Card>

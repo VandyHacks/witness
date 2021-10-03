@@ -1,7 +1,7 @@
-import { Alert, Col, Divider, Row, Skeleton, Switch } from 'antd';
+import { Alert, Col, Divider, Row, Skeleton } from 'antd';
 import React, { useState } from 'react';
 import useSWR from 'swr';
-import { Current, UpNext } from '../components/scheduleItem';
+import { AllDone, Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
 import Schedule from '../components/schedule';
 import { ScheduleData } from './api/schedule';
@@ -12,10 +12,19 @@ const userType = 'JUDGE';
 
 export const judgingLength = 600000;
 
-function getScheduleItem(type: 'next' | 'current', schedule: ScheduleData[]): ScheduleData | undefined {
+// TODO: this is horribly inefficient right now, as it checks through the whole dataset on every update
+// request. Rewrite this to use the restructured dataset in schedule.tsx.
+function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): ScheduleData {
 	// TODO: currently only configured for judge. Should do for user.
 	const now = new Date().getTime();
-	let myJudgingSession;
+	let myJudgingSession = {
+		startTime: -1,
+		projectName: '',
+		members: [{ id: '', name: '' }],
+		judges: [{ id: '', name: '' }],
+		devpostURL: '',
+		zoomURL: '',
+	};
 	schedule.some(judgingSession => {
 		// TODO: judges is hard coded.
 		if (
@@ -39,6 +48,9 @@ export default function Dashboard() {
 		return (await res.json()) as ScheduleData[];
 	});
 
+	const [nextJudgingSession, setNextJudgingSession] = useState<ScheduleData | undefined>(undefined);
+	const [currentJudgingSession, setCurrentJudgingSession] = useState<ScheduleData | undefined>(undefined);
+
 	let pageContent;
 	if (scheduleError) {
 		pageContent = (
@@ -50,25 +62,39 @@ export default function Dashboard() {
 	} else if (!scheduleData) {
 		pageContent = <Skeleton />;
 	} else {
-		const nextJudgingSession = getScheduleItem('next', scheduleData);
-		const currentJudgingSession = getScheduleItem('current', scheduleData);
+		let cards;
+		if (currentJudgingSession === undefined || nextJudgingSession === undefined) {
+			cards = <Skeleton />;
+		} else if (currentJudgingSession.startTime === -1 && nextJudgingSession.startTime === -1) {
+			cards = <AllDone />;
+		} else {
+			cards = (
+				<Row gutter={16}>
+					{currentJudgingSession.startTime > -1 && (
+						<Col className="gutter-row" flex={1}>
+							<Current {...currentJudgingSession} />
+						</Col>
+					)}
+					{nextJudgingSession.startTime > -1 && (
+						<Col className="gutter-row" flex={1}>
+							<UpNext {...nextJudgingSession} />
+						</Col>
+					)}
+				</Row>
+			);
+		}
 		pageContent = (
 			<>
-				{currentJudgingSession ? (
-					<Row gutter={16}>
-						<Col className="gutter-row" flex={1}>
-							<Current {...(currentJudgingSession as ScheduleData)} />
-						</Col>
-						<Col className="gutter-row" flex={1}>
-							<UpNext {...(nextJudgingSession as ScheduleData)} />
-						</Col>
-					</Row>
-				) : (
-					// TODO: figure out why the cast is necessary here when UpNext's props allow undefined
-					<UpNext {...(nextJudgingSession as ScheduleData)} />
-				)}
+				{cards}
 				<Divider>Schedule</Divider>
-				<Schedule data={scheduleData} />
+				<Schedule
+					data={scheduleData}
+					onScheduleAdvance={() => {
+						setNextJudgingSession(getScheduleItem('next', scheduleData));
+						setCurrentJudgingSession(getScheduleItem('current', scheduleData));
+						console.log('ADASDASDASDASDSA');
+					}}
+				/>
 			</>
 		);
 	}
@@ -78,26 +104,4 @@ export default function Dashboard() {
 			{pageContent}
 		</Outline>
 	);
-}
-
-{
-	/* <p>Use client-side data fetching to determine whether to show admin / judge / hacker views.</p>
-			<p>
-				Differences between judge and hacker views is hackers get to modify their project info (link Devpost).
-				Judges just see the team / project info.
-			</p>
-			<p>
-				Judges should also be able to create new score forms and view / edit all the ones they have already
-				made.
-			</p>
-			<p>
-				Both pages get a component that shows the master schedule, with the Zoom rooms relevant to them
-				highlighted
-			</p>
-			<p>Also a link to the correct Zoom room (countdown timer during breaks)</p>
-			<p>
-				All Zoom rooms are open to all organizers at all times to monitor. Organizers should also be able to
-				modify the schedule (swap teams, change timeslots, etc.)
-			</p>
-			<p>Only organizers get complete table of all hackers with comments and everything.</p> */
 }
