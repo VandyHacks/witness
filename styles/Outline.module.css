@@ -14,11 +14,16 @@
 	flex-grow: 1;
 }
 
+.layout {
+	min-height: 100vh;
+}
+
 .siteLayoutContent {
 	min-height: 280px;
 	padding: 24px;
 	background: #fff;
 	width: 100%;
+	min-height: 80vh;
 }
 
 .logo {

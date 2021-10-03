@@ -1,38 +1,38 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export type TeamsData = {
+export interface TeamsData {
 	teamID: string;
-	teamName: string;
+	projectName: string;
 	isMine: boolean;
 	judgingReceived: boolean;
-}[];
+}
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<TeamsData | null>): void {
+export default function handler(req: NextApiRequest, res: NextApiResponse<TeamsData[] | null>): void {
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
 		res.status(200).json([
 			// TODO: figure out how to deal with team IDs smartly.
 			{
 				teamID: '0',
-				teamName: 'Witness',
+				projectName: 'Witness',
 				isMine: true,
 				judgingReceived: true,
 			},
 			{
 				teamID: '1',
-				teamName: 'Vaken',
+				projectName: 'Vaken',
 				isMine: false,
 				judgingReceived: true,
 			},
 			{
 				teamID: '2',
-				teamName: 'Waken',
+				projectName: 'Waken',
 				isMine: false,
 				judgingReceived: true,
 			},
 			{
 				teamID: '3',
-				teamName: 'This will throw error',
+				projectName: 'This will throw error',
 				isMine: true,
 				judgingReceived: false,
 			},

@@ -1,121 +1,107 @@
-import { Divider } from 'antd';
-import React from 'react';
-import OnDeck from '../components/onDeck';
+import { Alert, Col, Divider, Row, Skeleton } from 'antd';
+import React, { useState } from 'react';
+import useSWR from 'swr';
+import { AllDone, Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
 import Schedule from '../components/schedule';
+import { ScheduleData } from './api/schedule';
 
-//********************************************************************************
-// Mock data
-const dataSource = [
-	{
-		key: '1',
-		name: 'Mike',
-		age: 32,
-		address: '10 Downing Street',
-	},
-	{
-		key: '2',
-		name: 'John',
-		age: 42,
-		address: '10 Downing Street',
-	},
-];
+// TODO: stub
+const userID = '0';
+const userType = 'JUDGE';
 
-const columns = [
-	{
-		title: 'Name',
-		dataIndex: 'name',
-		key: 'name',
-	},
-	{
-		title: 'Age',
-		dataIndex: 'age',
-		key: 'age',
-	},
-	{
-		title: 'Address',
-		dataIndex: 'address',
-		key: 'address',
-	},
-];
+export const judgingLength = 600000;
 
-const myTeam = {
-	projectName: 'witness',
-	members: ['John Aden', 'Lassy Gableson', 'Arjun Kabaddi', 'Genevra Justins'],
-	devpostURL: new URL('https://vandyhacks.org'),
-};
-
-const myJudges = ['Gretchen Miller', 'Abe Lichtenstein', 'Bob Jones'];
-
-//********************************************************************************
-
-const getSchedule = () => {
-	return [
-		{
-			time: 1632440052,
-			team: {
-				...myTeam,
-				members: ['member1', 'member2'],
-			},
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-		{
-			time: 1632440052,
-			team: {
-				...myTeam,
-				members: ['member1', 'member2', 'asdf'],
-			},
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-		{
-			time: 1632440052,
-			team: myTeam,
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-		{
-			time: 1632440052,
-			team: {
-				...myTeam,
-				members: ['member1', 'member2', 'fff'],
-			},
-			judges: myJudges,
-			zoomURL: new URL('https://vandyhacks.org'),
-		},
-	];
-};
-export default function Dashboard() {
-	const scheduleData = getSchedule();
-	return (
-		<Outline>
-			<h1>Shared Dashboard</h1>
-			<OnDeck {...scheduleData[0]} />
-			<Divider>Schedule</Divider>
-			<Schedule data={scheduleData} />
-		</Outline>
-	);
+// TODO: this is horribly inefficient right now, as it checks through the whole dataset on every update
+// request. Rewrite this to use the restructured dataset in schedule.tsx.
+function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): ScheduleData {
+	// TODO: currently only configured for judge. Should do for user.
+	const now = new Date().getTime();
+	let myJudgingSession = {
+		startTime: -1,
+		projectName: '',
+		members: [{ id: '', name: '' }],
+		judges: [{ id: '', name: '' }],
+		devpostURL: '',
+		zoomURL: '',
+	};
+	schedule.some(judgingSession => {
+		// TODO: judges is hard coded.
+		if (
+			((type === 'next' && judgingSession.startTime > now) ||
+				(type === 'current' &&
+					judgingSession.startTime + judgingLength > now &&
+					judgingSession.startTime < now)) &&
+			judgingSession['judges'].map(person => person.id).includes(userID)
+		) {
+			myJudgingSession = judgingSession;
+			return true;
+		}
+	});
+	return myJudgingSession;
 }
 
-{
-	/* <p>Use client-side data fetching to determine whether to show admin / judge / hacker views.</p>
-			<p>
-				Differences between judge and hacker views is hackers get to modify their project info (link Devpost).
-				Judges just see the team / project info.
-			</p>
-			<p>
-				Judges should also be able to create new score forms and view / edit all the ones they have already
-				made.
-			</p>
-			<p>
-				Both pages get a component that shows the master schedule, with the Zoom rooms relevant to them
-				highlighted
-			</p>
-			<p>Also a link to the correct Zoom room (countdown timer during breaks)</p>
-			<p>
-				All Zoom rooms are open to all organizers at all times to monitor. Organizers should also be able to
-				modify the schedule (swap teams, change timeslots, etc.)
-			</p>
-			<p>Only organizers get complete table of all hackers with comments and everything.</p> */
+export default function Dashboard() {
+	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) throw new Error('Failed to get list of teams.');
+		return (await res.json()) as ScheduleData[];
+	});
+
+	const [nextJudgingSession, setNextJudgingSession] = useState<ScheduleData | undefined>(undefined);
+	const [currentJudgingSession, setCurrentJudgingSession] = useState<ScheduleData | undefined>(undefined);
+
+	let pageContent;
+	if (scheduleError) {
+		pageContent = (
+			<Alert
+				message="An unknown error has occured. Please try again or reach out to an organizer."
+				type="error"
+			/>
+		);
+	} else if (!scheduleData) {
+		pageContent = <Skeleton />;
+	} else {
+		let cards;
+		if (currentJudgingSession === undefined || nextJudgingSession === undefined) {
+			cards = <Skeleton />;
+		} else if (currentJudgingSession.startTime === -1 && nextJudgingSession.startTime === -1) {
+			cards = <AllDone />;
+		} else {
+			cards = (
+				<Row gutter={16}>
+					{currentJudgingSession.startTime > -1 && (
+						<Col className="gutter-row" flex={1}>
+							<Current {...currentJudgingSession} />
+						</Col>
+					)}
+					{nextJudgingSession.startTime > -1 && (
+						<Col className="gutter-row" flex={1}>
+							<UpNext {...nextJudgingSession} />
+						</Col>
+					)}
+				</Row>
+			);
+		}
+		pageContent = (
+			<>
+				{cards}
+				<Divider>Schedule</Divider>
+				<Schedule
+					data={scheduleData}
+					onScheduleAdvance={() => {
+						setNextJudgingSession(getScheduleItem('next', scheduleData));
+						setCurrentJudgingSession(getScheduleItem('current', scheduleData));
+						console.log('ADASDASDASDASDSA');
+					}}
+				/>
+			</>
+		);
+	}
+	return (
+		<Outline>
+			<h1>Dashboard</h1>
+			{pageContent}
+		</Outline>
+	);
 }

@@ -51,7 +51,7 @@ export default function Forms() {
 	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) throw new Error('Failed to get list of teams.');
-		return (await res.json()) as TeamsData;
+		return (await res.json()) as TeamsData[];
 	});
 	// Get data for form component, formData will be falsy if teamID is not yet set.
 	const { data: formData, error: formError } = useSWR(

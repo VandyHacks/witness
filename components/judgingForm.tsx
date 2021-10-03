@@ -18,11 +18,11 @@ export default function JudgingForm(props: JudgingFormProps) {
 	};
 
 	const scoreInputsConfig = [
-		{ name: 'technicalability', label: 'Technical Ability' },
+		{ name: 'technicalAbility', label: 'Technical Ability' },
 		{ name: 'creativity', label: 'Creativity' },
 		{ name: 'utility', label: 'Utility' },
 		{ name: 'presentation', label: 'Presentation' },
-		{ name: 'wowfactor', label: 'WOW Factor' },
+		{ name: 'wowFactor', label: 'WOW Factor' },
 	];
 
 	const [form] = Form.useForm();
@@ -32,7 +32,7 @@ export default function JudgingForm(props: JudgingFormProps) {
 
 	return (
 		<>
-			<div>{formData.technicalability}</div>
+			<div>{formData.technicalAbility}</div>
 			<Form {...layout} labelAlign="left" form={form} initialValues={formData} onFinish={onSubmit}>
 				{scoreInputsConfig.map(config => (
 					<Form.Item name={config.name} label={config.label} key={config.name}>
