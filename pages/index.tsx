@@ -1,8 +1,8 @@
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Outline from '../components/outline';
 
 export default function Page() {
-	const [session, loading] = useSession();
+	const {data: session} = useSession();
 
 	return (
 		<Outline>

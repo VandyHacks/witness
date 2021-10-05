@@ -1,19 +1,23 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+// import Providers from 'next-auth/providers';
+import GitHubProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/google';
+import { TypeORMLegacyAdapter } from "@next-auth/typeorm-legacy-adapter"
+
 import dbConnect from '../../../middleware/database';
 import Hacker from '../../../models/hacker';
 
 export default NextAuth({
 	// Configure one or more authentication providers
 	providers: [
-		Providers.GitHub({
+		GitHubProvider({
 			clientId: process.env.GITHUB_ID,
 			clientSecret: process.env.GITHUB_SECRET,
-			scope: 'read:user',
+			// scope: 'read:user',
 		}),
-		Providers.Google({
-			clientId: process.env.GOOGLE_ID,
-			clientSecret: process.env.GOOGLE_SECRET,
+		GoogleProvider({
+			clientId: process.env.GOOGLE_ID as string,
+			clientSecret: process.env.GOOGLE_SECRET as string,
 		}),
 		// ...add more providers here
 	],
@@ -22,7 +26,7 @@ export default NextAuth({
 	},
 	// felix@yahoo.com
 	callbacks: {
-		async jwt(token, user) {
+		async jwt({token, user}) {
 			await dbConnect();
 			if (user) {
 				// user is only defined on first sign in
@@ -34,7 +38,7 @@ export default NextAuth({
 			console.log("Token: ", token);
 			return token;
 		},
-		async session(session, token) {
+		async session({session, token}) {
 			if (!session.hacker) {
 				session.hacker = token.hacker;
 				session.userType = token.userType;
@@ -45,5 +49,11 @@ export default NextAuth({
 	},
 
 	// A database is optional, but required to persist accounts in a database
-	database: process.env.DATABASE_URL,
+	adapter: TypeORMLegacyAdapter(process.env.DATABASE_URL as string),
+
+	theme: {
+		colorScheme: "auto",
+		brandColor: "#314a81",
+		logo: "/vhlogo-white.svg",
+	}
 });

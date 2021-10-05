@@ -2,7 +2,7 @@ import dbConnect from '../../middleware/database';
 import Hacker from '../../models/hacker';
 import Team from '../../models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 interface Data {
 	success: string;
