@@ -1,5 +1,7 @@
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
+import dbConnect from '../../../middleware/database';
+import Hacker from '../../../models/hacker';
 
 export default NextAuth({
 	// Configure one or more authentication providers
@@ -15,7 +17,25 @@ export default NextAuth({
 		}),
 		// ...add more providers here
 	],
+	session: {
+		jwt: true,
+	},
+	callbacks: {
+		async jwt(token, _account) {
+			if (token) {
+				if (!token.vakenUserData) {
+					await dbConnect();
+					token.vakenUserData = await Hacker.find({ email: token.email });;
+				}
+			}
 
+			return token;
+		},
+		async session(session, token, _user) {
+			session.vakenUserData = token.vaken;
+			return session;
+		}
+	},
 	// A database is optional, but required to persist accounts in a database
 	database: process.env.DATABASE_URL,
 });
