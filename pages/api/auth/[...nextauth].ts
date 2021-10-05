@@ -27,15 +27,19 @@ export default NextAuth({
 			if (user) {
 				// user is only defined on first sign in
 				const hacker = await Hacker.findOne({ email: user.email });
-				token.vaken = hacker;
+				token.user = hacker;
+				token.userType = "HACKER";
 				console.log('User:', user);
 			}
-
+			console.log("Token: ", token);
 			return token;
 		},
 		async session(session, token) {
-			if (!session.vaken) session.vaken = token.vaken;
-			console.log('session:', session);
+			if (!session.user) {
+				session.user = token.user;
+				session.userType = token.userType;
+			}
+			console.log('Sesh:', session);
 			return session;
 		},
 	},
