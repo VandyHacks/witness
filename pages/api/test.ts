@@ -13,7 +13,7 @@ interface Data {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 	const { method } = req;
 	const session = await getSession({ req });
-	const hacker = session?.user;
+	const hacker = session?.hacker;
 	if (!hacker) {
 		res.status(404);
 	}
