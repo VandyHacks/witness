@@ -32,7 +32,8 @@ export default NextAuth({
 			return token;
 		},
 		async session(session, token, _user) {
-			session.vakenUserData = token.vaken;
+			session.vakenUserData = token.vakenUserData;
+			console.log(session.vakenUserData);
 			return session;
 		}
 	},
