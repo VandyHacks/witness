@@ -10,7 +10,7 @@ export interface TeamsData {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<TeamsData[] | string>): Promise<void> {
 	const session = await getSession({ req });
-	if (!session) return res.status(401).send('Unauthorized');
+	if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
 		return res.status(200).json([

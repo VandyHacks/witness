@@ -9,7 +9,6 @@ import { signOut, useSession } from 'next-auth/client';
 interface OutlineProps {
 	children: React.ReactNode;
 	home?: boolean;
-	userType?: 'HACKER' | 'JUDGE' | 'ORGANIZER';
 }
 
 export default function Outline({ children, home }: OutlineProps) {
