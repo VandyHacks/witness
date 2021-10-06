@@ -9,7 +9,7 @@ import { signOut } from 'next-auth/client';
 interface OutlineProps {
 	children: React.ReactNode;
 	home?: boolean;
-	userType: 'HACKER' | 'JUDGE' | 'ORGANIZER';
+	userType?: 'HACKER' | 'JUDGE' | 'ORGANIZER';
 }
 
 export default function Outline({ children, home, userType }: OutlineProps) {
@@ -21,11 +21,11 @@ export default function Outline({ children, home, userType }: OutlineProps) {
 
 	return (
 		<Layout className={styles.layout}>
-			<Header>
+			<Header className={styles.header}>
 				<div className={styles.logo}>
 					<Image src="/vhlogo-white.svg" alt="VH Logo" width={36} height={36} />
 				</div>
-				<Menu className={styles.menu} theme="dark" mode="horizontal" defaultSelectedKeys={['2']}>
+				<Menu className={styles.menu} theme="dark" mode="horizontal" forceSubMenuRender>
 					<Menu.Item key="dashboard">
 						<Link href="/dashboard">Dashboard</Link>
 					</Menu.Item>
@@ -33,7 +33,7 @@ export default function Outline({ children, home, userType }: OutlineProps) {
 						<Link href="/forms">Forms</Link>
 					</Menu.Item>
 					<Menu.Item key="logout">
-						<div onClick={() => signOut({ callbackUrl: '/' })}>Logout</div>
+						<div onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</div>
 					</Menu.Item>
 				</Menu>
 			</Header>
