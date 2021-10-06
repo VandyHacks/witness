@@ -1,5 +1,4 @@
 import dbConnect from '../../middleware/database';
-import Hacker from '../../models/hacker';
 import Team from '../../models/team';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
@@ -13,7 +12,7 @@ interface Data {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
 	const { method } = req;
 	const session = await getSession({ req });
-	const hacker = session?.hacker;
+	const hacker = session?.user;
 	if (!hacker) {
 		res.status(404);
 	}
