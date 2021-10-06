@@ -8,12 +8,12 @@ const TeamSchema = new Schema(
 		name: {
 			type: String,
 			required: true,
-            unique: true,
+			unique: true,
 		},
 		joinCode: {
 			type: String,
 			required: true,
-            unique: true,
+			unique: true,
 		},
 		devpost: {
 			type: String,
@@ -28,7 +28,7 @@ const TeamSchema = new Schema(
 				message: 'Max team size is 4 members.',
 			},
 		},
-		judgement: { type: Schema.Types.ObjectId, ref: 'Judgement' },
+		judgements: { type: [Schema.Types.ObjectId], ref: 'Judgement' },
 	},
 	{
 		timestamps: true,

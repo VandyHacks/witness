@@ -15,7 +15,7 @@ const ScoresSchema = new Schema({
 const JudgementSchema = new Schema(
 	{
 		team: { type: Schema.Types.ObjectId, required: true, ref: 'Team' },
-		judges: [String],
+		judge: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
 		zoom: {
 			type: String,
 			required: true,
@@ -25,7 +25,7 @@ const JudgementSchema = new Schema(
 			required: true,
 		},
 		scores: {
-			type: ScoresSchema,
+			type: [ScoresSchema],
 			required: true,
 		},
 		judged: {
