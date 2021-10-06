@@ -74,12 +74,12 @@ while (mockTeams.length > 0) {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ScheduleData[] | string>) {
 	const session = await getSession({ req });
-	if (!session) return res.status(401).send('Unauthorized');
+	if (!session) return res.status(403).send('Forbidden');
 	if (req.method === 'GET') {
-		// TODO: these are just fillers. Actually implement this route.
 		// Note: schedule data should be sorted by time.
 		return res.status(200).json(mockSchedule);
 	} else if (req.method === 'POST') {
 		return res.status(200).send('Thanks');
 	}
+	return res.status(405).send('Method not supported brother');
 }

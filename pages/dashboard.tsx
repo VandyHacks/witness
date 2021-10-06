@@ -5,7 +5,7 @@ import { AllDone, Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
 import Schedule from '../components/schedule';
 import { ScheduleData } from './api/schedule';
-import { signIn } from 'next-auth/client';
+import { ResponseError } from '../types/types';
 
 // TODO: stub
 const userID = '0';
@@ -45,8 +45,11 @@ function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): Sc
 export default function Dashboard() {
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
-		if (res.status === 401) return signIn();
-		if (!res.ok) throw new Error('Failed to get list of teams.');
+		if (!res.ok) {
+			const error = new Error('Failed to get schedule.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
 		return (await res.json()) as ScheduleData[];
 	});
 
@@ -57,7 +60,11 @@ export default function Dashboard() {
 	if (scheduleError) {
 		pageContent = (
 			<Alert
-				message="An unknown error has occured. Please try again or reach out to an organizer."
+				message={
+					scheduleError.status === 403
+						? '403: You are not permitted to access this content.'
+						: 'An unknown error has occured. Please try again or reach out to an organizer.'
+				}
 				type="error"
 			/>
 		);
