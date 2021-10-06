@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { HackerSchema } from './hacker';
+import { UserSchema } from './user';
 
 const Schema = mongoose.Schema;
 
@@ -20,15 +20,15 @@ const TeamSchema = new Schema(
 			required: true,
 		},
 		members: {
-			type: [HackerSchema],
+			type: [UserSchema],
 			required: true,
 			validate: {
 				// check team size
-				validator: (arr: Array<typeof HackerSchema>) => arr.length <= 4,
+				validator: (arr: Array<typeof UserSchema>) => arr.length <= 4,
 				message: 'Max team size is 4 members.',
 			},
 		},
-		judging: { type: Schema.Types.ObjectId, ref: 'Judgement' },
+		judgement: { type: Schema.Types.ObjectId, ref: 'Judgement' },
 	},
 	{
 		timestamps: true,
