@@ -41,6 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			},
 		]);
 	} else if (req.method === 'POST') {
-		res.status(200).send(null);
+		return res.status(200).send('Thanks');
 	}
+	return res.status(405).send('Method not supported brother');
 }
