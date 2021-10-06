@@ -6,7 +6,7 @@ import Outline from '../components/outline';
 import Schedule from '../components/schedule';
 import { ScheduleData } from './api/schedule';
 import { ResponseError } from '../types/types';
-import { useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/client';
 
 // TODO: stub
 const userID = '0';
@@ -44,7 +44,7 @@ function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): Sc
 }
 
 export default function Dashboard() {
-	const [session] = useSession();
+	const [session, loading] = useSession();
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -58,6 +58,7 @@ export default function Dashboard() {
 	const [nextJudgingSession, setNextJudgingSession] = useState<ScheduleData | undefined>(undefined);
 	const [currentJudgingSession, setCurrentJudgingSession] = useState<ScheduleData | undefined>(undefined);
 
+	if (!loading && !session) return signIn();
 	let pageContent;
 	if (scheduleError) {
 		pageContent = (
