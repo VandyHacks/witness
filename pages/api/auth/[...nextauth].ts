@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import dbConnect from '../../../middleware/database';
-import Hacker from '../../../models/hacker';
+import vakenLogin from '../../../models/vakenLogin';
 
 export default NextAuth({
 	// Configure one or more authentication providers
@@ -26,17 +26,15 @@ export default NextAuth({
 			await dbConnect();
 			if (user) {
 				// user is only defined on first sign in
-				const hacker = await Hacker.findOne({ email: user.email });
-				token.hacker = hacker;
-				token.userType = "HACKER";
+				const login = await vakenLogin.findOne({ email: user.email });
+				token.userType = login.userType;
 				console.log('User:', user);
 			}
 			console.log("Token: ", token);
 			return token;
 		},
 		async session(session, token) {
-			if (!session.hacker) {
-				session.hacker = token.hacker;
+			if (!session.userType) {
 				session.userType = token.userType;
 			}
 			console.log('Sesh:', session);
