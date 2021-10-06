@@ -7,23 +7,23 @@ export const UserSchema = new Schema(
 		name: {
 			type: String,
 			required: true,
-            unique: true,
+			unique: true,
 		},
 		email: {
 			type: String,
 			required: true,
-            unique: true,
+			unique: true,
 		},
 		image: {
 			type: String,
 		},
-        userType: {
+		userType: {
 			type: String,
-            enum: ["HACKER", "JUDGE", "ORGANIZER"]
+			enum: ['HACKER', 'JUDGE', 'ORGANIZER'],
 		},
-        team: {
-            type: { type: Schema.Types.ObjectId, ref: 'Team' },
-        }
+		team: {
+			type: { type: Schema.Types.ObjectId, ref: 'Team' },
+		},
 	},
 	{
 		timestamps: true,

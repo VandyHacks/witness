@@ -27,19 +27,19 @@ export default NextAuth({
 			await dbConnect();
 			if (user) {
 				// user is only defined on first sign in
-				const login = await User.findOne({email: user.email});
+				const login = await User.findOne({ email: user.email });
 
 				// read usertype from vaken db
 				if (!login.userType) {
 					const vakenUser = await vakenLogin.findOne({ email: user.email });
-					login.userType = vakenUser.userType;
+					if (vakenUser?.userType) login.userType = vakenUser.userType;
 					await login.save();
 				}
 
 				token.userType = login.userType;
 				console.log('User:', user);
 			}
-			console.log("Token: ", token);
+			console.log('Token: ', token);
 			return token;
 		},
 		async session(session, token) {
