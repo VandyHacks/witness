@@ -9,9 +9,10 @@ import { signOut, useSession } from 'next-auth/client';
 interface OutlineProps {
 	children: React.ReactNode;
 	home?: boolean;
+	selectedKey: string;
 }
 
-export default function Outline({ children, home }: OutlineProps) {
+export default function Outline({ children, home, selectedKey }: OutlineProps) {
 	const [session, loading] = useSession();
 	if (loading) return <Skeleton />;
 	const userType = session?.userType;
@@ -21,7 +22,7 @@ export default function Outline({ children, home }: OutlineProps) {
 				<div className={styles.logo}>
 					<Image src="/vhlogo-white.svg" alt="VH Logo" width={36} height={36} />
 				</div>
-				<Menu theme="dark" mode="horizontal">
+				<Menu theme="dark" mode="horizontal" selectedKeys={[selectedKey]}>
 					{userType && userType !== 'HACKER' && (
 						<Menu.Item key="dashboard">
 							<Link href="/dashboard">Dashboard</Link>

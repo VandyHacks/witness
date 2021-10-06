@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
 import { TeamsData } from './api/team-select';
 import { ScopedMutator } from 'swr/dist/types';
-import { signIn } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/types';
 
 function handleSubmitSuccess() {
@@ -78,6 +78,9 @@ export default function Forms() {
 	// Get mutate function to reload teams list with updated data on form submission.
 	const { mutate } = useSWRConfig();
 
+	const [session, loading] = useSession();
+	if (!loading && !session) return signIn();
+
 	let pageContent;
 	if (teamsError) {
 		// if error fetching teams, everything dies
@@ -129,7 +132,7 @@ export default function Forms() {
 	}
 
 	return (
-		<Outline>
+		<Outline selectedKey="forms">
 			<h1>Judging</h1>
 			{pageContent}
 		</Outline>

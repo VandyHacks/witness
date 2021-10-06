@@ -44,7 +44,6 @@ function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): Sc
 }
 
 export default function Dashboard() {
-	const [session, loading] = useSession();
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -58,7 +57,9 @@ export default function Dashboard() {
 	const [nextJudgingSession, setNextJudgingSession] = useState<ScheduleData | undefined>(undefined);
 	const [currentJudgingSession, setCurrentJudgingSession] = useState<ScheduleData | undefined>(undefined);
 
+	const [session, loading] = useSession();
 	if (!loading && !session) return signIn();
+
 	let pageContent;
 	if (scheduleError) {
 		pageContent = (
@@ -110,7 +111,7 @@ export default function Dashboard() {
 		);
 	}
 	return (
-		<Outline>
+		<Outline selectedKey="dashboard">
 			<h1>Dashboard</h1>
 			<p>Signed in as {session?.user?.email}</p>
 			{pageContent}
