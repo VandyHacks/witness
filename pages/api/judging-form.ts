@@ -16,7 +16,6 @@ export interface JudgingFormData {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | string>) {
 	if (req.method === 'GET') {
-		// TODO: these are just fillers. Actually implement this route.
 		const teamID = req.query.id;
 		const session = await getSession({ req });
 		if (!session) return res.status(401).send('Unauthorized');

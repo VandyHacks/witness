@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from 'next-auth/client';
 
 // TODO: get rid of this or move to a test file
 import faker from 'faker';
@@ -71,12 +72,14 @@ while (mockTeams.length > 0) {
 	timestamp += 600000;
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<ScheduleData[] | null>): void {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ScheduleData[] | string>) {
+	const session = await getSession({ req });
+	if (!session) return res.status(401).send('Unauthorized');
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
 		// Note: schedule data should be sorted by time.
-		res.status(200).json(mockSchedule);
+		return res.status(200).json(mockSchedule);
 	} else if (req.method === 'POST') {
-		res.status(200).send(null);
+		return res.status(200).send('Thanks');
 	}
 }
