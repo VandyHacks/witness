@@ -10,3 +10,7 @@ export interface JudgingData {
 	judges: string[];
 	zoomURL: URL;
 }
+
+export interface ResponseError extends Error {
+	status?: number;
+}

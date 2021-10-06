@@ -8,7 +8,8 @@ import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
 import { TeamsData } from './api/team-select';
 import { ScopedMutator } from 'swr/dist/types';
-import { signin } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/client';
+import { ResponseError } from '../types/types';
 
 function handleSubmitSuccess() {
 	notification['success']({
@@ -53,8 +54,11 @@ export default function Forms() {
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
 		const res = await fetch(url, { method: 'GET' });
-		if (res.status === 401) return signin();
-		if (!res.ok) throw new Error('Failed to get list of teams.');
+		if (!res.ok) {
+			const error = new Error('Failed to get list of teams.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
 		return (await res.json()) as TeamsData[];
 	});
 
@@ -63,20 +67,30 @@ export default function Forms() {
 		() => (teamID ? ['/api/judging-form', teamID] : null),
 		async (url, id) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
-			if (res.status === 401) return signin();
-			if (!res.ok) throw new Error('Failed to get team information.');
+			if (!res.ok) {
+				const error = new Error('Failed to get form information.') as ResponseError;
+				error.status = res.status;
+				throw error;
+			}
 			return (await res.json()) as JudgingFormData;
 		}
 	);
 	// Get mutate function to reload teams list with updated data on form submission.
 	const { mutate } = useSWRConfig();
 
+	const [session, loading] = useSession();
+	if (!loading && !session) return signIn();
+
 	let pageContent;
 	if (teamsError) {
 		// if error fetching teams, everything dies
 		pageContent = (
 			<Alert
-				message="An unknown error has occured. Please try again or reach out to an organizer."
+				message={
+					teamsError.status === 403
+						? '403: You are not permitted to access this content.'
+						: 'An unknown error has occured. Please try again or reach out to an organizer.'
+				}
 				type="error"
 			/>
 		);
@@ -93,7 +107,11 @@ export default function Forms() {
 			// if team selected but error in getting team's form, show error
 			formSection = (
 				<Alert
-					message="Cannot get form for selected team. Please try again or reach out to an organizer."
+					message={
+						formError.status === 403
+							? '403: You are not permitted to access this content.'
+							: 'Cannot get form for selected team. Please try again or reach out to an organizer.'
+					}
 					type="error"
 				/>
 			);
@@ -114,7 +132,7 @@ export default function Forms() {
 	}
 
 	return (
-		<Outline>
+		<Outline selectedKey="forms">
 			<h1>Judging</h1>
 			{pageContent}
 		</Outline>
