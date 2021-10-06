@@ -6,6 +6,7 @@ import Outline from '../components/outline';
 import Schedule from '../components/schedule';
 import { ScheduleData } from './api/schedule';
 import { ResponseError } from '../types/types';
+import { useSession } from 'next-auth/client';
 
 // TODO: stub
 const userID = '0';
@@ -43,6 +44,7 @@ function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): Sc
 }
 
 export default function Dashboard() {
+	const [session] = useSession();
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -109,6 +111,7 @@ export default function Dashboard() {
 	return (
 		<Outline>
 			<h1>Dashboard</h1>
+			<p>Signed in as {session?.user?.email}</p>
 			{pageContent}
 		</Outline>
 	);
