@@ -43,8 +43,9 @@ export default NextAuth({
 			return token;
 		},
 		async session(session, token) {
-			if (!session.userType) {
+			if (!session.userType || !session.userID) {
 				session.userType = token.userType;
+				session.userID = token.sub;
 			}
 			console.log('Sesh:', session);
 			return session;
