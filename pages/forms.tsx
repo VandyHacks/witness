@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
 import { TeamsData } from './api/team-select';
 import { ScopedMutator } from 'swr/dist/types';
-import { signin } from 'next-auth/client';
+import { signIn } from 'next-auth/client';
 
 function handleSubmitSuccess() {
 	notification['success']({
@@ -53,7 +53,7 @@ export default function Forms() {
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
 		const res = await fetch(url, { method: 'GET' });
-		if (res.status === 401) return signin();
+		if (res.status === 401) return signIn();
 		if (!res.ok) throw new Error('Failed to get list of teams.');
 		return (await res.json()) as TeamsData[];
 	});
@@ -63,7 +63,7 @@ export default function Forms() {
 		() => (teamID ? ['/api/judging-form', teamID] : null),
 		async (url, id) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
-			if (res.status === 401) return signin();
+			if (res.status === 401) return signIn();
 			if (!res.ok) throw new Error('Failed to get team information.');
 			return (await res.json()) as JudgingFormData;
 		}

@@ -5,7 +5,7 @@ import { AllDone, Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
 import Schedule from '../components/schedule';
 import { ScheduleData } from './api/schedule';
-import { signin } from 'next-auth/client';
+import { signIn } from 'next-auth/client';
 
 // TODO: stub
 const userID = '0';
@@ -45,7 +45,7 @@ function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): Sc
 export default function Dashboard() {
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
-		if (res.status === 401) return signin();
+		if (res.status === 401) return signIn();
 		if (!res.ok) throw new Error('Failed to get list of teams.');
 		return (await res.json()) as ScheduleData[];
 	});

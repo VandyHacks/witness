@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	if (!session) return res.status(401).send('Unauthorized');
 	if (req.method === 'GET') {
 		// TODO: these are just fillers. Actually implement this route.
-		res.status(200).json([
+		return res.status(200).json([
 			// TODO: figure out how to deal with team IDs smartly.
 			{
 				teamID: '0',
