@@ -31,7 +31,7 @@ export default NextAuth({
 
 				// read usertype from vaken db
 				if (!login.userType) {
-					const vakenUser = await vakenLogin.findOne({ email: user.email });
+					const vakenUser = await vakenLogin.findOne({ email: user.email }).lean();
 					if (vakenUser?.userType) login.userType = vakenUser.userType;
 					await login.save();
 				}
