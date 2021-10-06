@@ -28,7 +28,7 @@ const TeamSchema = new Schema(
 				message: 'Max team size is 4 members.',
 			},
 		},
-		judgements: { type: [Schema.Types.ObjectId], ref: 'Judgement' },
+		scores: { type: [Schema.Types.ObjectId], ref: 'Scores' },
 	},
 	{
 		timestamps: true,

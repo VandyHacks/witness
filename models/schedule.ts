@@ -22,10 +22,10 @@ const ScheduleSchema = new Schema(
 			type: Date,
 			required: true,
 		},
-		judged: {
-			type: Boolean,
-			required: true,
-		},
+		// judged: {
+		// 	type: Boolean,
+		// 	required: true,
+		// },
 	},
 	{
 		timestamps: true,
