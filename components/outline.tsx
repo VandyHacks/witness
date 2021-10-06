@@ -25,13 +25,17 @@ export default function Outline({ children, home, userType }: OutlineProps) {
 				<div className={styles.logo}>
 					<Image src="/vhlogo-white.svg" alt="VH Logo" width={36} height={36} />
 				</div>
-				<Menu className={styles.menu} theme="dark" mode="horizontal" forceSubMenuRender>
-					<Menu.Item key="dashboard">
-						<Link href="/dashboard">Dashboard</Link>
-					</Menu.Item>
-					<Menu.Item key="forms">
-						<Link href="/forms">Forms</Link>
-					</Menu.Item>
+				<Menu theme="dark" mode="horizontal">
+					{userType && userType !== 'HACKER' && (
+						<Menu.Item key="dashboard">
+							<Link href="/dashboard">Dashboard</Link>
+						</Menu.Item>
+					)}
+					{userType && userType !== 'HACKER' && (
+						<Menu.Item key="forms">
+							<Link href="/forms">Forms</Link>
+						</Menu.Item>
+					)}
 					<Menu.Item key="logout">
 						<div onClick={() => signOut({ callbackUrl: '/' })}>Sign Out</div>
 					</Menu.Item>

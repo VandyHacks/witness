@@ -31,10 +31,6 @@
 	margin-top: 14px;
 }
 
-.menu {
-	/* min-width: 100px; */
-}
-
 .header {
 	display: flex;
 	justify-content: space-between;
