@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
 import { TeamsData } from './api/team-select';
 import { ScopedMutator } from 'swr/dist/types';
+import { signin } from 'next-auth/client';
 
 function handleSubmitSuccess() {
 	notification['success']({
@@ -44,20 +45,25 @@ export default function Forms() {
 	const router = useRouter();
 	let { id: idFromQueryString } = router.query;
 	const [teamID, setTeamID] = useState(idFromQueryString as string | undefined);
+
 	useEffect(() => {
 		setTeamID(idFromQueryString as string | undefined);
 	}, [idFromQueryString]);
+
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
 		const res = await fetch(url, { method: 'GET' });
+		if (res.status === 401) return signin();
 		if (!res.ok) throw new Error('Failed to get list of teams.');
 		return (await res.json()) as TeamsData[];
 	});
+
 	// Get data for form component, formData will be falsy if teamID is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
 		async (url, id) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
+			if (res.status === 401) return signin();
 			if (!res.ok) throw new Error('Failed to get team information.');
 			return (await res.json()) as JudgingFormData;
 		}
