@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import styles from '../styles/Outline.module.css';
 import React from 'react';
-import { Button, Layout, Menu, Space } from 'antd';
+import { Button, Layout, Menu, Skeleton, Space } from 'antd';
 const { Header, Content, Footer } = Layout;
 import Link from 'next/link';
-import { signOut } from 'next-auth/client';
+import { signOut, useSession } from 'next-auth/client';
 
 interface OutlineProps {
 	children: React.ReactNode;
@@ -12,13 +12,10 @@ interface OutlineProps {
 	userType?: 'HACKER' | 'JUDGE' | 'ORGANIZER';
 }
 
-export default function Outline({ children, home, userType }: OutlineProps) {
-	// let menuItems = [];
-	// switch (userType) {
-	// 	case 'JUDGE':
-	// 		menuItems = [];
-	// }
-
+export default function Outline({ children, home }: OutlineProps) {
+	const [session, loading] = useSession();
+	if (loading) return <Skeleton />;
+	const userType = session?.userType;
 	return (
 		<Layout className={styles.layout}>
 			<Header className={styles.header}>
