@@ -5,7 +5,7 @@ export default function Page() {
 	const [session, loading] = useSession();
 
 	return (
-		<Outline>
+		<Outline selectedKey="">
 			{!session && (
 				<>
 					Not signed in <br />

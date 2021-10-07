@@ -31,8 +31,9 @@
 	margin-top: 14px;
 }
 
-.menu {
-	float: right;
+.header {
+	display: flex;
+	justify-content: space-between;
 }
 
 .ossBanner {

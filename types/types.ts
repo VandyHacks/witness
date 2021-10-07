@@ -11,9 +11,6 @@ export interface JudgingData {
 	zoomURL: URL;
 }
 
-
-
-
 //New Interfaces
 
 import mongoose from 'mongoose';
@@ -57,4 +54,6 @@ export interface Schedules {
 	time: number
 }
 
-
+export interface ResponseError extends Error {
+	status?: number;
+}
