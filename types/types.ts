@@ -16,37 +16,43 @@ export interface JudgingData {
 
 //New Interfaces
 
+import mongoose from 'mongoose';
+
 export interface Users {
+	_id: mongoose.Schema.Types.ObjectId,
 	name: string,
 	email: string,
 	image: string,
 	userType: string,
-	team: Teams | null
+	team: mongoose.Schema.Types.ObjectId
 }
 
 export interface Teams {
+	_id: mongoose.Schema.Types.ObjectId,
 	name: string,
 	joinCode: string,
 	devpost: string,
 	members: Users[],
-	scores: Scores[]
+	scores: mongoose.Schema.Types.ObjectId[]
 }
 
 export interface Scores {
-	team: Teams | null,
-	judge: Users | null,
+	_id: mongoose.Schema.Types.ObjectId,
+	team: mongoose.Schema.Types.ObjectId,
+	judge: mongoose.Schema.Types.ObjectId,
 	technicalAbility: number,
 	creativity: number,
 	utility: number,
 	presentation: number,
 	wowfactor: number,
-	comments: number,
-	feedback: number
+	comments: string,
+	feedback: string
 }
 
 export interface Schedules {
-	team: Teams | null,
-	judges: Users[],
+	_id: mongoose.Schema.Types.ObjectId,
+	team: mongoose.Schema.Types.ObjectId,
+	judges: mongoose.Schema.Types.ObjectId[],
 	zoom: string,
 	time: number
 }

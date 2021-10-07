@@ -1,12 +1,22 @@
 const faker = require('faker');
+const { ObjectID } = require('mongodb');
+// const mongoose = require('mongoose');
+import mongoose, { AnyKeys } from 'mongoose';
 import type {Users, Teams, Scores, Schedules} from "../types/types"
-// import dbConnect from './database';
+import dbConnect from './database';
 
+import User from "../models/user";
+import Team from "../models/team";
+import Score from "../models/scores";
+import Schedule from "../models/schedule";
 
-function generateUsers(team: Teams, userType: string) : Users {
+const Schema = mongoose.Schema;
+
+function generateUsers(team: mongoose.Schema.Types.ObjectId, userType: string) : Users {
 
     return {
-        name: faker.name.firstName(),
+        _id: new ObjectID(),
+        name: faker.name.findName(),
         email: faker.internet.email(),
         image: faker.image.image(),
         userType: userType,
@@ -17,6 +27,7 @@ function generateUsers(team: Teams, userType: string) : Users {
 function generateTeams() : Teams {
 
     return {
+        _id: new ObjectID(),
         name: faker.company.companyName(),
         joinCode: faker.datatype.uuid(),
         devpost: `https://devpost.com/${faker.datatype.string()}`,
@@ -26,9 +37,10 @@ function generateTeams() : Teams {
 
 }
 
-function generateScores(team: Teams, judge: Users) : Scores {
+function generateScores(team: mongoose.Schema.Types.ObjectId, judge: mongoose.Schema.Types.ObjectId) : Scores {
 
     return {
+    _id: new ObjectID(),
     team: team,
     judge: judge,
     technicalAbility: faker.datatype.number(7),
@@ -36,14 +48,15 @@ function generateScores(team: Teams, judge: Users) : Scores {
     utility: faker.datatype.number(7),
     presentation: faker.datatype.number(7),
     wowfactor: faker.datatype.number(7),
-    comments: faker.datatype.number(7),
-    feedback: faker.datatype.number(7),
+    comments: faker.lorem.sentence(),
+    feedback: faker.lorem.sentence(),
     }
 }
 
-function generateSchedules(team: Teams, judges: Users[]) : Schedules {
+function generateSchedules(team: mongoose.Schema.Types.ObjectId, judges: mongoose.Schema.Types.ObjectId[]) : Schedules {
 
     return {
+        _id: new ObjectID(),
         team: team,
         judges: judges,
         zoom: faker.internet.url(),
@@ -62,28 +75,28 @@ const populateDatabase = async (): Promise<void> => {
     for ( let i = 0; i < 10; i++){
         let nextTeam = generateTeams();
         let teamUsers: Users[] = [];
-        let teamJudges: Users[] = [];
-        let teamScores: Scores[] = [];
-        for (let j = -1; j < faker.datatype.number(3); j++){
-            let nextUser = generateUsers(nextTeam, "HACKER");
+        let teamJudges: mongoose.Schema.Types.ObjectId[] = [];
+        let teamScores: mongoose.Schema.Types.ObjectId[] = [];
+        for (let j = -2; j < faker.datatype.number(2); j++){
+            let nextUser = generateUsers(nextTeam._id, "HACKER");
             teamUsers.push(nextUser)
             newUsers.push(nextUser);
         }
 
         nextTeam.members = teamUsers;
 
-        for (let k = -1; k < faker.datatype.number(2); k++){
-            let nextJudge = generateUsers(nextTeam, "JUDGE");
+        for (let k = 0; k < 3; k++){
+            let nextJudge = generateUsers(nextTeam._id, "JUDGE");
             newUsers.push(nextJudge);
-            teamJudges.push(nextJudge);
+            teamJudges.push(nextJudge._id);
 
-            let nextScore = generateScores(nextTeam, nextJudge);
+            let nextScore = generateScores(nextTeam._id, nextJudge._id);
             newScores.push(nextScore);
-            teamScores.push(nextScore);
+            teamScores.push(nextScore._id);
         }
 
         nextTeam.scores = teamScores;
-        let nextSchedule = generateSchedules(nextTeam, teamJudges);
+        let nextSchedule = generateSchedules(nextTeam._id, teamJudges);
         newSchedules.push(nextSchedule)
         newTeams.push(nextTeam);
     }
@@ -93,15 +106,17 @@ const populateDatabase = async (): Promise<void> => {
     console.log(newScores);
     console.log(newSchedules);
 
-    // let Db = await dbConnect();
+    await dbConnect();
 
-    // let teamsCount = await Db.Teams.insertMany(newTeams);
-    // let usersCount = await Db.Users.insertMany(newUsers);
-    // let scoresCount = await Db.Scores.insertMany(newScores);
-    // let schedulesCount = await Db.Schedules.insertMany(newSchedules);
+    let teamsCount = await Team.insertMany(newTeams);
+    let usersCount = await User.insertMany(newUsers);
+    let scoresCount = await Score.insertMany(newScores);
+    let schedulesCount = await Schedule.insertMany(newSchedules);
 
-    // console.log(`Teams: ${teamsCount}, Users: ${usersCount},
-    //              Scores: ${scoresCount}, Schedules: ${schedulesCount}`)
+    console.log(`Teams: ${teamsCount}, Users: ${usersCount},
+                 Scores: ${scoresCount}, Schedules: ${schedulesCount}`)
+    process.exit(0);
 }
+
 
 populateDatabase();
