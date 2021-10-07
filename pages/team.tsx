@@ -34,7 +34,12 @@ function handleRequestFailure(message: string) {
 	});
 }
 
-async function handleSetupSubmit(formData: { teamName: string } | { joinCode: string }, mutate: ScopedMutator<any>) {
+interface NewTeamFields {
+	teamName: string;
+	devpost: string;
+}
+
+async function handleSetupSubmit(formData: NewTeamFields | { joinCode: string }, mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/team-management', {
 		method: 'POST',
 		headers: {
@@ -50,14 +55,12 @@ async function handleSetupSubmit(formData: { teamName: string } | { joinCode: st
 }
 interface TeamCardProps {
 	title: string;
-	label: string;
-	message: string;
-	name: string;
-	onSubmit: (value: { teamName: string } | { joinCode: string }) => Promise<void>;
+	fields: { name: string; label: string }[];
+	onSubmit: (value: NewTeamFields | { joinCode: string }) => Promise<void>;
 }
 
 function TeamCard(props: TeamCardProps) {
-	const { title, message, label, name, onSubmit } = props;
+	const { title, fields, onSubmit } = props;
 	const layout = {
 		labelCol: { span: 8 },
 		wrapperCol: { span: 16 },
@@ -65,9 +68,15 @@ function TeamCard(props: TeamCardProps) {
 	return (
 		<Card title={title} type="inner" style={{ maxWidth: '50vw' }}>
 			<Form {...layout} labelAlign="left" onFinish={onSubmit}>
-				<Form.Item label={label} name={name} rules={[{ required: true, message }]}>
-					<Input />
-				</Form.Item>
+				{fields.map(field => (
+					<Form.Item
+						key={field.label}
+						label={field.label}
+						name={field.name}
+						rules={[{ required: true, message: 'This field is required.' }]}>
+						<Input />
+					</Form.Item>
+				))}
 				<Button type="primary" htmlType="submit" className="ant-col-offset-8">
 					Submit
 				</Button>
@@ -200,7 +209,7 @@ export interface TeamProfile {
 	members: string[];
 }
 interface TeamSetupProps {
-	handleSubmit: (formData: { teamName: string } | { joinCode: string }, mutate: ScopedMutator<any>) => Promise<void>;
+	handleSubmit: (formData: NewTeamFields | { joinCode: string }, mutate: ScopedMutator<any>) => Promise<void>;
 }
 
 function TeamSetup({ handleSubmit }: TeamSetupProps) {
@@ -211,9 +220,10 @@ function TeamSetup({ handleSubmit }: TeamSetupProps) {
 				<Col span={12}>
 					<TeamCard
 						title="New Team"
-						label="Team Name"
-						name="teamName"
-						message="Please enter a unique team name."
+						fields={[
+							{ name: 'teamName', label: 'Team Name' },
+							{ name: 'devpost', label: 'Devpost' },
+						]}
 						onSubmit={formData => handleSubmit(formData, mutate)}
 					/>
 				</Col>
@@ -227,9 +237,7 @@ function TeamSetup({ handleSubmit }: TeamSetupProps) {
 				<Col span={12}>
 					<TeamCard
 						title="Join Team"
-						label="Join Code"
-						name="joinCode"
-						message="Please enter your team's join code."
+						fields={[{ name: 'joinCode', label: 'Join Code' }]}
 						onSubmit={formData => handleSubmit(formData, mutate)}
 					/>
 				</Col>
