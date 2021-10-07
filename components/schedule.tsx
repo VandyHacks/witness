@@ -1,15 +1,17 @@
-import { Space, Table, Collapse, Tag, Typography, Switch, Skeleton } from 'antd';
+import { Space, Table, Collapse, Tag, Typography, Switch, Skeleton, Timeline, Button } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ScheduleData } from '../pages/api/schedule';
 import { DateTime } from 'luxon';
 import { judgingLength } from '../pages/dashboard';
+import Link from 'next/link';
 
 const { Panel } = Collapse;
-const { Link } = Typography;
+// const { Link } = Typography;
 
 interface ScheduleProps {
 	data: ScheduleData[];
-	onScheduleAdvance: () => void;
+	cutoffIndex: number;
+	// onScheduleAdvance: () => void;
 }
 
 // Data should include everything in ScheduleData except for startTime and zoomURL
@@ -44,6 +46,89 @@ function TableCell(data: Omit<ScheduleData, 'startTime' | 'zoomURL'> | null) {
 		</Space>
 	) : (
 		data
+	);
+}
+
+export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
+	const [showPast, setShowPast] = useState(false);
+	let key = 0;
+	const columns = [
+		{
+			title: 'Time',
+			dataIndex: 'time',
+			key: 'time',
+			width: 100,
+			render: (timestamp: number) => DateTime.fromMillis(timestamp).toLocaleString(DateTime.TIME_SIMPLE),
+		},
+		{
+			title: 'Project',
+			dataIndex: 'project',
+			key: 'project',
+			render: ({ name, link }: { name: string; link: URL }) => (
+				<Link href={link} passHref>
+					<Button type="link">{name}</Button>
+				</Link>
+			),
+		},
+		{
+			title: 'Team Members',
+			dataIndex: 'teamMembers',
+			key: 'teamMembers',
+			render: (members: string[]) => members.map(member => <Tag key={member + key++}>{member}</Tag>),
+		},
+		{
+			title: 'Judges',
+			dataIndex: 'judges',
+			key: 'judges',
+			render: (judges: string[]) =>
+				judges.map(judge => (
+					<Tag color="green" key={judge + key++}>
+						{judge}
+					</Tag>
+				)),
+		},
+		{
+			title: 'Room',
+			dataIndex: 'room',
+			key: 'room',
+			render: (link: URL) => (
+				<Link href={link} passHref>
+					<Button type="link">Go to room</Button>
+				</Link>
+			),
+		},
+	];
+	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
+		time: item.startTime,
+		project: { name: item.projectName, link: new URL(item.devpostURL) },
+		teamMembers: item.members,
+		judges: item.judges,
+		room: item.zoomURL,
+	}));
+	return (
+		<Table
+			dataSource={dataSource}
+			columns={columns}
+			pagination={false}
+			sticky
+			bordered
+			scroll={{ x: true }}
+			summary={_ => (
+				<Table.Summary fixed={true}>
+					<Table.Summary.Row>
+						<Table.Summary.Cell index={0} colSpan={5}>
+							<Switch
+								checkedChildren="Hide past sessions"
+								unCheckedChildren="Include past sessions"
+								onChange={checked => {
+									setShowPast(checked);
+								}}
+							/>
+						</Table.Summary.Cell>
+					</Table.Summary.Row>
+				</Table.Summary>
+			)}
+		/>
 	);
 }
 
