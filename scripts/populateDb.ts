@@ -1,16 +1,13 @@
 const faker = require('faker');
 const { ObjectID } = require('mongodb');
-// const mongoose = require('mongoose');
 import mongoose, { AnyKeys } from 'mongoose';
 import type {Users, Teams, Scores, Schedules} from "../types/types"
-import dbConnect from './database';
+import dbConnect from '../middleware/database';
 
 import User from "../models/user";
 import Team from "../models/team";
 import Score from "../models/scores";
 import Schedule from "../models/schedule";
-
-const Schema = mongoose.Schema;
 
 function generateUsers(team: mongoose.Schema.Types.ObjectId, userType: string) : Users {
 
