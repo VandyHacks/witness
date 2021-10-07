@@ -20,7 +20,7 @@ function TeamCard(props: TeamCardProps) {
 		wrapperCol: { span: 16 },
 	};
 	return (
-		<Card title={title} type="inner">
+		<Card title={title} type="inner" style={{ maxWidth: '50vw' }}>
 			<Form {...layout} labelAlign="left" onFinish={onSubmit}>
 				<Form.Item label={label} name={name} rules={[{ required: true, message }]}>
 					<Input />
@@ -59,8 +59,8 @@ export default function Team() {
 	return (
 		<Outline selectedKey="dashboard">
 			<h1>Team Management</h1>
-			<Row gutter={16}>
-				<Col className="gutter-row" flex={1}>
+			<Row justify="center">
+				<Col span={12}>
 					<TeamCard
 						title="New Team"
 						label="Team Name"
@@ -69,7 +69,14 @@ export default function Team() {
 						onSubmit={formData => handleSubmit(formData, mutate)}
 					/>
 				</Col>
-				<Col className="gutter-row" flex={1}>
+			</Row>
+			<Row justify="center">
+				<Col span={12}>
+					<Divider>Or</Divider>
+				</Col>
+			</Row>
+			<Row justify="center">
+				<Col span={12}>
 					<TeamCard
 						title="Join Team"
 						label="Join Code"
