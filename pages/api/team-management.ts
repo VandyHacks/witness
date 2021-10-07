@@ -12,13 +12,16 @@ const mockTeam = {
 	members: ['Mary Pickford', 'Jonathan Groff', 'Hamilton Meyers', 'Sam Tree'],
 };
 export default async function handler(req: NextApiRequest, res: NextApiResponse<TeamProfile | string>) {
+	const session = await getSession({ req });
+	if (session?.userType !== 'HACKER') return res.status(403).send('Forbidden');
 	if (req.method === 'GET') {
-		const session = await getSession({ req });
-		if (session?.userType !== 'HACKER') return res.status(403).send('Forbidden');
 		// Get the hacker's team if it exists. Otherwise yeet them to the team creation/join page.
 
+		// Uncomment this to force them to make team
 		// return res.status(409).send('Team not set');
+		// Uncomment this to send them to team profile
 		return res.status(200).json(mockTeam);
-	}
-	return res.status(405).send('Method not supported brother');
+	} else if (req.method === 'PATCH') {
+		return res.status(200).send('GOOD!');
+	} else return res.status(405).send('Method not supported brother');
 }

@@ -1,4 +1,18 @@
-import { Button, Card, Col, Divider, Form, Input, notification, Row, Skeleton, Space } from 'antd';
+import {
+	Button,
+	Card,
+	Col,
+	Collapse,
+	Descriptions,
+	Divider,
+	Form,
+	Input,
+	notification,
+	Row,
+	Skeleton,
+	Space,
+	Tag,
+} from 'antd';
 import { useSession, signIn } from 'next-auth/client';
 import React from 'react';
 import useSWR, { useSWRConfig } from 'swr';
@@ -7,6 +21,7 @@ import ErrorMessage from '../components/errorMessage';
 import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import { ResponseError } from '../types/types';
+const { Panel } = Collapse;
 
 // TODO: this is just a monolithic file, need to refactor
 
@@ -18,7 +33,7 @@ function handleSubmitFailure(message: string) {
 	});
 }
 
-async function handleSubmit(formData: { teamName: string } | { joinCode: string }, mutate: ScopedMutator<any>) {
+async function handleSetupSubmit(formData: { teamName: string } | { joinCode: string }, mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/team-setup', {
 		method: 'POST',
 		headers: {
@@ -60,51 +75,82 @@ function TeamCard(props: TeamCardProps) {
 	);
 }
 
-interface TeamFormData {
-	teamName: string;
-	devpost: URL;
+async function handleEditSubmit(formData: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) {
+	const res = await fetch('/api/team-management', {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(formData),
+	});
+
+	if (res.ok) {
+		console.log('Received:', await res.text());
+		mutate('/api/team-management');
+	} else handleSubmitFailure(await res.text());
 }
+
 interface TeamManagerProps {
 	profile: TeamProfile;
-	onSubmit: (value: TeamFormData) => Promise<void>;
+	handleSubmit: (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => Promise<void>;
 	onLeave: () => Promise<void>;
 }
 
 function TeamManager(props: TeamManagerProps) {
 	// TODO: STYLE THIS!
 	const { name, joinCode, devpost, members } = props.profile;
-	const { onSubmit, onLeave } = props;
+	const { handleSubmit, onLeave } = props;
+	const { mutate } = useSWRConfig();
 	const layout = {
-		labelCol: { span: 8 },
-		wrapperCol: { span: 16 },
+		labelCol: { span: 4 },
+		wrapperCol: { span: 20 },
 	};
 	return (
-		<Card>
-			<ul>
-				<li key="name">{name}</li>
-				<li key="joinCode">{joinCode}</li>
-				<li key="devpost">{devpost}</li>
-				<li key="members">{members}</li>
-			</ul>
-			<Form {...layout} labelAlign="left" onFinish={onSubmit}>
-				{/* TODO: validation of team name on server side */}
-				<Form.Item
-					label="Team name"
-					name="teamName"
-					rules={[{ required: true, message: 'Enter a unique team name' }]}>
-					<Input />
-				</Form.Item>
-				<Form.Item
-					label="Devpost"
-					name="teamName"
-					rules={[{ required: true, message: 'Enter your Devpost link.' }]}>
-					<Input />
-				</Form.Item>
-				<Button type="primary" htmlType="submit" className="ant-col-offset-8">
-					Submit
-				</Button>
-			</Form>
-		</Card>
+		<>
+			<Descriptions bordered>
+				<Descriptions.Item label="Team Name">{name}</Descriptions.Item>
+				<Descriptions.Item label="Join Code">{joinCode}</Descriptions.Item>
+				<Descriptions.Item label="Devpost">{devpost}</Descriptions.Item>
+				{/* <Descriptions.Item label="Members">empty</Descriptions.Item> */}
+				<Descriptions.Item label="Members">
+					{members.map((member, i) => (
+						<Tag key={i} color="blue">
+							{member}
+						</Tag>
+					))}
+				</Descriptions.Item>
+			</Descriptions>
+			{/* TODO: validation of team name on server side */}
+			<Divider />
+			<Collapse accordion>
+				<Panel header="Change Team Name" key="1">
+					<Form {...layout} labelAlign="left" onFinish={formData => handleSubmit(formData, mutate)}>
+						<Form.Item
+							name="teamName"
+							label="New Team Name"
+							rules={[{ required: true, message: 'goodbye' }]}>
+							<Input />
+						</Form.Item>
+						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
+							Submit
+						</Button>
+					</Form>
+				</Panel>
+				<Panel header="Change Devpost" key="2">
+					<Form {...layout} labelAlign="left" onFinish={formData => handleSubmit(formData, mutate)}>
+						<Form.Item
+							name="devpost"
+							label="New Devpost URL"
+							rules={[{ required: true, message: 'goodbye' }]}>
+							<Input />
+						</Form.Item>
+						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
+							Submit
+						</Button>
+					</Form>
+				</Panel>
+			</Collapse>
+		</>
 	);
 }
 
@@ -114,8 +160,11 @@ export interface TeamProfile {
 	devpost: URL;
 	members: string[];
 }
+interface TeamSetupProps {
+	handleSubmit: (formData: { teamName: string } | { joinCode: string }, mutate: ScopedMutator<any>) => Promise<void>;
+}
 
-function SetUpTeam() {
+function TeamSetup({ handleSubmit }: TeamSetupProps) {
 	const { mutate } = useSWRConfig();
 	return (
 		<>
@@ -165,11 +214,16 @@ export default function Team() {
 	if (!loading && !session) return signIn();
 	let pageContent;
 	if (teamError) {
-		pageContent = teamError.status === 409 ? <SetUpTeam /> : <ErrorMessage status={teamError.status} />;
+		pageContent =
+			teamError.status === 409 ? (
+				<TeamSetup handleSubmit={handleSetupSubmit} />
+			) : (
+				<ErrorMessage status={teamError.status} />
+			);
 	} else if (!teamData) pageContent = <Skeleton />;
 	else {
 		// Team data received.
-		pageContent = <TeamManager profile={teamData} onSubmit={() => {}} onLeave={() => {}} />; //<div>{teamData.members}</div>;
+		pageContent = <TeamManager profile={teamData} handleSubmit={handleEditSubmit} onLeave={() => {}} />; //<div>{teamData.members}</div>;
 	}
 	return (
 		<Outline selectedKey="team">
