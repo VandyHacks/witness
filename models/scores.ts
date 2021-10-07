@@ -3,14 +3,16 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const ScoresSchema = new Schema({
-	team: { 
-        type: Schema.Types.ObjectId, 
-        required: true, ref: 'Team' 
-    },
-	judge: { 
-        type: Schema.Types.ObjectId, 
-        required: true, 
-        ref: 'User' },
+	team: {
+		type: Schema.Types.ObjectId,
+		required: true,
+		ref: 'Team',
+	},
+	judge: {
+		type: Schema.Types.ObjectId,
+		required: true,
+		ref: 'User',
+	},
 	technicalAbility: { type: Number, min: 0, max: 7, required: true },
 	creativity: { type: Number, min: 0, max: 7, required: true },
 	utility: { type: Number, min: 0, max: 7, required: true },
