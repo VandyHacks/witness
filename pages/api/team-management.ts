@@ -22,6 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		// Uncomment this to send them to team profile
 		return res.status(200).json(mockTeam);
 	} else if (req.method === 'PATCH') {
-		return res.status(200).send('GOOD!');
+		return res.status(200).send('UPDATE TEAM!');
+	} else if (req.method === 'DELETE') {
+		return res.status(200).send('REMOVE TEAM!');
 	} else return res.status(405).send('Method not supported brother');
 }

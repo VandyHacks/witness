@@ -8,6 +8,7 @@ import {
 	Form,
 	Input,
 	notification,
+	Popconfirm,
 	Row,
 	Skeleton,
 	Space,
@@ -25,7 +26,7 @@ const { Panel } = Collapse;
 
 // TODO: this is just a monolithic file, need to refactor
 
-function handleSubmitFailure(message: string) {
+function handleRequestFailure(message: string) {
 	notification['error']({
 		message,
 		description: 'Please try again or contact an organizer if the problem persists.',
@@ -45,7 +46,7 @@ async function handleSetupSubmit(formData: { teamName: string } | { joinCode: st
 	if (res.ok) {
 		console.log('Received:', await res.text());
 		mutate('/api/team-management');
-	} else handleSubmitFailure(await res.text());
+	} else handleRequestFailure(await res.text());
 }
 interface TeamCardProps {
 	title: string;
@@ -87,13 +88,43 @@ async function handleEditSubmit(formData: { teamName: string } | { devpost: stri
 	if (res.ok) {
 		console.log('Received:', await res.text());
 		mutate('/api/team-management');
-	} else handleSubmitFailure(await res.text());
+	} else handleRequestFailure(await res.text());
+}
+
+async function handleLeaveTeam(mutate: ScopedMutator<any>) {
+	const res = await fetch('/api/team-management', {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	});
+
+	if (res.ok) {
+		console.log('Received:', await res.text());
+		mutate('/api/team-management');
+	} else handleRequestFailure(await res.text());
+}
+
+function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator<any>) => Promise<void> }) {
+	const { mutate } = useSWRConfig();
+	return (
+		<Popconfirm
+			title="Are you sure"
+			placement="right"
+			okText="Yes"
+			cancelText="No"
+			onConfirm={() => onLeave(mutate)}>
+			<Button type="primary" danger>
+				Leave Team
+			</Button>
+		</Popconfirm>
+	);
 }
 
 interface TeamManagerProps {
 	profile: TeamProfile;
 	handleSubmit: (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => Promise<void>;
-	onLeave: () => Promise<void>;
+	onLeave: (mutate: ScopedMutator<any>) => Promise<void>;
 }
 
 function TeamManager(props: TeamManagerProps) {
@@ -108,9 +139,15 @@ function TeamManager(props: TeamManagerProps) {
 	return (
 		<>
 			<Descriptions bordered>
-				<Descriptions.Item label="Team Name">{name}</Descriptions.Item>
-				<Descriptions.Item label="Join Code">{joinCode}</Descriptions.Item>
-				<Descriptions.Item label="Devpost">{devpost}</Descriptions.Item>
+				<Descriptions.Item label="Team Name" span={24}>
+					{name}
+				</Descriptions.Item>
+				<Descriptions.Item label="Join Code" span={24}>
+					{joinCode}
+				</Descriptions.Item>
+				<Descriptions.Item label="Devpost" span={24}>
+					{devpost}
+				</Descriptions.Item>
 				{/* <Descriptions.Item label="Members">empty</Descriptions.Item> */}
 				<Descriptions.Item label="Members">
 					{members.map((member, i) => (
@@ -128,7 +165,7 @@ function TeamManager(props: TeamManagerProps) {
 						<Form.Item
 							name="teamName"
 							label="New Team Name"
-							rules={[{ required: true, message: 'goodbye' }]}>
+							rules={[{ required: true, message: 'Please enter a team name.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
@@ -141,7 +178,7 @@ function TeamManager(props: TeamManagerProps) {
 						<Form.Item
 							name="devpost"
 							label="New Devpost URL"
-							rules={[{ required: true, message: 'goodbye' }]}>
+							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
@@ -150,6 +187,8 @@ function TeamManager(props: TeamManagerProps) {
 					</Form>
 				</Panel>
 			</Collapse>
+			<Divider />
+			<LeaveButton onLeave={onLeave} />
 		</>
 	);
 }
@@ -223,7 +262,7 @@ export default function Team() {
 	} else if (!teamData) pageContent = <Skeleton />;
 	else {
 		// Team data received.
-		pageContent = <TeamManager profile={teamData} handleSubmit={handleEditSubmit} onLeave={() => {}} />; //<div>{teamData.members}</div>;
+		pageContent = <TeamManager profile={teamData} handleSubmit={handleEditSubmit} onLeave={handleLeaveTeam} />; //<div>{teamData.members}</div>;
 	}
 	return (
 		<Outline selectedKey="team">
