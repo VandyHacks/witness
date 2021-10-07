@@ -94,34 +94,8 @@ export default function Dashboard() {
 					setCurrentScheduleItem(undefined);
 				}
 			}
-			console.log('hey here is the shit');
-			console.log('Index:', nextIndex);
-			console.log('currentScheduleItem:', currentScheduleItem);
-			console.log('nextScheduleItem:', nextScheduleItem);
 		}, 1000);
 		return () => clearInterval(interval);
-
-		// const now = Date.now();
-		// if (
-		// 	scheduleData &&
-		// 	nextIndex <= scheduleData.length &&
-		// 	now <= scheduleData[scheduleData.length - 1].startTime + JUDGING_LENGTH
-		// ) {
-		// 	// Will only get here if we have received data
-		// 	const interval = setInterval(() => {
-		// 		if (Date.now() > (nextScheduleItem?.startTime || 0)) {
-		// 			let index =
-		// 				nextIndex !== -1 ? nextIndex + 1 : scheduleData.findIndex(el => Date.now() < el.startTime);
-		// 			index = index !== -1 ? index : scheduleData.length;
-		// 			setCurrentScheduleItem(scheduleData[index - 1]);
-		// 			setNextScheduleItem(scheduleData[index]);
-		// 			setNextIndex(index);
-		// 		} else if (Date.now() > (currentScheduleItem?.startTime || 0) + JUDGING_LENGTH) {
-		// 			setCurrentScheduleItem(undefined);
-		// 		}
-		// 	}, 1000);
-		// 	return () => clearInterval(interval);
-		// }
 	});
 
 	const [session, loading] = useSession();
@@ -140,50 +114,56 @@ export default function Dashboard() {
 				type="error"
 			/>
 		);
-	} else if (!scheduleData) {
+	} else if (!scheduleData || loading) {
 		pageContent = <Skeleton />;
 	} else {
 		pageContent = (
 			<>
-				<Cards current={currentScheduleItem} next={nextScheduleItem} />
-				<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
+				{(session?.userType === 'JUDGE' || session?.userType === 'HACKER') && (
+					<Cards current={currentScheduleItem} next={nextScheduleItem} />
+				)}
+				{session?.userType === 'JUDGE' && (
+					<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
+				)}
 			</>
 		);
-		// let cards;
-		// if (currentScheduleItem === undefined || nextScheduleItem === undefined) {
-		// 	cards = <Skeleton />;
-		// } else if (currentScheduleItem.startTime === -1 && nextScheduleItem.startTime === -1) {
-		// 	cards = <AllDone />;
-		// } else {
-		// 	cards = (
-		// 		<Row gutter={16}>
-		// 			{currentScheduleItem.startTime > -1 && (
-		// 				<Col className="gutter-row" flex={1}>
-		// 					<Current {...currentScheduleItem} />
-		// 				</Col>
-		// 			)}
-		// 			{nextScheduleItem.startTime > -1 && (
-		// 				<Col className="gutter-row" flex={1}>
-		// 					<UpNext {...nextScheduleItem} />
-		// 				</Col>
-		// 			)}
-		// 		</Row>
-		// 	);
-		// }
-		// pageContent = (
-		// 	<>
-		// 		{cards}
-		// 		<Divider>Schedule</Divider>
-		// 		<Schedule
-		// 			data={scheduleData}
-		// 			onScheduleAdvance={() => {
-		// 				setNextScheduleItem(getScheduleItem('next', scheduleData));
-		// 				setCurrentScheduleItem(getScheduleItem('current', scheduleData));
-		// 			}}
-		// 		/>
-		// 	</>
-		// );
 	}
+
+	// let cards;
+	// if (currentScheduleItem === undefined || nextScheduleItem === undefined) {
+	// 	cards = <Skeleton />;
+	// } else if (currentScheduleItem.startTime === -1 && nextScheduleItem.startTime === -1) {
+	// 	cards = <AllDone />;
+	// } else {
+	// 	cards = (
+	// 		<Row gutter={16}>
+	// 			{currentScheduleItem.startTime > -1 && (
+	// 				<Col className="gutter-row" flex={1}>
+	// 					<Current {...currentScheduleItem} />
+	// 				</Col>
+	// 			)}
+	// 			{nextScheduleItem.startTime > -1 && (
+	// 				<Col className="gutter-row" flex={1}>
+	// 					<UpNext {...nextScheduleItem} />
+	// 				</Col>
+	// 			)}
+	// 		</Row>
+	// 	);
+	// }
+	// pageContent = (
+	// 	<>
+	// 		{cards}
+	// 		<Divider>Schedule</Divider>
+	// 		<Schedule
+	// 			data={scheduleData}
+	// 			onScheduleAdvance={() => {
+	// 				setNextScheduleItem(getScheduleItem('next', scheduleData));
+	// 				setCurrentScheduleItem(getScheduleItem('current', scheduleData));
+	// 			}}
+	// 		/>
+	// 	</>
+	// );
+
 	return (
 		<Outline selectedKey="dashboard">
 			<h1>Dashboard</h1>

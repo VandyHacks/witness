@@ -89,6 +89,10 @@ async function getJudgeSchedule(): Promise<ScheduleData[]> {
 	return Promise.resolve(data);
 }
 
+async function getHackerSchedule(): Promise<ScheduleData[]> {
+	return Promise.resolve([data[3]]);
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ScheduleData[] | string>) {
 	const session = await getSession({ req });
 	if (!session) return res.status(403).send('Forbidden');
@@ -96,14 +100,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	if (req.method === 'GET') {
 		console.log('hey user type:', session.userType);
 		let data;
-		// switch (session.userType) {
-		// 	case 'JUDGE':
-		// 		data = await getJudgeSchedule();
-		// 		break;
-		// 	default:
-		// 		data = mockSchedule;
-		// }
-		data = await getJudgeSchedule();
+		switch (session.userType) {
+			case 'JUDGE':
+				data = await getJudgeSchedule();
+				break;
+			case 'HACKER':
+				data = await getHackerSchedule();
+				break;
+			default:
+				data = mockSchedule;
+		}
 		// Note: schedule data should be sorted by time.
 		return res.status(200).json(data);
 	} else if (req.method === 'POST') {
