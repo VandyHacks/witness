@@ -1,9 +1,9 @@
 import { Alert, Button, Col, Divider, Row, Skeleton, Timeline } from 'antd';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { AllDone, Current, UpNext } from '../components/scheduleItem';
+// import { AllDone, Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
-import Schedule, { JudgeSchedule } from '../components/schedule';
+import { JudgeSchedule } from '../components/schedule';
 import Cards from '../components/cards';
 import { ScheduleData } from './api/schedule';
 import { ResponseError } from '../types/types';
@@ -20,30 +20,32 @@ export const JUDGING_LENGTH = 3000; //600000;
 
 // TODO: this is horribly inefficient right now, as it checks through the whole dataset on every update
 // request. Rewrite this to use the restructured dataset in schedule.tsx.
-function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): ScheduleData {
-	// TODO: currently only configured for judge. Should do for user.
-	const now = new Date().getTime();
-	let myScheduleItem = {
-		startTime: -1,
-		projectName: '',
-		members: [{ id: '', name: '' }],
-		judges: [{ id: '', name: '' }],
-		devpostURL: '',
-		zoomURL: '',
-	};
-	schedule.some(ScheduleItem => {
-		// TODO: judges is hard coded.
-		if (
-			((type === 'next' && ScheduleItem.startTime > now) ||
-				(type === 'current' && ScheduleItem.startTime + judgingLength > now && ScheduleItem.startTime < now)) &&
-			ScheduleItem['judges'].map(person => person.id).includes(userID)
-		) {
-			myScheduleItem = ScheduleItem;
-			return true;
-		}
-	});
-	return myScheduleItem;
-}
+// function getScheduleItem(type: 'current' | 'next', schedule: ScheduleData[]): ScheduleData {
+// 	// TODO: currently only configured for judge. Should do for user.
+// 	const now = new Date().getTime();
+// 	let myScheduleItem = {
+// 		startTime: -1,
+// 		projectName: '',
+// 		members: [{ id: '', name: '' }],
+// 		judges: [{ id: '', name: '' }],
+// 		devpostURL: '',
+// 		zoomURL: '',
+// 	};
+// 	schedule.some(ScheduleItem => {
+// 		// TODO: judges is hard coded.
+// 		if (
+// 			((type === 'next' && ScheduleItem.startTime > now) ||
+// 				(type === 'current' &&
+// 					ScheduleItem.startTime + JUDGING_LENGTH > now &&
+// 					ScheduleItem.startTime < now)) &&
+// 			ScheduleItem['judges'].map(person => person.id).includes(userID)
+// 		) {
+// 			myScheduleItem = ScheduleItem;
+// 			return true;
+// 		}
+// 	});
+// 	return myScheduleItem;
+// }
 
 export default function Dashboard() {
 	// TODO: trap state page

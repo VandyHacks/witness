@@ -49,29 +49,29 @@ export type ScheduleData = {
 	zoomURL: string;
 };
 
-const mockSchedule: ScheduleData[] = [];
-let timestamp = new Date().getTime() - 3.6e6;
-while (mockTeams.length > 0) {
-	const teamsInThisTimeSlot = Math.floor(1 + Math.random() * 5);
-	const judges = [...mockJudges];
-	for (let i = 0; i < teamsInThisTimeSlot; i++) {
-		const team = mockTeams.pop();
-		if (team) {
-			mockSchedule.push({
-				startTime: timestamp,
-				projectName: team.projectName,
-				members: team.members,
-				// Yes it's ugly. Just picks a random set of 3 judges from the pool
-				judges: Array(3)
-					.fill(null)
-					.map(_ => judges.splice(Math.floor(Math.random() * judges.length), 1)[0]),
-				devpostURL: team.devpostURL,
-				zoomURL: mockZoomRooms[i],
-			});
-		}
-	}
-	timestamp += 600000;
-}
+// const mockSchedule: ScheduleData[] = [];
+// let timestamp = new Date().getTime() - 3.6e6;
+// while (mockTeams.length > 0) {
+// 	const teamsInThisTimeSlot = Math.floor(1 + Math.random() * 5);
+// 	const judges = [...mockJudges];
+// 	for (let i = 0; i < teamsInThisTimeSlot; i++) {
+// 		const team = mockTeams.pop();
+// 		if (team) {
+// 			mockSchedule.push({
+// 				startTime: timestamp,
+// 				projectName: team.projectName,
+// 				members: team.members,
+// 				// Yes it's ugly. Just picks a random set of 3 judges from the pool
+// 				judges: Array(3)
+// 					.fill(null)
+// 					.map(_ => judges.splice(Math.floor(Math.random() * judges.length), 1)[0]),
+// 				devpostURL: team.devpostURL,
+// 				zoomURL: mockZoomRooms[i],
+// 			});
+// 		}
+// 	}
+// 	timestamp += 600000;
+// }
 
 // ================================================================================================
 const now = Date.now();
@@ -108,7 +108,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				data = await getHackerSchedule();
 				break;
 			default:
-				data = mockSchedule;
+				// TODO: lol this just placeholder
+				data = await getJudgeSchedule();
 		}
 		// Note: schedule data should be sorted by time.
 		return res.status(200).json(data);
