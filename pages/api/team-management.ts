@@ -18,9 +18,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		// Get the hacker's team if it exists. Otherwise yeet them to the team creation/join page.
 
 		// Uncomment this to force them to make team
-		// return res.status(409).send('Team not set');
+		return res.status(409).send('Team not set');
 		// Uncomment this to send them to team profile
-		return res.status(200).json(mockTeam);
+		// return res.status(200).json(mockTeam);
+	} else if (req.method === 'POST') {
+		// TODO: Handle specifically team creation or joining, i.e. adding the hacker to a team and back ye.
+		// ...
+		return res.status(200).send('Nice');
 	} else if (req.method === 'PATCH') {
 		return res.status(200).send('UPDATE TEAM!');
 	} else if (req.method === 'DELETE') {

@@ -35,7 +35,7 @@ function handleRequestFailure(message: string) {
 }
 
 async function handleSetupSubmit(formData: { teamName: string } | { joinCode: string }, mutate: ScopedMutator<any>) {
-	const res = await fetch('/api/team-setup', {
+	const res = await fetch('/api/team-management', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
