@@ -27,7 +27,7 @@ function handleSubmitFailure() {
 	});
 }
 
-async function onSubmit(formData: JudgingFormData, mutate: ScopedMutator<any>) {
+async function handleSubmit(formData: JudgingFormData, mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/judging-form', {
 		method: 'POST',
 		headers: {
@@ -103,7 +103,7 @@ export default function Forms() {
 			formSection = <Skeleton />;
 		} else {
 			// everything succeeded, show judging form
-			formSection = <JudgingForm formData={formData} onSubmit={formData => onSubmit(formData, mutate)} />;
+			formSection = <JudgingForm formData={formData} onSubmit={formData => handleSubmit(formData, mutate)} />;
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
