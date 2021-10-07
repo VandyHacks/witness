@@ -1,4 +1,4 @@
-import { Alert, Col, Divider, Row, Skeleton, Timeline } from 'antd';
+import { Alert, Button, Col, Divider, Row, Skeleton, Timeline } from 'antd';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AllDone, Current, UpNext } from '../components/scheduleItem';
@@ -9,6 +9,8 @@ import { ScheduleData } from './api/schedule';
 import { ResponseError } from '../types/types';
 import { signIn, useSession } from 'next-auth/client';
 import schedule from '../models/schedule';
+import Link from 'next/link';
+import ErrorMessage from '../components/errorMessage';
 
 // TODO: stub
 const userID = '0';
@@ -100,20 +102,10 @@ export default function Dashboard() {
 
 	const [session, loading] = useSession();
 	if (!loading && !session) return signIn();
-
 	let pageContent;
 	if (scheduleError) {
-		console.log('error:', scheduleError);
-		pageContent = (
-			<Alert
-				message={
-					scheduleError.status === 403
-						? '403: You are not permitted to access this content.'
-						: 'An unknown error has occured. Please try again or reach out to an organizer.'
-				}
-				type="error"
-			/>
-		);
+		console.error('Error:', scheduleError);
+		pageContent = <ErrorMessage status={scheduleError.status} />;
 	} else if (!scheduleData || loading) {
 		pageContent = <Skeleton />;
 	} else {
