@@ -1,9 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { customAlphabet } from 'nanoid';
 import Scores from '../../models/scores';
-// import Team from '../../models/team';
+import Team from '../../models/team';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/client';
 import { TeamProfile } from '../team';
+
+const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 7);
 
 const mockTeam = {
 	name: 'The Johnny Ives',
@@ -14,20 +17,56 @@ const mockTeam = {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<TeamProfile | string>) {
 	const session = await getSession({ req });
 	if (session?.userType !== 'HACKER') return res.status(403).send('Forbidden');
-	if (req.method === 'GET') {
-		// Get the hacker's team if it exists. Otherwise yeet them to the team creation/join page.
+	// TODO: add uniqueness validation try catch
+	switch (req.method) {
+		case 'GET':
+			const team = await Team.findOne({ members: { $in: [session.userID] } });
+			return res.status(200).send(team);
+		case 'POST': {
+			const { joinCode, teamName, devpost } = req.body;
+			// join team
+			if (joinCode) {
+				const team = await Team.findOne({ joinCode });
+				if (!team) return res.status(404).send('Team not found');
 
-		// Uncomment this to force them to make team
-		return res.status(409).send('Team not set');
-		// Uncomment this to send them to team profile
-		// return res.status(200).json(mockTeam);
-	} else if (req.method === 'POST') {
-		// TODO: Handle specifically team creation or joining, i.e. adding the hacker to a team and back ye.
-		// ...
-		return res.status(200).send('Nice');
-	} else if (req.method === 'PATCH') {
-		return res.status(200).send('UPDATE TEAM!');
-	} else if (req.method === 'DELETE') {
-		return res.status(200).send('REMOVE TEAM!');
-	} else return res.status(405).send('Method not supported brother');
+				team.members.push(session.userID);
+				await team.save();
+				return res.status(201).send(team);
+			} else if (teamName) {
+				// make team
+				const teamObj = {
+					name: teamName,
+					joinCode: nanoid(),
+					devpost,
+					members: [session.userID],
+				};
+				const team = new Team(teamObj);
+				await team.save();
+				res.status(201).send(team);
+			}
+			return res.status(400).send('Either joinCode or teamName required.');
+		}
+		case 'PATCH': {
+			const team = await Team.findOne({ members: { $in: [session.userID] } });
+			if (!team) return res.status(404).send('Team not found');
+
+			const { teamName, devpost } = req.body;
+			if (devpost) team.devpost = devpost;
+			if (teamName) team.teamName = teamName;
+
+			await team.save();
+			return res.status(200).send(team);
+		}
+
+		case 'DELETE': {
+			const { userID } = session;
+			let team = await Team.findOne({ members: { $in: [userID] } });
+			if (!team) return res.status(404).send('Team not found');
+			team.members = team.members.filter((id: unknown) => id !== userID);
+			await team.save();
+			return res.status(200).send(team);
+		}
+		default:
+			return res.status(405).send('Method not supported brother');
+	}
 }
