@@ -80,12 +80,7 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			title: 'Judges',
 			dataIndex: 'judges',
 			key: 'judges',
-			render: (judges: string[]) =>
-				judges.map(judge => (
-					<Tag color="green" key={judge + key++}>
-						{judge}
-					</Tag>
-				)),
+			render: (judges: string[]) => judges.map(judge => <Tag key={judge + key++}>{judge}</Tag>),
 		},
 		{
 			title: 'Room',

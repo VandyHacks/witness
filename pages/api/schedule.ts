@@ -74,15 +74,14 @@ while (mockTeams.length > 0) {
 }
 
 // ================================================================================================
-const now = 1633570605000;
-const myJudge = faker.name.findName();
+const now = Date.now();
 const data = Array(20)
 	.fill(null)
 	.map((_, i) => ({
 		startTime: now + 5000 * i,
 		projectName: `Some Project ${i}`,
 		members: ['member1', 'member2', 'member3', 'member4'],
-		judges: [myJudge, 'someOtherJudge', 'someOtherJudge'],
+		judges: ['myJudge', 'someOtherJudge', 'someOtherJudge'],
 		devpostURL: `https://example.com/devpost-${i}`,
 		zoomURL: `https://example.com/zoom-${i}`,
 	}));
