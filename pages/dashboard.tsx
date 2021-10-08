@@ -6,7 +6,7 @@ import Outline from '../components/outline';
 import OrganizerSchedule, { JudgeSchedule } from '../components/schedule';
 import Cards from '../components/cards';
 import { ScheduleData } from './api/schedule';
-import { ResponseError } from '../types/types';
+import { ResponseError } from '../types/database';
 import { signIn, useSession } from 'next-auth/client';
 import schedule from '../models/schedule';
 import Link from 'next/link';

@@ -1,7 +1,7 @@
-const faker = require('faker');
+import faker from 'faker';
 const { ObjectID } = require('mongodb');
-import mongoose, { AnyKeys } from 'mongoose';
-import type { UserData, TeamData, ScoreData, ScheduleData } from '../types/types';
+import mongoose from 'mongoose';
+import type { UserData, TeamData, ScoreData, ScheduleData } from '../types/database';
 import { config as dotenvConfig } from 'dotenv';
 import dbConnect from '../middleware/database';
 
@@ -44,7 +44,7 @@ function generateUser(userType: string): UserData {
 	};
 }
 
-function generateTeam(members: UserData[]): TeamData {
+function generateTeam(members: mongoose.Schema.Types.ObjectId[]): TeamData {
 	return {
 		_id: new ObjectID(),
 		name: faker.company.companyName(),
@@ -82,7 +82,10 @@ async function populateDatabase() {
 	}
 
 	const you = await User.findOneAndUpdate({ email: EMAIL }, { userType: USER_TYPE });
-
+	if (!you) {
+		console.error('Provided user email does not exist in database. Make sure you log in first.');
+		process.exit(0);
+	}
 	// make all judges and hackers
 	console.log('Generating hackers and judges...');
 	const judges = Array(parseInt(NUM_JUDGES || '0') - 1)
@@ -107,7 +110,7 @@ async function populateDatabase() {
 	const hackersCopy = hackers.slice();
 	while (hackersCopy.length > 0) {
 		const members = hackersCopy.splice(0, Math.floor(Math.random() * 4 + 1));
-		const team = generateTeam(members);
+		const team = generateTeam(members.map(member => member._id));
 		members.forEach((_, i, arr) => (arr[i].team = team._id));
 		teams.push(team);
 	}
@@ -132,7 +135,12 @@ async function populateDatabase() {
 				// Takes a random subset of judges (without replacement)
 				judges: Array(3)
 					.fill(null)
-					.map(_ => judgesCopy.splice(Math.floor(Math.random() * judgesCopy.length), 1)[0]._id),
+					.map(_ => {
+						console.log('JUDGES COPY:', judgesCopy);
+						const yes = judgesCopy.splice(Math.floor(Math.random() * judgesCopy.length), 1);
+						console.log('YES:', yes);
+						return yes[0]._id;
+					}),
 				zoom: rooms[i],
 				time: new Date(timestamp),
 			});

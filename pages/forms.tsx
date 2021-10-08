@@ -9,7 +9,7 @@ import { JudgingFormData } from './api/judging-form';
 import { TeamsData } from './api/teams';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
-import { ResponseError } from '../types/types';
+import { ResponseError } from '../types/database';
 import ErrorMessage from '../components/errorMessage';
 
 function handleSubmitSuccess() {

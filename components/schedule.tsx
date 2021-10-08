@@ -1,11 +1,11 @@
 import { Space, Table, Collapse, Tag, Switch, Skeleton, Button, List, Popconfirm, notification, Select } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ScheduleData } from '../pages/api/schedule';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import useSWR from 'swr';
-import { ResponseError } from '../types/types';
+import { ResponseError } from '../types/database';
 import { TeamsData } from '../pages/api/team-select';
+import { ScheduleDisplay } from '../types/client';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -16,13 +16,12 @@ const NUM_ROOMS = '5';
 // const { Link } = Typography;
 
 interface ScheduleProps {
-	data: ScheduleData[];
+	data: ScheduleDisplay[];
 	cutoffIndex?: number;
-	// onScheduleAdvance: () => void;
 }
 
-// Data should include everything in ScheduleData except for startTime and zoomURL
-function TableCell(data: ScheduleData | null) {
+// Data should include everything in ScheduleDisplay except for startTime and zoomURL
+function TableCell(data: ScheduleDisplay | null) {
 	return data ? (
 		<Space direction="vertical">
 			<Collapse ghost>
@@ -54,7 +53,7 @@ function TableCell(data: ScheduleData | null) {
 	) : null;
 }
 
-// function useStickyState(defaultValue: ScheduleData[], key: string) {
+// function useStickyState(defaultValue: ScheduleDisplay[], key: string) {
 // 	const [value, setValue] = useState(defaultValue);
 
 // 	useEffect(() => {
@@ -123,7 +122,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as ScheduleData[];
+		return (await res.json()) as ScheduleDisplay[];
 	});
 
 	const { data: teams, error: teamsError } = useSWR('/api/users', async url => {
@@ -161,7 +160,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				render:
 					editingState === EditingStates.NotEditing
 						? TableCell
-						: (data: ScheduleData | null) => {
+						: (data: ScheduleDisplay | null) => {
 								// console.log('TEAMS:', teams);
 								return (
 									<Space direction="vertical" style={{ width: '100%' }}>
@@ -288,7 +287,7 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			dataIndex: 'time',
 			key: 'time',
 			width: 100,
-			render: (timestamp: number) => DateTime.fromMillis(timestamp).toLocaleString(DateTime.TIME_SIMPLE),
+			render: (date: string) => DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE),
 		},
 		{
 			title: 'Project',
@@ -323,12 +322,13 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			),
 		},
 	];
+	console.log('HEY DATA:', data);
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
-		time: item.startTime,
-		project: { name: item.projectName, link: new URL(item.devpostURL) },
-		teamMembers: item.members,
-		judges: item.judges,
-		room: item.zoomURL,
+		time: item.time,
+		project: { name: item.teamName, link: new URL(item.devpost) },
+		teamMembers: item.memberNames,
+		judges: item.judgeNames,
+		room: item.zoom,
 	}));
 	return (
 		<Table

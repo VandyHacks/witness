@@ -1,7 +1,4 @@
-import mongoose from 'mongoose';
-import { UserSchema } from './user';
-
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from 'mongoose';
 
 const TeamSchema = new Schema(
 	{
@@ -20,11 +17,11 @@ const TeamSchema = new Schema(
 			required: true,
 		},
 		members: {
-			type: [UserSchema],
+			type: [Schema.Types.ObjectId],
 			required: true,
 			validate: {
 				// check team size
-				validator: (arr: Array<typeof UserSchema>) => arr.length <= 4,
+				validator: (arr: Array<Schema.Types.ObjectId>) => arr.length <= 4,
 				message: 'Max team size is 4 members.',
 			},
 		},

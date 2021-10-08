@@ -22,7 +22,7 @@ import ErrorMessage from '../components/errorMessage';
 import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import team from '../models/team';
-import { ResponseError } from '../types/types';
+import { ResponseError } from '../types/database';
 const { Panel } = Collapse;
 
 // TODO: this is just a monolithic file, need to refactor
@@ -74,8 +74,7 @@ function TeamCard(props: TeamCardProps) {
 						key={field.label}
 						label={field.label}
 						name={field.name}
-						rules={[{ required: true, message: 'This field is required.' }]}
-					>
+						rules={[{ required: true, message: 'This field is required.' }]}>
 						<Input />
 					</Form.Item>
 				))}
@@ -257,7 +256,7 @@ export default function Team() {
 			throw error;
 		}
 		const { members, ...rest } = await res.json();
-		
+
 		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
 	});
 

@@ -29,7 +29,7 @@ export interface TeamData {
 	name: string;
 	joinCode: string;
 	devpost: string;
-	members: UserData[];
+	members: mongoose.Schema.Types.ObjectId[];
 	scores: mongoose.Schema.Types.ObjectId[];
 }
 
