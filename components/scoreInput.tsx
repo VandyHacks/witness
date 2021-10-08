@@ -15,6 +15,7 @@ export default function ScoreInput(props: ScoreInputProps) {
 			</Col>
 			<Col span={4}>
 				<InputNumber
+					required
 					min={min}
 					max={max}
 					value={value}
