@@ -16,6 +16,7 @@ async function getJudgeSchedule(userId: string): Promise<ScheduleDisplay[]> {
 			return {
 				time: assignment.time,
 				teamName: assignment.team.name,
+				teamId: assignment.team._id.toString(),
 				memberNames: assignment.team.members.map((member: any) => member.name),
 				judgeNames: assignment.judges.map((judge: any) => judge.name),
 				devpost: assignment.team.devpost,
