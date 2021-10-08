@@ -1,7 +1,7 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Select, Space, Row } from 'antd';
 import { Dispatch, SetStateAction } from 'react';
-import { TeamsData } from '../pages/api/team-select';
+import { TeamsData } from '../pages/api/teams';
 const { Option, OptGroup } = Select;
 
 interface TeamSelectProps {
@@ -26,21 +26,20 @@ export default function TeamSelect(props: TeamSelectProps) {
 			<Select
 				value={currentTeamID ? currentTeamID : 'Select a team'}
 				style={{ width: 200 }}
-				onChange={handleChange}
-			>
+				onChange={handleChange}>
 				<OptGroup label="My Teams">
 					{teamsData
 						.filter(team => team.isMine)
 						.map(team => (
 							<Option value={team.teamID} key={team.teamID}>
-								{team.judgingReceived ? withCheckMark(team.projectName) : team.projectName}
+								{team.haveJudged ? withCheckMark(team.teamName) : team.teamName}
 							</Option>
 						))}
 				</OptGroup>
 				<OptGroup label="All Teams">
 					{teamsData.map(team => (
 						<Option value={team.teamID} key={`${team.teamID}ALL`}>
-							{team.judgingReceived ? withCheckMark(team.projectName) : team.projectName}
+							{team.haveJudged ? withCheckMark(team.teamName) : team.teamName}
 						</Option>
 					))}
 				</OptGroup>

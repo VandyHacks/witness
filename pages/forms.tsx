@@ -6,7 +6,7 @@ import TeamSelect from '../components/teamSelect';
 import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
-import { TeamsData } from './api/team-select';
+import { TeamsData } from './api/teams';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/types';
@@ -53,7 +53,7 @@ export default function Forms() {
 	}, [idFromQueryString]);
 
 	// Get data for teams dropdown
-	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
+	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of teams.') as ResponseError;
