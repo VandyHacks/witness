@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import Scores from '../../models/scores';
-// import Team from '../../models/team';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/client';
+import Scores from '../../models/scores';
+import Team from '../../models/team';
 
 export interface JudgingFormData {
 	technicalAbility: number;
@@ -15,21 +15,40 @@ export interface JudgingFormData {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | string>) {
-	if (req.method === 'GET') {
-		const teamID = req.query.id;
-		const session = await getSession({ req });
-		if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');
+	const teamID = req.query.id;
+	const session = await getSession({ req });
+	if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');
+	const judgeID = session.userID;
+	await dbConnect();
 
-		const judgeID = session.userID;
+	switch (req.method) {
+		case 'GET': {
+			const scores = await Scores.findOne({ team: teamID, judge: judgeID });
+			if (!scores) return res.status(404).send('No scores found for specified team');
 
-		await dbConnect();
+			return res.status(200).json(scores);
+		}
+		case 'POST': {
+			const scoresDoc = new Scores({ team: teamID, judge: judgeID, ...req.body });
+			const scores = await scoresDoc.save();
 
-		const scores = await Scores.findOne({ team: teamID, judge: judgeID });
-		if (!scores) return res.status(404).send('No scores found for specified team');
+			const team = await Team.findById(teamID);
+			team.scores = scores.id;
 
-		return res.status(200).json(scores);
+			await team.save();
+
+			return res.status(201).send(scores);
+		}
+		case 'PATCH': {
+			const scores = await Scores.findOneAndUpdate(
+				{ team: teamID, judge: judgeID },
+				{ team: teamID, judge: judgeID, ...req.body }
+			);
+			return res.status(scores ? 409 : 200).send(scores);
+		}
+		default:
+			return res.status(405).send('Method not supported brother');
 	}
-	return res.status(405).send('Method not supported brother');
 
 	// 	if (teamID == '0') {
 	// 		res.status(200).json({

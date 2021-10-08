@@ -10,6 +10,7 @@ import { TeamsData } from './api/team-select';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/types';
+import ErrorMessage from '../components/errorMessage';
 
 function handleSubmitSuccess() {
 	notification['success']({
@@ -26,7 +27,7 @@ function handleSubmitFailure() {
 	});
 }
 
-async function onSubmit(formData: JudgingFormData, mutate: ScopedMutator<any>) {
+async function handleSubmit(formData: JudgingFormData, mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/judging-form', {
 		method: 'POST',
 		headers: {
@@ -84,16 +85,7 @@ export default function Forms() {
 	let pageContent;
 	if (teamsError) {
 		// if error fetching teams, everything dies
-		pageContent = (
-			<Alert
-				message={
-					teamsError.status === 403
-						? '403: You are not permitted to access this content.'
-						: 'An unknown error has occured. Please try again or reach out to an organizer.'
-				}
-				type="error"
-			/>
-		);
+		pageContent = <ErrorMessage status={teamsError.status} />;
 	} else if (!teamsData) {
 		// otherwise, wait for teamsData to load
 		pageContent = <Skeleton />;
@@ -105,22 +97,13 @@ export default function Forms() {
 			formSection = <Empty description="No team selected." />;
 		} else if (formError) {
 			// if team selected but error in getting team's form, show error
-			formSection = (
-				<Alert
-					message={
-						formError.status === 403
-							? '403: You are not permitted to access this content.'
-							: 'Cannot get form for selected team. Please try again or reach out to an organizer.'
-					}
-					type="error"
-				/>
-			);
+			formSection = <ErrorMessage status={formError.status} />;
 		} else if (!formData) {
 			// team selected without error, wait for loading
 			formSection = <Skeleton />;
 		} else {
 			// everything succeeded, show judging form
-			formSection = <JudgingForm formData={formData} onSubmit={formData => onSubmit(formData, mutate)} />;
+			formSection = <JudgingForm formData={formData} onSubmit={formData => handleSubmit(formData, mutate)} />;
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
