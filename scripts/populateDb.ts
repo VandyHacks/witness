@@ -135,12 +135,7 @@ async function populateDatabase() {
 				// Takes a random subset of judges (without replacement)
 				judges: Array(3)
 					.fill(null)
-					.map(_ => {
-						console.log('JUDGES COPY:', judgesCopy);
-						const yes = judgesCopy.splice(Math.floor(Math.random() * judgesCopy.length), 1);
-						console.log('YES:', yes);
-						return yes[0]._id;
-					}),
+					.map(_ => judgesCopy.splice(Math.floor(Math.random() * judgesCopy.length), 1)[0]._id),
 				zoom: rooms[i],
 				time: new Date(timestamp),
 			});
