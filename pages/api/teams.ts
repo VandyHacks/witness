@@ -5,6 +5,7 @@ import Team from '../../models/team';
 import User from '../../models/user';
 import Schedule from '../../models/schedule';
 import Scores from '../../models/scores';
+import { ObjectId } from 'mongodb';
 
 export interface TeamsData {
 	teamID: string;
@@ -30,7 +31,6 @@ export default async function handler(
 	if (!['JUDGE', 'ORGANIZER'].includes(session?.userType as string)) return res.status(403).send('Forbidden');
 	if (req.method === 'GET') {
 		const teams = await Team.find();
-		console.log('teams: ', teams);
 		switch (session!.userType) {
 			case 'ORGANIZER': {
 				return res.status(200).send(teams);
@@ -42,8 +42,10 @@ export default async function handler(
 				// map team ID to array of judges
 				// this answers if the team has been judged by the judge or not
 				scores.forEach(s => {
-					if (scoresMap.has(s.team)) scoresMap.get(s.team).push(s.judge);
-					else scoresMap.set(s.team, [s.judge]);
+					const teamId = s.team.toString();
+					const judgeId = s.judge.toString();
+					if (scoresMap.has(teamId)) scoresMap.get(teamId).push(judgeId);
+					else scoresMap.set(teamId, [judgeId]);
 				});
 
 				const schedule = await Schedule.find();
@@ -51,15 +53,18 @@ export default async function handler(
 				// map teamID to array of judges as well
 				// this answers if the team has been assigned to a judge
 				schedule.forEach(s => {
-					scheduleMap.set(s.team, s.judges);
+					scheduleMap.set(
+						s.team.toString(),
+						s.judges.map((judge: ObjectId) => judge.toString())
+					);
 				});
 
 				const teamsData = teams.map(team => {
 					return {
 						teamID: team.id,
 						teamName: team.name,
-						isMine: scheduleMap.get(team.id)?.includes(judgeID),
-						haveJudged: scoresMap.get(team.id)?.includes(judgeID),
+						isMine: scheduleMap.get(team.id.toString())?.includes(judgeID),
+						haveJudged: scoresMap.get(team.id.toString())?.includes(judgeID),
 					};
 				});
 

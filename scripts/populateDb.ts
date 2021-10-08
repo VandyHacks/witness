@@ -64,7 +64,7 @@ function generateScore(team: mongoose.Schema.Types.ObjectId, judge: mongoose.Sch
 		creativity: faker.datatype.number(7),
 		utility: faker.datatype.number(7),
 		presentation: faker.datatype.number(7),
-		wowfactor: faker.datatype.number(7),
+		wowFactor: faker.datatype.number(7),
 		comments: faker.lorem.sentence(),
 		feedback: faker.lorem.sentence(),
 	};

@@ -41,7 +41,7 @@ export interface ScoreData {
 	creativity: number;
 	utility: number;
 	presentation: number;
-	wowfactor: number;
+	wowFactor: number;
 	comments: string;
 	feedback: string;
 }
