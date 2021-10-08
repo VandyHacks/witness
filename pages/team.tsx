@@ -21,6 +21,7 @@ import { ScopedMutator } from 'swr/dist/types';
 import ErrorMessage from '../components/errorMessage';
 import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
+import team from '../models/team';
 import { ResponseError } from '../types/types';
 const { Panel } = Collapse;
 
@@ -73,7 +74,8 @@ function TeamCard(props: TeamCardProps) {
 						key={field.label}
 						label={field.label}
 						name={field.name}
-						rules={[{ required: true, message: 'This field is required.' }]}>
+						rules={[{ required: true, message: 'This field is required.' }]}
+					>
 						<Input />
 					</Form.Item>
 				))}
@@ -257,7 +259,9 @@ export default function Team() {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as TeamProfile;
+		const { members, ...rest } = await res.json();
+		
+		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
 	});
 
 	const [session, loading] = useSession();
