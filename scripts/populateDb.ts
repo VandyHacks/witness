@@ -111,7 +111,7 @@ async function populateDatabase() {
 	while (hackersCopy.length > 0) {
 		const members = hackersCopy.splice(0, Math.floor(Math.random() * 4 + 1));
 		const team = generateTeam(members.map(member => member._id));
-		members.forEach((_, i, arr) => (arr[i].team = team._id));
+		members.forEach(member => (member.team = team._id));
 		teams.push(team);
 	}
 	console.log('Creating schedule...');
@@ -142,6 +142,7 @@ async function populateDatabase() {
 		}
 		timestamp += parseInt(JUDGING_LENGTH || '0');
 	}
+
 	// Generate scores
 	console.log('Scoring...');
 	const scores = schedule.flatMap(item => item.judges.map(judge => generateScore(item.team, judge)));
@@ -162,6 +163,7 @@ async function populateDatabase() {
 	console.log(`Users: ${usersCount}`);
 	console.log(`Scores: ${scoresCount}`);
 	console.log(`Schedules: ${schedulesCount}`);
+
 	process.exit(0);
 }
 

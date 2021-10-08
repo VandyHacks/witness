@@ -1,13 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
 import Schedule from '../../models/schedule';
+import User from '../../models/user';
+
 import { ScheduleDisplay } from '../../types/client';
 
 async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
-	// return Promise.resolve(data);
 	const schedule = await Schedule.find({ judges: userID })
 		.sort('time')
-		.populate({ path: 'team', populate: { path: 'members' } })
+		.populate({ path: 'team', populate: { path: 'members', model: User } })
 		.populate('judges')
 		.lean();
 	if (schedule) {
@@ -15,7 +16,7 @@ async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
 			return {
 				time: assignment.time,
 				teamName: assignment.team.name,
-				memberNames: assignment.team.members.map((member: any) => member.name), // TODO: if populate works then chang the schema.
+				memberNames: assignment.team.members.map((member: any) => member.name),
 				judgeNames: assignment.judges.map((judge: any) => judge.name),
 				devpost: assignment.team.devpost,
 				zoom: assignment.zoom,
@@ -36,7 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	else if (!session.userType) return res.status(418).send('No user type');
 	const userID = session.userID as string;
 
-	await import('../../models/team');
 	if (req.method === 'GET') {
 		console.log('hey user type:', session.userType);
 		let schedule;

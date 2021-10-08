@@ -21,7 +21,7 @@ export const UserSchema = new Schema(
 			enum: ['HACKER', 'JUDGE', 'ORGANIZER'],
 		},
 		team: {
-			type: { type: Schema.Types.ObjectId, ref: 'Team' },
+			type: Schema.Types.ObjectId,
 		},
 	},
 	{
