@@ -3,9 +3,9 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/client';
 import Scores from '../../models/scores';
 import Team from '../../models/team';
-import { ScoreFormFields } from '../../types/client';
+import { JudgingFormFields } from '../../types/client';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ScoreFormFields | string>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormFields | string>) {
 	const teamID = req.query.id;
 	const session = await getSession({ req });
 	if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');

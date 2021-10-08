@@ -5,8 +5,8 @@ import User from '../../models/user';
 
 import { ScheduleDisplay } from '../../types/client';
 
-async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
-	const schedule = await Schedule.find({ judges: userID })
+async function getJudgeSchedule(userId: string): Promise<ScheduleDisplay[]> {
+	const schedule = await Schedule.find({ judges: userId })
 		.sort('time')
 		.populate({ path: 'team', populate: { path: 'members', model: User } })
 		.populate('judges')
@@ -27,8 +27,8 @@ async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
 	}
 }
 
-async function getHackerSchedule(): Promise<ScheduleDisplay[]> {
-	return Promise.resolve([data[3]]);
+async function getHackerSchedule(userId: string): Promise<ScheduleDisplay[]> {
+	return Promise.resolve([]);
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<ScheduleDisplay[] | string>) {
@@ -36,9 +36,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	if (!session) return res.status(403).send('Forbidden');
 	else if (!session.userType) return res.status(418).send('No user type');
 	const userID = session.userID as string;
-
+	await import('../../models/team');
 	if (req.method === 'GET') {
-		console.log('hey user type:', session.userType);
+		console.log('user type:', session.userType);
 		let schedule;
 		switch (session.userType) {
 			case 'JUDGE':

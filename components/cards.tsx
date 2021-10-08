@@ -3,49 +3,48 @@ import { Row, Col } from 'antd';
 import { Card } from 'antd';
 import styles from '../styles/Dashboard.module.css';
 import { DateTime } from 'luxon';
-import { ScheduleData } from '../pages/api/schedule';
-
-type ScheduleItemProps = ScheduleData & {
+import { ScheduleDisplay } from '../types/client';
+interface ExtendedScheduleDisplay extends ScheduleDisplay {
 	title: string;
 	headStyle?: { backgroundColor: string };
-};
+}
 
-function ScheduleCard(props: ScheduleItemProps) {
+function ScheduleCard(props: ExtendedScheduleDisplay) {
 	return (
 		// TODO: make this nicer format
 		<Card title={props.title} type="inner" headStyle={props.headStyle}>
 			<div className={styles.ScheduleItem}>
-				<h1>{props.projectName}</h1>
+				<h1>{props.teamName}</h1>
 				<span>
 					<strong>When: </strong>
-					{DateTime.fromMillis(props.startTime).toLocaleString(DateTime.TIME_SIMPLE)}
+					{DateTime.fromISO(props.time).toLocaleString(DateTime.TIME_SIMPLE)}
 				</span>
 				<span>
 					<strong>Team: </strong>
 					<ul>
-						{props.members.map(member => (
-							<li key={member}>{member}</li>
+						{props.memberNames.map(name => (
+							<li key={name}>{name}</li>
 						))}
 					</ul>
 				</span>
 				<span>
 					<strong>Judges: </strong>
 					<ul>
-						{props.judges.map(judge => (
-							<li key={judge}>{judge}</li>
+						{props.judgeNames.map(name => (
+							<li key={name}>{name}</li>
 						))}
 					</ul>
 				</span>
 				<span>
 					<strong>Devpost: </strong>
-					<a href={props.devpostURL.toString()} target="_blank" rel="noreferrer">
-						{props.devpostURL.toString()}
+					<a href={props.devpost.toString()} target="_blank" rel="noreferrer">
+						{props.devpost.toString()}
 					</a>
 				</span>
 				<span>
 					<strong>Zoom: </strong>
-					<a href={props.zoomURL.toString()} target="_blank" rel="noreferrer">
-						{props.zoomURL.toString()}
+					<a href={props.zoom.toString()} target="_blank" rel="noreferrer">
+						{props.zoom.toString()}
 					</a>
 				</span>
 			</div>
@@ -53,12 +52,12 @@ function ScheduleCard(props: ScheduleItemProps) {
 	);
 }
 
-function Current(props: ScheduleData | any) {
-	return <ScheduleCard {...(props as ScheduleData)} headStyle={{ backgroundColor: '#87e8de' }} title="Current" />;
+function Current(props: ScheduleDisplay | any) {
+	return <ScheduleCard {...(props as ScheduleDisplay)} headStyle={{ backgroundColor: '#87e8de' }} title="Current" />;
 }
 
-function UpNext(props: ScheduleData | any) {
-	return <ScheduleCard {...(props as ScheduleData)} headStyle={{ backgroundColor: '#ffe58f' }} title="Next Up" />;
+function UpNext(props: ScheduleDisplay | any) {
+	return <ScheduleCard {...(props as ScheduleDisplay)} headStyle={{ backgroundColor: '#ffe58f' }} title="Next Up" />;
 }
 
 function AllDone() {
@@ -69,8 +68,8 @@ function AllDone() {
 	);
 }
 interface CardsProps {
-	current: ScheduleData | undefined;
-	next: ScheduleData | undefined;
+	current: ScheduleDisplay | undefined;
+	next: ScheduleDisplay | undefined;
 }
 
 export default function Cards({ current, next }: CardsProps) {

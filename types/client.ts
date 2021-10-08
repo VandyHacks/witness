@@ -7,7 +7,7 @@ export interface ScheduleDisplay {
 	zoom: string;
 }
 
-export interface ScoreFormFields {
+export interface JudgingFormFields {
 	technicalAbility: number;
 	creativity: number;
 	utility: number;

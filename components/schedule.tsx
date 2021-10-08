@@ -4,7 +4,6 @@ import { DateTime } from 'luxon';
 import Link from 'next/link';
 import useSWR from 'swr';
 import { ResponseError } from '../types/database';
-import { TeamsData } from '../pages/api/team-select';
 import { ScheduleDisplay } from '../types/client';
 
 const { Panel } = Collapse;
@@ -25,16 +24,16 @@ function TableCell(data: ScheduleDisplay | null) {
 	return data ? (
 		<Space direction="vertical">
 			<Collapse ghost>
-				<Panel header={<u>{data.projectName}</u>} key="info">
+				<Panel header={<u>{data.teamName}</u>} key="info">
 					<ul>
-						<li key={`${data.projectName}-hackers`}>
+						<li key={`${data.teamName}-hackers`}>
 							<span>Hackers: </span>
-							{data.members.map(member => (
-								<Tag key={member}>{member}</Tag>
+							{data.memberNames.map(name => (
+								<Tag key={name}>{name}</Tag>
 							))}
 						</li>
-						<li key={`${data.projectName}-devpost`}>
-							Devpost <Link href={data.devpostURL}>link</Link>
+						<li key={`${data.teamName}-devpost`}>
+							Devpost <Link href={data.devpost}>link</Link>
 						</li>
 					</ul>
 				</Panel>
@@ -43,8 +42,8 @@ function TableCell(data: ScheduleDisplay | null) {
 				<ul>
 					<li>
 						<span>Judges: </span>
-						{data.judges.map(judge => (
-							<Tag key={judge}>{judge}</Tag>
+						{data.judgeNames.map(name => (
+							<Tag key={name}>{name}</Tag>
 						))}
 					</li>
 				</ul>
@@ -70,38 +69,38 @@ function TableCell(data: ScheduleDisplay | null) {
 
 // 	return { value, setValue };
 // }
-function executeFunction(instruction, setter) {
-	setter();
-}
+// function executeFunction(instruction, setter) {
+// 	setter();
+// }
 
-function Instruction() {
-	return <span></span>;
-}
-function ScheduleManager(onStart, onSubmit, onCancel) {
-	// const
+// function Instruction() {
+// 	return <span></span>;
+// }
+// function ScheduleManager(onStart, onSubmit, onCancel) {
+// const
 
-	return <Button>Hello</Button>;
-	// const [instructions, setInstructions] = useState([]);
-	// const data = ['hello', 'hello1', 'hello2'];
-	// return (
-	// 	<>
-	// 		<Space direction="vertical" style={{ width: '100%' }}>
-	// 			<List
-	// 				header={<div>Header</div>}
-	// 				footer={<div>Footer</div>}
-	// 				bordered
-	// 				dataSource={data}
-	// 				renderItem={item => <List.Item>{item}</List.Item>}
-	// 			/>
-	// 			<Button>Hello</Button>
-	// 		</Space>
-	// 	</>
-	// );
-}
+// return <Button>Hello</Button>;
+// const [instructions, setInstructions] = useState([]);
+// const data = ['hello', 'hello1', 'hello2'];
+// return (
+// 	<>
+// 		<Space direction="vertical" style={{ width: '100%' }}>
+// 			<List
+// 				header={<div>Header</div>}
+// 				footer={<div>Footer</div>}
+// 				bordered
+// 				dataSource={data}
+// 				renderItem={item => <List.Item>{item}</List.Item>}
+// 			/>
+// 			<Button>Hello</Button>
+// 		</Space>
+// 	</>
+// );
+// }
 
-function handleSubmitEdit() {
-	// return true;
-}
+// function handleSubmitEdit() {
+// return true;
+// }
 
 enum EditingStates {
 	NotEditing = 'NOT_EDITING',
@@ -132,7 +131,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as TeamsData[];
+		return (await res.json()) as ScheduleDisplay[];
 	});
 	const [editingState, setEditingState] = useState(EditingStates.NotEditing);
 
@@ -198,12 +197,12 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
 		const dataAsMap = new Map();
-		workingData.forEach(judgingSession => {
-			const { startTime, zoomURL } = judgingSession;
-			if (!dataAsMap.has(startTime)) {
-				dataAsMap.set(startTime, Object.fromEntries(rooms.map(room => [room, null])));
+		workingData.forEach(assignment => {
+			const { time, zoom } = assignment;
+			if (!dataAsMap.has(time)) {
+				dataAsMap.set(time, Object.fromEntries(rooms.map(room => [room, null])));
 			}
-			dataAsMap.get(startTime)[zoomURL] = judgingSession;
+			dataAsMap.get(time)[zoom] = assignment;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],

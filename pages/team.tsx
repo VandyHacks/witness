@@ -100,7 +100,7 @@ async function handleEditSubmit(formData: { teamName: string } | { devpost: stri
 		mutate('/api/team-management');
 	} else handleRequestFailure(await res.text());
 }
-d;
+
 async function handleLeaveTeam(mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/team-management', {
 		method: 'DELETE',

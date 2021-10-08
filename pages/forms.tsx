@@ -5,7 +5,7 @@ import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
-import { ScoreFormFields } from '../types/client';
+import { JudgingFormFields } from '../types/client';
 import { TeamsData } from './api/teams';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
@@ -27,7 +27,7 @@ function handleSubmitFailure() {
 	});
 }
 
-async function handleSubmit(formData: ScoreFormFields, mutate: ScopedMutator<any>, teamId: string) {
+async function handleSubmit(formData: JudgingFormFields, mutate: ScopedMutator<any>, teamId: string) {
 	const res = await fetch(`/api/judging-form?id=${teamId}`, {
 		method: 'POST',
 		headers: {
@@ -75,7 +75,7 @@ export default function Forms() {
 				error.status = res.status;
 				throw error;
 			}
-			return (await res.json()) as ScoreFormFields;
+			return (await res.json()) as JudgingFormFields;
 		}
 	);
 	// Get mutate function to reload teams list with updated data on form submission.
