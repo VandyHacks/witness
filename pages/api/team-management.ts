@@ -72,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			team.members = team.members.filter((member: { id: string; }) => member.id !== userID);
 			if (!team.members.length) {
 				await Team.deleteOne({ "members.id": session.userID });
-				return res.status(200).send()
+				return res.status(200).send(`Team ${team.name} deleted successfully.`);
 			}
 			await team.save();
 			return res.status(200).send(team);
