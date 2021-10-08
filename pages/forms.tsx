@@ -6,7 +6,7 @@ import TeamSelect from '../components/teamSelect';
 import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { JudgingFormData } from './api/judging-form';
-import { TeamsData } from './api/team-select';
+import { TeamsData } from './api/teams';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/types';
