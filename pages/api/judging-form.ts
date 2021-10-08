@@ -17,7 +17,7 @@ export interface JudgingFormData {
 export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | string>) {
 	const teamID = req.query.id;
 	const session = await getSession({ req });
-	if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');
+	// if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');
 	const judgeID = session.userID;
 	await dbConnect();
 

@@ -162,10 +162,19 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 					editingState === EditingStates.NotEditing
 						? TableCell
 						: (data: ScheduleData | null) => {
+								// console.log('TEAMS:', teams);
 								return (
 									<Space direction="vertical" style={{ width: '100%' }}>
 										Team:
-										<Select placeholder="Please select favourite colors" style={{ width: '100%' }}>
+										<Select
+											placeholder="Please select favourite colors"
+											style={{ width: '100%' }}
+											onChange={stuff => console.log(stuff)}>
+											{/* {teams!.map(team => (
+												<Option key={team.teamID} value={team.projectName}>
+													{team.projectName}
+												</Option>
+											))} */}
 											<Option value="china">China</Option>
 											<Option value="india">India</Option>
 											<Option value="usa">USA</Option>
@@ -174,7 +183,8 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 										<Select
 											mode="multiple"
 											placeholder="Please select favourite colors"
-											style={{ width: '100%' }}>
+											style={{ width: '100%' }}
+											onChange={stuff => console.log(stuff)}>
 											<Option value="china">China</Option>
 											<Option value="india">India</Option>
 											<Option value="usa">USA</Option>
