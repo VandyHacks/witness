@@ -22,7 +22,7 @@ import ErrorMessage from '../components/errorMessage';
 import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import team from '../models/team';
-import { ResponseError } from '../types/types';
+import { ResponseError } from '../types/database';
 const { Panel } = Collapse;
 
 // TODO: this is just a monolithic file, need to refactor
@@ -74,8 +74,7 @@ function TeamCard(props: TeamCardProps) {
 						key={field.label}
 						label={field.label}
 						name={field.name}
-						rules={[{ required: true, message: 'This field is required.' }]}
-					>
+						rules={[{ required: true, message: 'This field is required.' }]}>
 						<Input />
 					</Form.Item>
 				))}
@@ -124,8 +123,7 @@ function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator<any>) => Pro
 			placement="right"
 			okText="Yes"
 			cancelText="No"
-			onConfirm={() => onLeave(mutate)}
-		>
+			onConfirm={() => onLeave(mutate)}>
 			<Button type="primary" danger>
 				Leave Team
 			</Button>
@@ -177,8 +175,7 @@ function TeamManager(props: TeamManagerProps) {
 						<Form.Item
 							name="teamName"
 							label="New Team Name"
-							rules={[{ required: true, message: 'Please enter a team name.' }]}
-						>
+							rules={[{ required: true, message: 'Please enter a team name.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
@@ -191,8 +188,7 @@ function TeamManager(props: TeamManagerProps) {
 						<Form.Item
 							name="devpost"
 							label="New Devpost URL"
-							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}
-						>
+							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
@@ -260,7 +256,7 @@ export default function Team() {
 			throw error;
 		}
 		const { members, ...rest } = await res.json();
-		
+
 		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
 	});
 

@@ -3,18 +3,9 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/client';
 import Scores from '../../models/scores';
 import Team from '../../models/team';
+import { JudgingFormFields } from '../../types/client';
 
-export interface JudgingFormData {
-	technicalAbility: number;
-	creativity: number;
-	utility: number;
-	presentation: number;
-	wowFactor: number;
-	comments: string;
-	feedback: string;
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormData | string>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormFields | string>) {
 	const teamID = req.query.id;
 	const session = await getSession({ req });
 	if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');
@@ -29,6 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return res.status(200).json(scores);
 		}
 		case 'POST': {
+			console.log('HEY REQ BODY:', req.body);
+
 			const scoresDoc = new Scores({ team: teamID, judge: judgeID, ...req.body });
 			const scores = await scoresDoc.save();
 
@@ -36,10 +29,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			team.scores = scores.id;
 
 			await team.save();
-
+			console.log('YEET!', scores);
 			return res.status(201).send(scores);
 		}
 		case 'PATCH': {
+			console.log('HEY REQ BODY:', req.body);
 			const scores = await Scores.findOneAndUpdate(
 				{ team: teamID, judge: judgeID },
 				{ team: teamID, judge: judgeID, ...req.body }

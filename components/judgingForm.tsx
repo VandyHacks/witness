@@ -1,12 +1,12 @@
 import ScoreInput from './scoreInput';
 import { Form, Input, Button } from 'antd';
-import { JudgingFormData } from '../pages/api/judging-form';
+import { JudgingFormFields } from '../types/client';
 import { useEffect } from 'react';
 const { TextArea } = Input;
 
 export interface JudgingFormProps {
-	formData: JudgingFormData;
-	onSubmit: (value: JudgingFormData) => Promise<void>;
+	formData: JudgingFormFields;
+	onSubmit: (value: JudgingFormFields) => Promise<void>;
 }
 
 export default function JudgingForm(props: JudgingFormProps) {

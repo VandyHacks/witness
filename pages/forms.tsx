@@ -5,11 +5,11 @@ import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
-import { JudgingFormData } from './api/judging-form';
+import { JudgingFormFields } from '../types/client';
 import { TeamsData } from './api/teams';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
-import { ResponseError } from '../types/types';
+import { ResponseError } from '../types/database';
 import ErrorMessage from '../components/errorMessage';
 
 function handleSubmitSuccess() {
@@ -27,8 +27,8 @@ function handleSubmitFailure() {
 	});
 }
 
-async function handleSubmit(formData: JudgingFormData, mutate: ScopedMutator<any>) {
-	const res = await fetch('/api/judging-form', {
+async function handleSubmit(formData: JudgingFormFields, mutate: ScopedMutator<any>, teamId: string) {
+	const res = await fetch(`/api/judging-form?id=${teamId}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -37,16 +37,17 @@ async function handleSubmit(formData: JudgingFormData, mutate: ScopedMutator<any
 	});
 
 	if (res.ok) {
-		mutate('/api/team-select');
+		mutate('/api/teams');
 		handleSubmitSuccess();
 	} else handleSubmitFailure();
 }
+// TODO: PATCH for if it was already sent.
 
 export default function Forms() {
 	// Use query string to get team ID
 	const router = useRouter();
 	let { id: idFromQueryString } = router.query;
-	const [teamID, setTeamID] = useState(idFromQueryString as string | undefined);
+	const [teamId, setTeamID] = useState(idFromQueryString as string | undefined);
 
 	useEffect(() => {
 		setTeamID(idFromQueryString as string | undefined);
@@ -62,10 +63,11 @@ export default function Forms() {
 		}
 		return (await res.json()) as TeamsData[];
 	});
+	console.log('ASDASD!!!!', teamsData);
 
-	// Get data for form component, formData will be falsy if teamID is not yet set.
+	// Get data for form component, formData will be falsy if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
-		() => (teamID ? ['/api/judging-form', teamID] : null),
+		() => (teamId ? ['/api/judging-form', teamId] : null),
 		async (url, id) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
 			if (!res.ok) {
@@ -73,7 +75,7 @@ export default function Forms() {
 				error.status = res.status;
 				throw error;
 			}
-			return (await res.json()) as JudgingFormData;
+			return (await res.json()) as JudgingFormFields;
 		}
 	);
 	// Get mutate function to reload teams list with updated data on form submission.
@@ -92,7 +94,7 @@ export default function Forms() {
 	} else {
 		// teamsData loaded, moving on
 		let formSection;
-		if (!teamID) {
+		if (!teamId) {
 			// if no team selected, show default screen
 			formSection = <Empty description="No team selected." />;
 		} else if (formError) {
@@ -103,11 +105,13 @@ export default function Forms() {
 			formSection = <Skeleton />;
 		} else {
 			// everything succeeded, show judging form
-			formSection = <JudgingForm formData={formData} onSubmit={formData => handleSubmit(formData, mutate)} />;
+			formSection = (
+				<JudgingForm formData={formData} onSubmit={formData => handleSubmit(formData, mutate, teamId)} />
+			);
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
-				<TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} />
+				<TeamSelect teamsData={teamsData} currentTeamID={teamId} handleChange={setTeamID} />
 				<Divider />
 				{formSection}
 			</Space>

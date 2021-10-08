@@ -17,7 +17,7 @@ const ScoresSchema = new Schema({
 	creativity: { type: Number, min: 0, max: 7, required: true },
 	utility: { type: Number, min: 0, max: 7, required: true },
 	presentation: { type: Number, min: 0, max: 7, required: true },
-	wowfactor: { type: Number, min: 0, max: 7, required: true },
+	wowFactor: { type: Number, min: 0, max: 7, required: true },
 	comments: { type: String, required: true },
 	feedback: { type: String, required: true },
 });

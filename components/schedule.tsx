@@ -1,33 +1,39 @@
-import { Space, Table, Collapse, Tag, Switch, Skeleton, Button } from 'antd';
+import { Space, Table, Collapse, Tag, Switch, Skeleton, Button, List, Popconfirm, notification, Select } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { ScheduleData } from '../pages/api/schedule';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
+import useSWR from 'swr';
+import { ResponseError } from '../types/database';
+import { ScheduleDisplay } from '../types/client';
 
 const { Panel } = Collapse;
+const { Option } = Select;
+
+// const { JUDGING_LENGTH, NUM_ROOMS } = process.env;
+const JUDGING_LENGTH = '1000';
+const NUM_ROOMS = '5';
 // const { Link } = Typography;
 
 interface ScheduleProps {
-	data: ScheduleData[];
-	cutoffIndex: number;
-	// onScheduleAdvance: () => void;
+	data: ScheduleDisplay[];
+	cutoffIndex?: number;
 }
 
-// Data should include everything in ScheduleData except for startTime and zoomURL
-function TableCell(data: Omit<ScheduleData, 'startTime' | 'zoomURL'> | null) {
+// Data should include everything in ScheduleDisplay except for startTime and zoomURL
+function TableCell(data: ScheduleDisplay | null) {
 	return data ? (
 		<Space direction="vertical">
 			<Collapse ghost>
-				<Panel header={<u>{data.projectName}</u>} key="info">
+				<Panel header={<u>{data.teamName}</u>} key="info">
 					<ul>
-						<li key={`${data.projectName}-hackers`}>
+						<li key={`${data.teamName}-hackers`}>
 							<span>Hackers: </span>
-							{data.members.map(member => (
-								<Tag key={member}>{member}</Tag>
+							{data.memberNames.map(name => (
+								<Tag key={name}>{name}</Tag>
 							))}
 						</li>
-						<li key={`${data.projectName}-devpost`}>
-							Devpost <Link href={data.devpostURL}>link</Link>
+						<li key={`${data.teamName}-devpost`}>
+							Devpost <Link href={data.devpost}>link</Link>
 						</li>
 					</ul>
 				</Panel>
@@ -36,15 +42,238 @@ function TableCell(data: Omit<ScheduleData, 'startTime' | 'zoomURL'> | null) {
 				<ul>
 					<li>
 						<span>Judges: </span>
-						{data.judges.map(judge => (
-							<Tag key={judge}>{judge}</Tag>
+						{data.judgeNames.map(name => (
+							<Tag key={name}>{name}</Tag>
 						))}
 					</li>
 				</ul>
 			</div>
 		</Space>
-	) : (
-		data
+	) : null;
+}
+
+// function useStickyState(defaultValue: ScheduleDisplay[], key: string) {
+// 	const [value, setValue] = useState(defaultValue);
+
+// 	useEffect(() => {
+// 		const stickyValue = window.localStorage.getItem(key);
+
+// 		if (stickyValue !== null) {
+// 			setValue(JSON.parse(stickyValue));
+// 		}
+// 	}, [key]);
+
+// 	useEffect(() => {
+// 		window.localStorage.setItem(key, JSON.stringify(value));
+// 	}, [key, value]);
+
+// 	return { value, setValue };
+// }
+// function executeFunction(instruction, setter) {
+// 	setter();
+// }
+
+// function Instruction() {
+// 	return <span></span>;
+// }
+// function ScheduleManager(onStart, onSubmit, onCancel) {
+// const
+
+// return <Button>Hello</Button>;
+// const [instructions, setInstructions] = useState([]);
+// const data = ['hello', 'hello1', 'hello2'];
+// return (
+// 	<>
+// 		<Space direction="vertical" style={{ width: '100%' }}>
+// 			<List
+// 				header={<div>Header</div>}
+// 				footer={<div>Footer</div>}
+// 				bordered
+// 				dataSource={data}
+// 				renderItem={item => <List.Item>{item}</List.Item>}
+// 			/>
+// 			<Button>Hello</Button>
+// 		</Space>
+// 	</>
+// );
+// }
+
+// function handleSubmitEdit() {
+// return true;
+// }
+
+enum EditingStates {
+	NotEditing = 'NOT_EDITING',
+	Accept = 'ACCEPT',
+	Reject = 'REJECT',
+}
+
+export default function OrganizerSchedule(props: ScheduleProps) {
+	const { data: originalData } = props;
+	const [workingData, setWorkingData] = useState(originalData);
+	const judgingLength = parseInt(JUDGING_LENGTH || '600000');
+	const numRooms = parseInt(NUM_ROOMS || '5');
+
+	const { data: judges, error: judgesError } = useSWR('/api/need-to-implement', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get schedule.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as ScheduleDisplay[];
+	});
+
+	const { data: teams, error: teamsError } = useSWR('/api/users', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get schedule.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as ScheduleDisplay[];
+	});
+	const [editingState, setEditingState] = useState(EditingStates.NotEditing);
+
+	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
+	const rooms = useMemo(
+		() =>
+			Array(numRooms)
+				.fill(null)
+				.map((_, i) => `vhl.ink/room-${i + 1}`),
+		[numRooms]
+	);
+	const columns = useMemo(
+		() => [
+			{
+				title: 'Time',
+				dataIndex: 'time',
+				key: 'time',
+				width: 100,
+				render: (timestamp: number) => DateTime.fromMillis(timestamp).toLocaleString(DateTime.TIME_SIMPLE),
+			},
+			...rooms.map((roomURL, roomNum) => ({
+				title: <a href={roomURL}>Room {roomNum + 1}</a>,
+				dataIndex: roomURL,
+				key: (roomNum + 1).toString(),
+				render:
+					editingState === EditingStates.NotEditing
+						? TableCell
+						: (data: ScheduleDisplay | null) => {
+								// console.log('TEAMS:', teams);
+								return (
+									<Space direction="vertical" style={{ width: '100%' }}>
+										Team:
+										<Select
+											placeholder="Please select favourite colors"
+											style={{ width: '100%' }}
+											onChange={stuff => console.log(stuff)}>
+											{/* {teams!.map(team => (
+												<Option key={team.teamID} value={team.projectName}>
+													{team.projectName}
+												</Option>
+											))} */}
+											<Option value="china">China</Option>
+											<Option value="india">India</Option>
+											<Option value="usa">USA</Option>
+										</Select>
+										Judges:
+										<Select
+											mode="multiple"
+											placeholder="Please select favourite colors"
+											style={{ width: '100%' }}
+											onChange={stuff => console.log(stuff)}>
+											<Option value="china">China</Option>
+											<Option value="india">India</Option>
+											<Option value="usa">USA</Option>
+										</Select>
+									</Space>
+								);
+						  },
+			})),
+		],
+		[rooms, editingState]
+	);
+	// Reorganize data to be fed into table
+	const tableData = useMemo(() => {
+		const dataAsMap = new Map();
+		workingData.forEach(assignment => {
+			const { time, zoom } = assignment;
+			if (!dataAsMap.has(time)) {
+				dataAsMap.set(time, Object.fromEntries(rooms.map(room => [room, null])));
+			}
+			dataAsMap.get(time)[zoom] = assignment;
+		});
+		return [...dataAsMap.entries()].map(pair => ({
+			time: pair[0],
+			...pair[1],
+		}));
+	}, [workingData, rooms]);
+
+	// Pools of data for if editing is happening.
+
+	return (
+		<Table
+			dataSource={tableData}
+			columns={columns}
+			pagination={false}
+			sticky
+			bordered
+			scroll={{ x: true }}
+			summary={_ => (
+				<Table.Summary fixed={true}>
+					{/* <Table.Summary.Row style={editingStyles[editingState]}> */}
+					<Table.Summary.Row>
+						<Table.Summary.Cell index={0} colSpan={100}>
+							{editingState === EditingStates.NotEditing ? (
+								<Button
+									type="primary"
+									onClick={() => setEditingState(EditingStates.Accept)}
+									loading={false /*!judges || !teams*/}>
+									Edit Schedule
+								</Button>
+							) : (
+								<Space direction="horizontal">
+									<Popconfirm
+										title="Discard changes?"
+										onConfirm={() => {
+											setEditingState(EditingStates.NotEditing);
+											setWorkingData(originalData);
+										}}
+										okText="Yes"
+										cancelText="No">
+										<Button>Cancel</Button>
+									</Popconfirm>
+									<Popconfirm
+										title="Save changes?"
+										onConfirm={async () => {
+											// const res = await handleSubmitEdit();
+											// if (res.ok) {
+											// 	setEditingState(EditingStates.NotEditing);
+											// 	// setWorkingData(originalData);
+											// } else {
+											// 	notification['error']({
+											// 		message: 'Error saving changes',
+											// 		description: 'Oops', //res.message,
+											// 		placement: 'bottomRight',
+											// 	});
+											// }
+											setEditingState(EditingStates.NotEditing);
+										}}
+										okText="Yes"
+										cancelText="No"
+										disabled={editingState === EditingStates.Reject}>
+										<Button type="primary" disabled={editingState === EditingStates.Reject}>
+											Submit Changes
+										</Button>
+									</Popconfirm>
+								</Space>
+							)}
+						</Table.Summary.Cell>
+					</Table.Summary.Row>
+				</Table.Summary>
+			)}
+		/>
 	);
 }
 
@@ -57,7 +286,7 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			dataIndex: 'time',
 			key: 'time',
 			width: 100,
-			render: (timestamp: number) => DateTime.fromMillis(timestamp).toLocaleString(DateTime.TIME_SIMPLE),
+			render: (date: string) => DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE),
 		},
 		{
 			title: 'Project',
@@ -92,12 +321,13 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			),
 		},
 	];
+	console.log('HEY DATA:', data);
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
-		time: item.startTime,
-		project: { name: item.projectName, link: new URL(item.devpostURL) },
-		teamMembers: item.members,
-		judges: item.judges,
-		room: item.zoomURL,
+		time: item.time,
+		project: { name: item.teamName, link: new URL(item.devpost) },
+		teamMembers: item.memberNames,
+		judges: item.judgeNames,
+		room: item.zoom,
 	}));
 	return (
 		<Table
@@ -125,105 +355,3 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 		/>
 	);
 }
-
-// export default function Schedule(props: ScheduleProps) {
-// 	const { data } = props;
-// 	const [showPast, setShowPast] = useState(false);
-
-// 	// TODO: this is kinda dumb, might be good to just get the rooms directly from db
-// 	const rooms = useMemo(() => [...new Set(data.map(judgingSession => judgingSession.zoomURL))], [data]);
-// 	const columns = useMemo(
-// 		() => [
-// 			{
-// 				title: 'Time',
-// 				dataIndex: 'time',
-// 				key: 'time',
-// 				width: 100,
-// 				render: (timestamp: number) => DateTime.fromMillis(timestamp).toLocaleString(DateTime.TIME_SIMPLE),
-// 			},
-// 			...rooms.map((roomURL, roomNum) => ({
-// 				title: <a href={roomURL}>Room {roomNum + 1}</a>,
-// 				dataIndex: roomURL,
-// 				key: (roomNum + 1).toString(),
-// 				render: TableCell,
-// 			})),
-// 		],
-// 		[rooms]
-// 	);
-// 	// Reorganize data to be fed into table
-// 	const tableData = useMemo(() => {
-// 		const dataAsMap = new Map();
-// 		data.forEach(judgingSession => {
-// 			if (!dataAsMap.has(judgingSession.startTime)) {
-// 				dataAsMap.set(judgingSession.startTime, Object.fromEntries(rooms.map(room => [room, null])));
-// 			}
-// 			const { startTime, zoomURL, ...rest } = judgingSession;
-// 			dataAsMap.get(startTime)[zoomURL] = rest;
-// 		});
-// 		// onScheduleAdvance(); // Load card data when schedule is first available without upsetting React (too much).
-// 		return [...dataAsMap.entries()].map(pair => ({
-// 			time: pair[0],
-// 			...pair[1],
-// 		}));
-// 	}, [data, rooms]); // Not including onScheduleAdvance as that causes memory leak.
-
-// 	// Keeps track of where in the overall schedule we currently are
-// 	const [currentIndex, setCurrentIndex] = useState(0);
-// 	const [stillJudging, setStillJudging] = useState(true);
-// 	// Prevents a flash of full schedule before filtering only to future events
-// 	const [dataLoaded, setDataLoaded] = useState(false);
-// 	// Keep track of where the top of the schedule show point to.
-// 	useEffect(() => {
-// 		const interval = setInterval(() => {
-// 			const now = Date.now();
-// 			if (stillJudging && now > tableData[currentIndex].time + judgingLength) {
-// 				// Search for next satisfying timestamp. If none exists, we are done judging and should no longer update.
-// 				if (
-// 					!tableData.slice(currentIndex).some((timeSlot, index) => {
-// 						if (timeSlot.time + judgingLength > now) {
-// 							setCurrentIndex(index);
-// 							// onScheduleAdvance(); // Reload card data every 10 minutes.
-// 							return true;
-// 						}
-// 					})
-// 				) {
-// 					setCurrentIndex(tableData.length);
-// 					setStillJudging(false);
-// 				}
-// 			}
-// 			setDataLoaded(true);
-// 		}, 1000);
-// 		return () => clearInterval(interval);
-// 	});
-
-// 	// Now fill the table
-// 	return dataLoaded ? (
-// 		<Table
-// 			dataSource={showPast ? tableData : tableData.slice(currentIndex)}
-// 			columns={columns}
-// 			pagination={false}
-// 			sticky
-// 			bordered
-// 			scroll={{ x: true }}
-// 			summary={_ => (
-// 				<Table.Summary fixed={true}>
-// 					<Table.Summary.Row>
-// 						<Table.Summary.Cell index={0} colSpan={2}>
-// 							<span> </span>
-// 							<Switch
-// 								checkedChildren="Hide past sessions"
-// 								unCheckedChildren="Include past sessions"
-// 								onChange={checked => {
-// 									setShowPast(checked);
-// 								}}
-// 							/>
-// 						</Table.Summary.Cell>
-// 						<Table.Summary.Cell index={2} colSpan={8} />
-// 					</Table.Summary.Row>
-// 				</Table.Summary>
-// 			)}
-// 		/>
-// 	) : (
-// 		<Skeleton />
-// 	);
-// }
