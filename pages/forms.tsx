@@ -53,7 +53,7 @@ export default function Forms() {
 	}, [idFromQueryString]);
 
 	// Get data for teams dropdown
-	const { data: teamsData, error: teamsError } = useSWR('/api/team-select', async url => {
+	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of teams.') as ResponseError;

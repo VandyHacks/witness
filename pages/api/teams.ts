@@ -30,6 +30,7 @@ export default async function handler(
 	if (!['JUDGE', 'ORGANIZER'].includes(session?.userType as string)) return res.status(403).send('Forbidden');
 	if (req.method === 'GET') {
 		const teams = await Team.find();
+		console.log('teams: ', teams);
 		switch (session!.userType) {
 			case 'ORGANIZER': {
 				return res.status(200).send(teams);
@@ -57,8 +58,8 @@ export default async function handler(
 					return {
 						teamID: team.id,
 						teamName: team.name,
-						isMine: scheduleMap.get(team.id).includes(judgeID),
-						haveJudged: scoresMap.get(team.id).includes(judgeID),
+						isMine: scheduleMap.get(team.id)?.includes(judgeID),
+						haveJudged: scoresMap.get(team.id)?.includes(judgeID),
 					};
 				});
 
