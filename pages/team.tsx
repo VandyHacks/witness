@@ -101,7 +101,7 @@ async function handleEditSubmit(formData: { teamName: string } | { devpost: stri
 		mutate('/api/team-management');
 	} else handleRequestFailure(await res.text());
 }
-
+d;
 async function handleLeaveTeam(mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/team-management', {
 		method: 'DELETE',
@@ -124,8 +124,7 @@ function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator<any>) => Pro
 			placement="right"
 			okText="Yes"
 			cancelText="No"
-			onConfirm={() => onLeave(mutate)}
-		>
+			onConfirm={() => onLeave(mutate)}>
 			<Button type="primary" danger>
 				Leave Team
 			</Button>
@@ -177,8 +176,7 @@ function TeamManager(props: TeamManagerProps) {
 						<Form.Item
 							name="teamName"
 							label="New Team Name"
-							rules={[{ required: true, message: 'Please enter a team name.' }]}
-						>
+							rules={[{ required: true, message: 'Please enter a team name.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
@@ -191,8 +189,7 @@ function TeamManager(props: TeamManagerProps) {
 						<Form.Item
 							name="devpost"
 							label="New Devpost URL"
-							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}
-						>
+							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">

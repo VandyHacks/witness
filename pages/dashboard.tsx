@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 // import { AllDone, Current, UpNext } from '../components/scheduleItem';
 import Outline from '../components/outline';
-import { JudgeSchedule } from '../components/schedule';
+import OrganizerSchedule, { JudgeSchedule } from '../components/schedule';
 import Cards from '../components/cards';
 import { ScheduleData } from './api/schedule';
 import { ResponseError } from '../types/types';
@@ -16,7 +16,8 @@ import ErrorMessage from '../components/errorMessage';
 const userID = '0';
 const userType = 'JUDGE';
 
-export const JUDGING_LENGTH = 3000; //600000;
+// let { JUDGING_LENGTH } = process.env;
+const JUDGING_LENGTH = 10000;
 
 // TODO: this is horribly inefficient right now, as it checks through the whole dataset on every update
 // request. Rewrite this to use the restructured dataset in schedule.tsx.
@@ -36,7 +37,7 @@ export const JUDGING_LENGTH = 3000; //600000;
 // 		if (
 // 			((type === 'next' && ScheduleItem.startTime > now) ||
 // 				(type === 'current' &&
-// 					ScheduleItem.startTime + JUDGING_LENGTH > now &&
+// 					ScheduleItem.startTime + judgingLength > now &&
 // 					ScheduleItem.startTime < now)) &&
 // 			ScheduleItem['judges'].map(person => person.id).includes(userID)
 // 		) {
@@ -48,7 +49,7 @@ export const JUDGING_LENGTH = 3000; //600000;
 // }
 
 export default function Dashboard() {
-	// TODO: trap state page
+	const judgingLength = parseInt(JUDGING_LENGTH || '600000');
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -70,7 +71,7 @@ export default function Dashboard() {
 			if (index === -1) index = scheduleData.length;
 			setNextScheduleItem(scheduleData[index]);
 			setCurrentScheduleItem(
-				now < scheduleData[index - 1]?.startTime + JUDGING_LENGTH ? scheduleData[index - 1] : undefined
+				now < scheduleData[index - 1]?.startTime + judgingLength ? scheduleData[index - 1] : undefined
 			);
 			setNextIndex(index);
 		}
@@ -82,14 +83,14 @@ export default function Dashboard() {
 			const now = Date.now();
 			if (scheduleData && nextIndex > -1) {
 				// Data has been received and state is initialized
-				if (now <= scheduleData[scheduleData.length - 1].startTime + JUDGING_LENGTH) {
+				if (now <= scheduleData[scheduleData.length - 1].startTime + judgingLength) {
 					// Not yet done judging
 					if (nextIndex < scheduleData.length && now > (nextScheduleItem?.startTime || 0)) {
 						// Next event should be current
 						setNextScheduleItem(scheduleData[nextIndex + 1]);
 						setCurrentScheduleItem(scheduleData[nextIndex]);
 						setNextIndex(nextIndex + 1);
-					} else if (now > (currentScheduleItem?.startTime || 0) + JUDGING_LENGTH) {
+					} else if (now > (currentScheduleItem?.startTime || 0) + judgingLength) {
 						// Next event has not yet arrived but current event is over
 						setCurrentScheduleItem(undefined);
 					}
@@ -119,6 +120,7 @@ export default function Dashboard() {
 				{session?.userType === 'JUDGE' && (
 					<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
 				)}
+				{session?.userType === 'ORGANIZER' && <OrganizerSchedule data={scheduleData} />}
 			</>
 		);
 	}
