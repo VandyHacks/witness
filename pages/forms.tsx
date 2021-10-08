@@ -71,6 +71,18 @@ export default function Forms() {
 		async (url, id) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
 			if (!res.ok) {
+				if (res.status === 404) {
+					const emptyJudgeForm = {
+						technicalAbility: 0,
+						creativity: 0,
+						utility: 0,
+						presentation: 0,
+						wowFactor: 0,
+						comments: '',
+						feedback: '',
+					} as JudgingFormFields;
+					return emptyJudgeForm;
+				}
 				const error = new Error('Failed to get form information.') as ResponseError;
 				error.status = res.status;
 				throw error;

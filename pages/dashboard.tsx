@@ -85,7 +85,7 @@ export default function Dashboard() {
 			const now = Date.now();
 			if (scheduleData && nextIndex > -1) {
 				// Data has been received and state is initialized
-				if (now <= new Date(scheduleData[scheduleData.length - 1].time).getMilliseconds() + judgingLength) {
+				if (now <= new Date(scheduleData[scheduleData.length - 1]?.time).getMilliseconds() + judgingLength) {
 					// Not yet done judging
 					if (nextIndex < scheduleData.length && now > (nextScheduleItem?.time || 0)) {
 						// Next event should be current
