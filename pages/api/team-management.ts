@@ -5,6 +5,8 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/client';
 import { TeamProfile } from '../team';
 import User from '../../models/user';
+import log from '../../middleware/log';
+import { name } from 'faker';
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 7);
 
@@ -34,6 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				team.members.push(hacker);
 				await team.save();
+				await log(session.userID, `Joined team ${team.name} (join code ${team.joinCode})`);
 				return res.status(201).send(team);
 			} else if (teamName) {
 				// make team
@@ -46,6 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				console.log(teamObj);
 				const team = new Team(teamObj);
 				await team.save();
+				await log(session.userID, `Created team ${team.name} (join code ${team.joinCode})`);
 				return res.status(201).send(team);
 			} else {
 				return res.status(400).send('Either joinCode or teamName required.');
@@ -57,8 +61,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (!team) return res.status(404).send('Team not found');
 
 			const { teamName, devpost } = req.body;
-			if (devpost) team.devpost = devpost;
-			if (teamName) team.name = teamName;
+			if (devpost) {
+				await log(session.userID, `Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`);
+				team.devpost = devpost;
+			}
+
+			if (teamName) {
+				await log(session.userID, `Changed team name ${team.name} => ${name} (join code ${team.joinCode})`);
+				team.name = teamName;
+			}
 
 			await team.save();
 			console.log("new team", team);
@@ -72,6 +83,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			team.members = team.members.filter((member: { id: string; }) => member.id !== userID);
 			if (!team.members.length) {
 				await Team.deleteOne({ "members.id": session.userID });
+				await log(session.userID, `Deleted team ${team.name} (join code ${team.joinCode})`);
 				return res.status(200).send(`Team ${team.name} deleted successfully.`);
 			}
 			await team.save();
