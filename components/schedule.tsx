@@ -135,23 +135,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 		}));
 	}, [data, rooms]);
 
-	// Pools of data for if editing is happening.
 	const [uploadData, setUploadData] = useState<string | ArrayBuffer | null | undefined>('');
-	const uploadProps = {
-		name: 'file',
-		accept: '.csv',
-		maxCount: 1,
-		async onChange(info: any) {
-			const reader = new FileReader();
-			reader.onload = e => {
-				setUploadData(e.target?.result);
-			};
-			reader.readAsText(info.file.originFileObj);
-			console.log('File:', uploadData);
-			const res = await fetch('/api/manual-edit', { method: 'PATCH', body: uploadData as string });
-		},
-	};
-
 	return (
 		<Table
 			dataSource={tableData}
@@ -174,7 +158,23 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 								<a href="/api/export-schedule-detailed" target="_blank" download>
 									<strong>Export detailed schedule</strong>
 								</a>
-								<Upload {...uploadProps}>
+								<Upload
+									name="file"
+									accept=".csv"
+									maxCount={1}
+									onChange={async (info: any) => {
+										const reader = new FileReader();
+										reader.onload = e => {
+											setUploadData(e.target?.result);
+										};
+										reader.readAsText(info.file.originFileObj);
+										console.log('File:', uploadData);
+										const res = await fetch('/api/schedule', {
+											method: 'PUT',
+											body: uploadData as string,
+										});
+										console.log('RES:', res);
+									}}>
 									<Button icon={<UploadOutlined />}>Click to Upload</Button>
 								</Upload>
 							</Space>
