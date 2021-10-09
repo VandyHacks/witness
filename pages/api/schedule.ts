@@ -6,6 +6,7 @@ import Team from '../../models/team';
 
 import { OrganizerScheduleDisplay, ScheduleDisplay } from '../../types/client';
 import { ScheduleData } from '../../types/database';
+const { ObjectID } = require('mongodb');
 
 async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
 	const schedule = await Schedule.find({ judges: userID })
@@ -69,12 +70,13 @@ interface AssignmentFromCSV {
 
 // TODO: allow between 1 and 3 judges
 async function validateSchedule(schedule: string): Promise<string | AssignmentFromCSV[]> {
-	let intermediate = schedule.split('\n').map(asString => asString.split(','));
+	let intermediate = schedule.split('\n').map(asString => asString.replace('\r', '').split(','));
 	// Check that the CSV is good.
 	const heading = ['Time', 'Zoom', 'Judge1', 'Judge2', 'Judge3', 'TeamName'];
 	if (!intermediate.every(row => row.length === 6) || !intermediate[0].every((el, index) => el === heading[index])) {
 		return 'Invalid CSV format. Make sure your headings are Time, Zoom, Judge1, Judge2, Judge3, TeamName';
 	}
+	console.log('Passed format');
 
 	// Check that urls are valid and also make the actual object list
 	// TODO: MAKE THIS NOT HARDCODED
@@ -97,6 +99,9 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			return `Zoom url ${asArray[1]} is not one of our rooms (row ${i + 2}).`;
 		}
 	});
+	console.log('Passed zoom check');
+	// SDOFIJSDOFISJDOFISDJFOISJDFOIJ
+	// SODIFJOWQIJOIWEJOIWEFJEFOJEOEOFJI
 
 	// Check that schedule is sorted and at 10 minute intervals.
 	let lastTime = processed[0].time;
@@ -107,14 +112,15 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			message = `Schedule is not sorted. See line ${index + 2}.`;
 			return true;
 		} else if (
-			assignment.time !== lastTime &&
 			// Need to explicitly extract milliseconds because typescript
-			assignment.time.getMilliseconds() - lastTime.getMilliseconds() !== 60000
+			assignment.time.getMilliseconds() !== lastTime.getMilliseconds() &&
+			assignment.time.getMilliseconds() - lastTime.getMilliseconds() !== 5000 // TODO: make this 600000
 		) {
 			message = `Schedule does not advance in 10 minute increments. See line ${index}.`;
 		}
 		return false;
 	});
+	console.log('Passed increments.');
 	if (message.length > 0) return message;
 
 	// Check that objects actually exist. Relies on teamnames and judges being unique :/
@@ -139,6 +145,7 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			teams.add(assignment.teamName);
 		}
 	}
+	console.log('Passed duplicates.');
 
 	// Check that zoom rooms and judges aren't double booked
 	let roomsAndJudges = new Set();
@@ -162,8 +169,25 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			});
 		}
 	}
+	console.log('Passed double booking.');
 
-	return '';
+	return processed;
+}
+
+async function updateSchedule(schedule: AssignmentFromCSV[]) {
+	// TODO: save copy
+	await Schedule.remove({});
+	const newSchedule: ScheduleData[] = [];
+	await Promise.all(
+		schedule.map(async assignment => {
+			const team = (await Team.findOne({ name: assignment.teamName }))?._id.toString();
+			const judges = await Promise.all(
+				assignment.judgeNames.map(async name => (await User.findOne({ name }))?._id.toString())
+			);
+			newSchedule.push({ _id: new ObjectID(), team, judges, zoom: assignment.zoom, time: assignment.time });
+		})
+	);
+	await Schedule.insertMany(newSchedule);
 }
 
 export default async function handler(
@@ -194,8 +218,13 @@ export default async function handler(
 	} else if (req.method === 'PUT') {
 		const validateResults = await validateSchedule(req.body);
 		if (typeof validateResults === 'string') return res.status(406).send(validateResults);
-		// ok now the csv is good.
-		return res.status(200).send('Thanks');
+		try {
+			console.log('FUCK!');
+			await updateSchedule(validateResults);
+			return res.status(200).send('Thanks');
+		} catch (e) {
+			return res.status(404).send('Validation worked but schedule update failed.');
+		}
 	}
 	return res.status(405).send('Method not supported brother');
 }
