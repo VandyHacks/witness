@@ -6,11 +6,12 @@ const { TextArea } = Input;
 
 export interface JudgingFormProps {
 	formData: JudgingFormFields;
+	isNewForm: boolean;
 	onSubmit: (value: JudgingFormFields) => Promise<void>;
 }
 
 export default function JudgingForm(props: JudgingFormProps) {
-	const { formData, onSubmit } = props;
+	const { formData, isNewForm, onSubmit } = props;
 	const layout = {
 		labelCol: { span: 7 },
 		wrapperCol: { span: 24 },
@@ -49,7 +50,7 @@ export default function JudgingForm(props: JudgingFormProps) {
 					<TextArea />
 				</Form.Item>
 				<Button type="primary" htmlType="submit" className="ant-col-offset-12">
-					Submit
+					{isNewForm ? 'Submit' : 'Update'}
 				</Button>
 			</Form>
 		</>

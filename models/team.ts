@@ -18,6 +18,7 @@ const TeamSchema = new Schema(
 		},
 		members: {
 			type: [Schema.Types.ObjectId],
+			ref: 'User',
 			required: true,
 			validate: {
 				// check team size

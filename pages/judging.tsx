@@ -12,9 +12,9 @@ import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/database';
 import ErrorMessage from '../components/errorMessage';
 
-function handleSubmitSuccess() {
+function handleSubmitSuccess(isNew: boolean) {
 	notification['success']({
-		message: 'Successfully submitted!',
+		message: `Successfully ${isNew ? 'submitted' : 'updated'}!`,
 		placement: 'bottomRight',
 	});
 }
@@ -27,9 +27,14 @@ function handleSubmitFailure() {
 	});
 }
 
-async function handleSubmit(formData: JudgingFormFields, mutate: ScopedMutator<any>, teamId: string) {
+async function handleSubmit(
+	formData: JudgingFormFields,
+	mutate: ScopedMutator<any>,
+	teamId: string,
+	isNewForm: boolean
+) {
 	const res = await fetch(`/api/judging-form?id=${teamId}`, {
-		method: 'POST',
+		method: isNewForm ? 'POST' : 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
 		},
@@ -38,10 +43,9 @@ async function handleSubmit(formData: JudgingFormFields, mutate: ScopedMutator<a
 
 	if (res.ok) {
 		mutate('/api/teams');
-		handleSubmitSuccess();
+		handleSubmitSuccess(isNewForm);
 	} else handleSubmitFailure();
 }
-// TODO: PATCH for if it was already sent.
 
 export default function Forms() {
 	// Use query string to get team ID
@@ -63,8 +67,8 @@ export default function Forms() {
 		}
 		return (await res.json()) as TeamsData[];
 	});
-	console.log('ASDASD!!!!', teamsData);
 
+	const [isNewForm, setIsNewForm] = useState(false);
 	// Get data for form component, formData will be falsy if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamId ? ['/api/judging-form', teamId] : null),
@@ -81,6 +85,7 @@ export default function Forms() {
 						comments: '',
 						feedback: '',
 					} as JudgingFormFields;
+					setIsNewForm(true);
 					return emptyJudgeForm;
 				}
 				const error = new Error('Failed to get form information.') as ResponseError;
@@ -118,7 +123,11 @@ export default function Forms() {
 		} else {
 			// everything succeeded, show judging form
 			formSection = (
-				<JudgingForm formData={formData} onSubmit={formData => handleSubmit(formData, mutate, teamId)} />
+				<JudgingForm
+					formData={formData}
+					isNewForm={isNewForm}
+					onSubmit={formData => handleSubmit(formData, mutate, teamId, isNewForm)}
+				/>
 			);
 		}
 		pageContent = (

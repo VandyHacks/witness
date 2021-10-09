@@ -311,22 +311,32 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			render: (judges: string[]) => judges.map(judge => <Tag key={judge + key++}>{judge}</Tag>),
 		},
 		{
+			title: 'Judging Form',
+			dataIndex: 'form',
+			key: 'form',
+			render: (id: string) => (
+				<Link href={`/judging?id=${id}`} passHref>
+					<Button type="link">Go to form</Button>
+				</Link>
+			),
+		},
+		{
 			title: 'Room',
 			dataIndex: 'room',
 			key: 'room',
 			render: (link: URL) => (
 				<Link href={link} passHref>
-					<Button type="link">Go to room</Button>
+					<Button type="link">Join room</Button>
 				</Link>
 			),
 		},
 	];
-	console.log('HEY DATA:', data);
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
 		time: item.time,
 		project: { name: item.teamName, link: new URL(item.devpost) },
 		teamMembers: item.memberNames,
 		judges: item.judgeNames,
+		form: item.teamId,
 		room: item.zoom,
 	}));
 	return (

@@ -1,5 +1,6 @@
 export interface ScheduleDisplay {
 	time: string;
+	teamId: string;
 	teamName: string;
 	memberNames: string[];
 	judgeNames: string[];
