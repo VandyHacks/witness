@@ -47,7 +47,7 @@ function generateUser(userType: string): UserData {
 function generateTeam(members: mongoose.Schema.Types.ObjectId[]): TeamData {
 	return {
 		_id: new ObjectID(),
-		name: faker.company.companyName(),
+		name: faker.commerce.product(),
 		joinCode: faker.datatype.uuid(),
 		devpost: `https://devpost.com/${faker.datatype.string()}`,
 		members: members,
