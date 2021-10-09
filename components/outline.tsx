@@ -29,9 +29,14 @@ export default function Outline({ children, home, selectedKey }: OutlineProps) {
 					selectedKeys={[selectedKey]}
 					style={{ minWidth: '50vw', display: 'flex', justifyContent: 'flex-end' }}>
 					{userType && (
-						<Menu.Item key="dashboard">
-							<Link href="/dashboard">Dashboard</Link>
-						</Menu.Item>
+						<>
+							<Menu.Item key="dashboard">
+								<Link href="/dashboard">Dashboard</Link>
+							</Menu.Item>
+							<Menu.Item key="assign">
+								<Link href="/assign">Assign Roles</Link>
+							</Menu.Item>
+						</>
 					)}
 					{userType && userType !== 'HACKER' && (
 						<Menu.Item key="judging">
