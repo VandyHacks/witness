@@ -4,6 +4,7 @@ import { getSession } from 'next-auth/client';
 import Scores from '../../models/scores';
 import Team from '../../models/team';
 import { JudgingFormFields } from '../../types/client';
+import log from '../../middleware/log';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormFields | string>) {
 	const teamID = req.query.id;
@@ -26,6 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const team = await Team.findById(teamID);
 			team.scores = scores.id;
 
+			await log(judgeID, `Submitted scores for team ${team.name} (join code ${team.joinCode})`);
+
 			await team.save();
 			return res.status(201).send(scores);
 		}
@@ -34,6 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				{ team: teamID, judge: judgeID },
 				{ team: teamID, judge: judgeID, ...req.body }
 			);
+
+			await log(judgeID, `Submitted scores for team ${team.name} (join code ${team.joinCode})`);
 			return res.status(scores ? 200 : 409).send(scores);
 		}
 		default:
