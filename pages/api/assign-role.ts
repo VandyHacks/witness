@@ -18,20 +18,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (!Object.keys(userData).length) return res.status(400).send('A user needs to be selected.');
 
 			const roles = {
-				HACKER: [],
-				JUDGE: [],
-				ORGANIZER: [],
+				HACKER: [] as (string | never)[],
+				JUDGE: [] as (string | never)[],
+				ORGANIZER: [] as (string | never)[],
 			};
+			type rolesIndex = 'HACKER' | 'JUDGE' | 'ORGANIZER';
 
 			// populate roles using data
 			for (const user in userData) {
 				console.log(user, userData[user]);
-				roles[userData[user]].push(user);
+				roles[userData[user] as rolesIndex].push(user);
 			}
 
 			// set their type to the one provided
 			for (const role in roles) {
-				await User.updateMany({ _id: { $in: roles[role] }, userType: { $exists: false } }, { userType: role });
+				await User.updateMany(
+					{ _id: { $in: roles[role as rolesIndex] }, userType: { $exists: false } },
+					{ userType: role }
+				);
 			}
 
 			return res.status(200).send(`Assigned roles to ${userData.length} users`);
