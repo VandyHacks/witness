@@ -60,6 +60,112 @@ async function getOrganizerSchedule(): Promise<OrganizerScheduleDisplay[]> {
 	}
 }
 
+interface AssignmentFromCSV {
+	time: Date;
+	zoom: string;
+	teamName: string;
+	judgeNames: string[];
+}
+
+// TODO: allow between 1 and 3 judges
+async function validateSchedule(schedule: string): Promise<string | AssignmentFromCSV[]> {
+	let intermediate = schedule.split('\n').map(asString => asString.split(','));
+	// Check that the CSV is good.
+	const heading = ['Time', 'Zoom', 'Judge1', 'Judge2', 'Judge3', 'TeamName'];
+	if (!intermediate.every(row => row.length === 6) || !intermediate[0].every((el, index) => el === heading[index])) {
+		return 'Invalid CSV format. Make sure your headings are Time, Zoom, Judge1, Judge2, Judge3, TeamName';
+	}
+
+	// Check that urls are valid and also make the actual object list
+	// TODO: MAKE THIS NOT HARDCODED
+	const validRooms = new Set(
+		Array(5)
+			.fill(null)
+			.map((_, i) => `vhl.ink/room-${i + 1}`)
+	);
+	let processed: AssignmentFromCSV[] | never = [];
+	intermediate.splice(1).forEach((asArray, i) => {
+		if (validRooms.has(asArray[1])) {
+			processed.push({
+				time: new Date(asArray[0]),
+				zoom: asArray[1],
+				teamName: asArray[5],
+				judgeNames: asArray.slice(2, 5),
+			});
+		} else {
+			// TODO: should we make sure the rooms are the same?
+			return `Zoom url ${asArray[1]} is not one of our rooms (row ${i + 2}).`;
+		}
+	});
+
+	// Check that schedule is sorted and at 10 minute intervals.
+	let lastTime = processed[0].time;
+	let message = '';
+	processed.find((assignment, index) => {
+		if (assignment.time < lastTime) {
+			lastTime = assignment.time;
+			message = `Schedule is not sorted. See line ${index + 2}.`;
+			return true;
+		} else if (
+			assignment.time !== lastTime &&
+			// Need to explicitly extract milliseconds because typescript
+			assignment.time.getMilliseconds() - lastTime.getMilliseconds() !== 60000
+		) {
+			message = `Schedule does not advance in 10 minute increments. See line ${index}.`;
+		}
+		return false;
+	});
+	if (message.length > 0) return message;
+
+	// Check that objects actually exist. Relies on teamnames and judges being unique :/
+	// minor TODO: use judge emails instead of names.
+	for (const [i, assignment] of processed.entries()) {
+		for (const [j, name] of assignment.judgeNames.entries()) {
+			if (!(await User.findOne({ name: assignment.judgeNames[j] }))) {
+				return `Judge "${name}" does not exist (row ${i + 2} judge ${j + 1}).`;
+			}
+		}
+		if (!(await Team.findOne({ name: assignment.teamName }))) {
+			return `Team "${assignment.teamName}" does not exist (row ${i + 2}).`;
+		}
+		// TODO: validate zooms
+	}
+	// Check that each team only exists once.
+	const teams = new Set();
+	for (const [i, assignment] of processed.entries()) {
+		if (teams.has(assignment.teamName)) {
+			return `Team "${assignment.teamName}" is a duplicate (row ${i + 1})`;
+		} else {
+			teams.add(assignment.teamName);
+		}
+	}
+
+	// Check that zoom rooms and judges aren't double booked
+	let roomsAndJudges = new Set();
+	let curTime = new Date(0);
+	for (const [i, assignment] of processed.entries()) {
+		if (assignment.time !== curTime) {
+			curTime = assignment.time;
+			roomsAndJudges = new Set();
+		} else {
+			if (roomsAndJudges.has(assignment.zoom)) {
+				return `Zoom room "${assignment.zoom}" appears twice in the same timeslot (row ${i + 1}).`;
+			} else {
+				roomsAndJudges.add(assignment.zoom);
+			}
+			assignment.judgeNames.forEach((name, j) => {
+				if (roomsAndJudges.has(name)) {
+					return `Judge "${name}" appears multiple twice in the same timeslot (row ${i + 1} judge ${j + 1}).`;
+				} else {
+					roomsAndJudges.add(name);
+				}
+			});
+		}
+	}
+
+	return '';
+}
+
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<ScheduleDisplay[] | OrganizerScheduleDisplay[] | string>
@@ -86,7 +192,9 @@ export default async function handler(
 		if (!schedule) return res.status(404).send('No assignments found for given user.');
 		return res.status(200).json(schedule);
 	} else if (req.method === 'PUT') {
-		console.log('MY BODY:', req.body);
+		const validateResults = await validateSchedule(req.body);
+		if (typeof validateResults === 'string') return res.status(406).send(validateResults);
+		// ok now the csv is good.
 		return res.status(200).send('Thanks');
 	}
 	return res.status(405).send('Method not supported brother');
