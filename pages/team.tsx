@@ -57,11 +57,12 @@ async function handleSetupSubmit(formData: NewTeamFields | { joinCode: string },
 interface TeamCardProps {
 	title: string;
 	fields: { name: string; label: string }[];
+	submitText: string;
 	onSubmit: (value: NewTeamFields | { joinCode: string }) => Promise<void>;
 }
 
 function TeamCard(props: TeamCardProps) {
-	const { title, fields, onSubmit } = props;
+	const { title, fields, submitText, onSubmit } = props;
 	const layout = {
 		labelCol: { span: 8 },
 		wrapperCol: { span: 16 },
@@ -79,7 +80,7 @@ function TeamCard(props: TeamCardProps) {
 					</Form.Item>
 				))}
 				<Button type="primary" htmlType="submit" className="ant-col-offset-8">
-					Submit
+					{ submitText }
 				</Button>
 			</Form>
 		</Card>
@@ -220,11 +221,12 @@ function TeamSetup({ handleSubmit }: TeamSetupProps) {
 			<Row justify="center">
 				<Col span={12}>
 					<TeamCard
-						title="New Team"
+						title="Create a New Team"
 						fields={[
 							{ name: 'teamName', label: 'Team Name' },
 							{ name: 'devpost', label: 'Devpost' },
 						]}
+						submitText='Create Team'
 						onSubmit={formData => handleSubmit(formData, mutate)}
 					/>
 				</Col>
@@ -237,8 +239,9 @@ function TeamSetup({ handleSubmit }: TeamSetupProps) {
 			<Row justify="center">
 				<Col span={12}>
 					<TeamCard
-						title="Join Team"
+						title="Join an Existing Team"
 						fields={[{ name: 'joinCode', label: 'Join Code' }]}
+						submitText='Join Team'
 						onSubmit={formData => handleSubmit(formData, mutate)}
 					/>
 				</Col>
