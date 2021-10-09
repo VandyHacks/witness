@@ -8,6 +8,9 @@ export default function ErrorMessage({ status }: { status: number }) {
 		case 403:
 			message = '403: You are not permitted to access this content.';
 			break;
+		case 409:
+			message = 'Click the "Team" tab on the menu bar to join or create a team!'
+			break;
 		case 418:
 			message = (
 				<p>
