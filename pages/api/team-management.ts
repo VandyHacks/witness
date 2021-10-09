@@ -6,6 +6,7 @@ import { getSession } from 'next-auth/client';
 import { TeamProfile } from '../team';
 import User from '../../models/user';
 import { ObjectId } from 'mongodb';
+import { RestFilled } from '@ant-design/icons';
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 7);
 
@@ -31,10 +32,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				team.members.push(hacker);
 				await team.save();
 				return res.status(201).send(team);
-			} else if (teamName) {
+			} else if (teamName.trim()) {
+				try {
+					const _url = new URL(devpost);	
+				} catch {
+					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://?");
+				}
+				
 				// make team
 				const teamObj = {
-					name: teamName,
+					name: teamName.trim(),
 					joinCode: nanoid(),
 					devpost,
 					members: [hacker._id],
@@ -43,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				await team.save();
 				return res.status(201).send(team);
 			} else {
-				return res.status(400).send('Either joinCode or teamName required.');
+				return res.status(400).send('Either a join code or a team name is required.');
 			}
 		}
 		case 'PATCH': {
@@ -51,8 +58,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (!team) return res.status(404).send('Team not found');
 
 			const { teamName, devpost } = req.body;
-			if (devpost) team.devpost = devpost;
-			if (teamName) team.name = teamName;
+			if (devpost) {
+				try {
+					const _url = new URL(devpost);	
+				} catch {
+					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://?");
+				}
+				team.devpost = devpost;
+			}
+			if (teamName.trim()) team.name = teamName.trim();
 
 			await team.save();
 			return res.status(200).send(team);

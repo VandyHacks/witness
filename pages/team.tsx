@@ -120,7 +120,7 @@ function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator<any>) => Pro
 	const { mutate } = useSWRConfig();
 	return (
 		<Popconfirm
-			title="Are you sure"
+			title="Are you sure?"
 			placement="right"
 			okText="Yes"
 			cancelText="No"
