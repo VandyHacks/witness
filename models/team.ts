@@ -6,6 +6,11 @@ const TeamSchema = new Schema(
 			type: String,
 			required: true,
 			unique: true,
+			validate: {
+				// check for commas since we export to csv
+				validator: (n: string) => n.includes(','),
+				message: 'Please do not include commas in your team name',
+			},
 		},
 		joinCode: {
 			type: String,
