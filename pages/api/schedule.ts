@@ -2,12 +2,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
 import Schedule from '../../models/schedule';
 import User from '../../models/user';
+import Team from '../../models/team';
 
 import { OrganizerScheduleDisplay, ScheduleDisplay } from '../../types/client';
 import { ScheduleData } from '../../types/database';
 
-async function getJudgeSchedule(userId: string): Promise<ScheduleDisplay[]> {
-	const schedule = await Schedule.find({ judges: userId })
+async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
+	const schedule = await Schedule.find({ judges: userID })
 		.sort('time')
 		.populate({ path: 'team', populate: { path: 'members', model: User } })
 		.populate('judges')
@@ -29,8 +30,11 @@ async function getJudgeSchedule(userId: string): Promise<ScheduleDisplay[]> {
 	}
 }
 
-async function getHackerSchedule(userId: string): Promise<ScheduleDisplay[]> {
-	return Promise.resolve([]);
+async function getHackerSchedule(userID: string): Promise<ScheduleDisplay[] | string> {
+	const team = await Team.findOne({ 'members.id': userID });
+	if (!team) return 'no team';
+	const schedule = await Schedule.findOne({ team: team.id });
+	return schedule;
 }
 
 async function getOrganizerSchedule(): Promise<OrganizerScheduleDisplay[]> {
@@ -74,11 +78,12 @@ export default async function handler(
 				break;
 			case 'HACKER':
 				schedule = await getHackerSchedule(userID);
+				if (schedule === 'no team') return res.status(409).send('hacker needs to be in a team');
 				break;
 			case 'ORGANIZER':
 				schedule = await getOrganizerSchedule();
 		}
-		if (!schedule) return res.status(404).send('No assignments found for given judge.');
+		if (!schedule) return res.status(404).send('No assignments found for given user.');
 		return res.status(200).json(schedule);
 	} else if (req.method === 'POST') {
 		return res.status(200).send('Thanks');
