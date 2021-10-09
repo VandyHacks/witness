@@ -5,15 +5,10 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/client';
 import { TeamProfile } from '../team';
 import User from '../../models/user';
+import { ObjectId } from 'mongodb';
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 7);
 
-const mockTeam = {
-	name: 'The Johnny Ives',
-	joinCode: 'A8GB89',
-	devpost: new URL('https://example.com/devpost'),
-	members: ['Mary Pickford', 'Jonathan Groff', 'Hamilton Meyers', 'Sam Tree'],
-};
 export default async function handler(req: NextApiRequest, res: NextApiResponse<TeamProfile | string>) {
 	const session = await getSession({ req });
 	if (session?.userType !== 'HACKER') return res.status(403).send('Forbidden');
@@ -22,8 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	const hacker = await User.findById(session.userID);
 	switch (req.method) {
 		case 'GET':
-			const team = await Team.findOne({ "members.id": session.userID });
-			console.log("TEAM:", team)
+			const team = await Team.findOne({ members: session.userID })
+				.populate({ path: 'members', model: User })
+				.lean();
 			return res.status(team ? 200 : 409).send(team);
 		case 'POST': {
 			const { joinCode, teamName, devpost } = req.body;
@@ -41,9 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					name: teamName,
 					joinCode: nanoid(),
 					devpost,
-					members: [hacker],
+					members: [new ObjectId(hacker._id)],
 				};
-				console.log(teamObj);
 				const team = new Team(teamObj);
 				await team.save();
 				return res.status(201).send(team);
@@ -52,8 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 		}
 		case 'PATCH': {
-			console.log("owo in patch");
-			const team = await Team.findOne({ "members.id": session.userID });
+			const team = await Team.findOne({ members: session.userID });
 			if (!team) return res.status(404).send('Team not found');
 
 			const { teamName, devpost } = req.body;
@@ -61,17 +55,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (teamName) team.name = teamName;
 
 			await team.save();
-			console.log("new team", team);
 			return res.status(200).send(team);
 		}
 
 		case 'DELETE': {
 			const { userID } = session;
-			let team = await Team.findOne({ "members.id": session.userID });
+			let team = await Team.findOne({ members: session.userID });
 			if (!team) return res.status(404).send('Team not found');
-			team.members = team.members.filter((member: { id: string; }) => member.id !== userID);
+			team.members = team.members.filter((member: ObjectId) => member.toString() !== userID);
 			if (!team.members.length) {
-				await Team.deleteOne({ "members.id": session.userID });
+				await Team.deleteOne({ members: session.userID });
 				return res.status(200).send(`Team ${team.name} deleted successfully.`);
 			}
 			await team.save();

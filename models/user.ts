@@ -22,6 +22,7 @@ export const UserSchema = new Schema(
 		},
 		team: {
 			type: Schema.Types.ObjectId,
+			ref: 'Team',
 		},
 	},
 	{
