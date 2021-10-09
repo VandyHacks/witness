@@ -6,7 +6,6 @@ import { getSession } from 'next-auth/client';
 import { TeamProfile } from '../team';
 import User from '../../models/user';
 import { ObjectId } from 'mongodb';
-import { RestFilled } from '@ant-design/icons';
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 7);
 
