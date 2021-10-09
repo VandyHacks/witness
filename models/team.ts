@@ -9,7 +9,7 @@ const TeamSchema = new Schema(
 			validate: {
 				// check for commas since we export to csv
 				validator: (n: string) => !n.includes(','),
-				message: 'Please do not include commas in your team name',
+				message: 'Please do not include commas in your team name.',
 			},
 		},
 		joinCode: {

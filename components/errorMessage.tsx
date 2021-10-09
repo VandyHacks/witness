@@ -26,6 +26,9 @@ export default function ErrorMessage({ status }: { status: number }) {
 				</p>
 			);
 			break;
+		case 425:
+			message = 'Judging schedules aren\'t out yet — check back later!';
+			break;
 		default:
 			message = 'An unknown error has occured. Please try again or reach out to an organizer.';
 	}

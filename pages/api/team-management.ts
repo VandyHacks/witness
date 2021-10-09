@@ -6,6 +6,7 @@ import { getSession } from 'next-auth/client';
 import { TeamProfile } from '../team';
 import User from '../../models/user';
 import { ObjectId } from 'mongodb';
+import { MongoServerError } from 'mongoose/node_modules/mongodb';
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 7);
 
@@ -46,7 +47,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					members: [hacker._id],
 				};
 				const team = new Team(teamObj);
-				await team.save();
+
+				try {
+					await team.save();
+				} catch (e) {
+					if (e instanceof MongoServerError && e.errmsg.includes("name")) {
+						return res.status(400).send('This team name is already taken!');
+					}
+
+					throw e;
+				}
+
 				return res.status(201).send(team);
 			} else {
 				return res.status(400).send('Either a join code or a team name is required.');
@@ -67,7 +78,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 			if (teamName.trim()) team.name = teamName.trim();
 
-			await team.save();
+			try {
+				await team.save();
+			} catch (e) {
+				if (e instanceof MongoServerError && e.errmsg.includes("name")) {
+					return res.status(400).send('This team name is already taken!');
+				}
+
+				throw e;
+			}
+			
 			return res.status(200).send(team);
 		}
 
