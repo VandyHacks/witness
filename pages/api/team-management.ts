@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					name: teamName,
 					joinCode: nanoid(),
 					devpost,
-					members: [new ObjectId(hacker._id)],
+					members: [hacker._id],
 				};
 				const team = new Team(teamObj);
 				await team.save();
