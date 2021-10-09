@@ -11,6 +11,7 @@ import {
 	notification,
 	Select,
 	Divider,
+	Upload,
 } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
@@ -19,6 +20,7 @@ import useSWR from 'swr';
 import { ResponseError, UserData } from '../types/database';
 import { OrganizerScheduleDisplay, ScheduleDisplay, TeamSelectData } from '../types/client';
 import { TeamData } from '../types/database';
+import { UploadOutlined } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -66,87 +68,30 @@ function TableCell(data: OrganizerScheduleDisplay | null) {
 	) : null;
 }
 
-// function useStickyState(defaultValue: ScheduleDisplay[], key: string) {
-// 	const [value, setValue] = useState(defaultValue);
-
-// 	useEffect(() => {
-// 		const stickyValue = window.localStorage.getItem(key);
-
-// 		if (stickyValue !== null) {
-// 			setValue(JSON.parse(stickyValue));
-// 		}
-// 	}, [key]);
-
-// 	useEffect(() => {
-// 		window.localStorage.setItem(key, JSON.stringify(value));
-// 	}, [key, value]);
-
-// 	return { value, setValue };
-// }
-// function executeFunction(instruction, setter) {
-// 	setter();
-// }
-
-// function Instruction() {
-// 	return <span></span>;
-// }
-// function ScheduleManager(onStart, onSubmit, onCancel) {
-// const
-
-// return <Button>Hello</Button>;
-// const [instructions, setInstructions] = useState([]);
-// const data = ['hello', 'hello1', 'hello2'];
-// return (
-// 	<>
-// 		<Space direction="vertical" style={{ width: '100%' }}>
-// 			<List
-// 				header={<div>Header</div>}
-// 				footer={<div>Footer</div>}
-// 				bordered
-// 				dataSource={data}
-// 				renderItem={item => <List.Item>{item}</List.Item>}
-// 			/>
-// 			<Button>Hello</Button>
-// 		</Space>
-// 	</>
-// );
-// }
-
-// function handleSubmitEdit() {
-// return true;
-// }
-
 enum EditingStates {
 	NotEditing = 'NOT_EDITING',
 	Accept = 'ACCEPT',
 	Reject = 'REJECT',
 }
 
-export default function OrganizerSchedule(props: ScheduleProps) {
-	const { data: originalData } = props;
-	const [workingData, setWorkingData] = useState(originalData);
-	const judgingLength = parseInt(JUDGING_LENGTH || '600000');
-	const numRooms = parseInt(NUM_ROOMS || '5');
-	const [editingState, setEditingState] = useState(EditingStates.NotEditing);
+function handleSubmitSuccess(isNew: boolean) {
+	notification['success']({
+		message: `Successfully updated!`,
+		placement: 'bottomRight',
+	});
+}
 
-	const { data: judgesData, error: judgesError } = useSWR('/api/users?usertype=JUDGE', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get schedule.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as UserData[];
+function handleSubmitFailure(message: string) {
+	notification['error']({
+		message: 'Oops, something went wrong!',
+		description: message,
+		placement: 'bottomRight',
 	});
-	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of teams.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as TeamData[];
-	});
+}
+
+export default function OrganizerSchedule(props: ScheduleProps) {
+	const { data } = props;
+	const numRooms = parseInt(NUM_ROOMS || '5');
 
 	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
 	const rooms = useMemo(
@@ -169,46 +114,15 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				title: <a href={roomURL}>Room {roomNum + 1}</a>,
 				dataIndex: roomURL,
 				key: (roomNum + 1).toString(),
-				render:
-					editingState === EditingStates.NotEditing
-						? TableCell
-						: (data: ScheduleDisplay | null) => {
-								// console.log('TEAMS:', teams);
-								return (
-									<Space direction="vertical" style={{ width: '100%' }}>
-										Team:
-										<Select
-											style={{ width: '100%' }}
-											onChange={stuff => console.log(stuff)}
-											value={data?.teamId}>
-											{teamsData?.map(team => (
-												<Option key={team._id.toString()} value={team._id.toString()}>
-													{team.name}
-												</Option>
-											))}
-										</Select>
-										Judges:
-										<Select
-											mode="multiple"
-											style={{ width: '100%' }}
-											onChange={stuff => console.log(stuff)}>
-											{judgesData?.map(judge => (
-												<Option key={judge._id.toString()} value={judge._id.toString()}>
-													{judge.name}
-												</Option>
-											))}
-										</Select>
-									</Space>
-								);
-						  },
+				render: TableCell,
 			})),
 		],
-		[rooms, editingState]
+		[rooms]
 	);
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
 		const dataAsMap = new Map();
-		workingData.forEach(assignment => {
+		data.forEach(assignment => {
 			const { time, zoom } = assignment;
 			if (!dataAsMap.has(time)) {
 				dataAsMap.set(time, Object.fromEntries(rooms.map(room => [room, null])));
@@ -219,9 +133,24 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			time: pair[0],
 			...pair[1],
 		}));
-	}, [workingData, rooms]);
+	}, [data, rooms]);
 
 	// Pools of data for if editing is happening.
+	const [uploadData, setUploadData] = useState<string | ArrayBuffer | null | undefined>('');
+	const uploadProps = {
+		name: 'file',
+		accept: '.csv',
+		maxCount: 1,
+		async onChange(info: any) {
+			const reader = new FileReader();
+			reader.onload = e => {
+				setUploadData(e.target?.result);
+			};
+			reader.readAsText(info.file.originFileObj);
+			console.log('File:', uploadData);
+			const res = await fetch('/api/manual-edit', { method: 'PATCH', body: uploadData as string });
+		},
+	};
 
 	return (
 		<Table
@@ -245,6 +174,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 								<a href="/api/export-schedule-detailed" target="_blank" download>
 									<strong>Export detailed schedule</strong>
 								</a>
+								<Upload {...uploadProps}>
+									<Button icon={<UploadOutlined />}>Click to Upload</Button>
+								</Upload>
 							</Space>
 						</Table.Summary.Cell>
 					</Table.Summary.Row>

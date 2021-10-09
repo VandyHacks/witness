@@ -6,7 +6,7 @@ import TeamSelect from '../components/teamSelect';
 import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { JudgingFormFields } from '../types/client';
-import { TeamsData } from './api/teams';
+import { TeamSelectData } from '../types/client';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/database';
@@ -65,7 +65,7 @@ export default function Forms() {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as TeamsData[];
+		return (await res.json()) as TeamSelectData[];
 	});
 
 	const [isNewForm, setIsNewForm] = useState(false);
@@ -106,10 +106,10 @@ export default function Forms() {
 		// if error fetching teams, everything dies
 		pageContent = <ErrorMessage status={teamsError.status} />;
 	} else if (!teamsData) {
-		// otherwise, wait for teamsData to load
+		// otherwise, wait for TeamSelectData to load
 		pageContent = <Skeleton />;
 	} else {
-		// teamsData loaded, moving on
+		// TeamSelectData loaded, moving on
 		let formSection;
 		if (!teamId) {
 			// if no team selected, show default screen

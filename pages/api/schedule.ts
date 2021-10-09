@@ -3,7 +3,8 @@ import { getSession } from 'next-auth/client';
 import Schedule from '../../models/schedule';
 import User from '../../models/user';
 
-import { ScheduleDisplay } from '../../types/client';
+import { OrganizerScheduleDisplay, ScheduleDisplay } from '../../types/client';
+import { ScheduleData } from '../../types/database';
 
 async function getJudgeSchedule(userId: string): Promise<ScheduleDisplay[]> {
 	const schedule = await Schedule.find({ judges: userId })
@@ -32,7 +33,33 @@ async function getHackerSchedule(userId: string): Promise<ScheduleDisplay[]> {
 	return Promise.resolve([]);
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ScheduleDisplay[] | string>) {
+async function getOrganizerSchedule(): Promise<OrganizerScheduleDisplay[]> {
+	const schedule = await Schedule.find()
+		.sort('time')
+		.populate({ path: 'team', populate: { path: 'members', model: User } })
+		.populate('judges')
+		.lean();
+	if (schedule) {
+		return schedule.map(assignment => {
+			return {
+				time: assignment.time,
+				teamName: assignment.team.name,
+				teamId: assignment.team._id.toString(),
+				memberNames: assignment.team.members.map((member: any) => member.name),
+				judges: assignment.judges.map((judge: any) => ({ name: judge.name, id: judge._id.toString() })),
+				devpost: assignment.team.devpost,
+				zoom: assignment.zoom,
+			};
+		});
+	} else {
+		return schedule;
+	}
+}
+
+export default async function handler(
+	req: NextApiRequest,
+	res: NextApiResponse<ScheduleDisplay[] | OrganizerScheduleDisplay[] | string>
+) {
 	const session = await getSession({ req });
 	if (!session) return res.status(403).send('Forbidden');
 	else if (!session.userType) return res.status(418).send('No user type');
@@ -48,6 +75,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			case 'HACKER':
 				schedule = await getHackerSchedule(userID);
 				break;
+			case 'ORGANIZER':
+				schedule = await getOrganizerSchedule();
 		}
 		if (!schedule) return res.status(404).send('No assignments found for given judge.');
 		return res.status(200).json(schedule);
