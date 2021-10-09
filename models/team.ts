@@ -8,7 +8,7 @@ const TeamSchema = new Schema(
 			unique: true,
 			validate: {
 				// check for commas since we export to csv
-				validator: (n: string) => n.includes(','),
+				validator: (n: string) => !n.includes(','),
 				message: 'Please do not include commas in your team name',
 			},
 		},
