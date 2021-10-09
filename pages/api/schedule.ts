@@ -74,6 +74,7 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 	// Check that the CSV is good.
 	const heading = ['Time', 'Zoom', 'Judge1', 'Judge2', 'Judge3', 'TeamName'];
 	if (!intermediate.every(row => row.length === 6) || !intermediate[0].every((el, index) => el === heading[index])) {
+		console.log('INTERMEDIATE:', intermediate);
 		return 'Invalid CSV format. Make sure your headings are Time, Zoom, Judge1, Judge2, Judge3, TeamName';
 	}
 	console.log('Passed format');
@@ -125,13 +126,15 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 
 	// Check that objects actually exist. Relies on teamnames and judges being unique :/
 	// minor TODO: use judge emails instead of names.
+	const allJudges = new Set((await User.find({ userType: 'JUDGE' })).map((judge: any) => judge.name));
+	const allTeams = new Set((await Team.find({})).flatMap((team: any) => team.name));
 	for (const [i, assignment] of processed.entries()) {
 		for (const [j, name] of assignment.judgeNames.entries()) {
-			if (!(await User.findOne({ name: assignment.judgeNames[j] }))) {
+			if (!allJudges.has(name)) {
 				return `Judge "${name}" does not exist (row ${i + 2} judge ${j + 1}).`;
 			}
 		}
-		if (!(await Team.findOne({ name: assignment.teamName }))) {
+		if (!allTeams.has(assignment.teamName)) {
 			return `Team "${assignment.teamName}" does not exist (row ${i + 2}).`;
 		}
 		// TODO: validate zooms
