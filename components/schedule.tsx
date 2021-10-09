@@ -74,14 +74,14 @@ enum EditingStates {
 	Reject = 'REJECT',
 }
 
-function handleSubmitSuccess(isNew: boolean) {
+function handleSuccess() {
 	notification['success']({
-		message: `Successfully updated!`,
+		message: 'Successfully set schedul!',
 		placement: 'bottomRight',
 	});
 }
 
-function handleSubmitFailure(message: string) {
+function handleFailure(message: string) {
 	notification['error']({
 		message: 'Oops, something went wrong!',
 		description: message,
@@ -169,12 +169,15 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 												setUploadData(e.target?.result);
 											};
 											reader.readAsText(info.file.originFileObj);
-											console.log('File:', uploadData);
 											const res = await fetch('/api/schedule', {
 												method: 'PUT',
 												body: uploadData as string,
 											});
-											console.log('RES:', res);
+											if (res.ok) {
+												handleSuccess();
+											} else {
+												handleFailure(await res.text());
+											}
 										}
 									}}>
 									<Button icon={<UploadOutlined />}>Click to Upload</Button>

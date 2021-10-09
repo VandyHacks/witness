@@ -86,6 +86,7 @@ export default async function handler(
 		if (!schedule) return res.status(404).send('No assignments found for given user.');
 		return res.status(200).json(schedule);
 	} else if (req.method === 'PUT') {
+		console.log('MY BODY:', req.body);
 		return res.status(200).send('Thanks');
 	}
 	return res.status(405).send('Method not supported brother');
