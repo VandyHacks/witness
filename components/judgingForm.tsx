@@ -46,7 +46,7 @@ export default function JudgingForm(props: JudgingFormProps) {
 				<Form.Item name="comments" label="Comments">
 					<TextArea />
 				</Form.Item>
-				<Form.Item name="feedback" label="Feedback" extra="this will be shared with the team">
+				<Form.Item name="feedback" label="Feedback" extra="This will be shared with the team!">
 					<TextArea />
 				</Form.Item>
 				<Button type="primary" htmlType="submit" className="ant-col-offset-12">
