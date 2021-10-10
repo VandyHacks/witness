@@ -50,7 +50,7 @@ function TableCell(data: OrganizerScheduleDisplay | null) {
 							))}
 						</li>
 						<li key={`${data.teamName}-devpost`}>
-							Devpost <Link href={data.devpost}>link</Link>
+						<Link href={data.devpost}><a style={{color: '#1890ff'}} target="_blank"> View Devpost</a></Link>
 						</li>
 					</ul>
 				</Panel>
@@ -223,9 +223,12 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			dataIndex: 'project',
 			key: 'project',
 			render: ({ name, link }: { name: string; link: URL }) => (
+				<>
+				<td>{name}</td>
 				<Link href={link} passHref>
-					<Button type="link">{name}</Button>
+					<a style={{color: '#1890ff'}} target="_blank">Devpost</a>
 				</Link>
+				</>
 			),
 		},
 		{

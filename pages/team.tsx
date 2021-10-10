@@ -142,6 +142,17 @@ function TeamManager(props: TeamManagerProps) {
 	// TODO: STYLE THIS!
 	const { name, joinCode, devpost, members } = props.profile;
 	const { handleSubmit, onLeave } = props;
+	const onFormFinish = (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => {
+		notification['success']({
+			message: (
+				<span>
+					Successfully Changed!
+				</span>
+			),
+			placement: 'bottomRight',
+		});
+		handleSubmit(data, mutate);
+	}
 	const { mutate } = useSWRConfig();
 	const layout = {
 		labelCol: { span: 4 },
@@ -172,7 +183,7 @@ function TeamManager(props: TeamManagerProps) {
 			<Divider />
 			<Collapse accordion>
 				<Panel header="Change Team Name" key="1">
-					<Form {...layout} labelAlign="left" onFinish={formData => handleSubmit(formData, mutate)}>
+					<Form {...layout} labelAlign="left" onFinish={formData => onFormFinish(formData, mutate)}>
 						<Form.Item
 							name="teamName"
 							label="New Team Name"
@@ -185,7 +196,7 @@ function TeamManager(props: TeamManagerProps) {
 					</Form>
 				</Panel>
 				<Panel header="Change Devpost" key="2">
-					<Form {...layout} labelAlign="left" onFinish={formData => handleSubmit(formData, mutate)}>
+					<Form {...layout} labelAlign="left" onFinish={formData => onFormFinish(formData, mutate)}>
 						<Form.Item
 							name="devpost"
 							label="New Devpost URL"
