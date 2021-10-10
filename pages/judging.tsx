@@ -146,3 +146,9 @@ export default function Forms() {
 		</Outline>
 	);
 }
+
+export async function getStaticProps() {
+	return {
+	  props: { title: "Judging" }
+	}
+}

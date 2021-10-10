@@ -170,3 +170,9 @@ export default function Dashboard() {
 		</Outline>
 	);
 }
+
+export async function getStaticProps() {
+	return {
+	  props: { title: "Dashboard" }
+	}
+}
