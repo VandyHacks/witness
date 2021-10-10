@@ -134,10 +134,10 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			lastTime = assignment.time;
 			message = `Schedule is not sorted. See line ${index + 2}.`;
 			return true;
-		} else if (assignment.time.getMilliseconds() !== lastTime.getMilliseconds()) {
+		} else if (assignment.time.getTime() !== lastTime.getTime()) {
 			// Checks for the first increment. All following increments must be the same.
 			if (interval === -1) {
-				interval = assignment.time.getMilliseconds() - lastTime.getMilliseconds();
+				interval = assignment.time.getTime() - lastTime.getTime();
 			} else {
 				message = `Schedule does not advance in equal increments. See line ${index}.`;
 				return true;
