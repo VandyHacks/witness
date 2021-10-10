@@ -93,6 +93,7 @@ function handleFailure(message: string) {
 		message: 'Oops, something went wrong!',
 		description: message,
 		placement: 'bottomRight',
+		duration: null,
 	});
 }
 
