@@ -39,9 +39,9 @@ async function getHackerSchedule(userID: string): Promise<any | string> {
 	return [{
 		teamName: team.name,
 		time: schedule.time,
-		memberNames: team.members,
-		judgeNames: schedule.judges,
-		devpost: schedule.devpost,
+		memberNames: team.members.map((x: any) => x.name),
+		judgeNames: schedule.judges.map((x: any) => x.name),
+		devpost: team.devpost,
 		zoom: schedule.zoom
 	}];
 }
