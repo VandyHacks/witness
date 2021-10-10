@@ -12,6 +12,7 @@ import {
 	Select,
 	Divider,
 	Upload,
+	Spin,
 } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
@@ -76,7 +77,13 @@ enum EditingStates {
 
 function handleSuccess() {
 	notification['success']({
-		message: 'Successfully set schedul!',
+		message: (
+			<span>
+				Successfully set schedule!
+				<br />
+				Please refresh the page.
+			</span>
+		),
 		placement: 'bottomRight',
 	});
 }
@@ -135,6 +142,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 		}));
 	}, [data, rooms]);
 
+	const [loading, setLoading] = useState(false);
 	return (
 		<Table
 			dataSource={tableData}
@@ -158,6 +166,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 									<strong>Export detailed schedule</strong>
 								</a>
 								<Upload
+									disabled={loading}
 									name="file"
 									accept=".csv"
 									maxCount={1}
@@ -166,10 +175,12 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 										let uploadData: string | ArrayBuffer | null | undefined = '';
 										reader.onload = async e => {
 											uploadData = e.target?.result;
+											setLoading(true);
 											const res = await fetch('/api/schedule', {
 												method: 'PUT',
 												body: uploadData as string,
 											});
+											setLoading(false);
 											if (res.ok) {
 												handleSuccess();
 											} else {
@@ -180,7 +191,11 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 											reader.readAsText(info.file.originFileObj);
 										}
 									}}>
-									<Button icon={<UploadOutlined />}>Click to Upload</Button>
+									<Button icon={<UploadOutlined />}>
+										<Space style={{ marginLeft: '10px' }}>
+											Click to Upload {loading && <Spin size="small" />}
+										</Space>
+									</Button>
 								</Upload>
 							</Space>
 						</Table.Summary.Cell>
