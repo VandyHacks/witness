@@ -6,6 +6,16 @@ import Team from '../../models/team';
 import { JudgingFormFields } from '../../types/client';
 import log from '../../middleware/log';
 
+async function validateJudgingForm(judgingForm: any): Promise<string | JudgingFormFields> {
+	if (judgingForm['comments'] === '') {
+		return 'Comments cannot be empty.';
+	}
+	if (judgingForm['feedback'] === '') {
+		return 'Feedback cannot be empty.';
+	}
+	return judgingForm;
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormFields | string>) {
 	const teamID = req.query.id;
 	const session = await getSession({ req });
@@ -21,6 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return res.status(200).json(scores);
 		}
 		case 'POST': {
+			const validateResults = await validateJudgingForm(req.body);
+			if (typeof validateResults === 'string') return res.status(406).send(validateResults);
 			const scoresDoc = new Scores({ team: teamID, judge: judgeID, ...req.body });
 			const scores = await scoresDoc.save();
 
@@ -33,6 +45,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return res.status(201).send(scores);
 		}
 		case 'PATCH': {
+			const validateResults = await validateJudgingForm(req.body);
+			if (typeof validateResults === 'string') return res.status(406).send(validateResults);
 			const scores = await Scores.findOneAndUpdate(
 				{ team: teamID, judge: judgeID },
 				{ team: teamID, judge: judgeID, ...req.body }
@@ -40,7 +54,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			const team = await Team.findById(teamID);
 			await log(judgeID, `Update scores for team ${team.name} (join code ${team.joinCode})`);
-			return res.status(scores ? 200 : 409).send(scores);
+			if (scores === 200) {
+				return res.status(scores).send(scores);				
+			}	else if (scores === 409) {
+				return res.status(scores).send('Please try again or contact an organizer if the problem persists.');				
+			}
 		}
 		default:
 			return res.status(405).send('Method not supported brother');
