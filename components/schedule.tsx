@@ -68,6 +68,14 @@ function TableCell(data: OrganizerScheduleDisplay | null) {
 							<Tag key={judge.id}>{judge.name}</Tag>
 						))}
 					</li>
+					<li>
+						<Link href={data.zoom}>
+							<a style={{ color: '#1890ff' }} target="_blank">
+								{' '}
+								Join Room
+							</a>
+						</Link>
+					</li>
 				</ul>
 			</div>
 		</Space>
@@ -112,7 +120,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 		() =>
 			Array(numRooms)
 				.fill(null)
-				.map((_, i) => `vhl.ink/room-${i + 1}`),
+				.map((_, i) => `https://vhl.ink/room-${i + 1}`),
 		[numRooms]
 	);
 	const columns = useMemo(
