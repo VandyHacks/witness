@@ -177,7 +177,14 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 									name="file"
 									accept=".csv"
 									maxCount={1}
-									action="/api/schedule">
+									action="/api/schedule"
+									onChange={async (info: any) => {
+										if (info.status == "error") {
+											handleFailure(info.response);
+										} else if (info.status == "done") {
+											handleSuccess();
+										}
+									}}>
 									<Button icon={<UploadOutlined />}>
 										<Space style={{ marginLeft: '10px' }}>
 											Click to Upload {loading && <Spin size="small" />}
