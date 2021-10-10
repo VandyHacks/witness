@@ -170,7 +170,9 @@ function TeamManager(props: TeamManagerProps) {
 					<Tag>{joinCode}</Tag>
 				</Descriptions.Item>
 				<Descriptions.Item label="Devpost" span={24}>
-					{devpost}
+					<a href={devpost.toString()} target="_blank" rel="noreferrer">
+						{devpost}
+					</a>
 				</Descriptions.Item>
 				{/* <Descriptions.Item label="Members">empty</Descriptions.Item> */}
 				<Descriptions.Item label="Members">
