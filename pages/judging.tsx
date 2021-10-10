@@ -183,7 +183,7 @@ export default function Forms() {
 	}
 
 	return (
-		<Outline selectedKey="forms">
+		<Outline selectedKey="judging">
 			<h1>Judging</h1>
 			{pageContent}
 		</Outline>
