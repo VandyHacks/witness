@@ -60,10 +60,10 @@ function UpNext(props: ScheduleDisplay | any) {
 	return <ScheduleCard {...(props as ScheduleDisplay)} headStyle={{ backgroundColor: '#ffe58f' }} title="Next Up" />;
 }
 
-function AllDone() {
+function NoSessions() {
 	return (
-		<Card title={'Mission Complete'} headStyle={{ backgroundColor: '#b7eb8f' }}>
-			<h1>You are all done. Thank you for being a part of VandyHacks VIII!</h1>
+		<Card title={'No sessions scheduled.'} headStyle={{ backgroundColor: '#b7eb8f' }}>
+			<h1>You have no upcoming sessions!</h1>
 		</Card>
 	);
 }
@@ -74,7 +74,7 @@ interface CardsProps {
 
 export default function Cards({ current, next }: CardsProps) {
 	if (current === undefined && next === undefined) {
-		return <AllDone />;
+		return <NoSessions />;
 	} else {
 		return (
 			<Row gutter={16}>
