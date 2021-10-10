@@ -50,7 +50,12 @@ function TableCell(data: OrganizerScheduleDisplay | null) {
 							))}
 						</li>
 						<li key={`${data.teamName}-devpost`}>
-						<Link href={data.devpost}><a style={{color: '#1890ff'}} target="_blank"> View Devpost</a></Link>
+							<Link href={data.devpost}>
+								<a style={{ color: '#1890ff' }} target="_blank">
+									{' '}
+									View Devpost
+								</a>
+							</Link>
 						</li>
 					</ul>
 				</Panel>
@@ -99,7 +104,8 @@ function handleFailure(message: string) {
 
 export default function OrganizerSchedule(props: ScheduleProps) {
 	const { data } = props;
-	const numRooms = parseInt(NUM_ROOMS || '5');
+	// const numRooms = parseInt(NUM_ROOMS || '5');
+	const numRooms = 2; // HOLY SHIT MAKE THIS GO AWAY IN PROD TODO TODO
 
 	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
 	const rooms = useMemo(
@@ -224,10 +230,12 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			key: 'project',
 			render: ({ name, link }: { name: string; link: URL }) => (
 				<>
-				<td>{name}</td>
-				<Link href={link} passHref>
-					<a style={{color: '#1890ff'}} target="_blank">Devpost</a>
-				</Link>
+					<td>{name}</td>
+					<Link href={link} passHref>
+						<a style={{ color: '#1890ff' }} target="_blank">
+							Devpost
+						</a>
+					</Link>
 				</>
 			),
 		},
