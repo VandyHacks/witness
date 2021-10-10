@@ -159,7 +159,7 @@ export default function Forms() {
 					(formSection = (
 						<AllScores
 							teamData={teamsData as TeamData[]}
-							scoreData={scoresData}
+							scoreData={scoresData!}
 							userData={usersData as UserData[]}
 						/>
 					));
