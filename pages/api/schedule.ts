@@ -36,7 +36,7 @@ async function getHackerSchedule(userID: string): Promise<ScheduleDisplay[] | st
 	const team = await Team.findOne({ members: userID });
 	if (!team) return 'no team';
 	const schedule = await Schedule.findOne({ team: team.id });
-	return schedule;
+	return [schedule];
 }
 
 async function getOrganizerSchedule(): Promise<OrganizerScheduleDisplay[]> {
