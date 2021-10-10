@@ -12,6 +12,9 @@ import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/database';
 import ErrorMessage from '../components/errorMessage';
 
+const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
+const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
+
 function handleSubmitSuccess(isNew: boolean) {
 	notification['success']({
 		message: `Successfully ${isNew ? 'submitted' : 'updated'}!`,
@@ -19,11 +22,14 @@ function handleSubmitSuccess(isNew: boolean) {
 	});
 }
 
-function handleSubmitFailure() {
+function handleSubmitFailure(errorDescription: string) {
+	if (errorDescription === '') {
+		errorDescription = GENERIC_ERROR_DESCRIPTION;
+	}
 	notification['error']({
-		message: 'Oops, something went wrong!',
-		description: 'Please try again or contact an organizer if the problem persists.',
-		placement: 'bottomRight',
+		message: GENERIC_ERROR_MESSAGE,
+		description: errorDescription,
+			placement: 'bottomRight',
 	});
 }
 
@@ -44,7 +50,9 @@ async function handleSubmit(
 	if (res.ok) {
 		mutate('/api/teams');
 		handleSubmitSuccess(isNewForm);
-	} else handleSubmitFailure();
+	} else {
+		handleSubmitFailure(await res.text());
+	}
 }
 
 export default function Forms() {
