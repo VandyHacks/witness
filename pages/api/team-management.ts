@@ -77,9 +77,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				} catch {
 					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://?");
 				}
-				
 				await log(session.userID, `Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`);
 				team.devpost = devpost;
+			}
+
+			if (teamName.trim()) {
+				await log(session.userID, `Changed team name ${team.name} => ${teamName} (join code ${team.joinCode})`);
+				team.name = teamName.trim();
 			}
 
 			if (teamName.trim()) {
