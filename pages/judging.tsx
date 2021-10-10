@@ -15,11 +15,12 @@ import ErrorMessage from '../components/errorMessage';
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
 const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
 
-function handleSubmitSuccess(isNew: boolean) {
+function handleSubmitSuccess(isNew: boolean, setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>) {
 	notification['success']({
 		message: `Successfully ${isNew ? 'submitted' : 'updated'}!`,
 		placement: 'bottomRight',
 	});
+	setIsNewForm(false);
 }
 
 function handleSubmitFailure(errorDescription: string) {
@@ -37,7 +38,8 @@ async function handleSubmit(
 	formData: JudgingFormFields,
 	mutate: ScopedMutator<any>,
 	teamId: string,
-	isNewForm: boolean
+	isNewForm: boolean,
+	setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>
 ) {
 	const res = await fetch(`/api/judging-form?id=${teamId}`, {
 		method: isNewForm ? 'POST' : 'PATCH',
@@ -49,7 +51,8 @@ async function handleSubmit(
 
 	if (res.ok) {
 		mutate('/api/teams');
-		handleSubmitSuccess(isNewForm);
+		mutate('/api/judging-form');
+		handleSubmitSuccess(isNewForm, setIsNewForm);
 	} else {
 		handleSubmitFailure(await res.text());
 	}
@@ -100,6 +103,7 @@ export default function Forms() {
 				error.status = res.status;
 				throw error;
 			}
+			setIsNewForm(false);
 			return (await res.json()) as JudgingFormFields;
 		}
 	);
@@ -134,7 +138,7 @@ export default function Forms() {
 				<JudgingForm
 					formData={formData}
 					isNewForm={isNewForm}
-					onSubmit={formData => handleSubmit(formData, mutate, teamId, isNewForm)}
+					onSubmit={formData => handleSubmit(formData, mutate, teamId, isNewForm, setIsNewForm)}
 				/>
 			);
 		}
