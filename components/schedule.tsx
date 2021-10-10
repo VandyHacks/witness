@@ -177,27 +177,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 									name="file"
 									accept=".csv"
 									maxCount={1}
-									onChange={async (info: any) => {
-										const reader = new FileReader();
-										let uploadData: string | ArrayBuffer | null | undefined = '';
-										reader.onload = async e => {
-											uploadData = e.target?.result;
-											setLoading(true);
-											const res = await fetch('/api/schedule', {
-												method: 'PUT',
-												body: uploadData as string,
-											});
-											setLoading(false);
-											if (res.ok) {
-												handleSuccess();
-											} else {
-												handleFailure(await res.text());
-											}
-										};
-										if (info.file.status === 'done') {
-											reader.readAsText(info.file.originFileObj);
-										}
-									}}>
+									action="/api/schedule">
 									<Button icon={<UploadOutlined />}>
 										<Space style={{ marginLeft: '10px' }}>
 											Click to Upload {loading && <Spin size="small" />}
