@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				await team.save();
 				await log(session.userID, `Joined team ${team.name} (join code ${team.joinCode})`);
 				return res.status(201).send(team);
-			} else if (teamName.trim()) {
+			} else if (teamName && teamName.trim()) {
 				try {
 					const _url = new URL(devpost);	
 				} catch {
@@ -81,12 +81,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				team.devpost = devpost;
 			}
 
-			if (teamName.trim()) {
-				await log(session.userID, `Changed team name ${team.name} => ${teamName} (join code ${team.joinCode})`);
-				team.name = teamName.trim();
-			}
-
-			if (teamName.trim()) {
+			if (teamName && teamName.trim()) {
 				await log(session.userID, `Changed team name ${team.name} => ${teamName} (join code ${team.joinCode})`);
 				team.name = teamName.trim();
 			}
