@@ -32,11 +32,18 @@ async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
 	}
 }
 
-async function getHackerSchedule(userID: string): Promise<ScheduleDisplay[] | string> {
-	const team = await Team.findOne({ members: userID });
+async function getHackerSchedule(userID: string): Promise<any | string> {
+	const team = await Team.findOne({ members: userID }).populate('members');
 	if (!team) return 'no team';
-	const schedule = await Schedule.findOne({ team: team.id });
-	return [schedule];
+	const schedule = await Schedule.findOne({ team: team.id }).populate('judges');
+	return [{
+		teamName: team.name,
+		time: schedule.time,
+		memberNames: team.members,
+		judgeNames: schedule.judges,
+		devpost: schedule.devpost,
+		zoom: schedule.zoom
+	}];
 }
 
 async function getOrganizerSchedule(): Promise<OrganizerScheduleDisplay[]> {
