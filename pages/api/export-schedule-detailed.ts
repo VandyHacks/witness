@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		item.judges[1]?.name,
 		item.judges[2]?.name,
 		item.team.name,
-		item.devpost,
+		item.team.devpost,
 		item.team.members[0]?.name,
 		item.team.members[1]?.name,
 		item.team.members[2]?.name,
