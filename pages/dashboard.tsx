@@ -17,7 +17,7 @@ const userID = '0';
 const userType = 'JUDGE';
 
 // let { JUDGING_LENGTH } = process.env;
-const JUDGING_LENGTH = '10000';
+const JUDGING_LENGTH = '600000';
 
 // TODO: this is horribly inefficient right now, as it checks through the whole dataset on every update
 // request. Rewrite this to use the restructured dataset in schedule.tsx.
@@ -69,9 +69,10 @@ export default function Dashboard() {
 			const now = Date.now();
 			let index = scheduleData.findIndex(el => now < new Date(el.time).getTime());
 			if (index === -1) index = scheduleData.length;
+			let currentlyGoingTime = new Date(scheduleData[index - 1]?.time).getTime() + judgingLength;
 			setNextScheduleItem(scheduleData[index]);
 			setCurrentScheduleItem(
-				now < new Date(scheduleData[index - 1]?.time).getTime() + judgingLength
+				now < currentlyGoingTime
 					? scheduleData[index - 1]
 					: undefined
 			);
@@ -85,14 +86,17 @@ export default function Dashboard() {
 			const now = Date.now();
 			if (scheduleData && nextIndex > -1) {
 				// Data has been received and state is initialized
-				if (now <= new Date(scheduleData[scheduleData.length - 1]?.time).getMilliseconds() + judgingLength) {
+				let time2 = new Date(scheduleData[scheduleData.length - 1]?.time).getTime() + judgingLength;
+				if (now <= time2) {
 					// Not yet done judging
-					if (nextIndex < scheduleData.length && now > (nextScheduleItem?.time || 0)) {
+					let time3 = new Date(currentScheduleItem?.time || 0).getTime() + judgingLength;
+
+					if (nextIndex < scheduleData.length && now >= new Date(nextScheduleItem?.time || 0).getTime()) {
 						// Next event should be current
 						setNextScheduleItem(scheduleData[nextIndex + 1]);
 						setCurrentScheduleItem(scheduleData[nextIndex]);
 						setNextIndex(nextIndex + 1);
-					} else if (now > new Date(currentScheduleItem?.time || 0).getMilliseconds() + judgingLength) {
+					} else if (now > time3) {
 						// Next event has not yet arrived but current event is over
 						setCurrentScheduleItem(undefined);
 					}
