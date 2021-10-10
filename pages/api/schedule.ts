@@ -36,6 +36,7 @@ async function getHackerSchedule(userID: string): Promise<any | string> {
 	const team = await Team.findOne({ members: userID }).populate('members');
 	if (!team) return 'no team';
 	const schedule = await Schedule.findOne({ team: team.id }).populate('judges');
+	if (!schedule) return schedule;
 	return [
 		{
 			teamName: team.name,
