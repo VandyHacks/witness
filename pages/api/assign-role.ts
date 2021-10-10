@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/client';
 import User from '../../models/user';
+import log from '../../middleware/log';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -38,6 +39,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				);
 			}
 
+			await log(session.userID, `Updated ${userData.length} user roles`);
 			return res.status(200).send(`Assigned roles to ${userData.length} users`);
 		default:
 			return res.status(405).send('Method not supported brother');

@@ -7,6 +7,7 @@ import Team from '../../models/team';
 import { OrganizerScheduleDisplay, ScheduleDisplay } from '../../types/client';
 import { ScheduleData } from '../../types/database';
 const { ObjectID } = require('mongodb');
+import log from '../../middleware/log';
 
 async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
 	const schedule = await Schedule.find({ judges: userID })
@@ -216,8 +217,10 @@ export default async function handler(
 		if (typeof validateResults === 'string') return res.status(406).send(validateResults);
 		try {
 			await updateSchedule(validateResults);
+			await log(userID, "Updated schedule");
 			return res.status(200).send('Thanks');
 		} catch (e) {
+			console.log(e);
 			return res.status(404).send('Validation worked but schedule update failed.');
 		}
 	}
