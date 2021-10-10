@@ -53,7 +53,7 @@ with open(f"{dir_path}/output.csv", "w", newline="") as f:
             if team_num >= len(TEAMS):
                 done = True
                 break
-            line = [datetime.strftime(time, TIME_FMT) + TZ_EXTRA, f"vhl.ink/room-{i+1}", *judge_names, TEAMS[team_num]]
+            line = [datetime.strftime(time, TIME_FMT) + TZ_EXTRA, f"https://vhl.ink/room-{i+1}", *judge_names, TEAMS[team_num]]
             writer.writerow(line)
             team_num += 1
         time += TIME_DELTA_10

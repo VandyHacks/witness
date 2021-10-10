@@ -118,7 +118,7 @@ async function populateDatabase() {
 	// Get zoom rooms (this is actually how it'll be done in prod too)
 	const rooms = Array(parseInt(NUM_ROOMS || '0'))
 		.fill(null)
-		.map((_, i) => `vhl.ink/room-${i + 1}`);
+		.map((_, i) => `https://vhl.ink/room-${i + 1}`);
 	// Fill schedule
 	const schedule: ScheduleData[] = [];
 	const teamsCopy = teams.slice();
