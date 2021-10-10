@@ -54,10 +54,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			const team = await Team.findById(teamID);
 			await log(judgeID, `Update scores for team ${team.name} (join code ${team.joinCode})`);
-			if (scores === 200) {
-				return res.status(scores).send(scores);				
-			}	else if (scores === 409) {
-				return res.status(scores).send('Please try again or contact an organizer if the problem persists.');				
+			if (scores) {
+				return res.status(200).send(scores);
+			} else {
+				return res.status(409).send('Please try again or contact an organizer if the problem persists.');
 			}
 		}
 		default:
