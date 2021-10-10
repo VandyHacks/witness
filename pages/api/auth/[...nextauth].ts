@@ -5,7 +5,6 @@ import vakenLogin from '../../../models/vakenLogin';
 import User from '../../../models/user';
 
 export default NextAuth({
-	// Configure one or more authentication providers
 	providers: [
 		Providers.GitHub({
 			clientId: process.env.GITHUB_ID,
@@ -15,18 +14,15 @@ export default NextAuth({
 			clientId: process.env.GOOGLE_ID,
 			clientSecret: process.env.GOOGLE_SECRET,
 		}),
-		// ...add more providers here
 	],
 	session: {
 		jwt: true,
 	},
-	// felix@yahoo.com
 	callbacks: {
-		async jwt(token, user) {
-			await dbConnect();
-			if (user?.image?.includes("github")) {
+		async signIn(user, account, profile) {
+			if (account.provider == "github") {
 				const res = await fetch('https://api.github.com/user/emails', {
-					headers: { Authorization: `token ${token}` },
+					headers: { Authorization: `token ${account.accessToken}` },
 				})
 				const emails = await res.json();
 				if (emails?.length > 0) {
@@ -34,7 +30,11 @@ export default NextAuth({
 				}
 			}
 
-			if (user?.email) {
+			return true;
+		},
+		async jwt(token, user, account) {
+			await dbConnect();
+			if (user) {
 				// user is only defined on first sign in
 				const login = await User.findOne({ email: user.email });
 
