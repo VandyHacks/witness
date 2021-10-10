@@ -179,9 +179,10 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 									maxCount={1}
 									action="/api/schedule"
 									onChange={async (info: any) => {
-										if (info.status == "error") {
-											handleFailure(info.response);
-										} else if (info.status == "done") {
+										console.log(info);
+										if (info.file.status == "error") {
+											handleFailure(info.file.response);
+										} else if (info.file.status == "done") {
 											handleSuccess();
 										}
 									}}>
