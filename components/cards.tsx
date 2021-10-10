@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Tag } from 'antd';
 import { Card } from 'antd';
 import styles from '../styles/Dashboard.module.css';
 import { DateTime } from 'luxon';
@@ -20,10 +20,22 @@ function ScheduleCard(props: ExtendedScheduleDisplay) {
 					{DateTime.fromISO(props.time).toLocaleString(DateTime.TIME_SIMPLE)}
 				</span>
 				<span>
+					<strong>Devpost: </strong>
+					<a style={{ color: '#1890ff' }} href={props.devpost.toString()} target="_blank" rel="noreferrer">
+						{props.devpost.toString()}
+					</a>
+				</span>
+				<span>
+				<strong >Zoom: </strong>
+				<a style={{ color: '#1890ff' }} href={props.zoom.toString()} target="_blank" rel="noreferrer">
+						{props.zoom.toString()}
+					</a>
+				</span>
+				<span>
 					<strong>Team: </strong>
 					<ul>
 						{props.memberNames.map(name => (
-							<li key={name}>{name}</li>
+							<li key={name}><Tag key={name}>{name}</Tag></li>
 						))}
 					</ul>
 				</span>
@@ -31,21 +43,9 @@ function ScheduleCard(props: ExtendedScheduleDisplay) {
 					<strong>Judges: </strong>
 					<ul>
 						{props.judgeNames.map(name => (
-							<li key={name}>{name}</li>
+							<li key={name}><Tag key={name}>{name}</Tag></li>
 						))}
 					</ul>
-				</span>
-				<span>
-					<strong>Devpost: </strong>
-					<a href={props.devpost.toString()} target="_blank" rel="noreferrer">
-						{props.devpost.toString()}
-					</a>
-				</span>
-				<span>
-					<strong>Zoom: </strong>
-					<a href={props.zoom.toString()} target="_blank" rel="noreferrer">
-						{props.zoom.toString()}
-					</a>
 				</span>
 			</div>
 		</Card>
