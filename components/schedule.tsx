@@ -135,7 +135,6 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 		}));
 	}, [data, rooms]);
 
-	const [uploadData, setUploadData] = useState<string | ArrayBuffer | null | undefined>('');
 	return (
 		<Table
 			dataSource={tableData}
@@ -163,12 +162,10 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 									accept=".csv"
 									maxCount={1}
 									onChange={async (info: any) => {
-										if (info.file.status === 'done') {
-											const reader = new FileReader();
-											reader.onload = e => {
-												setUploadData(e.target?.result);
-											};
-											reader.readAsText(info.file.originFileObj);
+										const reader = new FileReader();
+										let uploadData: string | ArrayBuffer | null | undefined = '';
+										reader.onload = async e => {
+											uploadData = e.target?.result;
 											const res = await fetch('/api/schedule', {
 												method: 'PUT',
 												body: uploadData as string,
@@ -178,6 +175,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 											} else {
 												handleFailure(await res.text());
 											}
+										};
+										if (info.file.status === 'done') {
+											reader.readAsText(info.file.originFileObj);
 										}
 									}}>
 									<Button icon={<UploadOutlined />}>Click to Upload</Button>
