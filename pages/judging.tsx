@@ -8,7 +8,7 @@ import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { JudgingFormFields } from '../types/client';
 import { TeamSelectData } from '../types/client';
-import { TeamData, ScoreData, UserData } from '../types/database'
+import { TeamData, ScoreData, UserData } from '../types/database';
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/database';
@@ -32,7 +32,7 @@ function handleSubmitFailure(errorDescription: string) {
 	notification['error']({
 		message: GENERIC_ERROR_MESSAGE,
 		description: errorDescription,
-			placement: 'bottomRight',
+		placement: 'bottomRight',
 	});
 }
 
@@ -136,9 +136,11 @@ export default function Forms() {
 	if (!loading && !session) return signIn();
 
 	let pageContent;
-	if (teamsError || scoresError) {
+	if (teamsError) {
 		// if error fetching teams, everything dies
 		pageContent = <ErrorMessage status={teamsError.status} />;
+	} else if (scoresError) {
+		pageContent = <ErrorMessage status={scoresError.status} />;
 	} else if (!teamsData || !scoresData) {
 		// otherwise, wait for TeamSelectData to load
 		pageContent = <Skeleton />;
@@ -151,15 +153,17 @@ export default function Forms() {
 		} else if (formError) {
 			// if team selected but error in getting team's form, show error
 			formSection = <ErrorMessage status={formError.status} />;
-			{(session?.userType === 'ORGANIZER') && (
-				// everything succeeded, show judging form
-				formSection = (
-					<AllScores 
-						teamData={teamsData as TeamData[]}
-						scoreData={scoresData}
-						userData={usersData as UserData[]} />
-				)
-				)}
+			{
+				session?.userType === 'ORGANIZER' &&
+					// everything succeeded, show judging form
+					(formSection = (
+						<AllScores
+							teamData={teamsData as TeamData[]}
+							scoreData={scoresData}
+							userData={usersData as UserData[]}
+						/>
+					));
+			}
 		} else if (!formData) {
 			// team selected without error, wait for loading
 			formSection = <Skeleton />;
@@ -192,6 +196,6 @@ export default function Forms() {
 
 export async function getStaticProps() {
 	return {
-	  props: { title: "Judging" }
-	}
+		props: { title: 'Judging' },
+	};
 }
