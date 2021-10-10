@@ -50,7 +50,7 @@ function TableCell(data: OrganizerScheduleDisplay | null) {
 							))}
 						</li>
 						<li key={`${data.teamName}-devpost`}>
-							Devpost <Link href={data.devpost}>link</Link>
+						<Link href={data.devpost}><a style={{color: '#1890ff'}} target="_blank"> Devpost link</a></Link>
 						</li>
 					</ul>
 				</Panel>
