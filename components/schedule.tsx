@@ -105,7 +105,7 @@ function handleFailure(message: string) {
 export default function OrganizerSchedule(props: ScheduleProps) {
 	const { data } = props;
 	// const numRooms = parseInt(NUM_ROOMS || '5');
-	const numRooms = 2; // HOLY SHIT MAKE THIS GO AWAY IN PROD TODO TODO
+	const numRooms = 5;
 
 	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
 	const rooms = useMemo(
@@ -180,9 +180,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 									action="/api/schedule"
 									onChange={async (info: any) => {
 										console.log(info);
-										if (info.file.status == "error") {
+										if (info.file.status == 'error') {
 											handleFailure(info.file.response);
-										} else if (info.file.status == "done") {
+										} else if (info.file.status == 'done') {
 											handleSuccess();
 										}
 									}}>
