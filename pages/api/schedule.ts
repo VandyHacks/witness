@@ -36,14 +36,16 @@ async function getHackerSchedule(userID: string): Promise<any | string> {
 	const team = await Team.findOne({ members: userID }).populate('members');
 	if (!team) return 'no team';
 	const schedule = await Schedule.findOne({ team: team.id }).populate('judges');
-	return [{
-		teamName: team.name,
-		time: schedule.time,
-		memberNames: team.members.map((x: any) => x.name),
-		judgeNames: schedule.judges.map((x: any) => x.name),
-		devpost: team.devpost,
-		zoom: schedule.zoom
-	}];
+	return [
+		{
+			teamName: team.name,
+			time: schedule.time,
+			memberNames: team.members.map((x: any) => x.name),
+			judgeNames: schedule.judges.map((x: any) => x.name),
+			devpost: team.devpost,
+			zoom: schedule.zoom,
+		},
+	];
 }
 
 async function getOrganizerSchedule(): Promise<OrganizerScheduleDisplay[]> {
@@ -79,6 +81,19 @@ interface AssignmentFromCSV {
 // TODO: allow between 1 and 3 judges
 async function validateSchedule(schedule: string): Promise<string | AssignmentFromCSV[]> {
 	let intermediate = schedule.split('\n').map(asString => asString.replace('\r', '').split(','));
+	const start = intermediate.findIndex(e => e.length === 6);
+	if (start === -1) {
+		return 'Invalid CSV format. No rows are the correct length (6).';
+	}
+	intermediate = intermediate.splice(start);
+	const end =
+		intermediate.length -
+		intermediate
+			.slice()
+			.reverse()
+			.findIndex(e => e.length === 6);
+	console.log('end:', end);
+	intermediate = intermediate.slice(0, end);
 	// Check that the CSV is good.
 	const heading = ['Time', 'Zoom', 'Judge1', 'Judge2', 'Judge3', 'TeamName'];
 	if (!intermediate.every(row => row.length === 6) || !intermediate[0].every((el, index) => el === heading[index])) {
@@ -89,22 +104,25 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 	const validRooms = new Set(
 		Array(5)
 			.fill(null)
-			.map((_, i) => `vhl.ink/room-${i + 1}`)
+			.map((_, i) => `https://vhl.ink/room-${i + 1}`)
 	);
 	let processed: AssignmentFromCSV[] | never = [];
-	intermediate.splice(1).forEach((asArray, i) => {
-		if (validRooms.has(asArray[1])) {
-			processed.push({
-				time: new Date(asArray[0]),
-				zoom: asArray[1],
-				teamName: asArray[5],
-				judgeNames: asArray.slice(2, 5),
-			});
-		} else {
-			// TODO: should we make sure the rooms are the same?
-			return `Zoom url ${asArray[1]} is not one of our rooms (row ${i + 2}).`;
-		}
-	});
+	intermediate
+		.slice()
+		.splice(1)
+		.forEach((asArray, i) => {
+			if (validRooms.has(asArray[1])) {
+				processed.push({
+					time: new Date(asArray[0]),
+					zoom: asArray[1],
+					teamName: asArray[5],
+					judgeNames: asArray.slice(2, 5),
+				});
+			} else {
+				// TODO: should we make sure the rooms are the same?
+				return `Zoom url ${asArray[1]} is not one of our rooms (row ${i + 2}).`;
+			}
+		});
 
 	// Check that schedule is sorted and at equal minute intervals.
 	let lastTime = processed[0].time;
@@ -174,7 +192,6 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			});
 		}
 	}
-
 	return processed;
 }
 
