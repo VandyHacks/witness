@@ -28,7 +28,7 @@ const { Option } = Select;
 
 // const { JUDGING_LENGTH, NUM_ROOMS } = process.env;
 const JUDGING_LENGTH = '1000';
-const NUM_ROOMS = '5';
+const NUM_ROOMS = '4';
 // const { Link } = Typography;
 
 interface ScheduleProps {
@@ -113,7 +113,7 @@ function handleFailure(message: string) {
 export default function OrganizerSchedule(props: ScheduleProps) {
 	const { data } = props;
 	// const numRooms = parseInt(NUM_ROOMS || '5');
-	const numRooms = 5;
+	const numRooms = 4;
 
 	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
 	const rooms = useMemo(
