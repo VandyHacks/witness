@@ -59,3 +59,6 @@ with open(f"{dir_path}/output.csv", "w", newline="") as f:
         time += TIME_DELTA_10
         if done:
             break
+
+if team_num < len(TEAMS):
+    print("Not all teams being judged")
