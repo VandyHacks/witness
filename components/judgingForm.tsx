@@ -33,7 +33,6 @@ export default function JudgingForm(props: JudgingFormProps) {
 
 	return (
 		<>
-			<div>{formData.technicalAbility}</div>
 			<Form {...layout} labelAlign="left" form={form} initialValues={formData} onFinish={onSubmit}>
 				{scoreInputsConfig.map(config => (
 					<Form.Item name={config.name} label={config.label} key={config.name}>
