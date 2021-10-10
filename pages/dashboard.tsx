@@ -67,11 +67,11 @@ export default function Dashboard() {
 	useEffect(() => {
 		if (nextIndex === -1 && scheduleData) {
 			const now = Date.now();
-			let index = scheduleData.findIndex(el => now < new Date(el.time).getMilliseconds());
+			let index = scheduleData.findIndex(el => now < new Date(el.time).getTime());
 			if (index === -1) index = scheduleData.length;
 			setNextScheduleItem(scheduleData[index]);
 			setCurrentScheduleItem(
-				now < new Date(scheduleData[index - 1]?.time).getMilliseconds() + judgingLength
+				now < new Date(scheduleData[index - 1]?.time).getTime() + judgingLength
 					? scheduleData[index - 1]
 					: undefined
 			);
