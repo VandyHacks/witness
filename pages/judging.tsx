@@ -12,11 +12,12 @@ import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/database';
 import ErrorMessage from '../components/errorMessage';
 
-function handleSubmitSuccess(isNew: boolean) {
+function handleSubmitSuccess(isNew: boolean, setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>) {
 	notification['success']({
 		message: `Successfully ${isNew ? 'submitted' : 'updated'}!`,
 		placement: 'bottomRight',
 	});
+	setIsNewForm(false);
 }
 
 function handleSubmitFailure() {
@@ -31,7 +32,8 @@ async function handleSubmit(
 	formData: JudgingFormFields,
 	mutate: ScopedMutator<any>,
 	teamId: string,
-	isNewForm: boolean
+	isNewForm: boolean,
+	setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>
 ) {
 	const res = await fetch(`/api/judging-form?id=${teamId}`, {
 		method: isNewForm ? 'POST' : 'PATCH',
@@ -43,7 +45,8 @@ async function handleSubmit(
 
 	if (res.ok) {
 		mutate('/api/teams');
-		handleSubmitSuccess(isNewForm);
+		mutate('/api/judging-form');
+		handleSubmitSuccess(isNewForm, setIsNewForm);
 	} else handleSubmitFailure();
 }
 
@@ -92,6 +95,7 @@ export default function Forms() {
 				error.status = res.status;
 				throw error;
 			}
+			setIsNewForm(false);
 			return (await res.json()) as JudgingFormFields;
 		}
 	);
@@ -126,7 +130,7 @@ export default function Forms() {
 				<JudgingForm
 					formData={formData}
 					isNewForm={isNewForm}
-					onSubmit={formData => handleSubmit(formData, mutate, teamId, isNewForm)}
+					onSubmit={formData => handleSubmit(formData, mutate, teamId, isNewForm, setIsNewForm)}
 				/>
 			);
 		}
