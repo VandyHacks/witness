@@ -21,7 +21,11 @@ export default function Outline({ children, home, selectedKey }: OutlineProps) {
 		<Layout className={styles.layout}>
 			<Header className={styles.header}>
 				<div className={styles.logo}>
-					<Image src="/vhlogo-white.svg" alt="VH Logo" width={36} height={36} />
+					<Link href="/dashboard">
+						<a>
+							<Image src="/vhlogo-white.svg" alt="VH Logo" width={36} height={36} />
+						</a>
+					</Link>
 				</div>
 				<Menu
 					theme="dark"
