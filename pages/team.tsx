@@ -296,3 +296,9 @@ export default function Team() {
 		</Outline>
 	);
 }
+
+export async function getStaticProps() {
+	return {
+	  props: { title: "Team" }
+	}
+}

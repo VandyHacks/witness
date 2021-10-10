@@ -8,6 +8,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<>
 		<Head>
 			<link rel="icon" type="image/x-icon" href="favicon.ico" />
+			<title>{pageProps.title}</title>
 		</Head>
 		<Provider session={pageProps.session}>
 			<Component {...pageProps} />

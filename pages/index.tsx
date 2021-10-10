@@ -21,3 +21,9 @@ export default function Page() {
 		</Outline>
 	);
 }
+
+export async function getStaticProps() {
+	return {
+	  props: { title: "Sign In" }
+	}
+}
