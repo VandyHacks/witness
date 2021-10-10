@@ -74,11 +74,8 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 	// Check that the CSV is good.
 	const heading = ['Time', 'Zoom', 'Judge1', 'Judge2', 'Judge3', 'TeamName'];
 	if (!intermediate.every(row => row.length === 6) || !intermediate[0].every((el, index) => el === heading[index])) {
-		console.log('INTERMEDIATE:', intermediate);
 		return 'Invalid CSV format. Make sure your headings are Time, Zoom, Judge1, Judge2, Judge3, TeamName';
 	}
-	console.log('Passed format');
-
 	// Check that urls are valid and also make the actual object list
 	// TODO: MAKE THIS NOT HARDCODED
 	const validRooms = new Set(
@@ -100,28 +97,27 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			return `Zoom url ${asArray[1]} is not one of our rooms (row ${i + 2}).`;
 		}
 	});
-	console.log('Passed zoom check');
-	// SDOFIJSDOFISJDOFISDJFOISJDFOIJ
-	// SODIFJOWQIJOIWEJOIWEFJEFOJEOEOFJI
 
-	// Check that schedule is sorted and at 10 minute intervals.
+	// Check that schedule is sorted and at equal minute intervals.
 	let lastTime = processed[0].time;
 	let message = '';
+	let interval = -1;
 	processed.find((assignment, index) => {
 		if (assignment.time < lastTime) {
 			lastTime = assignment.time;
 			message = `Schedule is not sorted. See line ${index + 2}.`;
 			return true;
-		} else if (
-			// Need to explicitly extract milliseconds because typescript
-			assignment.time.getMilliseconds() !== lastTime.getMilliseconds() &&
-			assignment.time.getMilliseconds() - lastTime.getMilliseconds() !== 5000 // TODO: make this 600000
-		) {
-			message = `Schedule does not advance in 10 minute increments. See line ${index}.`;
+		} else if (assignment.time.getMilliseconds() !== lastTime.getMilliseconds()) {
+			// Checks for the first increment. All following increments must be the same.
+			if (interval === -1) {
+				interval = assignment.time.getMilliseconds() - lastTime.getMilliseconds();
+			} else {
+				message = `Schedule does not advance in equal increments. See line ${index}.`;
+				return true;
+			}
 		}
 		return false;
 	});
-	console.log('Passed increments.');
 	if (message.length > 0) return message;
 
 	// Check that objects actually exist. Relies on teamnames and judges being unique :/
@@ -137,7 +133,6 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 		if (!allTeams.has(assignment.teamName)) {
 			return `Team "${assignment.teamName}" does not exist (row ${i + 2}).`;
 		}
-		// TODO: validate zooms
 	}
 	// Check that each team only exists once.
 	const teams = new Set();
@@ -148,7 +143,6 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			teams.add(assignment.teamName);
 		}
 	}
-	console.log('Passed duplicates.');
 
 	// Check that zoom rooms and judges aren't double booked
 	let roomsAndJudges = new Set();
@@ -165,14 +159,13 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 			}
 			assignment.judgeNames.forEach((name, j) => {
 				if (roomsAndJudges.has(name)) {
-					return `Judge "${name}" appears multiple twice in the same timeslot (row ${i + 1} judge ${j + 1}).`;
+					return `Judge "${name}" appears multiple times in the same timeslot (row ${i + 1} judge ${j + 1}).`;
 				} else {
 					roomsAndJudges.add(name);
 				}
 			});
 		}
 	}
-	console.log('Passed double booking.');
 
 	return processed;
 }
