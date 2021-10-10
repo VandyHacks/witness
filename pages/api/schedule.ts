@@ -215,7 +215,6 @@ export default async function handler(
 		const validateResults = await validateSchedule(req.body);
 		if (typeof validateResults === 'string') return res.status(406).send(validateResults);
 		try {
-			console.log('FUCK!');
 			await updateSchedule(validateResults);
 			return res.status(200).send('Thanks');
 		} catch (e) {
