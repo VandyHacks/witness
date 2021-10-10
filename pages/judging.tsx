@@ -139,7 +139,7 @@ export default function Forms() {
 	if (teamsError) {
 		// if error fetching teams, everything dies
 		pageContent = <ErrorMessage status={teamsError.status} />;
-	} else if (scoresError) {
+	} else if (scoresError && session?.userType === 'ORGANIZER') {
 		pageContent = <ErrorMessage status={scoresError.status} />;
 	} else if (!teamsData || !scoresData) {
 		// otherwise, wait for TeamSelectData to load
