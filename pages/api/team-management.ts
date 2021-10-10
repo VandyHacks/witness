@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			} else if (teamName && teamName.trim()) {
 				try {
 					const _url = new URL(devpost);
-					if (!devpost.includes("https://devpost.com")) throw Error();
+					if (!devpost.startsWith("https://devpost.com")) throw Error();
 				} catch {
 					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?");
 				}
@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (devpost) {
 				try {
 					const _url = new URL(devpost);	
-					if (!devpost.includes("https://devpost.com")) throw Error();
+					if (!devpost.startsWith("https://devpost.com")) throw Error();
 				} catch {
 					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?");
 				}
