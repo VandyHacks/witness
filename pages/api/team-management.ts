@@ -36,9 +36,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res.status(201).send(team);
 			} else if (teamName && teamName.trim()) {
 				try {
-					const _url = new URL(devpost);	
+					const _url = new URL(devpost);
+					if (!devpost.includes("https://devpost.com")) throw Error();
 				} catch {
-					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://?");
+					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?");
 				}
 				
 				// make team
@@ -74,8 +75,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (devpost) {
 				try {
 					const _url = new URL(devpost);	
+					if (!devpost.includes("https://devpost.com")) throw Error();
 				} catch {
-					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://?");
+					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?");
 				}
 				await log(session.userID, `Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`);
 				team.devpost = devpost;
