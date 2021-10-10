@@ -23,7 +23,7 @@ import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import team from '../models/team';
 import { ResponseError } from '../types/database';
-import { TeamData, UserData } from '../types/database'
+import { TeamData, UserData } from '../types/database';
 import AllMembers from '../components/allMembers';
 const { Panel } = Collapse;
 
@@ -82,7 +82,7 @@ function TeamCard(props: TeamCardProps) {
 					</Form.Item>
 				))}
 				<Button type="primary" htmlType="submit" className="ant-col-offset-8">
-					{ submitText }
+					{submitText}
 				</Button>
 			</Form>
 		</Card>
@@ -150,15 +150,11 @@ function TeamManager(props: TeamManagerProps) {
 		const success = await handleSubmit(data, mutate);
 		if (success) {
 			notification['success']({
-				message: (
-					<span>
-						Successfully Changed!
-					</span>
-				),
+				message: <span>Successfully Changed!</span>,
 				placement: 'bottomRight',
 			});
 		}
-	}
+	};
 	const { mutate } = useSWRConfig();
 	const layout = {
 		labelCol: { span: 4 },
@@ -171,7 +167,7 @@ function TeamManager(props: TeamManagerProps) {
 					{name}
 				</Descriptions.Item>
 				<Descriptions.Item label="Join Code" span={24}>
-					{joinCode}
+					<Tag>{joinCode}</Tag>
 				</Descriptions.Item>
 				<Descriptions.Item label="Devpost" span={24}>
 					{devpost}
@@ -243,7 +239,7 @@ function TeamSetup({ handleSubmit }: TeamSetupProps) {
 							{ name: 'teamName', label: 'Team Name' },
 							{ name: 'devpost', label: 'Devpost' },
 						]}
-						submitText='Create Team'
+						submitText="Create Team"
 						onSubmit={formData => handleSubmit(formData, mutate)}
 					/>
 				</Col>
@@ -258,7 +254,7 @@ function TeamSetup({ handleSubmit }: TeamSetupProps) {
 					<TeamCard
 						title="Join an Existing Team"
 						fields={[{ name: 'joinCode', label: 'Join Code' }]}
-						submitText='Join Team'
+						submitText="Join Team"
 						onSubmit={formData => handleSubmit(formData, mutate)}
 					/>
 				</Col>
@@ -310,27 +306,22 @@ export default function Team() {
 			) : (
 				<ErrorMessage status={teamError.status} />
 			);
-			let conditions = (session?.userType === 'ORGANIZER' &&
-								teamsData && usersData)
-			{(conditions) && (
-
-				pageContent = (
-				<AllMembers
-				teamData={teamsData as TeamData[]}
-				userData={usersData as UserData[]} />
-				)
-			)}
+		let conditions = session?.userType === 'ORGANIZER' && teamsData && usersData;
+		{
+			conditions &&
+				(pageContent = <AllMembers teamData={teamsData as TeamData[]} userData={usersData as UserData[]} />);
+		}
 	} else if (!teamData) pageContent = <Skeleton />;
 	else {
 		// Team data received.
 		pageContent = (
 			<>
-			{(session?.userType === 'HACKER') && (
-			<TeamManager profile={teamData} handleSubmit={handleEditSubmit} onLeave={handleLeaveTeam} />
-			)} 
+				{session?.userType === 'HACKER' && (
+					<TeamManager profile={teamData} handleSubmit={handleEditSubmit} onLeave={handleLeaveTeam} />
+				)}
 			</>
 			//<div>{teamData.members}</div>;
-		)
+		);
 	}
 	return (
 		<Outline selectedKey="team">
@@ -342,6 +333,6 @@ export default function Team() {
 
 export async function getStaticProps() {
 	return {
-	  props: { title: "Team" }
-	}
+		props: { title: 'Team' },
+	};
 }
