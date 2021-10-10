@@ -129,23 +129,23 @@ async function validateSchedule(schedule: string): Promise<string | AssignmentFr
 	let lastTime = processed[0].time;
 	let message = '';
 	let interval = -1;
-	processed.find((assignment, index) => {
-		if (assignment.time < lastTime) {
-			lastTime = assignment.time;
-			message = `Schedule is not sorted. See line ${index + 2}.`;
-			return true;
-		} else if (assignment.time.getTime() !== lastTime.getTime()) {
-			// Checks for the first increment. All following increments must be the same.
-			if (interval === -1) {
-				interval = assignment.time.getTime() - lastTime.getTime();
-			} else {
-				message = `Schedule does not advance in equal increments. See line ${index}.`;
-				return true;
-			}
-		}
-		return false;
-	});
-	if (message.length > 0) return message;
+	// processed.find((assignment, index) => {
+	// 	if (assignment.time < lastTime) {
+	// 		lastTime = assignment.time;
+	// 		message = `Schedule is not sorted. See line ${index + 2}.`;
+	// 		return true;
+	// 	} else if (assignment.time.getTime() !== lastTime.getTime()) {
+	// 		// Checks for the first increment. All following increments must be the same.
+	// 		if (interval === -1) {
+	// 			interval = assignment.time.getTime() - lastTime.getTime();
+	// 		} else {
+	// 			message = `Schedule does not advance in equal increments. See line ${index}.`;
+	// 			return true;
+	// 		}
+	// 	}
+	// 	return false;
+	// });
+	// if (message.length > 0) return message;
 
 	// Check that objects actually exist. Relies on teamnames and judges being unique :/
 	// minor TODO: use judge emails instead of names.
