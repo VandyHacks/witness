@@ -262,9 +262,9 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			dataIndex: 'room',
 			key: 'room',
 			render: (link: URL) => (
-				<Link href={link} passHref>
+				<a href={link.toString()} target="_blank" rel="noreferrer">
 					<Button type="link">Join room</Button>
-				</Link>
+				</a>
 			),
 		},
 	];
