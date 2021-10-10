@@ -33,7 +33,7 @@ async function getJudgeSchedule(userID: string): Promise<ScheduleDisplay[]> {
 }
 
 async function getHackerSchedule(userID: string): Promise<ScheduleDisplay[] | string> {
-	const team = await Team.findOne({ 'members': userID });
+	const team = await Team.findOne({ members: userID });
 	if (!team) return 'no team';
 	const schedule = await Schedule.findOne({ team: team.id });
 	return schedule;
@@ -212,12 +212,12 @@ export default async function handler(
 		}
 		if (!schedule) return res.status(425).send('No assignments found for given user.');
 		return res.status(200).json(schedule);
-	} else if (req.method === 'PUT') {
+	} else if (req.method === 'PUT' || req.method === 'POST') {
 		const validateResults = await validateSchedule(req.body);
 		if (typeof validateResults === 'string') return res.status(406).send(validateResults);
 		try {
 			await updateSchedule(validateResults);
-			await log(userID, "Updated schedule");
+			await log(userID, 'Updated schedule');
 			return res.status(200).send('Thanks');
 		} catch (e) {
 			console.log(e);
