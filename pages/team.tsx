@@ -165,7 +165,7 @@ function TeamManager(props: TeamManagerProps) {
 					{name}
 				</Descriptions.Item>
 				<Descriptions.Item label="Join Code" span={24}>
-					{joinCode}
+					<span style={{fontFamily: "monospace"}}>{joinCode}</span>
 				</Descriptions.Item>
 				<Descriptions.Item label="Devpost" span={24}>
 					{devpost}
