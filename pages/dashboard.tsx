@@ -111,7 +111,7 @@ export default function Dashboard() {
 	if (scheduleError) {
 		console.error('Error:', scheduleError);
 		pageContent = <ErrorMessage status={scheduleError.status} />;
-	} else if (scheduleData === undefined || loading) {
+	} else if (!scheduleData || loading) {
 		pageContent = <Skeleton />;
 	} else {
 		pageContent = (
