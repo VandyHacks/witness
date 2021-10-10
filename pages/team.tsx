@@ -99,7 +99,9 @@ async function handleEditSubmit(formData: { teamName: string } | { devpost: stri
 	if (res.ok) {
 		console.log('Received:', await res.text());
 		mutate('/api/team-management');
+		return true;
 	} else handleRequestFailure(await res.text());
+	return false;
 }
 
 async function handleLeaveTeam(mutate: ScopedMutator<any>) {
@@ -134,7 +136,7 @@ function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator<any>) => Pro
 
 interface TeamManagerProps {
 	profile: TeamProfile;
-	handleSubmit: (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => Promise<void>;
+	handleSubmit: (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => Promise<boolean>;
 	onLeave: (mutate: ScopedMutator<any>) => Promise<void>;
 }
 
@@ -142,16 +144,18 @@ function TeamManager(props: TeamManagerProps) {
 	// TODO: STYLE THIS!
 	const { name, joinCode, devpost, members } = props.profile;
 	const { handleSubmit, onLeave } = props;
-	const onFormFinish = (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => {
-		notification['success']({
-			message: (
-				<span>
-					Successfully Changed!
-				</span>
-			),
-			placement: 'bottomRight',
-		});
-		handleSubmit(data, mutate);
+	const onFormFinish = async (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => {
+		const success = await handleSubmit(data, mutate);
+		if (success) {
+			notification['success']({
+				message: (
+					<span>
+						Successfully Changed!
+					</span>
+				),
+				placement: 'bottomRight',
+			});
+		}
 	}
 	const { mutate } = useSWRConfig();
 	const layout = {
