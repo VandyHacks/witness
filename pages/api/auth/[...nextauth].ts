@@ -22,6 +22,19 @@ export default NextAuth({
 	},
 	// felix@yahoo.com
 	callbacks: {
+		async signIn(user, account, profile): Promise<any> {
+			if (account.provider === 'github') {
+				const res = await fetch('https://api.github.com/user/emails', {
+					headers: { Authorization: `token ${account.accessToken}` },
+				})
+				const emails = await res.json();
+				if (emails?.length > 0) {
+					profile.email = emails.sort((a: any, b: any) => b.primary - a.primary)[0].email;
+				}
+
+				return true;
+			}
+		},
 		async jwt(token, user) {
 			await dbConnect();
 			if (user) {
