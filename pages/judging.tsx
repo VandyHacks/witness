@@ -138,7 +138,6 @@ export default function Forms() {
 			formSection = <Empty description="No team selected." />;
 		} else if (formError) {
 			// if team selected but error in getting team's form, show error
-			console.log(formError.status)
 			formSection = <ErrorMessage status={formError.status} />;
 			{(session?.userType === 'ORGANIZER') && (
 				// everything succeeded, show judging form

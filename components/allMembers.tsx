@@ -61,7 +61,7 @@ const newCols = [
 	  render: (members: any[]) => (
 		  <>
 		  	{members.map((member, i)=> {
-				  return <div key = {i}>{member}</div>
+				  return <Tag key = {i}>{member}</Tag>
 			  })}
 		  </>
 	  )
@@ -75,9 +75,6 @@ export const exportCSV : any = (work : any) => {
 
 export default function allMembers(props: AllMembersProps){
 	let data = props;
-
-	console.log(data.teamData)
-	console.log(data.userData)
 	let work = data.teamData.map(x => {
 		return {"name": x.name, "members": x.members.map((y,z) => {
 			let temp = data.userData[data.userData.findIndex(p => p._id == x.members[z])]
