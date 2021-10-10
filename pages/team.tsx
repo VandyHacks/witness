@@ -23,6 +23,8 @@ import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import team from '../models/team';
 import { ResponseError } from '../types/database';
+import { TeamData, UserData } from '../types/database'
+import AllMembers from '../components/allMembers';
 const { Panel } = Collapse;
 
 // TODO: this is just a monolithic file, need to refactor
@@ -263,6 +265,26 @@ export default function Team() {
 		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
 	});
 
+	const { data: usersData, error: usersError } = useSWR('/api/users?usertype=HACKER', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of users.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as UserData[];
+	});
+
+	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of teams.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as TeamData[];
+	});
+
 	const [session, loading] = useSession();
 	if (!loading && !session) return signIn();
 	let pageContent;
@@ -273,10 +295,27 @@ export default function Team() {
 			) : (
 				<ErrorMessage status={teamError.status} />
 			);
+			let conditions = (session?.userType === 'ORGANIZER' &&
+								teamsData && usersData)
+			{(conditions) && (
+
+				pageContent = (
+				<AllMembers
+				teamData={teamsData as TeamData[]}
+				userData={usersData as UserData[]} />
+				)
+			)}
 	} else if (!teamData) pageContent = <Skeleton />;
 	else {
 		// Team data received.
-		pageContent = <TeamManager profile={teamData} handleSubmit={handleEditSubmit} onLeave={handleLeaveTeam} />; //<div>{teamData.members}</div>;
+		pageContent = (
+			<>
+			{(session?.userType === 'HACKER') && (
+			<TeamManager profile={teamData} handleSubmit={handleEditSubmit} onLeave={handleLeaveTeam} />
+			)} 
+			</>
+			//<div>{teamData.members}</div>;
+		)
 	}
 	return (
 		<Outline selectedKey="team">

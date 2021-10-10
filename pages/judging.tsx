@@ -1,12 +1,14 @@
 import { Divider, Space, Skeleton, Alert, notification, Empty } from 'antd';
 import React, { useEffect, useState } from 'react';
 import JudgingForm from '../components/judgingForm';
+import AllScores from '../components/allScores';
 import Outline from '../components/outline';
 import TeamSelect from '../components/teamSelect';
 import useSWR, { useSWRConfig } from 'swr';
 import { useRouter } from 'next/router';
 import { JudgingFormFields } from '../types/client';
 import { TeamSelectData } from '../types/client';
+import { TeamData, ScoreData, UserData } from '../types/database'
 import { ScopedMutator } from 'swr/dist/types';
 import { signIn, useSession } from 'next-auth/client';
 import { ResponseError } from '../types/database';
@@ -65,7 +67,27 @@ export default function Forms() {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as TeamSelectData[];
+		return (await res.json()) as TeamSelectData[] | TeamData[];
+	});
+
+	const { data: scoresData, error: scoresError } = useSWR('/api/scores', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of scores.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as ScoreData[];
+	});
+
+	const { data: usersData, error: usersError } = useSWR('/api/users?usertype=JUDGE', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of judges.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as UserData[];
 	});
 
 	const [isNewForm, setIsNewForm] = useState(false);
@@ -102,10 +124,10 @@ export default function Forms() {
 	if (!loading && !session) return signIn();
 
 	let pageContent;
-	if (teamsError) {
+	if (teamsError || scoresError) {
 		// if error fetching teams, everything dies
 		pageContent = <ErrorMessage status={teamsError.status} />;
-	} else if (!teamsData) {
+	} else if (!teamsData || !scoresData) {
 		// otherwise, wait for TeamSelectData to load
 		pageContent = <Skeleton />;
 	} else {
@@ -116,7 +138,17 @@ export default function Forms() {
 			formSection = <Empty description="No team selected." />;
 		} else if (formError) {
 			// if team selected but error in getting team's form, show error
+			console.log(formError.status)
 			formSection = <ErrorMessage status={formError.status} />;
+			{(session?.userType === 'ORGANIZER') && (
+				// everything succeeded, show judging form
+				formSection = (
+					<AllScores 
+						teamData={teamsData as TeamData[]}
+						scoreData={scoresData}
+						userData={usersData as UserData[]} />
+				)
+				)}
 		} else if (!formData) {
 			// team selected without error, wait for loading
 			formSection = <Skeleton />;
@@ -132,7 +164,7 @@ export default function Forms() {
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
-				<TeamSelect teamsData={teamsData} currentTeamID={teamId} handleChange={setTeamID} />
+				<TeamSelect teamsData={teamsData as TeamSelectData[]} currentTeamID={teamId} handleChange={setTeamID} />
 				<Divider />
 				{formSection}
 			</Space>
