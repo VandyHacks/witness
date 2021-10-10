@@ -6,14 +6,7 @@ import User from '../../models/user';
 import Schedule from '../../models/schedule';
 import Scores from '../../models/scores';
 import { ObjectId } from 'mongodb';
-
-export interface TeamsData {
-	teamID: string;
-	teamName: string;
-	isMine: boolean;
-	haveJudged: boolean;
-}
-
+import { TeamSelectData } from '../../types/client';
 export interface Teams {
 	_id: mongoose.Schema.Types.ObjectId;
 	name: string;
@@ -25,7 +18,7 @@ export interface Teams {
 
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<TeamsData[] | Teams[] | string>
+	res: NextApiResponse<TeamSelectData[] | Teams[] | string>
 ): Promise<void> {
 	const session = await getSession({ req });
 	if (!['JUDGE', 'ORGANIZER'].includes(session?.userType as string)) return res.status(403).send('Forbidden');

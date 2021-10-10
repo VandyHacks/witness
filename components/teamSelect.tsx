@@ -1,11 +1,11 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Row, Select, Space } from 'antd';
 import React, { Dispatch, SetStateAction } from 'react';
-import { TeamsData } from '../pages/api/teams';
+import { TeamSelectData } from '../types/client';
 const { Option, OptGroup } = Select;
 
 interface TeamSelectProps {
-	teamsData: TeamsData[];
+	teamsData: TeamSelectData[];
 	currentTeamID: string | undefined;
 	handleChange: Dispatch<SetStateAction<string | undefined>>;
 }

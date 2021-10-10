@@ -1,10 +1,27 @@
-import { Space, Table, Collapse, Tag, Switch, Skeleton, Button, List, Popconfirm, notification, Select } from 'antd';
+import {
+	Space,
+	Table,
+	Collapse,
+	Tag,
+	Switch,
+	Skeleton,
+	Button,
+	List,
+	Popconfirm,
+	notification,
+	Select,
+	Divider,
+	Upload,
+	Spin,
+} from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import useSWR from 'swr';
-import { ResponseError } from '../types/database';
-import { ScheduleDisplay } from '../types/client';
+import { ResponseError, UserData } from '../types/database';
+import { OrganizerScheduleDisplay, ScheduleDisplay, TeamSelectData } from '../types/client';
+import { TeamData } from '../types/database';
+import { UploadOutlined } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 const { Option } = Select;
@@ -20,7 +37,7 @@ interface ScheduleProps {
 }
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
-function TableCell(data: ScheduleDisplay | null) {
+function TableCell(data: OrganizerScheduleDisplay | null) {
 	return data ? (
 		<Space direction="vertical">
 			<Collapse ghost>
@@ -42,8 +59,8 @@ function TableCell(data: ScheduleDisplay | null) {
 				<ul>
 					<li>
 						<span>Judges: </span>
-						{data.judgeNames.map(name => (
-							<Tag key={name}>{name}</Tag>
+						{data.judges.map(judge => (
+							<Tag key={judge.id}>{judge.name}</Tag>
 						))}
 					</li>
 				</ul>
@@ -52,88 +69,37 @@ function TableCell(data: ScheduleDisplay | null) {
 	) : null;
 }
 
-// function useStickyState(defaultValue: ScheduleDisplay[], key: string) {
-// 	const [value, setValue] = useState(defaultValue);
-
-// 	useEffect(() => {
-// 		const stickyValue = window.localStorage.getItem(key);
-
-// 		if (stickyValue !== null) {
-// 			setValue(JSON.parse(stickyValue));
-// 		}
-// 	}, [key]);
-
-// 	useEffect(() => {
-// 		window.localStorage.setItem(key, JSON.stringify(value));
-// 	}, [key, value]);
-
-// 	return { value, setValue };
-// }
-// function executeFunction(instruction, setter) {
-// 	setter();
-// }
-
-// function Instruction() {
-// 	return <span></span>;
-// }
-// function ScheduleManager(onStart, onSubmit, onCancel) {
-// const
-
-// return <Button>Hello</Button>;
-// const [instructions, setInstructions] = useState([]);
-// const data = ['hello', 'hello1', 'hello2'];
-// return (
-// 	<>
-// 		<Space direction="vertical" style={{ width: '100%' }}>
-// 			<List
-// 				header={<div>Header</div>}
-// 				footer={<div>Footer</div>}
-// 				bordered
-// 				dataSource={data}
-// 				renderItem={item => <List.Item>{item}</List.Item>}
-// 			/>
-// 			<Button>Hello</Button>
-// 		</Space>
-// 	</>
-// );
-// }
-
-// function handleSubmitEdit() {
-// return true;
-// }
-
 enum EditingStates {
 	NotEditing = 'NOT_EDITING',
 	Accept = 'ACCEPT',
 	Reject = 'REJECT',
 }
 
+function handleSuccess() {
+	notification['success']({
+		message: (
+			<span>
+				Successfully set schedule!
+				<br />
+				Please refresh the page.
+			</span>
+		),
+		placement: 'bottomRight',
+	});
+}
+
+function handleFailure(message: string) {
+	notification['error']({
+		message: 'Oops, something went wrong!',
+		description: message,
+		placement: 'bottomRight',
+		duration: null,
+	});
+}
+
 export default function OrganizerSchedule(props: ScheduleProps) {
-	const { data: originalData } = props;
-	const [workingData, setWorkingData] = useState(originalData);
-	const judgingLength = parseInt(JUDGING_LENGTH || '600000');
+	const { data } = props;
 	const numRooms = parseInt(NUM_ROOMS || '5');
-
-	const { data: judges, error: judgesError } = useSWR('/api/need-to-implement', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get schedule.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as ScheduleDisplay[];
-	});
-
-	const { data: teams, error: teamsError } = useSWR('/api/users', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get schedule.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as ScheduleDisplay[];
-	});
-	const [editingState, setEditingState] = useState(EditingStates.NotEditing);
 
 	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
 	const rooms = useMemo(
@@ -150,54 +116,21 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				dataIndex: 'time',
 				key: 'time',
 				width: 100,
-				render: (timestamp: number) => DateTime.fromMillis(timestamp).toLocaleString(DateTime.TIME_SIMPLE),
+				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
 			...rooms.map((roomURL, roomNum) => ({
 				title: <a href={roomURL}>Room {roomNum + 1}</a>,
 				dataIndex: roomURL,
 				key: (roomNum + 1).toString(),
-				render:
-					editingState === EditingStates.NotEditing
-						? TableCell
-						: (data: ScheduleDisplay | null) => {
-								// console.log('TEAMS:', teams);
-								return (
-									<Space direction="vertical" style={{ width: '100%' }}>
-										Team:
-										<Select
-											placeholder="Please select favourite colors"
-											style={{ width: '100%' }}
-											onChange={stuff => console.log(stuff)}>
-											{/* {teams!.map(team => (
-												<Option key={team.teamID} value={team.projectName}>
-													{team.projectName}
-												</Option>
-											))} */}
-											<Option value="china">China</Option>
-											<Option value="india">India</Option>
-											<Option value="usa">USA</Option>
-										</Select>
-										Judges:
-										<Select
-											mode="multiple"
-											placeholder="Please select favourite colors"
-											style={{ width: '100%' }}
-											onChange={stuff => console.log(stuff)}>
-											<Option value="china">China</Option>
-											<Option value="india">India</Option>
-											<Option value="usa">USA</Option>
-										</Select>
-									</Space>
-								);
-						  },
+				render: TableCell,
 			})),
 		],
-		[rooms, editingState]
+		[rooms]
 	);
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
 		const dataAsMap = new Map();
-		workingData.forEach(assignment => {
+		data.forEach(assignment => {
 			const { time, zoom } = assignment;
 			if (!dataAsMap.has(time)) {
 				dataAsMap.set(time, Object.fromEntries(rooms.map(room => [room, null])));
@@ -208,10 +141,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			time: pair[0],
 			...pair[1],
 		}));
-	}, [workingData, rooms]);
+	}, [data, rooms]);
 
-	// Pools of data for if editing is happening.
-
+	const [loading, setLoading] = useState(false);
 	return (
 		<Table
 			dataSource={tableData}
@@ -225,50 +157,48 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 					{/* <Table.Summary.Row style={editingStyles[editingState]}> */}
 					<Table.Summary.Row>
 						<Table.Summary.Cell index={0} colSpan={100}>
-							{editingState === EditingStates.NotEditing ? (
-								<Button
-									type="primary"
-									onClick={() => setEditingState(EditingStates.Accept)}
-									loading={false /*!judges || !teams*/}>
-									Edit Schedule
-								</Button>
-							) : (
-								<Space direction="horizontal">
-									<Popconfirm
-										title="Discard changes?"
-										onConfirm={() => {
-											setEditingState(EditingStates.NotEditing);
-											setWorkingData(originalData);
-										}}
-										okText="Yes"
-										cancelText="No">
-										<Button>Cancel</Button>
-									</Popconfirm>
-									<Popconfirm
-										title="Save changes?"
-										onConfirm={async () => {
-											// const res = await handleSubmitEdit();
-											// if (res.ok) {
-											// 	setEditingState(EditingStates.NotEditing);
-											// 	// setWorkingData(originalData);
-											// } else {
-											// 	notification['error']({
-											// 		message: 'Error saving changes',
-											// 		description: 'Oops', //res.message,
-											// 		placement: 'bottomRight',
-											// 	});
-											// }
-											setEditingState(EditingStates.NotEditing);
-										}}
-										okText="Yes"
-										cancelText="No"
-										disabled={editingState === EditingStates.Reject}>
-										<Button type="primary" disabled={editingState === EditingStates.Reject}>
-											Submit Changes
-										</Button>
-									</Popconfirm>
-								</Space>
-							)}
+							<Space direction="vertical">
+								{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+								<a href="/api/export-schedule" target="_blank" download>
+									<strong>Export schedule</strong>
+								</a>
+								{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+								<a href="/api/export-schedule-detailed" target="_blank" download>
+									<strong>Export detailed schedule</strong>
+								</a>
+								<Upload
+									disabled={loading}
+									name="file"
+									accept=".csv"
+									maxCount={1}
+									onChange={async (info: any) => {
+										const reader = new FileReader();
+										let uploadData: string | ArrayBuffer | null | undefined = '';
+										reader.onload = async e => {
+											uploadData = e.target?.result;
+											setLoading(true);
+											const res = await fetch('/api/schedule', {
+												method: 'PUT',
+												body: uploadData as string,
+											});
+											setLoading(false);
+											if (res.ok) {
+												handleSuccess();
+											} else {
+												handleFailure(await res.text());
+											}
+										};
+										if (info.file.status === 'done') {
+											reader.readAsText(info.file.originFileObj);
+										}
+									}}>
+									<Button icon={<UploadOutlined />}>
+										<Space style={{ marginLeft: '10px' }}>
+											Click to Upload {loading && <Spin size="small" />}
+										</Space>
+									</Button>
+								</Upload>
+							</Space>
 						</Table.Summary.Cell>
 					</Table.Summary.Row>
 				</Table.Summary>

@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'GET':
-			const { userType } = req.body;
+			const userType = req.query.usertype;
 			const users = await User.find({ userType });
 			return res.status(200).send(users);
 		default:

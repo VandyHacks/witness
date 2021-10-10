@@ -37,9 +37,7 @@ export default NextAuth({
 				}
 
 				token.userType = login.userType;
-				console.log('User:', user);
 			}
-			console.log('Token: ', token);
 			return token;
 		},
 		async session(session, token) {
@@ -47,7 +45,6 @@ export default NextAuth({
 				session.userType = token.userType;
 				session.userID = token.sub;
 			}
-			console.log('Sesh:', session);
 			return session;
 		},
 	},
