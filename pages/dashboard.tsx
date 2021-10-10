@@ -111,7 +111,7 @@ export default function Dashboard() {
 	if (scheduleError) {
 		console.error('Error:', scheduleError);
 		pageContent = <ErrorMessage status={scheduleError.status} />;
-	} else if (!scheduleData || loading) {
+	} else if (scheduleData === undefined || loading) {
 		pageContent = <Skeleton />;
 	} else {
 		pageContent = (
@@ -173,6 +173,6 @@ export default function Dashboard() {
 
 export async function getStaticProps() {
 	return {
-	  props: { title: "Dashboard" }
-	}
+		props: { title: 'Dashboard' },
+	};
 }

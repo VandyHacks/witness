@@ -141,7 +141,7 @@ export default function Forms() {
 		pageContent = <ErrorMessage status={teamsError.status} />;
 	} else if (scoresError && session?.userType === 'ORGANIZER') {
 		pageContent = <ErrorMessage status={scoresError.status} />;
-	} else if (!teamsData || !scoresData) {
+	} else if ((!teamsData || !scoresData) && session?.userType === 'ORGANIZER') {
 		// otherwise, wait for TeamSelectData to load
 		pageContent = <Skeleton />;
 	} else {
