@@ -75,7 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (devpost) {
 				try {
 					const _url = new URL(devpost);	
-					if (_url.hostname !== "devpost.com")) throw Error();
+					if (_url.hostname !== "devpost.com") throw Error();
 				} catch {
 					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?");
 				}
