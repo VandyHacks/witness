@@ -1,24 +1,30 @@
 # Witness
 
-VandyHacks's streamlined hackathon judging platform.
+Witness is VandyHacks's in-house judging platform. On this platform, hackers can manage their team and submit their project, judges can see a dynamically updating schedule of all their assigned projects and submit feedback for them, and organizers can manage the whole process at a high level and optimally match judges with teams.
 
-- [Witness](#witness)
-  - [Tooling](#tooling)
-  - [Usage](#usage)
-    - [Organizers](#organizers)
-      - [Manage Schedule](#manage-schedule)
-      - [Assign Roles](#assign-roles)
-      - [Export Scores](#export-scores)
-      - [Export Teams](#export-teams)
-    - [Judges](#judges)
-      - [View Schedule](#view-schedule)
-      - [Submit Feedback](#submit-feedback)
-    - [Hackers](#hackers)
-      - [See Presentation Time](#see-presentation-time)
-      - [Join Team](#join-team)
-  - [Setup and Deployment](#setup-and-deployment)
-  - [Contributing](#contributing)
-  - [Thanks](#thanks)
+-   [Witness](#witness)
+
+    -   [Tooling](#tooling)
+    -   [Project-Judge Matching Process](#project-judge-matching-process)
+    -   [Usage](#usage)
+        -   [Organizers](#organizers)
+            -   [Manage Schedule](#manage-schedule)
+            -   [Assign Roles](#assign-roles)
+            -   [Export Scores](#export-scores)
+            -   [Export Teams](#export-teams)
+        -   [Judges](#judges)
+            -   [View Schedule](#view-schedule)
+            -   [Submit Feedback](#submit-feedback)
+        -   [Hackers](#hackers)
+            -   [See Presentation Time](#see-presentation-time)
+            -   [Join Team](#join-team)
+    -   [Setup and Deployment](#setup-and-deployment)
+    -   [Contributing](#contributing)
+    -   [Thanks](#thanks)
+
+        -   [Setup and Deployment](#setup-and-deployment)
+        -   [Contributing](#contributing)
+        -   [Thanks](#thanks)
 
 ## Tooling
 
@@ -28,6 +34,10 @@ VandyHacks's streamlined hackathon judging platform.
 -   NextAuth.js
 -   Ant Design
 -   MongoDB + Mongoose
+
+## Project-Judge Matching Process
+
+During judging, each team presents their project once to a panel of 3 judges in one of our preallocated Zoom rooms. To make sure this process is fair, our automated matching process ensures that as few teams as possible share the same set of judges. However, to decrease the overhead of multiple parties leaving and joining Zooms between judging sessions, the process also minimizes room changes for judges. This way, the judging period can proceed smoothly, avoiding delays while minimizing bias for each project.
 
 ## Usage
 
