@@ -7,7 +7,7 @@ import OrganizerSchedule, { JudgeSchedule } from '../components/schedule';
 import Cards from '../components/cards';
 import { ScheduleDisplay } from '../types/client';
 import { ResponseError } from '../types/database';
-import { signIn, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/react';
 import schedule from '../models/schedule';
 import Link from 'next/link';
 import ErrorMessage from '../components/errorMessage';
@@ -71,11 +71,7 @@ export default function Dashboard() {
 			if (index === -1) index = scheduleData.length;
 			let currentlyGoingTime = new Date(scheduleData[index - 1]?.time).getTime() + judgingLength;
 			setNextScheduleItem(scheduleData[index]);
-			setCurrentScheduleItem(
-				now < currentlyGoingTime
-					? scheduleData[index - 1]
-					: undefined
-			);
+			setCurrentScheduleItem(now < currentlyGoingTime ? scheduleData[index - 1] : undefined);
 			setNextIndex(index);
 		}
 	}, [scheduleData, nextIndex, judgingLength]);
@@ -109,7 +105,8 @@ export default function Dashboard() {
 		return () => clearInterval(interval);
 	});
 
-	const [session, loading] = useSession();
+	const { data: session, status } = useSession();
+	const loading = status === 'loading';
 	if (!loading && !session) return signIn();
 	let pageContent;
 	if (scheduleError) {

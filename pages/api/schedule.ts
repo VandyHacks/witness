@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import Schedule from '../../models/schedule';
 import User from '../../models/user';
 import Team from '../../models/team';

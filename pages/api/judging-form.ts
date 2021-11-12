@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../middleware/database';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import Scores from '../../models/scores';
 import Team from '../../models/team';
 import { JudgingFormFields } from '../../types/client';

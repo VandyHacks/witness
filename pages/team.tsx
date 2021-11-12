@@ -14,7 +14,7 @@ import {
 	Space,
 	Tag,
 } from 'antd';
-import { useSession, signIn } from 'next-auth/client';
+import { useSession, signIn } from 'next-auth/react';
 import React from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
@@ -298,7 +298,8 @@ export default function Team() {
 		return (await res.json()) as TeamData[];
 	});
 
-	const [session, loading] = useSession();
+	const { data: session, status } = useSession();
+	const loading = status === 'loading';
 	if (!loading && !session) return signIn();
 	let pageContent;
 	if (teamError) {
