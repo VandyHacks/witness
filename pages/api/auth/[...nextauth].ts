@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
-import GoogleProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/google';
 import { TypeORMLegacyAdapter } from '@next-auth/typeorm-legacy-adapter';
 import dbConnect from '../../../middleware/database';
 import vakenLogin from '../../../models/vakenLogin';
@@ -61,5 +61,5 @@ export default NextAuth({
 	},
 
 	// A database is optional, but required to persist accounts in a database
-	adapter: TypeORMLegacyAdapter(process.env.DATABASE_URL),
+	adapter: TypeORMLegacyAdapter(process.env.DATABASE_URL as string),
 });
