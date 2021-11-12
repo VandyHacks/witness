@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@ant-design/icons": "^4.7.0",
+		"@next-auth/typeorm-legacy-adapter": "^0.1.2-next.19",
 		"antd": "^4.16.13",
 		"export-to-csv": "^0.2.1",
 		"luxon": "^2.1.1",

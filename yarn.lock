@@ -158,6 +158,11 @@
   resolved "https://registry.yarnpkg.com/@napi-rs/triples/-/triples-1.0.3.tgz#76d6d0c3f4d16013c61e45dfca5ff1e6c31ae53c"
   integrity sha512-jDJTpta+P4p1NZTFVLHJ/TLFVYVcOqv6l8xwOeBKNPMgY/zDYH/YH7SJbvrr/h1RcS9GzbPcLKGzpuK9cV56UA==
 
+"@next-auth/typeorm-legacy-adapter@^0.1.2-next.19":
+  version "0.1.2-next.19"
+  resolved "https://registry.yarnpkg.com/@next-auth/typeorm-legacy-adapter/-/typeorm-legacy-adapter-0.1.2-next.19.tgz#ec0a33dd07ae0b0d977e32cd201ec39e7496cda9"
+  integrity sha512-9ExKihvMGQVBMECSqt29zGVDP+0bu1CMlbWO+5Eb/YEYTHpNFAgmzaMhd5rsfiWybx2Xsvjn3cFF8kNd35J10w==
+
 "@next/env@12.0.3":
   version "12.0.3"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-12.0.3.tgz#e676b4d1454d8b6be433a348e99f2b8276ab6cd7"

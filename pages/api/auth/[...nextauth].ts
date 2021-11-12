@@ -1,16 +1,18 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import GitHubProvider from 'next-auth/providers/github';
+import GoogleProvider from 'next-auth/providers/github';
+import { TypeORMLegacyAdapter } from '@next-auth/typeorm-legacy-adapter';
 import dbConnect from '../../../middleware/database';
 import vakenLogin from '../../../models/vakenLogin';
 import User from '../../../models/user';
 
 export default NextAuth({
 	providers: [
-		Providers.GitHub({
+		GitHubProvider({
 			clientId: process.env.GITHUB_ID,
 			clientSecret: process.env.GITHUB_SECRET,
 		}),
-		Providers.Google({
+		GoogleProvider({
 			clientId: process.env.GOOGLE_ID,
 			clientSecret: process.env.GOOGLE_SECRET,
 		}),
@@ -19,11 +21,11 @@ export default NextAuth({
 		jwt: true,
 	},
 	callbacks: {
-		async signIn(user, account, profile) {
-			if (account.provider == "github") {
+		async signIn({ user, account, profile }) {
+			if (account.provider == 'github') {
 				const res = await fetch('https://api.github.com/user/emails', {
 					headers: { Authorization: `token ${account.accessToken}` },
-				})
+				});
 				const emails = await res.json();
 				if (emails?.length > 0) {
 					user.email = emails.sort((a: any, b: any) => b.primary - a.primary)[0].email;
@@ -32,7 +34,7 @@ export default NextAuth({
 
 			return true;
 		},
-		async jwt(token, user, account) {
+		async jwt({ token, user, account }) {
 			await dbConnect();
 			if (user) {
 				// user is only defined on first sign in
@@ -49,7 +51,7 @@ export default NextAuth({
 			}
 			return token;
 		},
-		async session(session, token) {
+		async session({ session, token }) {
 			if (!session.userType || !session.userID) {
 				session.userType = token.userType;
 				session.userID = token.sub;
@@ -59,5 +61,5 @@ export default NextAuth({
 	},
 
 	// A database is optional, but required to persist accounts in a database
-	database: process.env.DATABASE_URL,
+	adapter: TypeORMLegacyAdapter(process.env.DATABASE_URL),
 });
