@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
-// import { TypeORMLegacyAdapter } from '@next-auth/typeorm-legacy-adapter';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
 import dbConnect from '../../../middleware/database';
@@ -66,7 +65,6 @@ export default async function auth(req: any, res: any) {
 		},
 
 		// A database is optional, but required to persist accounts in a database
-		// adapter: TypeORMLegacyAdapter(process.env.DATABASE_URL as string),
 		adapter: MongoDBAdapter({
 			db: (await clientPromise).db('witness'),
 		}),
