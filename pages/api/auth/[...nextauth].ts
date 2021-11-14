@@ -23,20 +23,20 @@ export default async function auth(req: any, res: any) {
 			jwt: true,
 		},
 		callbacks: {
-			// async signIn({ user, account, profile }) {
-			// 	if (account.provider == 'github') {
-			// 		const res = await fetch('https://api.github.com/user/emails', {
-			// 			headers: { Authorization: `token ${account.accessToken}` },
-			// 		});
-			// 		const emails = await res.json();
-			// 		if (emails?.length > 0) {
-			// 			user.email = emails.sort((a: any, b: any) => b.primary - a.primary)[0].email;
-			// 		}
-			// 	}
+			async signIn({ user, account, profile }) {
+				if (account.provider == 'github') {
+					const res = await fetch('https://api.github.com/user/emails', {
+						headers: { Authorization: `token ${account.access_token}` },
+					});
+					const emails = await res.json();
+					if (emails?.length > 0) {
+						user.email = emails.sort((a: any, b: any) => b.primary - a.primary)[0].email;
+					}
+				}
 
-			// 	return true;
-			// },
-			async jwt({ token, user }) {
+				return true;
+			},
+			async jwt({ token, user, account }) {
 				await dbConnect();
 				if (user) {
 					// user is only defined on first sign in
