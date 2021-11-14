@@ -11,6 +11,7 @@
 	},
 	"dependencies": {
 		"@ant-design/icons": "^4.7.0",
+		"@next-auth/mongodb-adapter": "^0.0.2-next.285",
 		"@next-auth/typeorm-legacy-adapter": "^0.1.2-next.19",
 		"antd": "^4.16.13",
 		"dotenv": "^10.0.0",
