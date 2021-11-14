@@ -36,7 +36,7 @@ export default async function auth(req: any, res: any) {
 
 			// 	return true;
 			// },
-			async jwt({ token, user, account }) {
+			async jwt({ token, user }) {
 				await dbConnect();
 				if (user) {
 					// user is only defined on first sign in
@@ -66,5 +66,10 @@ export default async function auth(req: any, res: any) {
 		adapter: MongoDBAdapter({
 			db: (await clientPromise).db('witness'),
 		}),
+
+		theme: {
+			colorScheme: 'dark',
+			logo: '/vhlogo-white.svg',
+		},
 	});
 }
