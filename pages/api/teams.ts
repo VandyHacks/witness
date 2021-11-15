@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import mongoose from 'mongoose';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import Team from '../../models/team';
 import User from '../../models/user';
 import Schedule from '../../models/schedule';

@@ -10,7 +10,7 @@ import { JudgingFormFields } from '../types/client';
 import { TeamSelectData } from '../types/client';
 import { TeamData, ScoreData, UserData } from '../types/database';
 import { ScopedMutator } from 'swr/dist/types';
-import { signIn, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/react';
 import { ResponseError } from '../types/database';
 import ErrorMessage from '../components/errorMessage';
 
@@ -132,7 +132,8 @@ export default function Forms() {
 	// Get mutate function to reload teams list with updated data on form submission.
 	const { mutate } = useSWRConfig();
 
-	const [session, loading] = useSession();
+	const { data: session, status } = useSession();
+	const loading = status === 'loading';
 	if (!loading && !session) return signIn();
 
 	let pageContent;

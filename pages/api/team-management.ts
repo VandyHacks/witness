@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { customAlphabet } from 'nanoid';
 import Team from '../../models/team';
 import dbConnect from '../../middleware/database';
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 import { TeamProfile } from '../team';
 import User from '../../models/user';
 import { ObjectId } from 'mongodb';
@@ -37,11 +37,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			} else if (teamName && teamName.trim()) {
 				try {
 					const _url = new URL(devpost);
-					if (!devpost.startsWith("https://devpost.com")) throw Error();
+					if (!devpost.startsWith('https://devpost.com')) throw Error();
 				} catch {
-					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?");
+					return res
+						.status(404)
+						.send(
+							'Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?'
+						);
 				}
-				
+
 				// make team
 				const teamObj = {
 					name: teamName.trim(),
@@ -55,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 					await team.save();
 					await log(session.userID, `Created team ${team.name} (join code ${team.joinCode})`);
 				} catch (e) {
-					if (e instanceof MongoServerError && e.errmsg.includes("name")) {
+					if (e instanceof MongoServerError && e.errmsg.includes('name')) {
 						return res.status(400).send('This team name is already taken!');
 					}
 
@@ -74,12 +78,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const { teamName, devpost } = req.body;
 			if (devpost) {
 				try {
-					const _url = new URL(devpost);	
-					if (_url.hostname !== "devpost.com") throw Error();
+					const _url = new URL(devpost);
+					if (_url.hostname !== 'devpost.com') throw Error();
 				} catch {
-					return res.status(404).send("Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?");
+					return res
+						.status(404)
+						.send(
+							'Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?'
+						);
 				}
-				await log(session.userID, `Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`);
+				await log(
+					session.userID,
+					`Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`
+				);
 				team.devpost = devpost;
 			}
 
@@ -91,13 +102,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			try {
 				await team.save();
 			} catch (e) {
-				if (e instanceof MongoServerError && e.errmsg.includes("name")) {
+				if (e instanceof MongoServerError && e.errmsg.includes('name')) {
 					return res.status(400).send('This team name is already taken!');
 				}
 
 				throw e;
 			}
-			
+
 			return res.status(200).send(team);
 		}
 		case 'DELETE': {

@@ -1,8 +1,9 @@
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import Outline from '../components/outline';
 
 export default function Page() {
-	const [session, loading] = useSession();
+	const { data: session, status } = useSession();
+	const loading = status === 'loading';
 
 	return (
 		<Outline selectedKey="">
@@ -24,6 +25,6 @@ export default function Page() {
 
 export async function getStaticProps() {
 	return {
-	  props: { title: "Sign In" }
-	}
+		props: { title: 'Sign In' },
+	};
 }
