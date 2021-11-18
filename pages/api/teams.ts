@@ -18,6 +18,7 @@ export interface Teams {
 
 export default async function handler(
 	req: NextApiRequest,
+	// TeamSelectData[] for judges, TeamData[] for organizers, string for error
 	res: NextApiResponse<TeamSelectData[] | Teams[] | string>
 ): Promise<void> {
 	const session = await getSession({ req });
@@ -54,8 +55,8 @@ export default async function handler(
 
 				const teamsData = teams.map(team => {
 					return {
-						teamID: team.id,
-						teamName: team.name,
+						id: team.id,
+						name: team.name,
 						isMine: scheduleMap.get(team.id.toString())?.includes(judgeID),
 						haveJudged: scoresMap.get(team.id.toString())?.includes(judgeID),
 					};
