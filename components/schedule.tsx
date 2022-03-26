@@ -287,7 +287,7 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			summary={_ => (
 				<Table.Summary fixed={true}>
 					<Table.Summary.Row>
-						<Table.Summary.Cell index={0} colSpan={5}>
+						<Table.Summary.Cell index={0} colSpan={6}>
 							<Switch
 								checkedChildren="Hide past sessions"
 								unCheckedChildren="Include past sessions"
