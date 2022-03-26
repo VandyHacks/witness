@@ -1,11 +1,10 @@
 import Image from 'next/image';
 import styles from '../styles/Outline.module.css';
 import React from 'react';
-import { Button, Layout, Menu, Skeleton, Space } from 'antd';
+import { Layout, Menu, Skeleton, Space } from 'antd';
 const { Header, Content, Footer } = Layout;
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
-import { DownCircleOutlined } from '@ant-design/icons';
 
 interface OutlineProps {
 	children: React.ReactNode;

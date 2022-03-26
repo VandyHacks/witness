@@ -1,4 +1,4 @@
-import { Alert, Button, Col, Divider, Row, Skeleton, Timeline } from 'antd';
+import { Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 // import { AllDone, Current, UpNext } from '../components/scheduleItem';
@@ -8,13 +8,7 @@ import Cards from '../components/cards';
 import { ScheduleDisplay } from '../types/client';
 import { ResponseError } from '../types/database';
 import { signIn, useSession } from 'next-auth/react';
-import schedule from '../models/schedule';
-import Link from 'next/link';
 import ErrorMessage from '../components/errorMessage';
-
-// TODO: stub
-const userID = '0';
-const userType = 'JUDGE';
 
 // let { JUDGING_LENGTH } = process.env;
 const JUDGING_LENGTH = '600000';
