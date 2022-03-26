@@ -3,7 +3,6 @@ import Outline from '../components/outline';
 
 export default function Page() {
 	const { data: session, status } = useSession();
-	const loading = status === 'loading';
 
 	return (
 		<Outline selectedKey="">

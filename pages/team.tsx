@@ -11,7 +11,6 @@ import {
 	Popconfirm,
 	Row,
 	Skeleton,
-	Space,
 	Tag,
 } from 'antd';
 import { useSession, signIn } from 'next-auth/react';
@@ -20,8 +19,6 @@ import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import ErrorMessage from '../components/errorMessage';
 import Outline from '../components/outline';
-import TeamSelect from '../components/teamSelect';
-import team from '../models/team';
 import { ResponseError } from '../types/database';
 import { TeamData, UserData } from '../types/database';
 import AllMembers from '../components/allMembers';

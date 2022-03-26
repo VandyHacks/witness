@@ -1,5 +1,5 @@
 import { Slider, InputNumber, Row, Col } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 interface ScoreInputProps {
 	value: number;
 	onChange: (value: number) => void;

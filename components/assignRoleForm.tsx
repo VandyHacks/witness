@@ -1,6 +1,4 @@
 import { Form, Button, Select } from 'antd';
-import { JudgingFormFields } from '../types/client';
-import { useEffect } from 'react';
 
 const { Option } = Select;
 
@@ -15,7 +13,7 @@ export interface AssignFormProps {
 }
 
 export default function AssignRoleForm(props: AssignFormProps) {
-	const { formData, onSubmit } = props;
+	const { onSubmit } = props;
 	const layout = {
 		labelCol: { span: 7 },
 		wrapperCol: { span: 24 },

@@ -1,4 +1,4 @@
-import { Divider, Space, Skeleton, Alert, notification, Empty } from 'antd';
+import { Divider, Space, Skeleton, notification, Empty } from 'antd';
 import React, { useEffect, useState } from 'react';
 import JudgingForm from '../components/judgingForm';
 import AllScores from '../components/allScores';

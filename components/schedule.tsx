@@ -1,35 +1,11 @@
-import {
-	Space,
-	Table,
-	Collapse,
-	Tag,
-	Switch,
-	Skeleton,
-	Button,
-	List,
-	Popconfirm,
-	notification,
-	Select,
-	Divider,
-	Upload,
-	Spin,
-} from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin } from 'antd';
+import React, { useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
-import useSWR from 'swr';
-import { ResponseError, UserData } from '../types/database';
-import { OrganizerScheduleDisplay, ScheduleDisplay, TeamSelectData } from '../types/client';
-import { TeamData } from '../types/database';
+import { OrganizerScheduleDisplay, ScheduleDisplay } from '../types/client';
 import { UploadOutlined } from '@ant-design/icons';
 
 const { Panel } = Collapse;
-const { Option } = Select;
-
-// const { JUDGING_LENGTH, NUM_ROOMS } = process.env;
-const JUDGING_LENGTH = '1000';
-const NUM_ROOMS = '4';
-// const { Link } = Typography;
 
 interface ScheduleProps {
 	data: ScheduleDisplay[];
