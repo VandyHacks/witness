@@ -78,6 +78,7 @@ export default function Forms() {
 			error.status = res.status;
 			throw error;
 		}
+		// Type is TeamSelectData[] for judges and TeamData[] for organizers
 		return (await res.json()) as TeamSelectData[] | TeamData[];
 	});
 

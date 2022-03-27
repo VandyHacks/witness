@@ -1,24 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import mongoose from 'mongoose';
 import { getSession } from 'next-auth/react';
 import Team from '../../models/team';
-import User from '../../models/user';
+import { TeamData } from '../../types/database';
 import Schedule from '../../models/schedule';
 import Scores from '../../models/scores';
 import { ObjectId } from 'mongodb';
 import { TeamSelectData } from '../../types/client';
-export interface Teams {
-	_id: mongoose.Schema.Types.ObjectId;
-	name: string;
-	joinCode: string;
-	devpost: string;
-	members: typeof User[];
-	scores: mongoose.Schema.Types.ObjectId[];
-}
 
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<TeamSelectData[] | Teams[] | string>
+	// TeamSelectData[] for judges, TeamData[] for organizers, string for error
+	res: NextApiResponse<TeamSelectData[] | TeamData[] | string>
 ): Promise<void> {
 	const session = await getSession({ req });
 	if (!['JUDGE', 'ORGANIZER'].includes(session?.userType as string)) return res.status(403).send('Forbidden');
@@ -54,8 +46,8 @@ export default async function handler(
 
 				const teamsData = teams.map(team => {
 					return {
-						teamID: team.id,
-						teamName: team.name,
+						id: team.id,
+						name: team.name,
 						isMine: scheduleMap.get(team.id.toString())?.includes(judgeID),
 						haveJudged: scoresMap.get(team.id.toString())?.includes(judgeID),
 					};
