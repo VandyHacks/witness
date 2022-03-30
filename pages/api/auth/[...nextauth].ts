@@ -9,6 +9,9 @@ import vakenLogin from '../../../models/vakenLogin';
 import User from '../../../models/user';
 import testUser from '../../../models/testUser';
 
+const DEV_DEPLOY =
+	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env?.VERCEL_ENV!);
+
 export default async function auth(req: any, res: any) {
 	await NextAuth(req, res, {
 		providers: [
@@ -21,7 +24,7 @@ export default async function auth(req: any, res: any) {
 				clientSecret: process.env.GOOGLE_SECRET as string,
 			}),
 			// add username / pass login for dev builds for easier testing
-			...(process.env.NODE_ENV === 'development'
+			...(DEV_DEPLOY
 				? [
 						CredentialsProvider({
 							// The name to display on the sign in form (e.g. "Sign in with...")
@@ -60,10 +63,7 @@ export default async function auth(req: any, res: any) {
 				if (user) {
 					const { email } = user;
 					// user is only defined on first sign in
-					const login =
-						process.env.NODE_ENV === 'development'
-							? await testUser.findOne({ email })
-							: await User.findOne({ email });
+					const login = DEV_DEPLOY ? await testUser.findOne({ email }) : await User.findOne({ email });
 
 					// read usertype from vaken db
 					if (!login.userType) {
