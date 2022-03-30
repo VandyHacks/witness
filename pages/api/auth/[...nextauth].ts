@@ -26,10 +26,7 @@ export default async function auth(req: any, res: any) {
 						CredentialsProvider({
 							// The name to display on the sign in form (e.g. "Sign in with...")
 							name: 'Dev Credentials',
-							// The credentials is used to generate a suitable form on the sign in page.
-							// You can specify whatever fields you are expecting to be submitted.
-							// e.g. domain, username, password, 2FA token, etc.
-							// You can pass any HTML attribute to the <input> tag through the object.
+							// credentials is used to generate a suitable form on the sign in page.
 							credentials: {
 								username: { label: 'Username', type: 'text', placeholder: 'test' },
 								password: { label: 'Password', type: 'password' },
@@ -61,7 +58,6 @@ export default async function auth(req: any, res: any) {
 			async jwt({ token, user }) {
 				await dbConnect();
 				if (user) {
-					console.log('user: ', user);
 					const { email } = user;
 					// user is only defined on first sign in
 					const login =
