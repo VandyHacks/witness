@@ -22,7 +22,7 @@ if (!(USERNAME && PASSWORD && EMAIL && USER_TYPE)) {
 	);
 	console.log('================================================================');
 	console.log(
-		'Run the script with DATABASE_URL="..." ts-node <path-to-script>/populateDb.ts where ... is your DEVELOPMENT database connection string.'
+		'Run the script with DATABASE_URL="..." ts-node <path-to-script>/addTestUsers.ts where ... is your DEVELOPMENT database connection string.'
 	);
 	process.exit(0);
 }
