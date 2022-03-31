@@ -1,4 +1,4 @@
-import { Divider, notification } from "antd";
+import { Divider, notification, Skeleton } from "antd";
 import { useEffect, useState } from "react";
 import useSWR, { useSWRConfig } from "swr";
 import { ScopedMutator } from "swr/dist/types";
@@ -159,12 +159,15 @@ export default function JudgeDash() {
     return (
 		<>
 			{ scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} /> }
+			<br /><br />
             { teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} /> }
+			{ (!scheduleData || !teamsData) && <Skeleton /> }
             <Divider />
             { formData && <JudgingForm
                 formData={formData}
                 isNewForm={isNewForm}
                 onSubmit={formData => handleSubmit(formData, mutate, teamID, isNewForm, setIsNewForm)}
             /> }
+			{ !formData && teamID && <Skeleton /> }
 		</>);
 }

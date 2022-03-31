@@ -1,10 +1,8 @@
-import { Divider, Space } from "antd";
-import { useState } from "react";
+import { Divider, Skeleton } from "antd";
 import useSWR from "swr";
 import AllScores from "../components/allScores";
 import OrganizerSchedule from "../components/schedule";
-import TeamSelect from "../components/teamSelect";
-import { ScheduleDisplay, TeamSelectData } from "../types/client";
+import { ScheduleDisplay } from "../types/client";
 import { ResponseError, ScoreData, TeamData, UserData } from "../types/database";
 
 export default function OrganizerDash() {
@@ -50,6 +48,7 @@ export default function OrganizerDash() {
     
     return (
         <>
+			{ !scheduleData && <Skeleton /> }
 			{ scheduleData && <OrganizerSchedule data={scheduleData} /> }
 			<Divider />
             { teamsData && <>
@@ -60,6 +59,7 @@ export default function OrganizerDash() {
 					userData={usersData}
 				/> }
 			</>}
+			{ (!teamsData || !usersData) && <Skeleton /> }
         </>
     )
 }

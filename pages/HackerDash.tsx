@@ -1,3 +1,4 @@
+import { Skeleton } from "antd";
 import useSWR from "swr";
 import TeamManager from "../components/TeamManager";
 import TeamSetup from "../components/TeamSetup";
