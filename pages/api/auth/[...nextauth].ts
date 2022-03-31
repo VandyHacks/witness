@@ -5,7 +5,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
 import dbConnect from '../../../middleware/database';
-import vakenLogin from '../../../models/vakenLogin';
 import User from '../../../models/user';
 import testUser from '../../../models/testUser';
 
@@ -64,14 +63,6 @@ export default async function auth(req: any, res: any) {
 					const { email } = user;
 					// user is only defined on first sign in
 					const login = DEV_DEPLOY ? await testUser.findOne({ email }) : await User.findOne({ email });
-
-					// read usertype from vaken db
-					if (!login.userType) {
-						const vakenUser = await vakenLogin.findOne({ email }).lean();
-						if (vakenUser?.userType) login.userType = vakenUser.userType;
-						await login.save();
-					}
-
 					token.userType = login.userType;
 				}
 				return token;

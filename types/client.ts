@@ -34,3 +34,15 @@ export interface TeamSelectData {
 	isMine: boolean;
 	haveJudged: boolean;
 }
+
+export interface NewTeamFields {
+	teamName: string;
+	devpost: string;
+}
+
+export interface TeamProfile {
+	name: string;
+	joinCode: string;
+	devpost: URL;
+	members: string[];
+}
