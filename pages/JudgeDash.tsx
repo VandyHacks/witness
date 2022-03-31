@@ -159,7 +159,7 @@ export default function JudgeDash() {
     return (
 		<>
 			{ scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} /> }
-            <TeamSelect teamsData={teamsData as TeamSelectData[]} currentTeamID={teamID} handleChange={setTeamID} />
+            { teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} /> }
             <Divider />
             { formData && <JudgingForm
                 formData={formData}
