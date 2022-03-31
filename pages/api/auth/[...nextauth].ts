@@ -63,8 +63,13 @@ export default async function auth(req: any, res: any) {
 					const { email } = user;
 					// user is only defined on first sign in
 					const login = DEV_DEPLOY ? await testUser.findOne({ email }) : await User.findOne({ email });
+					if (!login.userType) {
+						login.userType = "HACKER";
+						login.save();
+					}
 					token.userType = login.userType;
 				}
+				
 				return token;
 			},
 			async session({ session, token }) {
