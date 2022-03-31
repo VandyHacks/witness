@@ -53,13 +53,13 @@ export default function OrganizerDash() {
 			<Divider />
             { teamsData && <>
 				{ /* Add dropdown here w/ functionality */ }
-				{ usersData && <AllScores
+				{ usersData && scoresData && <AllScores
 					teamData={teamsData}
-					scoreData={scoresData!}
+					scoreData={scoresData}
 					userData={usersData}
 				/> }
 			</>}
-			{ (!teamsData || !usersData) && <Skeleton /> }
+			{ (!teamsData || !usersData || !scoresData) && <Skeleton /> }
         </>
     )
 }
