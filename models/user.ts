@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
+export const USER_TYPES = ['HACKER', 'JUDGE', 'ORGANIZER'];
 
 export const UserSchema = new Schema(
 	{
@@ -18,7 +19,7 @@ export const UserSchema = new Schema(
 		},
 		userType: {
 			type: String,
-			enum: ['HACKER', 'JUDGE', 'ORGANIZER'],
+			enum: USER_TYPES,
 		},
 		team: {
 			type: Schema.Types.ObjectId,
