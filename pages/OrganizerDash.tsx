@@ -53,7 +53,7 @@ export default function OrganizerDash() {
 			{ scheduleData && <OrganizerSchedule data={scheduleData} /> }
 			<Divider />
             { teamsData && <>
-				{ /* Add dropdown here w/functionlity */ }
+				{ /* Add dropdown here w/ functionality */ }
 				{ usersData && <AllScores
 					teamData={teamsData}
 					scoreData={scoresData!}
