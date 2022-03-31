@@ -29,8 +29,8 @@ export interface JudgingFormFields {
 }
 
 export interface TeamSelectData {
-	id: string;
+	_id: string;
 	name: string;
-	isMine: boolean;
-	haveJudged: boolean;
+	isMine?: boolean;
+	haveJudged?: boolean;
 }

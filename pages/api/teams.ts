@@ -46,7 +46,7 @@ export default async function handler(
 
 				const teamsData = teams.map(team => {
 					return {
-						id: team.id,
+						_id: team._id,
 						name: team.name,
 						isMine: scheduleMap.get(team.id.toString())?.includes(judgeID),
 						haveJudged: scoresMap.get(team.id.toString())?.includes(judgeID),
