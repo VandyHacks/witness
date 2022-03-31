@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
-import User from '../../models/user';
+import User, { USER_TYPES } from '../../models/user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -10,7 +10,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'GET':
-			const userType = req.query.usertype;
+			const userType = req.query.usertype as string;
+			// validate usertype
+			if (!userType || !USER_TYPES.includes(userType)) return res.status(400).send('Invalid user type');
+
 			const users = await User.find({ userType });
 			return res.status(200).send(users);
 		default:
