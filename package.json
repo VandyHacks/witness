@@ -13,7 +13,7 @@
 		"@ant-design/icons": "^4.7.0",
 		"@next-auth/mongodb-adapter": "^1.0.3",
 		"antd": "^4.16.13",
-		"dotenv": "^10.0.0",
+		"dotenv": "^16.0.0",
 		"export-to-csv": "^0.2.1",
 		"luxon": "^2.1.1",
 		"mongodb": "^4.4.1",
