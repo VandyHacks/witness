@@ -93,8 +93,8 @@ export default function OrganizerDash() {
     
     return (
         <>
-			{ scheduleData === undefined && <Skeleton /> }
-			{ scheduleData !== undefined && <OrganizerSchedule data={scheduleData} /> }
+			{ !scheduleData && <Skeleton /> }
+			{ scheduleData && <OrganizerSchedule data={scheduleData} /> }
 			<Divider />
             { teamsData && <>
 				{ /* Add dropdown here w/ functionality */ }
