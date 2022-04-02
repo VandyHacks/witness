@@ -82,7 +82,9 @@ export default async function auth(req: any, res: any) {
 		},
 
 		// A database is optional, but required to persist accounts in a database
-		adapter: MongoDBAdapter(clientPromise),
+		adapter: MongoDBAdapter({
+			db: (await clientPromise).db('witness'),
+		}),
 
 		theme: {
 			colorScheme: 'dark',
