@@ -9,13 +9,12 @@ import User from '../models/user';
 
 dotenvConfig();
 
-const { NAME, PASSWORD, EMAIL, USER_TYPE } = process.env;
+const { NAME, EMAIL, USER_TYPE } = process.env;
 
-if (!(NAME && PASSWORD && EMAIL && USER_TYPE)) {
+if (!(NAME && EMAIL && USER_TYPE)) {
 	console.log('Usage:');
 	console.log('Please log into Witness. Then, make sure that the following variables are set in your .env:');
 	console.log('NAME: name for the test user');
-	console.log('PASSWORD: password for the test user');
 	console.log('EMAIL: fake email address to use for the test user');
 	console.log(
 		'USER_TYPE: one of JUDGE or HACKER or ORGANIZER. Set this to whatever you want your user to be assigned as.'
@@ -39,7 +38,7 @@ async function populateDatabase() {
 	}
 
 	// set test to true
-	const user = new User({ name: NAME, password: PASSWORD, email: EMAIL, userType: USER_TYPE, test: true });
+	const user = new User({ name: NAME, email: EMAIL, userType: USER_TYPE, test: true });
 	await user.save();
 
 	console.log('Test user created:', user);
