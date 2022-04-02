@@ -91,7 +91,8 @@ export const args = {
 
 // TODO: test
 if ((args.email === undefined) !== (args.userType === undefined)) {
-	console.log('You must provide both an email and user type if you want to be included in judging.');
+	console.error('You must provide both an email and user type if you want to be included in judging.');
+	process.exit(1);
 }
 
 function generateUser(userType: string): UserData {
@@ -138,7 +139,6 @@ async function populateDatabase() {
 		console.error(
 			'Error connecting to database. Make sure you specify the DATABASE_URL env variable when you run the script.'
 		);
-		process.exit(1);
 	}
 
 	const you =
