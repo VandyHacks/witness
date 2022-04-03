@@ -63,17 +63,7 @@ export const exportCSV: any = (work: any) => {
 	const csvExporter = new ExportToCsv({
 		filename: 'judging-data',
 		showLabels: true,
-		headers: [
-			'Technical Ability',
-			'Creativity',
-			'Utility',
-			'Presentation',
-			'Wow Factor',
-			'Comments',
-			'Feedback',
-			'Team',
-			'Judge',
-		],
+		headers: newCols.map((col: any) => col.title),
 	});
 	csvExporter.generateCsv(work);
 };
@@ -94,6 +84,8 @@ export default function allScores(props: AllScoresProps) {
 		}
 
 		return {
+			team: teamName,
+			judge: judgeName,
 			technicalAbility: x.technicalAbility,
 			creativity: x.creativity,
 			utility: x.utility,
@@ -101,8 +93,6 @@ export default function allScores(props: AllScoresProps) {
 			wowFactor: x.wowFactor,
 			comments: x.comments,
 			feedback: x.feedback,
-			team: teamName,
-			judge: judgeName,
 		};
 	});
 
