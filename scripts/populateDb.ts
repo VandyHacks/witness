@@ -34,6 +34,7 @@ export const args = {
 		judgingLength: 10 * 1000,
 		numRooms: 5,
 		startTimeStamp: Date.now() + 60 * 1000,
+		userType: 'HACKER',
 	},
 	...parse<Arguments>(
 		{
@@ -78,7 +79,7 @@ export const args = {
 				type: String,
 				alias: 'U',
 				optional: true,
-				description: 'Your user type (only if you want to be included in judging, default none).',
+				description: 'Your user type (only if you want to be included in judging, default HACKER).',
 			},
 			help: { type: Boolean, optional: true, alias: 'h', description: 'Prints this usage guide' },
 		},
@@ -88,12 +89,6 @@ export const args = {
 		}
 	),
 };
-
-// TODO: test
-if ((args.email === undefined) !== (args.userType === undefined)) {
-	console.error('You must provide both an email and user type if you want to be included in judging.');
-	process.exit(1);
-}
 
 function generateUser(userType: string): UserData {
 	return {
