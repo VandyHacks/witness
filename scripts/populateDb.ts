@@ -31,9 +31,9 @@ export const args = {
 	...{
 		numHackers: 500,
 		numJudges: 20,
-		judgingLength: 10 * 1000,
+		judgingLength: 10 * 1000, // 10 seconds
 		numRooms: 5,
-		startTimeStamp: Date.now() + 60 * 1000,
+		startTimeStamp: Date.now() + 60 * 1000, // 1 minute from now
 		userType: 'HACKER',
 	},
 	...parse<Arguments>(
