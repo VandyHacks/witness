@@ -8,6 +8,7 @@ export interface AllScoresProps {
 	scoreData: ScoreData[];
 	teamData: TeamData[];
 	userData: UserData[];
+	teamId?: string | null;
 }
 
 const newCols = [
@@ -66,7 +67,13 @@ export const exportCSV: any = (work: any) => {
 
 export default function allScores(props: AllScoresProps) {
 	let data = props;
-	let work = data.scoreData.map(x => {
+	let scoreData = data.scoreData;
+
+	if (data.teamId) {
+		scoreData = scoreData.filter(x => x.team.toString() === data.teamId);
+	}
+
+	let work = scoreData.map(x => {
 		let tempTeam = data.teamData[data.teamData.findIndex(p => p._id == x.team)];
 		let tempJudge = data.userData[data.userData.findIndex(p => p._id == x.judge)];
 
@@ -92,7 +99,6 @@ export default function allScores(props: AllScoresProps) {
 		};
 	});
 
-	console.log(work);
 	return (
 		<>
 			<Table dataSource={work} columns={newCols}></Table>

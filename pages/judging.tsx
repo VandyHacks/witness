@@ -151,7 +151,17 @@ export default function Forms() {
 		let formSection;
 		if (!teamId) {
 			// if no team selected, show default screen
+
 			formSection = <Empty description="No team selected." />;
+			if (session?.userType === 'ORGANIZER' && teamsData && scoresData && usersData) {
+				formSection = (
+					<AllScores
+						teamData={teamsData! as TeamData[]}
+						scoreData={scoresData!}
+						userData={usersData! as UserData[]}
+					/>
+				);
+			}
 		} else if (formError) {
 			// if team selected but error in getting team's form, show error
 			formSection = <ErrorMessage status={formError.status} />;
@@ -163,6 +173,7 @@ export default function Forms() {
 							teamData={teamsData as TeamData[]}
 							scoreData={scoresData!}
 							userData={usersData as UserData[]}
+							teamId={teamId}
 						/>
 					));
 			}
@@ -181,6 +192,7 @@ export default function Forms() {
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
+				{console.log(teamId)}
 				<TeamSelect teamsData={teamsData as TeamSelectData[]} currentTeamID={teamId} handleChange={setTeamID} />
 				<Divider />
 				{formSection}
