@@ -41,12 +41,10 @@ export default async function auth(req: any, res: any) {
 								const user = await User.findOne({
 									email,
 								});
-
-								if (!user.test) return null; // only allow test users
-
+								
 								if (user) {
 									// Any object returned will be saved in `user` property of the JWT
-									return user;
+									return ("test" in user ? user : null);
 								} else {
 									// If you return null then an error will be displayed advising the user to check their details.
 									return null;
