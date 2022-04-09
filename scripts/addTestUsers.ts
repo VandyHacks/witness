@@ -5,17 +5,16 @@ add test users for dev builds to login w/ username/password and not oauth
 import { config as dotenvConfig } from 'dotenv';
 import dbConnect from '../middleware/database';
 
-import testUser from '../models/testUser';
+import User from '../models/user';
 
 dotenvConfig();
 
-const { USERNAME, PASSWORD, EMAIL, USER_TYPE } = process.env;
+const { NAME, EMAIL, USER_TYPE } = process.env;
 
-if (!(USERNAME && PASSWORD && EMAIL && USER_TYPE)) {
+if (!(NAME && EMAIL && USER_TYPE)) {
 	console.log('Usage:');
 	console.log('Please log into Witness. Then, make sure that the following variables are set in your .env:');
-	console.log('USERNAME: username for the test user');
-	console.log('PASSWORD: password for the test user');
+	console.log('NAME: name for the test user');
 	console.log('EMAIL: fake email address to use for the test user');
 	console.log(
 		'USER_TYPE: one of JUDGE or HACKER or ORGANIZER. Set this to whatever you want your user to be assigned as.'
@@ -38,7 +37,8 @@ async function populateDatabase() {
 		console.error(e);
 	}
 
-	const user = new testUser({ username: USERNAME, password: PASSWORD, email: EMAIL, userType: USER_TYPE });
+	// set test to true
+	const user = new User({ name: NAME, email: EMAIL, userType: USER_TYPE, test: true });
 	await user.save();
 
 	console.log('Test user created:', user);
