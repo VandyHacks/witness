@@ -7,7 +7,7 @@ import { ExportToCsv } from 'export-to-csv';
 export interface AllScoresProps {
 	scoreData: ScoreData[];
 	teamData: TeamData[];
-	userData: UserData[];
+	userData: UserData[]; // TODO: No need to have all users if you only use the judges anyway
 	teamId?: string | null;
 }
 
