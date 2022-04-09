@@ -14,7 +14,7 @@ if (!cached) {
 	cached = (global as any).mongoose = { conn: null, promise: null };
 }
 
-async function dbConnect() {
+async function dbConnect(overrideURL?: string | undefined) {
 	if (cached.conn) {
 		return cached.conn;
 	}
@@ -27,7 +27,7 @@ async function dbConnect() {
 			autoIndex: true,
 		};
 
-		cached.promise = mongoose.connect(DATABASE_URL as string, options).then(mongoose => {
+		cached.promise = mongoose.connect(overrideURL || (DATABASE_URL as string), options).then(mongoose => {
 			return mongoose;
 		});
 	}
