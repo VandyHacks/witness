@@ -73,9 +73,9 @@ export default function allScores(props: AllScoresProps) {
 		scoreData = scoreData.filter(x => x.team.toString() === data.teamId);
 	}
 
-	let work = scoreData.map(x => {
-		let tempTeam = data.teamData[data.teamData.findIndex(p => p._id == x.team)];
-		let tempJudge = data.userData[data.userData.findIndex(p => p._id == x.judge)];
+	let work = scoreData.map(score => {
+		let tempTeam = data.teamData[data.teamData.findIndex(p => p._id == score.team)];
+		let tempJudge = data.userData[data.userData.findIndex(p => p._id == score.judge)];
 
 		let teamName;
 		let judgeName;
@@ -87,13 +87,7 @@ export default function allScores(props: AllScoresProps) {
 		}
 
 		return {
-			technicalAbility: x.technicalAbility,
-			creativity: x.creativity,
-			utility: x.utility,
-			presentation: x.presentation,
-			wowFactor: x.wowFactor,
-			comments: x.comments,
-			feedback: x.feedback,
+			...score,
 			team: teamName,
 			judge: judgeName,
 		};
