@@ -192,7 +192,6 @@ export default function Forms() {
 		}
 		pageContent = (
 			<Space direction="vertical" style={{ width: '100%' }}>
-				{console.log(teamId)}
 				<TeamSelect teamsData={teamsData as TeamSelectData[]} currentTeamID={teamId} handleChange={setTeamID} />
 				<Divider />
 				{formSection}
