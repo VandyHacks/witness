@@ -43,7 +43,7 @@ export default async function auth(req: any, res: any) {
 									email,
 								});
 
-								if (!user.test) return null; // only allow test users
+								if (!user?.test) return null; // only allow test users
 
 								if (user) {
 									// Any object returned will be saved in `user` property of the JWT
