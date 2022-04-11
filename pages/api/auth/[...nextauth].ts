@@ -41,8 +41,10 @@ export default async function auth(req: any, res: any) {
 								const user = await User.findOne({
 									email,
 								});
-								
-								return ((user && "test" in user) ? user : null);
+
+
+								if (!user?.test) return null; // only allow test users
+                return user;
 							},
 						}),
 				  ]
