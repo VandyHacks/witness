@@ -5,7 +5,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
 import dbConnect from '../../../middleware/database';
-import vakenLogin from '../../../models/vakenLogin';
 import User from '../../../models/user';
 
 const DEV_DEPLOY =
@@ -43,15 +42,9 @@ export default async function auth(req: any, res: any) {
 									email,
 								});
 
-								if (!user?.test) return null; // only allow test users
 
-								if (user) {
-									// Any object returned will be saved in `user` property of the JWT
-									return user;
-								} else {
-									// If you return null then an error will be displayed advising the user to check their details.
-									return null;
-								}
+								if (!user?.test) return null; // only allow test users
+                return user;
 							},
 						}),
 				  ]
@@ -68,16 +61,13 @@ export default async function auth(req: any, res: any) {
 					const { email } = user;
 					// user is only defined on first sign in
 					const login = await User.findOne({ email });
-
-					// read usertype from vaken db
 					if (!login.userType) {
-						const vakenUser = await vakenLogin.findOne({ email }).lean();
-						if (vakenUser?.userType) login.userType = vakenUser.userType;
-						await login.save();
+						login.userType = "HACKER";
+						login.save();
 					}
-
 					token.userType = login.userType;
 				}
+				
 				return token;
 			},
 			async session({ session, token }) {
