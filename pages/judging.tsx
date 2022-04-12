@@ -173,7 +173,7 @@ export default function Forms() {
 							teamData={teamsData as TeamData[]}
 							scoreData={scoresData!}
 							userData={usersData as UserData[]}
-							teamId={teamId}
+							selectedTeamId={teamId}
 						/>
 					));
 			}

@@ -8,7 +8,7 @@ export interface AllScoresProps {
 	scoreData: ScoreData[];
 	teamData: TeamData[];
 	userData: UserData[]; // TODO: No need to have all users if you only use the judges anyway
-	teamId?: string | null;
+	selectedTeamId?: string | null;
 }
 
 const newCols = [
@@ -69,8 +69,8 @@ export default function allScores(props: AllScoresProps) {
 	let data = props;
 	let scoreData = data.scoreData;
 
-	if (data.teamId) {
-		scoreData = scoreData.filter(x => x.team.toString() === data.teamId);
+	if (data.selectedTeamId) {
+		scoreData = scoreData.filter(x => x.team.toString() === data.selectedTeamId);
 	}
 
 	let work = scoreData.map(score => {
