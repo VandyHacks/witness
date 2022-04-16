@@ -61,7 +61,11 @@ const newCols = [
 ];
 
 export const exportCSV: any = (work: any) => {
-	const csvExporter = new ExportToCsv();
+	const csvExporter = new ExportToCsv({
+		filename: 'judging-data',
+		showLabels: true,
+		headers: newCols.map((col: any) => col.title),
+	});
 	csvExporter.generateCsv(work);
 };
 

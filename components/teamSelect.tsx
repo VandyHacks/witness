@@ -8,7 +8,7 @@ const { Option, OptGroup } = Select;
 interface TeamSelectProps {
 	teamsData: TeamSelectData[];
 	currentTeamID: string | undefined;
-	handleChange: Dispatch<SetStateAction<string | undefined>>;
+	handleChange: Dispatch<SetStateAction<string>>;
 }
 
 function withCheckMark(value: string) {

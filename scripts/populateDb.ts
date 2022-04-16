@@ -1,4 +1,4 @@
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 const { ObjectID } = require('mongodb');
 import mongoose from 'mongoose';
 import type { UserData, TeamData, ScoreData, ScheduleData } from '../types/database';
@@ -10,30 +10,86 @@ import Team from '../models/team';
 import Score from '../models/scores';
 import Schedule from '../models/schedule';
 
+import { parse } from 'ts-command-line-args';
+
 dotenvConfig();
 
-const { NUM_HACKERS, NUM_JUDGES, JUDGING_LENGTH, NUM_ROOMS, START_TIME_STAMP, EMAIL, USER_TYPE } = process.env;
-
-if (!(NUM_HACKERS && NUM_JUDGES && JUDGING_LENGTH && NUM_ROOMS && START_TIME_STAMP && EMAIL && USER_TYPE)) {
-	console.log('Usage:');
-	console.log(
-		'Please log into Witness using a fresh database. Then, make sure that the following variables are set in your .env:'
-	);
-	console.log('NUM_HACKERS: integer number of hackers to generate');
-	console.log('NUM_JUDGES: integer number of judges to generate');
-	console.log('NUM_ROOMS: integer number of zoom rooms URLs to generate');
-	console.log('JUDGING_LENGTH: length in milliseconds of a judging period');
-	console.log('START_TIME_STAMP: unix timestamp for when "judging" will begin');
-	console.log('EMAIL: email address (case sensitive) of the user you signed in as in the first step.');
-	console.log(
-		'USER_TYPE: one of JUDGE or HACKER or ORGANIZER. Set this to whatever you want your user to be assigned as.'
-	);
-	console.log('================================================================');
-	console.log(
-		'Run the script with DATABASE_URL="..." ts-node <path-to-script>/populateDb.ts where ... is your DEVELOPMENT database connection string.'
-	);
-	process.exit(0);
+interface Arguments {
+	numHackers?: number;
+	numJudges?: number;
+	judgingLength?: number;
+	numRooms?: number;
+	startTimeStamp?: number;
+	email?: string;
+	userType?: string;
+	databaseUrl: string;
+	help?: boolean;
 }
+
+export const args = {
+	// Defaults
+	...{
+		numHackers: 500,
+		numJudges: 20,
+		judgingLength: 10 * 1000, // 10 seconds
+		numRooms: 5,
+		startTimeStamp: Date.now() + 60 * 1000, // 1 minute from now
+		userType: 'HACKER',
+	},
+	...parse<Arguments>(
+		{
+			databaseUrl: { type: String, alias: 'D', description: '***REQUIRED***: Database connection string' },
+			numHackers: {
+				type: Number,
+				alias: 'H',
+				optional: true,
+				description: 'Number of hackers to generate (default 500)',
+			},
+			numJudges: {
+				type: Number,
+				alias: 'J',
+				optional: true,
+				description: 'Number of judges to generate (default 20)',
+			},
+			judgingLength: {
+				type: Number,
+				alias: 'L',
+				optional: true,
+				description: 'Length of judging period in milliseconds (default 10 seconds)',
+			},
+			numRooms: {
+				type: Number,
+				alias: 'R',
+				optional: true,
+				description: 'Number of zoom rooms to generate (default 5)',
+			},
+			startTimeStamp: {
+				type: Number,
+				alias: 'S',
+				optional: true,
+				description: 'Unix timestamp (in milliseconds) for when judging will begin (default 1 minute from now)',
+			},
+			email: {
+				type: String,
+				alias: 'E',
+				optional: true,
+				description: 'Your email address (only if you want to be included in judging, default none).',
+			},
+			userType: {
+				type: String,
+				alias: 'U',
+				optional: true,
+				description: 'Your user type (only if you want to be included in judging, default HACKER).',
+			},
+			help: { type: Boolean, optional: true, alias: 'h', description: 'Prints this usage guide' },
+		},
+		{
+			helpArg: 'help',
+			headerContentSections: [{ header: 'Populate DB Config', content: 'Populates the database with fake data' }],
+		}
+	),
+};
+
 function generateUser(userType: string): UserData {
 	return {
 		_id: new ObjectID(),
@@ -73,34 +129,32 @@ function generateScore(team: mongoose.Schema.Types.ObjectId, judge: mongoose.Sch
 async function populateDatabase() {
 	console.log('Connecting to DB...');
 	try {
-		await dbConnect();
+		await dbConnect(args.databaseUrl);
 	} catch (e) {
 		console.error(
 			'Error connecting to database. Make sure you specify the DATABASE_URL env variable when you run the script.'
 		);
-		console.error(e);
 	}
 
-	const you = await User.findOneAndUpdate({ email: EMAIL }, { userType: USER_TYPE });
-	if (!you) {
-		console.error('Provided user email does not exist in database. Make sure you log in first.');
-		process.exit(0);
-	}
+	const you =
+		args.email !== undefined
+			? await User.findOneAndUpdate({ email: args.email }, { userType: args.userType })
+			: null;
 	// make all judges and hackers
 	console.log('Generating hackers and judges...');
-	const judges = Array(parseInt(NUM_JUDGES || '0') - 1)
+	const judges = Array(args.numJudges - 1)
 		.fill(null)
 		.map(_ => generateUser('JUDGE'));
 
 	// include yourself as a judge
-	if (USER_TYPE === 'JUDGE') {
+	if (args.userType === 'JUDGE') {
 		judges.splice(0, 1);
 		judges.push(you);
 	}
-	const hackers = Array(parseInt(NUM_HACKERS || '0'))
+	const hackers = Array(args.numHackers)
 		.fill(null)
 		.map(_ => generateUser('HACKER'));
-	if (USER_TYPE === 'HACKER') {
+	if (args.userType === 'HACKER') {
 		hackers.splice(0, 1);
 		hackers.push(you);
 	}
@@ -116,13 +170,13 @@ async function populateDatabase() {
 	}
 	console.log('Creating schedule...');
 	// Get zoom rooms (this is actually how it'll be done in prod too)
-	const rooms = Array(parseInt(NUM_ROOMS || '0'))
+	const rooms = Array(args.numRooms)
 		.fill(null)
 		.map((_, i) => `https://vhl.ink/room-${i + 1}`);
 	// Fill schedule
 	const schedule: ScheduleData[] = [];
 	const teamsCopy = teams.slice();
-	let timestamp = parseInt(START_TIME_STAMP || '0');
+	let timestamp = args.startTimeStamp;
 	while (teamsCopy.length > 0) {
 		let teamsInThisTimeSlot = Math.floor(1 + Math.random() * 5);
 		if (teamsInThisTimeSlot > teamsCopy.length) teamsInThisTimeSlot = teamsCopy.length;
@@ -140,7 +194,7 @@ async function populateDatabase() {
 				time: new Date(timestamp),
 			});
 		}
-		timestamp += parseInt(JUDGING_LENGTH || '0');
+		timestamp += args.judgingLength;
 	}
 
 	// Generate scores
@@ -150,8 +204,8 @@ async function populateDatabase() {
 	console.log('Inserting teams...');
 	let teamsCount = (await Team.insertMany(teams)).length;
 	console.log('Inserting users...');
-	if (USER_TYPE === 'HACKER') hackers.splice(hackers.length - 1);
-	else if (USER_TYPE === 'JUDGE') judges.splice(judges.length - 1);
+	if (args.userType === 'HACKER') hackers.splice(hackers.length - 1);
+	else if (args.userType === 'JUDGE') judges.splice(judges.length - 1);
 	let usersCount = (await User.insertMany(hackers)).length + (await User.insertMany(judges)).length;
 	console.log('Inserting scores...');
 	let scoresCount = (await Score.insertMany(scores)).length;

@@ -25,6 +25,10 @@ export const UserSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'Team',
 		},
+		test: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,

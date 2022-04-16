@@ -5,9 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
 import dbConnect from '../../../middleware/database';
-import vakenLogin from '../../../models/vakenLogin';
 import User from '../../../models/user';
-import testUser from '../../../models/testUser';
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env?.VERCEL_ENV!);
@@ -31,23 +29,22 @@ export default async function auth(req: any, res: any) {
 							name: 'Dev Credentials',
 							// credentials is used to generate a suitable form on the sign in page.
 							credentials: {
-								username: { label: 'Username', type: 'text', placeholder: 'test' },
+								email: { label: 'Email', type: 'text', placeholder: 'test@vandyhacks.dev' },
 								password: { label: 'Password', type: 'password' },
 							},
 							async authorize(credentials, req) {
+								if (!credentials) return null;
+								const { email, password } = credentials;
+								if (password !== process.env.TEST_PASSWD) return null;
+
 								await dbConnect();
-								const user = await testUser.findOne({
-									username: credentials?.username,
-									password: credentials?.password,
+								const user = await User.findOne({
+									email,
 								});
 
-								if (user) {
-									// Any object returned will be saved in `user` property of the JWT
-									return user;
-								} else {
-									// If you return null then an error will be displayed advising the user to check their details.
-									return null;
-								}
+
+								if (!user?.test) return null; // only allow test users
+                return user;
 							},
 						}),
 				  ]
@@ -63,17 +60,14 @@ export default async function auth(req: any, res: any) {
 				if (user) {
 					const { email } = user;
 					// user is only defined on first sign in
-					const login = DEV_DEPLOY ? await testUser.findOne({ email }) : await User.findOne({ email });
-
-					// read usertype from vaken db
+					const login = await User.findOne({ email });
 					if (!login.userType) {
-						const vakenUser = await vakenLogin.findOne({ email }).lean();
-						if (vakenUser?.userType) login.userType = vakenUser.userType;
-						await login.save();
+						login.userType = "HACKER";
+						login.save();
 					}
-
 					token.userType = login.userType;
 				}
+				
 				return token;
 			},
 			async session({ session, token }) {
