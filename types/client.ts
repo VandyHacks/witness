@@ -29,10 +29,10 @@ export interface JudgingFormFields {
 }
 
 export interface TeamSelectData {
-	teamID: string;
-	teamName: string;
-	isMine: boolean;
-	haveJudged: boolean;
+	_id: string;
+	name: string;
+	isMine?: boolean;
+	haveJudged?: boolean;
 }
 
 export interface NewTeamFields {
