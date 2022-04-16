@@ -7,7 +7,8 @@ import { ExportToCsv } from 'export-to-csv';
 export interface AllScoresProps {
 	scoreData: ScoreData[];
 	teamData: TeamData[];
-	userData: UserData[];
+	userData: UserData[]; // TODO: No need to have all users if you only use the judges anyway
+	selectedTeamId?: string | null;
 }
 
 const newCols = [
@@ -70,9 +71,15 @@ export const exportCSV: any = (work: any) => {
 
 export default function allScores(props: AllScoresProps) {
 	let data = props;
-	let work = data.scoreData.map(x => {
-		let tempTeam = data.teamData[data.teamData.findIndex(p => p._id == x.team)];
-		let tempJudge = data.userData[data.userData.findIndex(p => p._id == x.judge)];
+	let scoreData = data.scoreData;
+
+	if (data.selectedTeamId) {
+		scoreData = scoreData.filter(x => x.team.toString() === data.selectedTeamId);
+	}
+
+	let work = scoreData.map(score => {
+		let tempTeam = data.teamData[data.teamData.findIndex(p => p._id == score.team)];
+		let tempJudge = data.userData[data.userData.findIndex(p => p._id == score.judge)];
 
 		let teamName;
 		let judgeName;
@@ -84,19 +91,12 @@ export default function allScores(props: AllScoresProps) {
 		}
 
 		return {
+			...score,
 			team: teamName,
 			judge: judgeName,
-			technicalAbility: x.technicalAbility,
-			creativity: x.creativity,
-			utility: x.utility,
-			presentation: x.presentation,
-			wowFactor: x.wowFactor,
-			comments: x.comments,
-			feedback: x.feedback,
 		};
 	});
 
-	console.log(work);
 	return (
 		<>
 			<Table dataSource={work} columns={newCols}></Table>
