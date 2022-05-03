@@ -17,7 +17,7 @@
 		"export-to-csv": "^0.2.1",
 		"luxon": "^2.1.1",
 		"mongodb": "^4.5.0",
-		"mongoose": "^6.2.10",
+		"mongoose": "^6.3.2",
 		"nanoid": "^3.1.31",
 		"next": "12.1.5",
 		"next-auth": "^4.3.1",
