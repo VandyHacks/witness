@@ -1,5 +1,5 @@
-import { Button, Card, Form, Input } from "antd";
-import { NewTeamFields } from "../types/client";
+import { Button, Card, Form, Input } from 'antd';
+import { NewTeamFields } from '../types/client';
 
 interface Props {
 	title: string;
@@ -22,7 +22,8 @@ export default function TeamCard(props: Props) {
 						key={field.label}
 						label={field.label}
 						name={field.name}
-						rules={[{ required: true, message: 'This field is required.' }]}>
+						rules={[{ required: true, message: 'This field is required.' }]}
+					>
 						<Input />
 					</Form.Item>
 				))}

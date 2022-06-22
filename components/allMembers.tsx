@@ -56,7 +56,8 @@ export default function allMembers(props: AllMembersProps) {
 			<Button
 				onClick={() => {
 					exportCSV(work);
-				}}>
+				}}
+			>
 				Export
 			</Button>
 		</>

@@ -1,11 +1,11 @@
-import { Divider, Empty, notification, Skeleton } from "antd";
-import useSWR, { useSWRConfig } from "swr";
-import { ScopedMutator } from "swr/dist/types";
-import AllScores from "../components/allScores";
-import AssignRoleForm, { AssignFormFields } from "../components/assignRoleForm";
-import OrganizerSchedule from "../components/schedule";
-import { ScheduleDisplay } from "../types/client";
-import { ResponseError, ScoreData, TeamData, UserData } from "../types/database";
+import { Divider, Empty, notification, Skeleton } from 'antd';
+import useSWR, { useSWRConfig } from 'swr';
+import { ScopedMutator } from 'swr/dist/types';
+import AllScores from '../components/allScores';
+import AssignRoleForm, { AssignFormFields } from '../components/assignRoleForm';
+import OrganizerSchedule from '../components/schedule';
+import { ScheduleDisplay } from '../types/client';
+import { ResponseError, ScoreData, TeamData, UserData } from '../types/database';
 
 function handleSubmitSuccess() {
 	notification['success']({
@@ -39,8 +39,8 @@ async function handleSubmit(roleData: AssignFormFields, mutate: ScopedMutator<an
 
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
-	
-    const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
+
+	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of teams.') as ResponseError;
@@ -50,7 +50,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as TeamData[];
 	});
 
-    const { data: scoresData, error: scoresError } = useSWR('/api/scores', async url => {
+	const { data: scoresData, error: scoresError } = useSWR('/api/scores', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of scores.') as ResponseError;
@@ -60,7 +60,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScoreData[];
 	});
 
-    const { data: usersData, error: usersError } = useSWR('/api/users?usertype=JUDGE', async url => {
+	const { data: usersData, error: usersError } = useSWR('/api/users?usertype=JUDGE', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of judges.') as ResponseError;
@@ -90,25 +90,29 @@ export default function OrganizerDash() {
 
 		return (await res.json()) as { _id: string; name: string }[];
 	});
-    
-    return (
-        <>
-			{ !scheduleData && <Skeleton /> }
-			{ scheduleData && <OrganizerSchedule data={scheduleData} /> }
+
+	return (
+		<>
+			{!scheduleData && <Skeleton />}
+			{scheduleData && <OrganizerSchedule data={scheduleData} />}
 			<Divider />
-            { teamsData && <>
-				{ /* Add dropdown here w/ functionality */ }
-				{ usersData && scoresData && <AllScores
-					teamData={teamsData}
-					scoreData={scoresData}
-					userData={usersData}
-				/> }
-			</>}
-			{ (!teamsData || !usersData || !scoresData) && <Skeleton /> }
+			{teamsData && (
+				<>
+					{/* Add dropdown here w/ functionality */}
+					{usersData && scoresData && (
+						<AllScores teamData={teamsData} scoreData={scoresData} userData={usersData} />
+					)}
+				</>
+			)}
+			{(!teamsData || !usersData || !scoresData) && <Skeleton />}
 			<Divider />
-			{ !userData && <Skeleton /> }
-			{ userData && userData.length == 0 && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users without roles</span>} /> }
-			{ userData && userData.length > 0 && <AssignRoleForm formData={userData} onSubmit={formData => handleSubmit(formData, mutate)} />}
-        </>
-    )
+			{!userData && <Skeleton />}
+			{userData && userData.length == 0 && (
+				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users without roles</span>} />
+			)}
+			{userData && userData.length > 0 && (
+				<AssignRoleForm formData={userData} onSubmit={formData => handleSubmit(formData, mutate)} />
+			)}
+		</>
+	);
 }

@@ -1,9 +1,9 @@
-import { Col, Divider, Row } from "antd";
-import { useSWRConfig } from "swr";
-import { ScopedMutator } from "swr/dist/types";
-import { handleRequestFailure } from "../lib/helpers";
-import { NewTeamFields } from "../types/client";
-import TeamCard from "./TeamCard";
+import { Col, Divider, Row } from 'antd';
+import { useSWRConfig } from 'swr';
+import { ScopedMutator } from 'swr/dist/types';
+import { handleRequestFailure } from '../lib/helpers';
+import { NewTeamFields } from '../types/client';
+import TeamCard from './TeamCard';
 
 async function handleSubmit(formData: NewTeamFields | { joinCode: string }, mutate: ScopedMutator<any>) {
 	const res = await fetch('/api/team-management', {

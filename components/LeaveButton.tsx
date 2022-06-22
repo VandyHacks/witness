@@ -1,6 +1,6 @@
-import { Button, Popconfirm } from "antd";
-import { useSWRConfig } from "swr";
-import { ScopedMutator } from "swr/dist/types";
+import { Button, Popconfirm } from 'antd';
+import { useSWRConfig } from 'swr';
+import { ScopedMutator } from 'swr/dist/types';
 
 export default function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator<any>) => Promise<void> }) {
 	const { mutate } = useSWRConfig();
@@ -10,7 +10,8 @@ export default function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutat
 			placement="right"
 			okText="Yes"
 			cancelText="No"
-			onConfirm={() => onLeave(mutate)}>
+			onConfirm={() => onLeave(mutate)}
+		>
 			<Button type="primary" danger>
 				Leave Team
 			</Button>

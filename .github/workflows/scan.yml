@@ -1,25 +1,25 @@
-name: "Code Scanning"
+name: 'Code Scanning'
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  CodeQL:
-    # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
-    runs-on: ubuntu-latest
+    CodeQL:
+        # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
+        runs-on: ubuntu-latest
 
-    permissions:
-      security-events: write
+        permissions:
+            security-events: write
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v1
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            - name: Initialize CodeQL
+              uses: github/codeql-action/init@v1
+            - name: Autobuild
+              uses: github/codeql-action/autobuild@v1
+            - name: Perform CodeQL Analysis
+              uses: github/codeql-action/analyze@v1

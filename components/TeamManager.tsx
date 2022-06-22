@@ -1,9 +1,9 @@
-import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag } from "antd";
-import { useSWRConfig } from "swr";
-import { ScopedMutator } from "swr/dist/types";
-import { handleRequestFailure } from "../lib/helpers";
-import { TeamProfile } from "../types/client";
-import LeaveButton from "./LeaveButton";
+import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag } from 'antd';
+import { useSWRConfig } from 'swr';
+import { ScopedMutator } from 'swr/dist/types';
+import { handleRequestFailure } from '../lib/helpers';
+import { TeamProfile } from '../types/client';
+import LeaveButton from './LeaveButton';
 const { Panel } = Collapse;
 
 async function handleSubmit(formData: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) {
@@ -37,7 +37,7 @@ async function handleLeaveTeam(mutate: ScopedMutator<any>) {
 	} else handleRequestFailure(await res.text());
 }
 
-export default function TeamManager({ profile } : { profile: TeamProfile }) {
+export default function TeamManager({ profile }: { profile: TeamProfile }) {
 	// TODO: STYLE THIS!
 	const { name, joinCode, devpost, members } = profile;
 	const onFormFinish = async (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => {
@@ -85,7 +85,8 @@ export default function TeamManager({ profile } : { profile: TeamProfile }) {
 						<Form.Item
 							name="teamName"
 							label="New Team Name"
-							rules={[{ required: true, message: 'Please enter a team name.' }]}>
+							rules={[{ required: true, message: 'Please enter a team name.' }]}
+						>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
@@ -98,7 +99,8 @@ export default function TeamManager({ profile } : { profile: TeamProfile }) {
 						<Form.Item
 							name="devpost"
 							label="New Devpost URL"
-							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}>
+							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}
+						>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">

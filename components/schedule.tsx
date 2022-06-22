@@ -169,7 +169,8 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 										} else if (info.file.status == 'done') {
 											handleSuccess();
 										}
-									}}>
+									}}
+								>
 									<Button icon={<UploadOutlined />}>
 										<Space style={{ marginLeft: '10px' }}>
 											Click to Upload {loading && <Spin size="small" />}

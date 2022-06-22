@@ -1,12 +1,12 @@
-import { Divider, notification, Skeleton } from "antd";
-import { useEffect, useState } from "react";
-import useSWR, { useSWRConfig } from "swr";
-import { ScopedMutator } from "swr/dist/types";
-import JudgingForm from "../components/judgingForm";
-import { JudgeSchedule } from "../components/schedule";
-import TeamSelect from "../components/teamSelect";
-import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from "../types/client";
-import { ResponseError, TeamData } from "../types/database";
+import { Divider, notification, Skeleton } from 'antd';
+import { useEffect, useState } from 'react';
+import useSWR, { useSWRConfig } from 'swr';
+import { ScopedMutator } from 'swr/dist/types';
+import JudgingForm from '../components/judgingForm';
+import { JudgeSchedule } from '../components/schedule';
+import TeamSelect from '../components/teamSelect';
+import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
+import { ResponseError, TeamData } from '../types/database';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
 const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
@@ -57,14 +57,14 @@ async function handleSubmit(
 }
 
 export default function JudgeDash() {
-    const [teamID, setTeamID] = useState("");
+	const [teamID, setTeamID] = useState('');
 	const [currentScheduleItem, setCurrentScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
 	const [nextScheduleItem, setNextScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
 	const [nextIndex, setNextIndex] = useState(-1);
 	const { mutate } = useSWRConfig();
 	const judgingLength = parseInt(JUDGING_LENGTH || '0');
 
-    // Get data for teams dropdown
+	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -75,7 +75,7 @@ export default function JudgeDash() {
 		return (await res.json()) as TeamSelectData[];
 	});
 
-    const [isNewForm, setIsNewForm] = useState(false);
+	const [isNewForm, setIsNewForm] = useState(false);
 	// Get data for form component, formData will be falsy if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
@@ -155,19 +155,25 @@ export default function JudgeDash() {
 		}, 1000);
 		return () => clearInterval(interval);
 	});
-    
-    return (
+
+	return (
 		<>
-			{ scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} /> }
-			<br /><br />
-            { teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} /> }
-			{ (!scheduleData || !teamsData) && <Skeleton /> }
-            <Divider />
-            { formData && <JudgingForm
-                formData={formData}
-                isNewForm={isNewForm}
-                onSubmit={formData => handleSubmit(formData, mutate, teamID, isNewForm, setIsNewForm)}
-            /> }
-			{ !formData && teamID && <Skeleton /> }
-		</>);
+			{scheduleData && (
+				<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
+			)}
+			<br />
+			<br />
+			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} />}
+			{(!scheduleData || !teamsData) && <Skeleton />}
+			<Divider />
+			{formData && (
+				<JudgingForm
+					formData={formData}
+					isNewForm={isNewForm}
+					onSubmit={formData => handleSubmit(formData, mutate, teamID, isNewForm, setIsNewForm)}
+				/>
+			)}
+			{!formData && teamID && <Skeleton />}
+		</>
+	);
 }
