@@ -26,8 +26,8 @@ function ScheduleCard(props: ExtendedScheduleDisplay) {
 					</a>
 				</span>
 				<span>
-				<strong >Zoom: </strong>
-				<a style={{ color: '#1890ff' }} href={props.zoom.toString()} target="_blank" rel="noreferrer">
+					<strong>Zoom: </strong>
+					<a style={{ color: '#1890ff' }} href={props.zoom.toString()} target="_blank" rel="noreferrer">
 						{props.zoom.toString()}
 					</a>
 				</span>
@@ -35,7 +35,9 @@ function ScheduleCard(props: ExtendedScheduleDisplay) {
 					<strong>Team: </strong>
 					<ul>
 						{props.memberNames.map(name => (
-							<li key={name}><Tag key={name}>{name}</Tag></li>
+							<li key={name}>
+								<Tag key={name}>{name}</Tag>
+							</li>
 						))}
 					</ul>
 				</span>
@@ -43,7 +45,9 @@ function ScheduleCard(props: ExtendedScheduleDisplay) {
 					<strong>Judges: </strong>
 					<ul>
 						{props.judgeNames.map(name => (
-							<li key={name}><Tag key={name}>{name}</Tag></li>
+							<li key={name}>
+								<Tag key={name}>{name}</Tag>
+							</li>
 						))}
 					</ul>
 				</span>

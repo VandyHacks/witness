@@ -9,7 +9,7 @@ export default function ErrorMessage({ status }: { status: number }) {
 			message = '403: You are not permitted to access this content.';
 			break;
 		case 409:
-			message = 'Click the "Team" tab on the menu bar to join or create a team!'
+			message = 'Click the "Team" tab on the menu bar to join or create a team!';
 			break;
 		case 418:
 			message = (
@@ -27,7 +27,7 @@ export default function ErrorMessage({ status }: { status: number }) {
 			);
 			break;
 		case 425:
-			message = 'Judging schedules aren\'t out yet — check back later!';
+			message = "Judging schedules aren't out yet — check back later!";
 			break;
 		default:
 			message = 'An unknown error has occured. Please try again or reach out to an organizer.';

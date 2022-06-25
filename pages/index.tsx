@@ -10,22 +10,23 @@ export default function Page() {
 
 	return (
 		<Content style={{ padding: '30px' }}>
-			{ !session && status === "unauthenticated" && (
+			{!session && status === 'unauthenticated' && (
 				<>
 					Not signed in <br />
 					<button onClick={() => signIn()}>Sign in</button>
 				</>
-			) }
-			{ !session && status === "loading" && <Skeleton /> }
-			{ session && (
+			)}
+			{!session && status === 'loading' && <Skeleton />}
+			{session && (
 				<>
 					Signed in as {session.user?.email} <br />
-					<button onClick={() => signOut()}>Sign out</button> <br /><br />
-					{ session.userType === "HACKER" && <HackerDash /> }
-					{ session.userType === "JUDGE" && <JudgeDash /> }
-					{ session.userType === "ORGANIZER" && <OrganizerDash />  }
+					<button onClick={() => signOut()}>Sign out</button> <br />
+					<br />
+					{session.userType === 'HACKER' && <HackerDash />}
+					{session.userType === 'JUDGE' && <JudgeDash />}
+					{session.userType === 'ORGANIZER' && <OrganizerDash />}
 				</>
-			) }
+			)}
 		</Content>
 	);
 }

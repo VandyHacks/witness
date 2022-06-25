@@ -103,7 +103,8 @@ export default function allScores(props: AllScoresProps) {
 			<Button
 				onClick={() => {
 					exportCSV(work);
-				}}>
+				}}
+			>
 				Export
 			</Button>
 		</>

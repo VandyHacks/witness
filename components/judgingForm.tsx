@@ -33,7 +33,7 @@ export default function JudgingForm(props: JudgingFormProps) {
 
 	return (
 		<>
-			<p style={{color:'red'}}>All fields are required.</p>
+			<p style={{ color: 'red' }}>All fields are required.</p>
 			<Form {...layout} labelAlign="left" form={form} initialValues={formData} onFinish={onSubmit}>
 				{scoreInputsConfig.map(config => (
 					<Form.Item name={config.name} label={config.label} key={config.name}>

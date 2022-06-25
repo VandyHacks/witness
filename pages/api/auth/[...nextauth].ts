@@ -42,9 +42,8 @@ export default async function auth(req: any, res: any) {
 									email,
 								});
 
-
 								if (!user?.test) return null; // only allow test users
-                return user;
+								return user;
 							},
 						}),
 				  ]
@@ -62,12 +61,12 @@ export default async function auth(req: any, res: any) {
 					// user is only defined on first sign in
 					const login = await User.findOne({ email });
 					if (!login.userType) {
-						login.userType = "HACKER";
+						login.userType = 'HACKER';
 						login.save();
 					}
 					token.userType = login.userType;
 				}
-				
+
 				return token;
 			},
 			async session({ session, token }) {
