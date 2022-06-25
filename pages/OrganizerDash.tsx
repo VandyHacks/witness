@@ -2,7 +2,7 @@ import { Divider, Empty, notification, Skeleton } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
-import AssignRoleForm, { AssignFormFields } from '../components/assignRoleForm';
+import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
 import { ScheduleDisplay } from '../types/client';
 import { ResponseError, ScoreData, TeamData, UserData } from '../types/database';
@@ -22,7 +22,7 @@ function handleSubmitFailure(msg: string) {
 	});
 }
 
-async function handleSubmit(roleData: AssignFormFields, mutate: ScopedMutator<any>) {
+async function handleSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/assign-role`, {
 		method: 'PATCH',
 		headers: {
@@ -80,15 +80,15 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScheduleDisplay[];
 	});
 
-	const { data: userData, error } = useSWR('/api/assign-role', async url => {
+	const { data: userData, error } = useSWR('/api/manage-role', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
-			const error = new Error('Failed to get list of users without roles.') as ResponseError;
+			const error = new Error('Failed to get list of all users.') as ResponseError;
 			error.status = res.status;
 			throw error;
 		}
 
-		return (await res.json()) as { _id: string; name: string }[];
+		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
 	});
 
 	return (
@@ -108,10 +108,10 @@ export default function OrganizerDash() {
 			<Divider />
 			{!userData && <Skeleton />}
 			{userData && userData.length == 0 && (
-				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users without roles</span>} />
+				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users lmao</span>} />
 			)}
 			{userData && userData.length > 0 && (
-				<AssignRoleForm formData={userData} onSubmit={formData => handleSubmit(formData, mutate)} />
+				<ManageRoleForm formData={userData} onSubmit={formData => handleSubmit(formData, mutate)} />
 			)}
 		</>
 	);

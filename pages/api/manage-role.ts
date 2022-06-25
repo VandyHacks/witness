@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'GET':
-			const logins = await User.find({ userType: { $exists: false } }).select('id name');
+			const logins = await User.find({}).select('id name email userType');
 			// read usertype from vaken db
 			return res.status(200).send(logins);
 		case 'PATCH':

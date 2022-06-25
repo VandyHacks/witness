@@ -1,18 +1,21 @@
 import { Form, Button, Select } from 'antd';
+import Text from 'antd/lib/typography/Text';
 
 const { Option } = Select;
 
-export interface AssignFormFields {
+export interface ManageFormFields {
 	_id: string;
 	name: string;
+	userType: string;
+	email: string;
 }
 
-export interface AssignFormProps {
-	formData: AssignFormFields[];
-	onSubmit: (value: AssignFormFields) => Promise<void>;
+export interface ManageFormProps {
+	formData: ManageFormFields[];
+	onSubmit: (value: ManageFormFields) => Promise<void>;
 }
 
-export default function AssignRoleForm(props: AssignFormProps) {
+export default function ManageRoleForm(props: ManageFormProps) {
 	const { onSubmit } = props;
 	const layout = {
 		labelCol: { span: 7 },
@@ -20,13 +23,27 @@ export default function AssignRoleForm(props: AssignFormProps) {
 		labelAlign: 'left',
 	};
 
+	// TODO: probably add search
 	const [form] = Form.useForm();
 
 	return (
 		<>
 			<Form {...layout} labelAlign="left" form={form} onFinish={onSubmit}>
 				{props.formData.map(config => (
-					<Form.Item name={config._id} label={config.name} key={config._id}>
+					<Form.Item
+						name={config._id}
+						// display name and email
+						label={
+							<Text>
+								{config.name}
+								<br />
+								<Text type="secondary">{config.email}</Text>
+							</Text>
+						}
+						colon={false}
+						key={config._id}
+						initialValue={config.userType}
+					>
 						<Select placeholder="Select Role">
 							<Option value="HACKER">Hacker</Option>
 							<Option value="JUDGE">Judge</Option>
