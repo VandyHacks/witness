@@ -12,7 +12,7 @@
 	"dependencies": {
 		"@ant-design/icons": "^4.7.0",
 		"@next-auth/mongodb-adapter": "^1.0.3",
-		"antd": "^4.21.3",
+		"antd": "^4.21.4",
 		"dotenv": "^16.0.0",
 		"export-to-csv": "^0.2.1",
 		"luxon": "^2.4.0",
@@ -27,7 +27,7 @@
 		"ts-command-line-args": "^2.2.1"
 	},
 	"devDependencies": {
-		"@faker-js/faker": "^6.1.2",
+		"@faker-js/faker": "^7.3.0",
 		"@types/faker": "^5.5.8",
 		"@types/luxon": "^2.3.2",
 		"@types/mongodb": "^4.0.7",
