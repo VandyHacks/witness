@@ -17,7 +17,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - name: Run Prettier
-        run: yarn install --frozen-lockfile && yarn prettier --write **/*.js
+        run: yarn install --frozen-lockfile && yarn prettier --write .
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Run Prettier
