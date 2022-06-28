@@ -4,8 +4,7 @@ import Team from '../../models/team';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
-import { ObjectId } from 'mongodb';
-import { MongoServerError } from 'mongoose/node_modules/mongodb';
+import { ObjectId, MongoServerError } from 'mongodb';
 import log from '../../middleware/log';
 import { TeamProfile } from '../../types/client';
 
