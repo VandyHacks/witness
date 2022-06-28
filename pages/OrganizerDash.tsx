@@ -23,7 +23,7 @@ function handleSubmitFailure(msg: string) {
 }
 
 async function handleSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
-	const res = await fetch(`/api/assign-role`, {
+	const res = await fetch(`/api/manage-role`, {
 		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ async function handleSubmit(roleData: ManageFormFields, mutate: ScopedMutator<an
 	});
 
 	if (res.ok) {
-		mutate('/api/assign');
+		mutate('/api/manage-role');
 		handleSubmitSuccess();
 	} else handleSubmitFailure(await res.text());
 }
