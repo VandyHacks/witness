@@ -1,4 +1,4 @@
-import { Form, Button, Select } from 'antd';
+import { Form, Button, Select, Row, Col } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { useState } from 'react';
 
@@ -19,8 +19,8 @@ export interface ManageFormProps {
 export default function ManageRoleForm(props: ManageFormProps) {
 	const { onSubmit } = props;
 	const layout = {
-		labelCol: { span: 5 },
-		wrapperCol: { span: 3 },
+		labelCol: { span: 8 },
+		wrapperCol: { span: 6 },
 		labelAlign: 'left',
 	};
 
@@ -65,9 +65,24 @@ export default function ManageRoleForm(props: ManageFormProps) {
 					</Select>
 				</Form.Item>
 			))}
-			<Button type="primary" htmlType="submit" className="ant-col-offset-12">
-				Submit
-			</Button>
+			<Row gutter={16}>
+				<Col offset={10}>
+					<Button type="primary" htmlType="submit">
+						Submit
+					</Button>
+				</Col>
+				<Col>
+					<Button
+						htmlType="reset"
+						onClick={() => {
+							form.resetFields();
+							setModified([]);
+						}}
+					>
+						Clear
+					</Button>
+				</Col>
+			</Row>
 		</Form>
 	);
 }
