@@ -1,4 +1,4 @@
-import { Form, Button, Select, Row, Col } from 'antd';
+import { Form, Button, Select, Row, Col, message } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { useState } from 'react';
 
@@ -76,6 +76,7 @@ export default function ManageRoleForm(props: ManageFormProps) {
 						htmlType="reset"
 						onClick={() => {
 							form.resetFields();
+							message.success('Successfuly reset form!');
 							setModified([]);
 						}}
 					>
