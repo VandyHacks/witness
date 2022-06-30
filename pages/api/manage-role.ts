@@ -34,12 +34,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			// set their type to the one provided
 			for (const role in roles) {
 				await User.updateMany(
-					{ _id: { $in: roles[role as rolesIndex] }, userType: { $exists: false } },
+					{ _id: { $in: roles[role as rolesIndex] } },
 					{ userType: role }
 				);
 			}
 
-			await log(session.userID, `Updated ${userData.length} user roles`);
+			await log(session.userID, `Updated ${Object.keys(userData).length} user roles`);
 			return res.status(200).send(`Assigned roles to ${userData.length} users`);
 		default:
 			return res.status(405).send('Method not supported brother');
