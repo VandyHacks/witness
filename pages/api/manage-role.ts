@@ -33,10 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			// set their type to the one provided
 			for (const role in roles) {
-				await User.updateMany(
-					{ _id: { $in: roles[role as rolesIndex] } },
-					{ userType: role }
-				);
+				await User.updateMany({ _id: { $in: roles[role as rolesIndex] } }, { userType: role });
 			}
 
 			await log(session.userID, `Updated ${Object.keys(userData).length} user roles`);
