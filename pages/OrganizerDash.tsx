@@ -4,6 +4,7 @@ import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
 import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
+import PreAddForm from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
 import { ResponseError, ScoreData, TeamData, UserData } from '../types/database';
 
@@ -113,6 +114,8 @@ export default function OrganizerDash() {
 			{userData && userData.length > 0 && (
 				<ManageRoleForm formData={userData} onSubmit={formData => handleSubmit(formData, mutate)} />
 			)}
+			<Divider />
+			<PreAddForm />
 		</>
 	);
 }

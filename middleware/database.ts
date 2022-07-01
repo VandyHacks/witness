@@ -21,8 +21,6 @@ async function dbConnect(overrideURL?: string | undefined) {
 
 	if (!cached.promise) {
 		const options = {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
 			bufferCommands: false,
 			autoIndex: true,
 		};
