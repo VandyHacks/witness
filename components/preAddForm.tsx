@@ -4,11 +4,24 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 const { Option } = Select;
 const { TextArea } = Input;
 
-export default function PreAddForm() {
+export interface PreAddFormFields {
+	name: string;
+	email: string;
+	userType: string;
+	note: string;
+}
+
+export interface PreAddFormProps {
+	onSubmit: (values: PreAddFormFields[]) => Promise<void>;
+}
+
+export default function PreAddForm(props: PreAddFormProps) {
 	const [form] = Form.useForm();
 
+	const { onSubmit } = props;
+
 	return (
-		<Form name="preadd" form={form} layout="horizontal" onFinish={vals => console.log(vals)} requiredMark>
+		<Form name="preadd" form={form} layout="horizontal" onFinish={onSubmit} requiredMark>
 			<Form.List name="users">
 				{(fields, { add, remove }) => (
 					<>
@@ -22,17 +35,17 @@ export default function PreAddForm() {
 									name={[name, 'email']}
 									required
 									rules={[{ type: 'email' }]}
-									extra="this should match with the email they will sign in with"
+									extra="should match with the email they sign in with"
 								>
-									<Input placeholder="Email" />
+									<Input placeholder="Email" style={{ width: 350 }} />
 								</Form.Item>
 								<Form.Item
 									{...restFields}
-									name={[name, 'role']}
-									extra="this will be their role on sign in"
+									name={[name, 'userType']}
+									extra="their role on sign in"
 									required
 								>
-									<Select placeholder="Select Role">
+									<Select placeholder="Select Role" style={{ width: 200 }}>
 										<Option value="HACKER">Hacker</Option>
 										<Option value="JUDGE">Judge</Option>
 										<Option value="ORGANIZER">Organizer</Option>
@@ -45,7 +58,7 @@ export default function PreAddForm() {
 										rows={1}
 									/>
 								</Form.Item>
-								<MinusCircleOutlined {...restFields} onClick={() => remove(name)} />
+								<MinusCircleOutlined onClick={() => remove(name)} />
 							</Space>
 						))}
 						<Form.Item>

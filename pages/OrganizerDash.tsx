@@ -4,7 +4,7 @@ import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
 import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
-import PreAddForm from '../components/preAddForm';
+import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
 import { ResponseError, ScoreData, TeamData, UserData } from '../types/database';
 
@@ -23,7 +23,7 @@ function handleSubmitFailure(msg: string) {
 	});
 }
 
-async function handleSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
+async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
 		method: 'PATCH',
 		headers: {
@@ -34,6 +34,21 @@ async function handleSubmit(roleData: ManageFormFields, mutate: ScopedMutator<an
 
 	if (res.ok) {
 		mutate('/api/manage-role');
+		handleSubmitSuccess();
+	} else handleSubmitFailure(await res.text());
+}
+
+async function handlePreAddFormSubmit(preAddData: PreAddFormFields[]) {
+	console.log(preAddData);
+	const res = await fetch('/api/preadd', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ formData: preAddData }),
+	});
+
+	if (res.ok) {
 		handleSubmitSuccess();
 	} else handleSubmitFailure(await res.text());
 }
@@ -112,10 +127,10 @@ export default function OrganizerDash() {
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users lmao</span>} />
 			)}
 			{userData && userData.length > 0 && (
-				<ManageRoleForm formData={userData} onSubmit={formData => handleSubmit(formData, mutate)} />
+				<ManageRoleForm formData={userData} onSubmit={formData => handleManageFormSubmit(formData, mutate)} />
 			)}
 			<Divider />
-			<PreAddForm />
+			<PreAddForm onSubmit={formData => handlePreAddFormSubmit(formData)} />
 		</>
 	);
 }
