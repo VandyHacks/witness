@@ -11,21 +11,19 @@ export default function PreAddDisplay(props: PreAddDisplayProps) {
 	const { data, onDelete } = props;
 	return (
 		<Space size="middle" wrap>
-			{data.map(user => {
-				return (
-					<Card
-						key={`${user._id}`}
-						title={user.name}
-						style={{ width: 350 }}
-						actions={[<DeleteOutlined onClick={() => onDelete(user)} />]}
-					>
-						<p>{user.email}</p>
-						<p>Role: {user.userType}</p>
-						<p>Added by {user.addedBy}</p>
-						<p>{user.note}</p>
-					</Card>
-				);
-			})}
+			{data.map((user, idx) => (
+				<Card
+					key={idx}
+					title={user.name}
+					style={{ width: 350 }}
+					actions={[<DeleteOutlined key={idx} onClick={() => onDelete(user)} />]}
+				>
+					<p>{user.email}</p>
+					<p>Role: {user.userType}</p>
+					<p>Added by {user.addedBy}</p>
+					<p>{user.note}</p>
+				</Card>
+			))}
 		</Space>
 	);
 }

@@ -148,7 +148,7 @@ export default function OrganizerDash() {
 					)}
 				</>
 			)}
-			{(!teamsData || !usersData || !scoresData) && <Skeleton />}
+			{(!teamsData || !usersData || !scoresData || !preAddData) && <Skeleton />}
 			<Divider />
 			{!userData && <Skeleton />}
 			{userData && userData.length == 0 && (
@@ -160,10 +160,10 @@ export default function OrganizerDash() {
 			<Divider />
 			<PreAddForm onSubmit={formData => handlePreAddFormSubmit(formData, mutate)} />
 
-			{preAddData?.length == 0 && (
+			{preAddData && preAddData.length == 0 && (
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />
 			)}
-			{preAddData?.length !== 0 && (
+			{preAddData && preAddData.length > 0 && (
 				<PreAddDisplay data={preAddData!} onDelete={user => handlePreAddDelete(user, mutate)} />
 			)}
 		</Space>
