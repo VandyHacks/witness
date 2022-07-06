@@ -13,6 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'GET':
 			return res.send(await PreAdd.find());
+		case 'DELETE':
+			const { userId } = req.body;
+			console.log(`removing user with id ${userId} from preadded`);
+			const deleted = await PreAdd.findByIdAndDelete(userId);
+			return res.status(200).send(`Deleted ${deleted.name} from preadded successfully.`);
 		case 'POST': {
 			const { formData } = req.body;
 			console.log(formData);

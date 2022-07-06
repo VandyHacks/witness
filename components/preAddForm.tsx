@@ -27,14 +27,19 @@ export default function PreAddForm(props: PreAddFormProps) {
 					<>
 						{fields.map(({ key, name, ...restFields }) => (
 							<Space key={key} align="start">
-								<Form.Item name={[name, 'name']} required>
+								<Form.Item
+									name={[name, 'name']}
+									rules={[{ required: true, message: 'Name is required.' }]}
+								>
 									<Input placeholder="Name" />
 								</Form.Item>
 								<Form.Item
 									{...restFields}
 									name={[name, 'email']}
-									required
-									rules={[{ type: 'email' }]}
+									rules={[
+										{ type: 'email', message: 'Please enter a valid email.' },
+										{ required: true, message: 'Email is required.' },
+									]}
 									extra="should match with the email they sign in with"
 								>
 									<Input placeholder="Email" style={{ width: 350 }} />
@@ -43,7 +48,7 @@ export default function PreAddForm(props: PreAddFormProps) {
 									{...restFields}
 									name={[name, 'userType']}
 									extra="their role on sign in"
-									required
+									rules={[{ required: true, message: 'Please select a role.' }]}
 								>
 									<Select placeholder="Select Role" style={{ width: 200 }}>
 										<Option value="HACKER">Hacker</Option>

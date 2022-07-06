@@ -78,7 +78,6 @@ export default async function auth(req: any, res: any) {
 					session.userType = token.userType;
 					session.userID = token.sub;
 				}
-				console.log(session);
 				return session;
 			},
 		},
