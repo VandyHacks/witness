@@ -8,21 +8,8 @@ import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
 import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
+import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 
-function handleSubmitSuccess(msg: string = 'Successfully updated!') {
-	notification['success']({
-		message: msg,
-		placement: 'bottomRight',
-	});
-}
-
-function handleSubmitFailure(msg: string) {
-	notification['error']({
-		message: 'Oops woopsy, something went fucky wucky',
-		description: msg || 'Please try again or contact an organizer if the problem persists.',
-		placement: 'bottomRight',
-	});
-}
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -52,22 +39,6 @@ async function handlePreAddDelete(user: PreAddData, mutate: ScopedMutator<any>) 
 	if (res.ok) {
 		mutate('/api/preadd');
 		handleSubmitSuccess(await res.text());
-	} else handleSubmitFailure(await res.text());
-}
-
-async function handlePreAddFormSubmit(preAddData: PreAddFormFields[], mutate: ScopedMutator<any>) {
-	console.log(preAddData);
-	const res = await fetch('/api/preadd', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ formData: preAddData }),
-	});
-
-	if (res.ok) {
-		mutate('/api/preadd');
-		handleSubmitSuccess();
 	} else handleSubmitFailure(await res.text());
 }
 
@@ -158,7 +129,7 @@ export default function OrganizerDash() {
 				<ManageRoleForm formData={userData} onSubmit={formData => handleManageFormSubmit(formData, mutate)} />
 			)}
 			<Divider />
-			<PreAddForm onSubmit={formData => handlePreAddFormSubmit(formData, mutate)} />
+			<PreAddForm/>
 
 			{preAddData && preAddData.length == 0 && (
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />

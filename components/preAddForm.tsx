@@ -1,5 +1,7 @@
-import { Form, Select, Input, Button, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Select, Space } from 'antd';
+import { useSWRConfig } from 'swr';
+import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -11,17 +13,35 @@ export interface PreAddFormFields {
 	note: string;
 }
 
-export interface PreAddFormProps {
-	onSubmit: (values: PreAddFormFields[]) => Promise<void>;
-}
-
-export default function PreAddForm(props: PreAddFormProps) {
+export default function PreAddForm() {
 	const [form] = Form.useForm();
 
-	const { onSubmit } = props;
+	const { mutate } = useSWRConfig();
+
+	async function handleSubmit(preAddData: PreAddFormFields[]) {
+		const res = await fetch('/api/preadd', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ formData: preAddData }),
+		});
+
+		if (res.ok) {
+			mutate('/api/preadd');
+			handleSubmitSuccess();
+			form.resetFields();
+		} else handleSubmitFailure(await res.text());
+	}
 
 	return (
-		<Form name="preadd" form={form} layout="horizontal" onFinish={onSubmit} requiredMark>
+		<Form
+			name="preadd"
+			form={form}
+			layout="horizontal"
+			onFinish={handleSubmit}
+			requiredMark
+		>
 			<Form.List name="users">
 				{(fields, { add, remove }) => (
 					<>

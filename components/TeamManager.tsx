@@ -1,7 +1,7 @@
 import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag } from 'antd';
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
-import { handleRequestFailure } from '../lib/helpers';
+import { handleSubmitFailure } from '../lib/helpers';
 import { TeamProfile } from '../types/client';
 import LeaveButton from './LeaveButton';
 const { Panel } = Collapse;
@@ -19,7 +19,7 @@ async function handleSubmit(formData: { teamName: string } | { devpost: string }
 		console.log('Received:', await res.text());
 		mutate('/api/team-management');
 		return true;
-	} else handleRequestFailure(await res.text());
+	} else handleSubmitFailure(await res.text());
 	return false;
 }
 
@@ -34,7 +34,7 @@ async function handleLeaveTeam(mutate: ScopedMutator<any>) {
 	if (res.ok) {
 		console.log('Received:', await res.text());
 		mutate('/api/team-management');
-	} else handleRequestFailure(await res.text());
+	} else handleSubmitFailure(await res.text());
 }
 
 export default function TeamManager({ profile }: { profile: TeamProfile }) {
