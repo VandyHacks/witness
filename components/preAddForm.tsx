@@ -35,13 +35,7 @@ export default function PreAddForm() {
 	}
 
 	return (
-		<Form
-			name="preadd"
-			form={form}
-			layout="horizontal"
-			onFinish={handleSubmit}
-			requiredMark
-		>
+		<Form name="preadd" form={form} layout="horizontal" onFinish={handleSubmit} requiredMark>
 			<Form.List name="users">
 				{(fields, { add, remove }) => (
 					<>

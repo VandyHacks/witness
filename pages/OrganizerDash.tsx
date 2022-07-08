@@ -10,7 +10,6 @@ import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../typ
 import PreAddDisplay from '../components/preAddDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 
-
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
 		method: 'PATCH',
@@ -129,7 +128,7 @@ export default function OrganizerDash() {
 				<ManageRoleForm formData={userData} onSubmit={formData => handleManageFormSubmit(formData, mutate)} />
 			)}
 			<Divider />
-			<PreAddForm/>
+			<PreAddForm />
 
 			{preAddData && preAddData.length == 0 && (
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />
