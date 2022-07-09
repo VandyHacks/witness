@@ -15,9 +15,9 @@
 		"antd": "^4.21.4",
 		"dotenv": "^16.0.0",
 		"export-to-csv": "^0.2.1",
-		"luxon": "^2.4.0",
+		"luxon": "^3.0.1",
 		"mongodb": "^4.5.0",
-		"mongoose": "^6.4.1",
+		"mongoose": "^6.4.4",
 		"nanoid": "^4.0.0",
 		"next": "12.1.6",
 		"next-auth": "^4.9.0",
@@ -37,6 +37,6 @@
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^4.1.0",
 		"prettier": "^2.6.2",
-		"typescript": "4.6.3"
+		"typescript": "4.7.4"
 	}
 }
