@@ -10,7 +10,7 @@ export interface PreAddDisplayProps {
 export default function PreAddDisplay(props: PreAddDisplayProps) {
 	const { data, onDelete } = props;
 	return (
-		<Space size="middle" wrap>
+		<Space size="middle" align="end" wrap>
 			{data.map((user, idx) => (
 				<Card
 					key={idx}

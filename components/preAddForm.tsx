@@ -29,7 +29,7 @@ export default function PreAddForm() {
 
 		if (res.ok) {
 			mutate('/api/preadd');
-			handleSubmitSuccess();
+			handleSubmitSuccess(await res.text());
 			form.resetFields();
 		} else handleSubmitFailure(await res.text());
 	}

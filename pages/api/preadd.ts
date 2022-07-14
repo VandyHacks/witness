@@ -3,6 +3,7 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import PreAdd from '../../models/preadd';
 import { PreAddFormFields } from '../../components/preAddForm';
+import { MongoBulkWriteError, WriteError } from 'mongodb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -22,10 +23,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const { formData } = req.body;
 			console.log(formData);
 			// todo: handle empty array
-			await PreAdd.insertMany(
-				// add submitter to every field
-				formData!.users.map((data: PreAddFormFields) => ({ ...data, addedBy: session!.user!.name }))
-			);
+			try {
+				await PreAdd.insertMany(
+					// add submitter to every field
+					formData!.users.map((data: PreAddFormFields) => ({ ...data, addedBy: session!.user!.name })),
+					{ ordered: false } // so duplicates don't make it fail early
+				);
+			} catch (e) {
+				if (e instanceof MongoBulkWriteError && e.code == 11000) {
+					// handle duplicates
+					console.log(e);
+					let msg = `Inserted ${e.result.nInserted} user(s) but encountered duplicates: `;
+					// collect all non inserted rows
+					(e.writeErrors as Array<WriteError>).forEach(
+						(e: WriteError) => (msg += e.errmsg!.slice(70) + ', ')
+					); // remove extra parts
+					console.log(msg);
+					return res.status(422).send(msg);
+				} else throw e;
+			}
 			return res.send(`Stored preadd info for ${formData.length} users.`);
 		}
 		default:
