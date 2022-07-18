@@ -10,12 +10,12 @@ export interface PreAddDisplayProps {
 export default function PreAddDisplay(props: PreAddDisplayProps) {
 	const { data, onDelete } = props;
 	return (
-		<Space size="middle" align="end" wrap>
+		<Space size="middle" align="end" wrap style={{"alignItems": "stretch"}}>
 			{data.map((user, idx) => (
 				<Card
 					key={idx}
 					title={user.name}
-					style={{ width: 350, height: 400 }}
+					style={{ width: 350, height: "100%" }}
 					actions={[<DeleteOutlined key={idx} onClick={() => onDelete(user)} />]}
 				>
 					<p>{user.email}</p>
