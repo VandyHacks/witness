@@ -17,7 +17,7 @@ export default function PreAddDisplay(props: PreAddDisplayProps) {
 					title={user.name}
 					style={{ width: 350, height: '100%' }}
 					actions={[<DeleteOutlined key={idx} onClick={() => onDelete(user)} />]}
-					bodyStyle={{"height": "calc(100% - 106px)"}}
+					bodyStyle={{ height: 'calc(100% - 106px)' }}
 				>
 					<p>{user.email}</p>
 					<p>Role: {user.userType}</p>
