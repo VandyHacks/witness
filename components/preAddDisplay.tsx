@@ -15,7 +15,7 @@ export default function PreAddDisplay(props: PreAddDisplayProps) {
 				<Card
 					key={idx}
 					title={user.name}
-					style={{ width: 350 }}
+					style={{ width: 350, height: 400 }}
 					actions={[<DeleteOutlined key={idx} onClick={() => onDelete(user)} />]}
 				>
 					<p>{user.email}</p>
