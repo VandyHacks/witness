@@ -3,6 +3,11 @@ import { USER_TYPES } from './user';
 
 const Schema = mongoose.Schema;
 
+enum PREADD_STATUS {
+	JOINED,
+	WAITING,
+}
+
 export const PreAddSchema = new Schema(
 	{
 		name: {
@@ -25,6 +30,11 @@ export const PreAddSchema = new Schema(
 		addedBy: {
 			type: String,
 			required: true, // for now just name, but could link to user or remove altogether
+		},
+		status: {
+			type: String,
+			enum: PREADD_STATUS,
+			required: true,
 		},
 	},
 	{

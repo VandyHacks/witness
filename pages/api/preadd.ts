@@ -26,7 +26,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			try {
 				const preadded = await PreAdd.insertMany(
 					// add submitter to every field
-					formData!.users.map((data: PreAddFormFields) => ({ ...data, addedBy: session!.user!.name })),
+					formData!.users.map((data: PreAddFormFields) => ({
+						...data,
+						addedBy: session!.user!.name,
+						status: 'WAITING',
+					})),
 					{ ordered: false } // so duplicates don't make it fail early
 				);
 				return res.send(`Stored preadd info for ${preadded.length} user(s).`);

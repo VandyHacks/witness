@@ -64,9 +64,17 @@ export default async function auth(req: any, res: any) {
 					const login = await User.findOne({ email });
 					if (!login.userType) {
 						const preadded = await PreAdd.findOne({ email });
-						login.userType = preadded ? preadded.userType : 'HACKER';
-						await log(login.id, `Found in preadd list, assigned role ${login.userType}`);
-						login.save();
+						if (preadded) {
+							login.userType = preadded.userType;
+							await login.save(); // ensure role has persisted before future action
+							await log(login.id, `Found in preadd list, assigned role ${login.userType}`);
+							// mark preadd entry as joined
+							preadded.status = 'JOINED';
+							await preadded.save();
+						} else {
+							login.userType = 'HACKER';
+							await login.save();
+						}
 					}
 					token.userType = login.userType;
 				}
