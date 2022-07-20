@@ -24,6 +24,15 @@ export interface UserData {
 	team?: mongoose.Schema.Types.ObjectId;
 }
 
+export interface PreAddData {
+	_id: mongoose.Schema.Types.ObjectId;
+	name: string;
+	email: string;
+	userType: string;
+	note: string;
+	addedBy: string;
+}
+
 export interface TeamData {
 	_id: mongoose.Schema.Types.ObjectId;
 	name: string;

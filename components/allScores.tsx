@@ -94,6 +94,7 @@ export default function allScores(props: AllScoresProps) {
 			...score,
 			team: teamName,
 			judge: judgeName,
+			key: score._id,
 		};
 	});
 

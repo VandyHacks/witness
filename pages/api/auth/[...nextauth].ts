@@ -6,6 +6,8 @@ import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
 import dbConnect from '../../../middleware/database';
 import User from '../../../models/user';
+import PreAdd from '../../../models/preadd';
+import log from '../../../middleware/log';
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env?.VERCEL_ENV!);
@@ -61,7 +63,9 @@ export default async function auth(req: any, res: any) {
 					// user is only defined on first sign in
 					const login = await User.findOne({ email });
 					if (!login.userType) {
-						login.userType = 'HACKER';
+						const preadded = await PreAdd.findOne({ email });
+						login.userType = preadded ? preadded.userType : 'HACKER';
+						await log(login.id, `Found in preadd list, assigned role ${login.userType}`);
 						login.save();
 					}
 					token.userType = login.userType;

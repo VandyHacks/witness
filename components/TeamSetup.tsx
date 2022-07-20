@@ -1,7 +1,7 @@
 import { Col, Divider, Row } from 'antd';
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
-import { handleRequestFailure } from '../lib/helpers';
+import { handleSubmitFailure } from '../lib/helpers';
 import { NewTeamFields } from '../types/client';
 import TeamCard from './TeamCard';
 
@@ -17,7 +17,7 @@ async function handleSubmit(formData: NewTeamFields | { joinCode: string }, muta
 	if (res.ok) {
 		console.log('Received:', await res.text());
 		mutate('/api/team-management');
-	} else handleRequestFailure(await res.text());
+	} else handleSubmitFailure(await res.text());
 }
 
 export default function TeamSetup() {

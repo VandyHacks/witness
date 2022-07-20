@@ -1,28 +1,16 @@
-import { Divider, Empty, notification, Skeleton } from 'antd';
+import { Divider, Empty, notification, Skeleton, Space } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
 import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
+import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
-import { ResponseError, ScoreData, TeamData, UserData } from '../types/database';
+import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../types/database';
+import PreAddDisplay from '../components/preAddDisplay';
+import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 
-function handleSubmitSuccess() {
-	notification['success']({
-		message: `Successfully updated!`,
-		placement: 'bottomRight',
-	});
-}
-
-function handleSubmitFailure(msg: string) {
-	notification['error']({
-		message: 'Oops woopsy, something went fucky wucky',
-		description: msg || 'Please try again or contact an organizer if the problem persists.',
-		placement: 'bottomRight',
-	});
-}
-
-async function handleSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
+async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
 		method: 'PATCH',
 		headers: {
@@ -34,6 +22,22 @@ async function handleSubmit(roleData: ManageFormFields, mutate: ScopedMutator<an
 	if (res.ok) {
 		mutate('/api/manage-role');
 		handleSubmitSuccess();
+	} else handleSubmitFailure(await res.text());
+}
+
+async function handlePreAddDelete(user: PreAddData, mutate: ScopedMutator<any>) {
+	console.log('logging user obj', user);
+	const res = await fetch('/api/preadd', {
+		method: 'DELETE',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({ userId: user._id }),
+	});
+
+	if (res.ok) {
+		mutate('/api/preadd');
+		handleSubmitSuccess(await res.text());
 	} else handleSubmitFailure(await res.text());
 }
 
@@ -80,6 +84,16 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScheduleDisplay[];
 	});
 
+	const { data: preAddData, error: Error } = useSWR('/api/preadd', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get schedule.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as PreAddData[];
+	});
+
 	const { data: userData, error } = useSWR('/api/manage-role', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -92,7 +106,7 @@ export default function OrganizerDash() {
 	});
 
 	return (
-		<>
+		<Space direction="vertical">
 			{!scheduleData && <Skeleton />}
 			{scheduleData && <OrganizerSchedule data={scheduleData} />}
 			<Divider />
@@ -104,15 +118,24 @@ export default function OrganizerDash() {
 					)}
 				</>
 			)}
-			{(!teamsData || !usersData || !scoresData) && <Skeleton />}
+			{(!teamsData || !usersData || !scoresData || !preAddData) && <Skeleton />}
 			<Divider />
 			{!userData && <Skeleton />}
 			{userData && userData.length == 0 && (
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users lmao</span>} />
 			)}
 			{userData && userData.length > 0 && (
-				<ManageRoleForm formData={userData} onSubmit={formData => handleSubmit(formData, mutate)} />
+				<ManageRoleForm formData={userData} onSubmit={formData => handleManageFormSubmit(formData, mutate)} />
 			)}
-		</>
+			<Divider />
+			<PreAddForm />
+
+			{preAddData && preAddData.length == 0 && (
+				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />
+			)}
+			{preAddData && preAddData.length > 0 && (
+				<PreAddDisplay data={preAddData!} onDelete={user => handlePreAddDelete(user, mutate)} />
+			)}
+		</Space>
 	);
 }
