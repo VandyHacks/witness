@@ -31,6 +31,7 @@ export interface PreAddData {
 	userType: string;
 	note: string;
 	addedBy: string;
+	status: string;
 }
 
 export interface TeamData {
