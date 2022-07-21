@@ -1,5 +1,5 @@
-import { Card, Space } from 'antd';
-import { DeleteOutlined, LoadingOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { Card, Space, Tooltip } from 'antd';
+import { DeleteOutlined, QuestionCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
 import { PreAddData } from '../types/database';
 
 export interface PreAddDisplayProps {
@@ -15,7 +15,18 @@ export default function PreAddDisplay(props: PreAddDisplayProps) {
 				<Card
 					key={idx}
 					title={user.name}
-					extra={<>status: {user.status === 'JOINED' ? <CheckCircleOutlined /> : <LoadingOutlined />}</>}
+					extra={
+						<>
+							status:{' '}
+							<Tooltip title={user.status.toLowerCase()}>
+								{user.status === 'JOINED' ? (
+									<CheckCircleTwoTone twoToneColor="#52c41a" /> // green check
+								) : (
+									<QuestionCircleTwoTone twoToneColor="#ff9500" />
+								)}
+							</Tooltip>
+						</>
+					}
 					style={{ width: 350, height: '100%' }}
 					actions={[<DeleteOutlined key={idx} onClick={() => onDelete(user)} />]}
 					/* Stretch body of card to max height, ignoring header and footer */
