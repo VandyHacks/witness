@@ -33,7 +33,7 @@
 		"@types/mongodb": "^4.0.7",
 		"@types/react": "17.0.43",
 		"eslint": "8.20.0",
-		"eslint-config-next": "12.2.2",
+		"eslint-config-next": "12.2.4",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"prettier": "^2.6.2",
