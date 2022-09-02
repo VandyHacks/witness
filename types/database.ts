@@ -15,6 +15,16 @@ export interface JudgingData {
 
 import mongoose from 'mongoose';
 
+export const enum ApplicationStatus {
+    CREATED,
+    DECLINED,
+    STARTED,
+    SUBMITTED,
+    ACCEPTED,
+    CONFIRMED,
+    REJECTED,
+}
+
 export interface UserData {
 	_id: mongoose.Schema.Types.ObjectId;
 	name: string;
@@ -22,6 +32,7 @@ export interface UserData {
 	image: string;
 	userType: string;
 	team?: mongoose.Schema.Types.ObjectId;
+	applicationStatus: ApplicationStatus;
 }
 
 export interface PreAddData {
