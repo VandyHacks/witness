@@ -3,6 +3,7 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ApplicationStatus } from '../../types/database';
+import Application from '../../models/application';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -24,10 +25,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 res.send(403);
                 return;
             }
+
+            console.log(req.body);
+
+            const application = await Application.create(JSON.parse(req.body));
             
             await User.findOneAndUpdate(
                 { email: session.user.email }, 
-                { ...req.body, applicationStatus: ApplicationStatus.SUBMITTED }
+                { application: application._id, applicationStatus: ApplicationStatus.SUBMITTED }
             );
 
 			return res.send(200);

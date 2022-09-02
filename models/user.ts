@@ -33,6 +33,10 @@ export const UserSchema = new Schema(
 		applicationStatus: {
 			type: Number,
 			default: ApplicationStatus.CREATED,
+		},
+		application: {
+			type: Schema.Types.ObjectId,
+			ref: 'Application'
 		}
 	},
 	{

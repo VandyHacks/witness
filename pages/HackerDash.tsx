@@ -1,4 +1,5 @@
 import { Button, Form, Input, Skeleton } from 'antd';
+import { useState } from 'react';
 import useSWR from 'swr';
 import TeamManager from '../components/TeamManager';
 import TeamSetup from '../components/TeamSetup';
@@ -6,6 +7,7 @@ import { TeamProfile } from '../types/client';
 import { ApplicationStatus, UserData } from '../types/database';
 
 export default function HackerDash() {
+	const [loading, setLoading] = useState(false);
 	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) return;
@@ -20,6 +22,7 @@ export default function HackerDash() {
 	});
 
 	const onFinish = async (values: any) => {
+		setLoading(true);
 		await fetch('/api/apply', {
 			method: "POST",
 			body: JSON.stringify(values),
@@ -60,13 +63,14 @@ export default function HackerDash() {
 								<Input />
 							</Form.Item>
 							<Form.Item>
-								<Button type="primary" htmlType="submit">
+								<Button loading={loading} type="primary" htmlType="submit">
 									Submit
 								</Button>
 							</Form.Item>
 						</Form>
 					)}
-					{user.applicationStatus === ApplicationStatus.ACCEPTED && (
+					{ user.applicationStatus === ApplicationStatus.SUBMITTED && <p>Submitted!</p> }
+					{ user.applicationStatus === ApplicationStatus.ACCEPTED && (
 						<>
 							{!teamData && <TeamSetup />}
 							{teamData && <TeamManager profile={teamData} />}
