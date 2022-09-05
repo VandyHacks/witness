@@ -6,7 +6,7 @@ const { Item } = Form;
 const { Title } = Typography;
 
 const DEV_DEPLOY =
-	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env?.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
+	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
 
 export default function SignIn() {
 	return (
