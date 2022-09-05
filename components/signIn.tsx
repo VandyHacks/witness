@@ -71,18 +71,21 @@ export default function SignIn() {
 							layout="vertical"
 							onFinish={values => signIn('credentials', { ...values })}
 							//   onFinishFailed={onFinishFailed}
-							autoComplete="off">
+							autoComplete="off"
+						>
 							<Item
 								label={<label style={{ color: 'white' }}>Email</label>}
 								name="email"
-								rules={[{ required: true, message: 'Please input your email!' }]}>
+								rules={[{ required: true, message: 'Please input your email!' }]}
+							>
 								<Input />
 							</Item>
 
 							<Item
 								label={<label style={{ color: 'white' }}>Password</label>}
 								name="password"
-								rules={[{ required: true, message: 'Please input your password!' }]}>
+								rules={[{ required: true, message: 'Please input your password!' }]}
+							>
 								<Input.Password />
 							</Item>
 
@@ -91,7 +94,8 @@ export default function SignIn() {
 								type="primary"
 								icon={<MailOutlined />}
 								style={{ borderRadius: '4px' }}
-								htmlType="submit">
+								htmlType="submit"
+							>
 								Sign in with Email
 							</Button>
 						</Form>
