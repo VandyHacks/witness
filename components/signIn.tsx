@@ -1,8 +1,12 @@
 import { signIn } from 'next-auth/react';
-import { GoogleOutlined, GithubOutlined } from '@ant-design/icons';
-import { Button, Space, Card, Image, Typography } from 'antd';
+import { GoogleOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
+import { Button, Space, Card, Image, Typography, Form, Input } from 'antd';
 
+const { Item } = Form;
 const { Title } = Typography;
+
+const DEV_DEPLOY =
+	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env?.VERCEL_ENV!);
 
 export default function SignIn() {
 	return (
@@ -21,7 +25,7 @@ export default function SignIn() {
 				bordered={false}
 				style={{
 					width: 400,
-					height: 450,
+					height: DEV_DEPLOY ? 650 : 450,
 					display: 'flex',
 					borderRadius: '8px',
 					padding: '1.5rem',
@@ -59,6 +63,39 @@ export default function SignIn() {
 					>
 						Sign in with GitHub
 					</Button>
+					{DEV_DEPLOY && ( // email sign in only in dev
+						<Form
+							name="basic"
+							// labelCol={{ span: 8 }}
+							// wrapperCol={{ span: 16 }}
+							layout="vertical"
+							onFinish={values => signIn('credentials', { ...values })}
+							//   onFinishFailed={onFinishFailed}
+							autoComplete="off">
+							<Item
+								label={<label style={{ color: 'white' }}>Email</label>}
+								name="email"
+								rules={[{ required: true, message: 'Please input your email!' }]}>
+								<Input />
+							</Item>
+
+							<Item
+								label={<label style={{ color: 'white' }}>Password</label>}
+								name="password"
+								rules={[{ required: true, message: 'Please input your password!' }]}>
+								<Input.Password />
+							</Item>
+
+							<Button
+								size="large"
+								type="primary"
+								icon={<MailOutlined />}
+								style={{ borderRadius: '4px' }}
+								htmlType="submit">
+								Sign in with Email
+							</Button>
+						</Form>
+					)}
 				</Space>
 			</Card>
 		</div>

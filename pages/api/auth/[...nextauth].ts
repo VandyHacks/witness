@@ -51,9 +51,6 @@ export default async function auth(req: any, res: any) {
 				  ]
 				: []),
 		],
-		// pages: {
-		//   signIn: "/signin",
-		// },
 		secret: process.env.SESSION_SECRET as string,
 		session: {
 			strategy: 'jwt',
