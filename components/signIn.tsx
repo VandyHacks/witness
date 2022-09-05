@@ -19,7 +19,8 @@ export default function SignIn() {
 				backgroundSize: 'cover',
 				display: 'flex',
 				justifyContent: 'center',
-			}}>
+			}}
+		>
 			<Card
 				bordered={false}
 				style={{
@@ -31,14 +32,16 @@ export default function SignIn() {
 					justifyContent: 'center',
 					alignItems: 'center',
 					backgroundColor: '#003f3356',
-				}}>
+				}}
+			>
 				{/* <button onClick={() => signIn()}>Sign in</button> */}
 				<Space
 					direction="vertical"
 					style={{
 						// justifyContent: 'center',
 						alignItems: 'center',
-					}}>
+					}}
+				>
 					<Image width="150px" src="/vhlogo-white.svg" alt="VandyHacks Logo" preview={false} />
 					<br />
 					<Title style={{ color: 'white' }}>VandyHacks IX</Title>
@@ -47,7 +50,8 @@ export default function SignIn() {
 						type="primary"
 						icon={<GoogleOutlined />}
 						style={{ borderRadius: '4px' }}
-						onClick={() => signIn('google')}>
+						onClick={() => signIn('google')}
+					>
 						Sign in with Google
 					</Button>
 					<Button
@@ -55,7 +59,8 @@ export default function SignIn() {
 						type="primary"
 						icon={<GithubOutlined />}
 						style={{ borderRadius: '4px' }}
-						onClick={() => signIn('github')}>
+						onClick={() => signIn('github')}
+					>
 						Sign in with GitHub
 					</Button>
 					{DEV_DEPLOY && ( // email sign in only in dev
@@ -66,18 +71,21 @@ export default function SignIn() {
 							layout="vertical"
 							onFinish={values => signIn('credentials', { ...values })}
 							//   onFinishFailed={onFinishFailed}
-							autoComplete="off">
+							autoComplete="off"
+						>
 							<Item
 								label={<label style={{ color: 'white' }}>Email</label>}
 								name="email"
-								rules={[{ required: true, message: 'Please input your email!' }]}>
+								rules={[{ required: true, message: 'Please input your email!' }]}
+							>
 								<Input />
 							</Item>
 
 							<Item
 								label={<label style={{ color: 'white' }}>Password</label>}
 								name="password"
-								rules={[{ required: true, message: 'Please input your password!' }]}>
+								rules={[{ required: true, message: 'Please input your password!' }]}
+							>
 								<Input.Password />
 							</Item>
 
@@ -86,7 +94,8 @@ export default function SignIn() {
 								type="primary"
 								icon={<MailOutlined />}
 								style={{ borderRadius: '4px' }}
-								htmlType="submit">
+								htmlType="submit"
+							>
 								Sign in with Email
 							</Button>
 						</Form>
