@@ -27,10 +27,6 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		phoneNumberType: {
-			type: String,
-			required: true,
-		},
 		dateOfBirth: {
 			type: String,
 			required: true,
@@ -52,7 +48,7 @@ export const ApplicationSchema = new Schema(
 			required: true,
 		},
 		motivation: {
-			type: String,
+			type: Array,
 			required: true,
 		},
 		attendingInPerson: {
@@ -63,26 +59,24 @@ export const ApplicationSchema = new Schema(
 			type: Boolean,
 			required: true,
 		},
-		resume: {
+		address1: {
 			type: String,
 			required: true,
 		},
-		shippingAddress: {
-			address1: {
-				type: String,
-			},
-			address2: {
-				type: String,
-			},
-			city: {
-				type: String,
-			},
-			state: {
-				type: String,
-			},
-			zip: {
-				type: String,
-			},
+		address2: {
+			type: String,
+		},
+		city: {
+			type: String,
+			required: true,
+		},
+		state: {
+			type: String,
+			required: true
+		},
+		zip: {
+			type: String,
+			required: true
 		},
 		shirtSize: {
 			type: String,
