@@ -11,7 +11,7 @@ export default function Page() {
 	return (
 		<>
 			{!session && status === 'unauthenticated' && <SignIn />}
-			<Content style={{ padding: '30px' }}>
+			<Content style={{ padding: session ? '30px' : '0px' }}>
 				{!session && status === 'loading' && <Skeleton />}
 				{session && (
 					<>
