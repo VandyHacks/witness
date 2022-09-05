@@ -15,7 +15,8 @@ export default function SignIn() {
 				backgroundSize: 'cover',
 				display: 'flex',
 				justifyContent: 'center',
-			}}>
+			}}
+		>
 			<Card
 				bordered={false}
 				style={{
@@ -27,14 +28,16 @@ export default function SignIn() {
 					justifyContent: 'center',
 					alignItems: 'center',
 					backgroundColor: '#003f3356',
-				}}>
+				}}
+			>
 				{/* <button onClick={() => signIn()}>Sign in</button> */}
 				<Space
 					direction="vertical"
 					style={{
 						// justifyContent: 'center',
 						alignItems: 'center',
-					}}>
+					}}
+				>
 					<Image width="150px" src="/vhlogo-white.svg" alt="VandyHacks Logo" preview={false} />
 					<br />
 					<Title style={{ color: 'white' }}>VandyHacks IX</Title>
@@ -43,7 +46,8 @@ export default function SignIn() {
 						type="primary"
 						icon={<GoogleOutlined />}
 						style={{ borderRadius: '4px' }}
-						onClick={() => signIn('google')}>
+						onClick={() => signIn('google')}
+					>
 						Sign in with Google
 					</Button>
 					<Button
@@ -51,7 +55,8 @@ export default function SignIn() {
 						type="primary"
 						icon={<GithubOutlined />}
 						style={{ borderRadius: '4px' }}
-						onClick={() => signIn('github')}>
+						onClick={() => signIn('github')}
+					>
 						Sign in with GitHub
 					</Button>
 				</Space>
