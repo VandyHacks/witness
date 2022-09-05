@@ -44,9 +44,9 @@ export default function HackerDash() {
 
 	const race = [
 		{ label: 'White', value: 'white' },
-		{ label: 'Black or African American', value: 'vegan' },
-		{ label: 'American Indian or Alaskan Native', value: 'glutenFree' },
-		{ label: 'Asian', value: 'vegetarian' },
+		{ label: 'Black or African American', value: 'black' },
+		{ label: 'American Indian or Alaskan Native', value: 'native' },
+		{ label: 'Asian', value: 'asian' },
 		{ label: 'Native Hawaiian or Other Pacific Islander', value: 'pacific' },
 		{ label: 'Other', value: 'other' },
 		{ label: 'Prefer Not To Answer', value: 'noAnswer' },
