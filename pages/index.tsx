@@ -9,7 +9,7 @@ export default function Page() {
 	const { data: session, status } = useSession();
 
 	return (
-		<Content style={{ padding: '30px' }}>
+		<Content style={{ padding: '30px' , backgroundImage: `${session && session.userType === 'HACKER' ? 'url(form-background.png)' : ''}`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover'}}>
 			{!session && status === 'unauthenticated' && (
 				<>
 					Not signed in <br />

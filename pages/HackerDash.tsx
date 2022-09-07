@@ -67,7 +67,7 @@ export default function HackerDash() {
 			{user && (
 				<>
 					{user.applicationStatus === ApplicationStatus.CREATED && (
-						<Form layout={'vertical'} onFinish={onFinish} className={styles.Form}>
+						<Form layout={'vertical'} onFinish={onFinish} className={styles.Form} style={{backgroundImage: 'url(input-background.png)'}}>
 							<Form.Item
 								label="First Name"
 								name="firstName"
