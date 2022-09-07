@@ -1,0 +1,32 @@
+.Form {
+	border: 1px solid black;
+	border-radius: 20px;
+	padding: 5em;
+	width: 60%;
+	margin: auto;
+}
+
+.Input {
+	height: 40px;
+	font-size: large;
+}
+
+.InputCity {
+	width: 90%;
+}
+
+.InputState {
+	width: 80%;
+}
+
+/* add media query for mobile screen */
+@media (max-width: 768px) {
+	.Form {
+		padding: 2em;
+		width: 100%;
+	}
+
+	.InputCity {
+		width: 60%;
+	}
+}
