@@ -189,8 +189,8 @@ export default function HackerDash() {
 								<Form.Item label="Address Line 2" name="address2">
 									<Input className={styles.Input} />
 								</Form.Item>
-								<div style={{ display: 'flex' }}>
-									<Col span={16}>
+								<div className={styles.InputAddress}>
+									<Col span={10} className={styles.Col}>
 										<Form.Item
 											label="City"
 											name={'city'}
@@ -198,7 +198,7 @@ export default function HackerDash() {
 											<Input className={styles.Input + ' ' + styles.InputCity} />
 										</Form.Item>
 									</Col>
-									<Col span={4}>
+									<Col span={4} className={styles.Col}>
 										<Form.Item
 											label="State"
 											name={'state'}
@@ -206,12 +206,12 @@ export default function HackerDash() {
 											<Input className={styles.Input + ' ' + styles.InputState} />
 										</Form.Item>
 									</Col>
-									<Col span={4}>
+									<Col span={8} className={styles.Col}>
 										<Form.Item
 											label="ZIP Code"
 											name={'zip'}
 											rules={[{ required: true, message: 'Please input your zip code!' }]}>
-											<Input className={styles.Input} />
+											<Input className={styles.Input + ' ' + styles.InputZip} />
 										</Form.Item>
 									</Col>
 								</div>

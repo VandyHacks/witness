@@ -30,6 +30,10 @@
 	font-size: large;
 }
 
+.InputAddress {
+	display: flex;
+}
+
 .InputCity {
 	width: 90%;
 }
@@ -38,6 +42,9 @@
 	width: 80%;
 }
 
+.InputZip {
+	width: 80%;
+}
 .Submit {
 	background-image: url('/form-submit.png');
 	background-size: 30%;
@@ -61,15 +68,28 @@
 	.Form {
 		padding: 5em;
 		width: 100%;
+		font-size: xx-small;
 	}
 	.Title{
 		margin-bottom: 0;
 		height:100px;
 	}
+	.InputAddress {
+		display: block;
+	}
 	.InputCity {
-		width: 60%;
+		width: 100%;
+	}
+	.InputState {
+		width: 100%;
+	}
+	.InputZip {
+		width: 100%;
 	}
 	.Submit{
 		height: 40px;
+	}
+	.Col {
+		max-width: 100%;
 	}
 }
