@@ -16,13 +16,13 @@ export interface JudgingData {
 import mongoose from 'mongoose';
 
 export const enum ApplicationStatus {
-    CREATED,
-    DECLINED,
-    STARTED,
-    SUBMITTED,
-    ACCEPTED,
-    CONFIRMED,
-    REJECTED,
+	CREATED,
+	DECLINED,
+	STARTED,
+	SUBMITTED,
+	ACCEPTED,
+	CONFIRMED,
+	REJECTED,
 }
 
 export interface UserData {
