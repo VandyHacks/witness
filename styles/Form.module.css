@@ -47,12 +47,13 @@
 }
 .Submit {
 	background-image: url('/form-submit.png');
+	background-size: 30%;
 	background-repeat: no-repeat;
 	background-position: center;
 	background-color: transparent;
 	cursor: pointer;
-	width: 90%;
-	height: 120px;
+	width: 80%;
+	height: 100px;
 	border: 0;
 	margin: auto;
 	display: block;
