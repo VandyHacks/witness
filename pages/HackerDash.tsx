@@ -66,7 +66,7 @@ export default function HackerDash() {
 			{!user && <Skeleton />}
 			{user && (
 				<>
-					<Form.Item className={styles.Title}> </Form.Item>
+					<Form.Item className={styles.Title}>{' '}</Form.Item>
 
 					{user.applicationStatus === ApplicationStatus.CREATED && (
 						<Form layout={'vertical'} onFinish={onFinish}>
@@ -227,14 +227,8 @@ export default function HackerDash() {
 										<Form.Item
 											label="ZIP Code"
 											name={'zip'}
-<<<<<<< HEAD
 											rules={[{ required: true, message: 'Please input your zip code!' }]}>
 											<Input className={styles.Input + ' ' + styles.InputZip} />
-=======
-											rules={[{ required: true, message: 'Please input your zip code!' }]}
-										>
-											<Input className={styles.Input} />
->>>>>>> 1ecf7f1b4d409cb45166d8310182814a953b39ce
 										</Form.Item>
 									</Col>
 								</div>
