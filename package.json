@@ -15,7 +15,7 @@
 		"antd": "^4.21.7",
 		"dotenv": "^16.0.0",
 		"export-to-csv": "^0.2.1",
-		"luxon": "^3.0.1",
+		"luxon": "^3.0.3",
 		"mongodb": "^4.8.0",
 		"mongoose": "^6.5.4",
 		"nanoid": "^4.0.0",
@@ -29,7 +29,7 @@
 	"devDependencies": {
 		"@faker-js/faker": "^7.5.0",
 		"@types/faker": "^5.5.8",
-		"@types/luxon": "^3.0.0",
+		"@types/luxon": "^3.0.1",
 		"@types/mongodb": "^4.0.7",
 		"@types/react": "17.0.43",
 		"eslint": "8.20.0",
