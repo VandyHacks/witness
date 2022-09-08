@@ -4,7 +4,7 @@
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	padding: 5em;
-	width: 80%;
+	width: 70%;
 	margin: auto;
 }
 
@@ -49,9 +49,10 @@
 	background-image: url('/form-submit.png');
 	background-repeat: no-repeat;
 	background-position: center;
+	background-size: contain;
 	background-color: transparent;
 	cursor: pointer;
-	width: 90%;
+	width: 300px;
 	height: 120px;
 	border: 0;
 	margin: auto;
@@ -59,7 +60,7 @@
 }
 
 .Submit:hover {
-	background-size: 25%;
+	width: 400px;
 }
 
 /* add media query for mobile screen */
@@ -86,10 +87,13 @@
 		width: 100%;
 	}
 	.Submit {
-		width: 100%;
+		width: 200px;
 		height: 100px;
 	}
 	.Col {
 		max-width: 100%;
+	}
+	.Submit:hover {
+		width: 300px;
 	}
 }
