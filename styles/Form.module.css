@@ -1,14 +1,30 @@
 .Form {
-	border-radius: 20px;
+	background-image: url('/input-background.png');
 	background-position:center;
 	background-size: 100% 100%;
-	
 	background-repeat: no-repeat;
 	padding: 5em;
 	width: 80%;
 	margin: auto;
 }
 
+.Form::before {
+	content: url('/public/form-title.png');
+	
+	width: 80%;
+	height: 100%;
+}
+
+.Title{
+	width:70%;
+	height: 150px;
+	margin: auto;
+	margin-bottom: 3em;
+	background-image: url('/form-title.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
 .Input {
 	height: 40px;
 	font-size: large;
@@ -22,14 +38,38 @@
 	width: 80%;
 }
 
+.Submit {
+	background-image: url('/form-submit.png');
+	background-size: 30%;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: transparent;
+	cursor: pointer;
+	width: 80%;
+	height: 100px;
+	border: 0;
+	margin: auto;
+	display: block;
+}
+
+.Submit:hover {
+	background-size: 25%;
+}
+
 /* add media query for mobile screen */
 @media (max-width: 768px) {
 	.Form {
 		padding: 5em;
 		width: 100%;
 	}
-
+	.Title{
+		margin-bottom: 0;
+		height:100px;
+	}
 	.InputCity {
 		width: 60%;
+	}
+	.Submit{
+		height: 40px;
 	}
 }
