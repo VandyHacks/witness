@@ -66,8 +66,6 @@ export default function HackerDash() {
 			{!user && <Skeleton />}
 			{user && (
 				<>
-					<Form.Item className={styles.Title}> </Form.Item>
-
 					{user.applicationStatus === ApplicationStatus.CREATED && (
 						<Form layout={'vertical'} onFinish={onFinish}>
 							<div className={styles.Form}>
@@ -307,7 +305,83 @@ export default function HackerDash() {
 								<br />
 							</div>
 
-							<button className={styles.Submit} type="submit" />
+							<Form.Item
+								label="Shirt Size"
+								name="shirtSize"
+								rules={[{ required: true, message: 'Please select your shirt size!' }]}
+							>
+								<Radio.Group>
+									<Radio.Button value="XS">XS</Radio.Button>
+									<Radio.Button value="S">S</Radio.Button>
+									<Radio.Button value="M">M</Radio.Button>
+									<Radio.Button value="L">L</Radio.Button>
+									<Radio.Button value="XL">XL</Radio.Button>
+									<Radio.Button value="XXL">XXL</Radio.Button>
+								</Radio.Group>
+							</Form.Item>
+							<br />
+							<Form.Item
+								valuePropName="checked"
+								name="agreement1"
+								rules={[
+									{
+										validator: (_, value) =>
+											value
+												? Promise.resolve()
+												: Promise.reject(new Error('Please read and agree to submit.')),
+									},
+								]}
+							>
+								<Checkbox>
+									I have read and agree to the{' '}
+									<a
+										target="_blank"
+										rel="noopener noreferrer"
+										href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf"
+									>
+										MLH Code of Conduct
+									</a>
+									.
+								</Checkbox>
+							</Form.Item>
+							<Form.Item
+								valuePropName="checked"
+								name="agreement2"
+								rules={[
+									{
+										validator: (_, value) =>
+											value
+												? Promise.resolve()
+												: Promise.reject(new Error('Please read and agree to submit.')),
+									},
+								]}
+							>
+								<Checkbox>
+									I authorize you to share my application/registration information for event
+									administration, ranking, MLH administration, pre- and post-event informational
+									emails, and occasional emails about hackathons in line with the MLH Privacy Policy.
+									I further agree to the terms of both the{' '}
+									<a
+										target="_blank"
+										rel="noopener noreferrer"
+										href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions"
+									>
+										MLH Contest Terms and Conditions
+									</a>{' '}
+									and the{' '}
+									<a target="_blank" rel="noopener noreferrer" href="https://mlh.io/privacy">
+										MLH Privacy Policy
+									</a>
+									.
+								</Checkbox>
+							</Form.Item>
+							<br />
+
+							<Form.Item>
+								<Button loading={loading} type="primary" htmlType="submit">
+									Submit
+								</Button>
+							</Form.Item>
 						</Form>
 					)}
 					{user.applicationStatus === ApplicationStatus.SUBMITTED && <p>Submitted!</p>}
