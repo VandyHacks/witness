@@ -1,13 +1,13 @@
 import { Skeleton } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { signIn, signOut, useSession } from 'next-auth/react';
+import SignIn from '../components/signIn';
 import HackerDash from './HackerDash';
 import JudgeDash from './JudgeDash';
 import OrganizerDash from './OrganizerDash';
 
 export default function Page() {
 	const { data: session, status } = useSession();
-
 	return (
 		<Content
 			style={{
