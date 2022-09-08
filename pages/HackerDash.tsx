@@ -70,9 +70,7 @@ export default function HackerDash() {
 
 					{user.applicationStatus === ApplicationStatus.CREATED && (
 						<Form layout={'vertical'} onFinish={onFinish}>
-							{/* <img src="form-title.png"/> */}
 							<div className={styles.Form}>
-								{/* <img src="/form-title.png" className="dasCrazy" style={{width: '60%'}}/> */}
 								<Form.Item
 									label="First Name"
 									name="firstName"
