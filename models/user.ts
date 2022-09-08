@@ -36,8 +36,8 @@ export const UserSchema = new Schema(
 		},
 		application: {
 			type: Schema.Types.ObjectId,
-			ref: 'Application'
-		}
+			ref: 'Application',
+		},
 	},
 	{
 		timestamps: true,

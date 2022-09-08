@@ -72,15 +72,15 @@ export const ApplicationSchema = new Schema(
 		},
 		state: {
 			type: String,
-			required: true
+			required: true,
 		},
 		zip: {
 			type: String,
-			required: true
+			required: true,
 		},
 		shirtSize: {
 			type: String,
-		}
+		},
 	},
 	{
 		timestamps: true,

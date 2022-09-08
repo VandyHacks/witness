@@ -1,6 +1,6 @@
 .Form {
 	background-image: url('/input-background.png');
-	background-position:center;
+	background-position: center;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 	padding: 5em;
@@ -10,13 +10,13 @@
 
 .Form::before {
 	content: url('/public/form-title.png');
-	
+
 	width: 80%;
 	height: 100%;
 }
 
-.Title{
-	width:70%;
+.Title {
+	width: 70%;
 	height: 150px;
 	margin: auto;
 	margin-bottom: 3em;
@@ -70,9 +70,9 @@
 		width: 100%;
 		font-size: xx-small;
 	}
-	.Title{
+	.Title {
 		margin-bottom: 0;
-		height:100px;
+		height: 100px;
 	}
 	.InputAddress {
 		display: block;
@@ -86,7 +86,7 @@
 	.InputZip {
 		width: 100%;
 	}
-	.Submit{
+	.Submit {
 		height: 40px;
 	}
 	.Col {

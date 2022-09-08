@@ -97,7 +97,7 @@ function generateUser(userType: string): UserData {
 		email: faker.internet.email(),
 		image: faker.image.image(),
 		userType: userType,
-		applicationStatus: ApplicationStatus.CREATED
+		applicationStatus: ApplicationStatus.CREATED,
 	};
 }
 
