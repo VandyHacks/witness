@@ -12,7 +12,7 @@
 	"dependencies": {
 		"@ant-design/icons": "^4.7.0",
 		"@next-auth/mongodb-adapter": "^1.0.4",
-		"antd": "^4.21.7",
+		"antd": "^4.23.1",
 		"dotenv": "^16.0.0",
 		"export-to-csv": "^0.2.1",
 		"luxon": "^3.0.3",
