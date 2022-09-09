@@ -44,7 +44,7 @@ export default function SignIn() {
 				>
 					<Image width="150px" src="/vhlogo-white.svg" alt="VandyHacks Logo" preview={false} />
 					<br />
-					<Title style={{ color: 'white' }}>VandyHacks IX</Title>
+					<Title style={{ color: '#714a00' }}>VandyHacks IX</Title>
 					<Button
 						size="large"
 						type="primary"
