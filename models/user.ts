@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { ApplicationStatus } from '../types/database';
 
 const Schema = mongoose.Schema;
 export const USER_TYPES = ['HACKER', 'JUDGE', 'ORGANIZER'];
@@ -28,6 +29,14 @@ export const UserSchema = new Schema(
 		test: {
 			type: Boolean,
 			default: false,
+		},
+		applicationStatus: {
+			type: Number,
+			default: ApplicationStatus.CREATED,
+		},
+		application: {
+			type: Schema.Types.ObjectId,
+			ref: 'Application',
 		},
 	},
 	{

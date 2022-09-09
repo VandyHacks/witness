@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 const { ObjectID } = require('mongodb');
 import mongoose from 'mongoose';
-import type { UserData, TeamData, ScoreData, ScheduleData } from '../types/database';
+import { UserData, TeamData, ScoreData, ScheduleData, ApplicationStatus } from '../types/database';
 import { config as dotenvConfig } from 'dotenv';
 import dbConnect from '../middleware/database';
 
@@ -97,6 +97,7 @@ function generateUser(userType: string): UserData {
 		email: faker.internet.email(),
 		image: faker.image.image(),
 		userType: userType,
+		applicationStatus: ApplicationStatus.CREATED,
 	};
 }
 
