@@ -11,18 +11,12 @@ export default function Page() {
 	return (
 		<Content
 			style={{
-				padding: '30px',
+				padding: session ? '30px' : '0px',
 				backgroundImage: `${session && session.userType === 'HACKER' ? 'url(form-background.png)' : ''}`,
 				backgroundRepeat: 'no-repeat',
 				backgroundSize: 'cover',
-			}}
-		>
-			{!session && status === 'unauthenticated' && (
-				<>
-					Not signed in <br />
-					<button onClick={() => signIn()}>Sign in</button>
-				</>
-			)}
+			}}>
+			{!session && status === 'unauthenticated' && <SignIn />}
 			{!session && status === 'loading' && <Skeleton />}
 			{session && (
 				<>
