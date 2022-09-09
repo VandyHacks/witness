@@ -17,6 +17,7 @@
 		"antd": "^4.21.7",
 		"dotenv": "^16.0.0",
 		"export-to-csv": "^0.2.1",
+		"formidable": "^2.0.1",
 		"luxon": "^3.0.3",
 		"mongodb": "^4.9.1",
 		"mongoose": "^6.5.4",
