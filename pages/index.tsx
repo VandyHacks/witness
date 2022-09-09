@@ -15,7 +15,8 @@ export default function Page() {
 				backgroundImage: `${session && session.userType === 'HACKER' ? 'url(form-background.png)' : ''}`,
 				backgroundRepeat: 'no-repeat',
 				backgroundSize: 'cover',
-			}}>
+			}}
+		>
 			{!session && status === 'unauthenticated' && <SignIn />}
 			{!session && status === 'loading' && <Skeleton />}
 			{session && (
