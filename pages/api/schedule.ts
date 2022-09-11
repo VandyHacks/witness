@@ -222,7 +222,7 @@ export default async function handler(
 	const userID = session.userID as string;
 	await import('../../models/team');
 	if (req.method === 'GET') {
-		// console.log('user type:', session.userType);
+		console.log('user type:', session.userType);
 		let schedule;
 		switch (session.userType) {
 			case 'JUDGE':
