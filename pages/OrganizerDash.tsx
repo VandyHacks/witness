@@ -6,9 +6,10 @@ import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
 import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
-import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../types/database';
+import { ResponseError, ScoreData, TeamData, UserData, PreAddData, ApplicationData } from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
+import ReviewApplication from '../components/ReviewApplication';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -64,7 +65,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScoreData[];
 	});
 
-	const { data: usersData, error: usersError } = useSWR('/api/users?usertype=JUDGE', async url => {
+	const { data: judgeData, error: judgeError } = useSWR('/api/users?usertype=JUDGE', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of judges.') as ResponseError;
@@ -105,20 +106,34 @@ export default function OrganizerDash() {
 		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
 	});
 
+	const { data: applicationData, error: applicationError } = useSWR('/api/applications', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of all applications.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+
+		return (await res.json()) as ApplicationData[];
+	});
+
 	return (
 		<Space direction="vertical">
+			{!applicationData && <Skeleton />}
+			{applicationData && <ReviewApplication data={applicationData} />}
+
 			{!scheduleData && <Skeleton />}
 			{scheduleData && <OrganizerSchedule data={scheduleData} />}
 			<Divider />
 			{teamsData && (
 				<>
 					{/* Add dropdown here w/ functionality */}
-					{usersData && scoresData && (
-						<AllScores teamData={teamsData} scoreData={scoresData} userData={usersData} />
+					{judgeData && scoresData && (
+						<AllScores teamData={teamsData} scoreData={scoresData} userData={judgeData} />
 					)}
 				</>
 			)}
-			{(!teamsData || !usersData || !scoresData || !preAddData) && <Skeleton />}
+			{(!teamsData || !judgeData || !scoresData || !preAddData) && <Skeleton />}
 			<Divider />
 			{!userData && <Skeleton />}
 			{userData && userData.length == 0 && (
