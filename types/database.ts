@@ -15,7 +15,7 @@ export interface JudgingData {
 
 import mongoose from 'mongoose';
 
-export enum ApplicationStatus {
+export const enum ApplicationStatus {
 	CREATED,
 	DECLINED,
 	STARTED,
@@ -77,34 +77,4 @@ export interface ScheduleData {
 
 export interface ResponseError extends Error {
 	status?: number;
-}
-
-enum Gender {
-	Male,
-	Female,
-}
-export interface ApplicationData {
-	_id: mongoose.Schema.Types.ObjectId;
-	firstName: string;
-	lastName: string;
-	gender: Gender;
-	dietaryRestriction: Array<string>;
-	phoneNumber: string;
-	dateOfBirth: string;
-	school: string;
-	major: string;
-	graduationYear: string;
-	race: Array<string>;
-	motivation: Array<string>;
-	attendingInPerson: boolean;
-	volunteer: boolean;
-	address1: string;
-	city: string;
-	state: string;
-	zip: number;
-	shirtSize: string;
-	user: {
-		applicationStatus: ApplicationStatus;
-	};
-	status: string;
 }
