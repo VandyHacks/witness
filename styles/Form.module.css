@@ -8,7 +8,6 @@
 	margin: auto;
 }
 
-<<<<<<< HEAD
 .SubmittedForm {
 	background-image: url('/form-background.svg');
 	background-repeat: no-repeat;
@@ -20,13 +19,6 @@
 
 	flex-direction: column;
 	justify-content: center;
-=======
-.Form::before {
-	content: url('/public/form-title.png');
-
-	width: 80%;
-	height: 100%;
->>>>>>> 87aed7a7f635c3a49dd890805e6fc57298555ed7
 }
 
 .Title {
