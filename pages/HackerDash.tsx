@@ -1,14 +1,17 @@
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, DatePicker, Form, Input, Radio, Row, Skeleton, Upload } from 'antd';
-import { useState } from 'react';
 import useSWR from 'swr';
 import TeamManager from '../components/TeamManager';
 import TeamSetup from '../components/TeamSetup';
 import { TeamProfile } from '../types/client';
 import { ApplicationStatus, UserData } from '../types/database';
 import styles from '../styles/Form.module.css';
+import { useState, Dispatch, SetStateAction, FunctionComponent as FC } from 'react';
 
-export default function HackerDash() {
+interface userProps {
+	user: UserData | undefined;
+}
+const HackerDash: FC<userProps> = (props: userProps) => {
 	const [loading, setLoading] = useState(false);
 	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
 		const res = await fetch(url, { method: 'GET' });
@@ -16,11 +19,6 @@ export default function HackerDash() {
 		const { members, ...rest } = await res.json();
 
 		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
-	});
-
-	const { data: user } = useSWR('/api/user-data', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		return (await res.json()) as UserData;
 	});
 
 	const onFinish = async (values: any) => {
@@ -63,12 +61,12 @@ export default function HackerDash() {
 
 	return (
 		<>
-			{!user && <Skeleton />}
-			{user && (
+			{!props.user && <Skeleton />}
+			{props.user && (
 				<>
 					<Form.Item className={styles.Title}> </Form.Item>
 
-					{user.applicationStatus === ApplicationStatus.CREATED && (
+					{props.user.applicationStatus === ApplicationStatus.CREATED && (
 						<Form layout={'vertical'} onFinish={onFinish}>
 							<div className={styles.Form}>
 								<Form.Item
@@ -310,8 +308,17 @@ export default function HackerDash() {
 							<button className={styles.Submit} type="submit" />
 						</Form>
 					)}
-					{user.applicationStatus === ApplicationStatus.SUBMITTED && <p>Submitted!</p>}
-					{user.applicationStatus === ApplicationStatus.ACCEPTED && (
+					{props.user.applicationStatus === ApplicationStatus.SUBMITTED && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div style={{ width: '60%', margin: 'auto', padding: '5%' }}>
+									Thank you for applying to VandyHacks! You will hear back from us soon. In the
+									meantime, follow us on Instagram to stay updated on our news and announcements!
+								</div>
+							</div>
+						</>
+					)}
+					{props.user.applicationStatus === ApplicationStatus.ACCEPTED && (
 						<>
 							{!teamData && <TeamSetup />}
 							{teamData && <TeamManager profile={teamData} />}
@@ -321,4 +328,6 @@ export default function HackerDash() {
 			)}
 		</>
 	);
-}
+};
+
+export default HackerDash;

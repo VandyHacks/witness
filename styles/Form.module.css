@@ -8,11 +8,17 @@
 	margin: auto;
 }
 
-.Form::before {
-	content: url('/public/form-title.png');
+.SubmittedForm {
+	background-image: url('/form-background.svg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	width: 60%;
+	text-align: center;
+	margin: auto;
+	display: flex;
 
-	width: 80%;
-	height: 100%;
+	flex-direction: column;
+	justify-content: center;
 }
 
 .Title {
