@@ -1,6 +1,6 @@
 import { Skeleton } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useState } from 'react';
 import SignIn from '../components/signIn';
 import { ApplicationStatus } from '../types/database';
@@ -26,24 +26,12 @@ export default function Page() {
 			{!session && status === 'loading' && <Skeleton />}
 			{session && (
 				<>
-					{/* center this div */}
-					<div
-						style={{
-							width: '100%',
-							display: 'flex-column',
-							// backgroundColor: 'pink',
-							justifyContent: 'center',
-							alignItems: 'center',
-						}}>
-						Signed in as {session.user?.email} <br />
-						Not you? <br />
-						<button onClick={() => signOut()}>Sign out</button> <br />
-					</div>
 					<br />
 					{session.userType === 'HACKER' && (
 						<HackerDash
 							userApplicationStatus={userApplicationStatus}
 							setUserApplicationStatus={setUserApplicationStatus}
+							userEmail={session.user?.email}
 						/>
 					)}
 					{session.userType === 'JUDGE' && <JudgeDash />}

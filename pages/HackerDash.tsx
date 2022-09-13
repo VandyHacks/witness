@@ -7,12 +7,14 @@ import TeamSetup from '../components/TeamSetup';
 import { TeamProfile } from '../types/client';
 import { ApplicationStatus, UserData } from '../types/database';
 import styles from '../styles/Form.module.css';
+import { signOut } from 'next-auth/react';
 
 type Props = {
 	userApplicationStatus?: number;
 	setUserApplicationStatus?: (newType: number) => void;
+	userEmail?: string | null;
 };
-export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: Props) {
+export default function HackerDash({ userApplicationStatus, setUserApplicationStatus, userEmail }: Props) {
 	const [loading, setLoading] = useState(false);
 	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
 		const res = await fetch(url, { method: 'GET' });
@@ -79,6 +81,17 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{user.applicationStatus === ApplicationStatus.CREATED && (
 						<Form layout={'vertical'} onFinish={onFinish}>
 							<div className={styles.Form}>
+								<div
+									style={{
+										width: '100%',
+										display: 'flex',
+										flexDirection: 'column',
+										alignItems: 'center',
+									}}>
+									<div>Signed in as {userEmail}</div>
+									<div>Not you? </div>
+									<button onClick={() => signOut()}>Sign out</button>
+								</div>
 								<Form.Item
 									label="First Name"
 									name="firstName"
@@ -223,7 +236,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										</Form.Item>
 									</Col>
 								</div>
-
 								<Form.Item
 									label="Shirt Size"
 									name="shirtSize"
@@ -313,6 +325,18 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										Instagram
 									</a>{' '}
 									to stay updated on our news and announcements!
+									<div
+										style={{
+											width: '100%',
+											marginTop: '25px',
+											fontSize: '14px',
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center',
+										}}>
+										<div>Signed in as {userEmail}</div>
+										<button onClick={() => signOut()}>Sign out</button>
+									</div>
 								</div>
 							</div>
 						</>
