@@ -8,6 +8,7 @@ import { TeamProfile } from '../types/client';
 import { ApplicationStatus, UserData } from '../types/database';
 import styles from '../styles/Form.module.css';
 import { signOut } from 'next-auth/react';
+import moment from 'moment';
 
 type Props = {
 	userApplicationStatus?: number;
@@ -71,6 +72,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ label: 'Other', value: 'other' },
 	];
 
+	function disabledDate(current: moment.Moment): boolean {
+		// disable all dates from 18 years ago onwards
+		return current && current > moment().subtract(18, 'years');
+	}
+
 	return (
 		<>
 			{!user && <Skeleton />}
@@ -79,7 +85,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					<Form.Item className={styles.Title}> </Form.Item>
 
 					{user.applicationStatus === ApplicationStatus.CREATED && (
-						<Form layout={'vertical'} onFinish={onFinish}>
+						<Form layout={'vertical'} onFinish={onFinish} scrollToFirstError={true}>
 							<div className={styles.Form}>
 								<div
 									style={{
@@ -133,7 +139,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									name="dateOfBirth"
 									label="Date of Birth"
 									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
-									<DatePicker />
+									<DatePicker
+										disabledDate={disabledDate}
+										placeholder="MM-DD-YYYY"
+										format="MM-DD-YYYY"
+										defaultPickerValue={moment().subtract(18, 'years')}
+									/>
 								</Form.Item>
 								<Form.Item
 									label="School"
@@ -307,7 +318,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<br />
 
-								<Button style={{ marginBottom: '60px' }} type="primary">
+								<Button style={{ marginBottom: '60px' }} type="primary" htmlType="submit">
 									Submit
 								</Button>
 								<br />
