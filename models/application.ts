@@ -51,7 +51,7 @@ export const ApplicationSchema = new Schema(
 			type: Array,
 			required: true,
 		},
-		attendingInPerson: {
+		applyTravelReimbursement: {
 			type: Boolean,
 			required: true,
 		},
