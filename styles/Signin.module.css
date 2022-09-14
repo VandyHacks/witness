@@ -1,0 +1,43 @@
+.SignIn {
+	background-image: url('/background.png');
+	align-items: center;
+	height: 100vh;
+	width: 100vw;
+	background-size: cover;
+	display: flex;
+	justify-content: center;
+}
+
+.Card {
+	display: flex;
+	width: auto;
+	border-radius: 8px;
+	padding: 1.5rem;
+	justify-content: center;
+	align-items: center;
+	background-color: #e5c49b61;
+}
+
+.Logo {
+	width: 170px;
+	margin-top: 20px;
+	margin-bottom: -20px;
+}
+
+.Title {
+	font-size: 2.5rem;
+	font-weight: 550;
+	margin-bottom: 1rem;
+}
+
+/* add media query for mobile screen */
+@media (max-width: 768px) {
+	.Logo {
+		margin-top: 30px;
+		margin-bottom: -30px;
+		width: 120px;
+	}
+	.Title {
+		font-size: 1.5rem;
+	}
+}

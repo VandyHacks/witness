@@ -8,8 +8,8 @@ import fs from 'fs';
 const s3 = new S3({
 	region: 'us-east-2',
 	credentials: {
-		accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+		accessKeyId: process.env.VH_AWS_ACCESS_KEY_ID!,
+		secretAccessKey: process.env.VH_AWS_SECRET_ACCESS_KEY!,
 	},
 	bucketEndpoint: true,
 });
@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	});
 
 	await s3.putObject({
-		Bucket: `${process.env.S3_BUCKET!}.s3.us-east-2.amazonaws.com`,
+		Bucket: `${process.env.VH_S3_BUCKET!}.s3.us-east-2.amazonaws.com`,
 		Key: `resumes/${session.userID}.pdf`,
 		Body: fs.readFileSync(data.files.resume.filepath),
 	});

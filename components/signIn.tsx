@@ -1,50 +1,30 @@
 import { signIn } from 'next-auth/react';
 import { GoogleOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Space, Card, Image, Typography, Form, Input } from 'antd';
+import styles from '../styles/Signin.module.css';
 
 const { Item } = Form;
-const { Title } = Typography;
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
 
 export default function SignIn() {
 	return (
-		<div
-			style={{
-				backgroundImage: 'url(/background.png)',
-				alignItems: 'center',
-				height: '100vh',
-				width: '100vw',
-				backgroundSize: 'cover',
-				display: 'flex',
-				justifyContent: 'center',
-			}}
-		>
-			<Card
-				bordered={false}
-				style={{
-					width: 400,
-					height: DEV_DEPLOY ? 650 : 450,
-					display: 'flex',
-					borderRadius: '8px',
-					padding: '1.5rem',
-					justifyContent: 'center',
-					alignItems: 'center',
-					backgroundColor: '#e5c49b61',
-				}}
-			>
+		<div className={styles.SignIn}>
+			<Card bordered={false} className={styles.Card} style={{ height: DEV_DEPLOY ? '80%' : '70%' }}>
 				{/* <button onClick={() => signIn()}>Sign in</button> */}
 				<Space
 					direction="vertical"
+					size="small"
 					style={{
-						// justifyContent: 'center',
 						alignItems: 'center',
 					}}
 				>
-					<Image width="150px" src="/vhlogo-white.svg" alt="VandyHacks Logo" preview={false} />
+					<Image className={styles.Logo} src="/vhlogo-brown.svg" alt="VandyHacks Logo" preview={false} />
 					<br />
-					<Title style={{ color: '#714a00' }}>VandyHacks IX</Title>
+					<div className={styles.Title} style={{ color: '#714a00' }}>
+						VandyHacks IX
+					</div>
 					<Button
 						size="large"
 						type="primary"
