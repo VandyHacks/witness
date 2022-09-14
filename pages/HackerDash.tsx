@@ -25,10 +25,14 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	// 	return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
 	// });
 
-	const { data: user } = useSWR('/api/user-data', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		return (await res.json()) as UserData;
-	}, { revalidateOnFocus: false, revalidateOnMount: true });
+	const { data: user } = useSWR(
+		'/api/user-data',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+			return (await res.json()) as UserData;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
 
 	if (user && user.applicationStatus) {
 		setUserApplicationStatus?.(user.applicationStatus);
@@ -78,7 +82,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	}
 
 	const [resumeFile, setResumeFile] = useState<UploadFile[]>([]);
-	
+
 	const dummyRequest = ({ onSuccess }: any) => {
 		setTimeout(() => {
 			onSuccess('ok');
@@ -238,22 +242,27 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									label={'Résumé (will be shared with sponsors)'}
-									rules={[{ required: true, validator(rule, value, callback) {
-										if (value && value.fileList.length > 0) {
-											const file = value.fileList[0].originFileObj;
-											if (!file) {
-												callback('Please upload your résumé!');
-											} else if (file.size > 1000000) {
-												callback('File must be smaller than 1MB!');
-											} else if (!file.type.includes('pdf')) {
-												callback('File must be a PDF!');
-											} else {
-												callback();
-											}
-										} else {
-											callback('Please upload your résumé!');
-										}
-									}, }]}
+									rules={[
+										{
+											required: true,
+											validator(rule, value, callback) {
+												if (value && value.fileList.length > 0) {
+													const file = value.fileList[0].originFileObj;
+													if (!file) {
+														callback('Please upload your résumé!');
+													} else if (file.size > 1000000) {
+														callback('File must be smaller than 1MB!');
+													} else if (!file.type.includes('pdf')) {
+														callback('File must be a PDF!');
+													} else {
+														callback();
+													}
+												} else {
+													callback('Please upload your résumé!');
+												}
+											},
+										},
+									]}
 									name="resume"
 									valuePropName="resume"
 								>
