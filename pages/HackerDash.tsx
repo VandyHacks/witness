@@ -10,12 +10,12 @@ import styles from '../styles/Form.module.css';
 import { signOut } from 'next-auth/react';
 import moment from 'moment';
 
-type Props = {
+type HackerProps = {
 	userApplicationStatus?: number;
 	setUserApplicationStatus?: (newType: number) => void;
 	userEmail?: string | null;
 };
-export default function HackerDash({ userApplicationStatus, setUserApplicationStatus, userEmail }: Props) {
+export default function HackerDash({ userApplicationStatus, setUserApplicationStatus, userEmail }: HackerProps) {
 	const [loading, setLoading] = useState(false);
 	// const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
 	// 	const res = await fetch(url, { method: 'GET' });
@@ -34,7 +34,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
 
-	if (user && user.applicationStatus) {
+	if (user?.applicationStatus) {
 		setUserApplicationStatus?.(user.applicationStatus);
 	}
 
@@ -93,6 +93,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	const [resumeFile, setResumeFile] = useState<UploadFile[]>([]);
 	const [resumeToUpload, setResumeToUpload] = useState<string | Blob>('');
 
+	// Create dummyRequest to prevent antd from sending POST request immediately after upload
 	const dummyRequest = (options: any) => {
 		setResumeToUpload(options.file);
 		setTimeout(() => {
