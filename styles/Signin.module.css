@@ -19,7 +19,9 @@
 }
 
 .Logo {
-	width: 200px;
+	width: 170px;
+	margin-top: 20px;
+	margin-bottom: -20px;
 }
 
 .Title {
@@ -33,7 +35,7 @@
 	.Logo {
 		margin-top: 30px;
 		margin-bottom: -30px;
-		width: 150px;
+		width: 120px;
 	}
 	.Title {
 		font-size: 1.5rem;
