@@ -352,7 +352,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{user.applicationStatus === ApplicationStatus.SUBMITTED && (
 						<>
 							<div className={styles.SubmittedForm}>
-								<div style={{ width: '70%', margin: 'auto', padding: '5%', fontSize: '18px' }}>
+								<div className={styles.ThankYouMessage}>
 									Thank you for applying to VandyHacks!
 									<br />
 									You will hear back from us soon :&#41;
@@ -368,18 +368,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										Instagram
 									</a>{' '}
 									to stay updated on our news and announcements!
-									<div
-										style={{
-											width: '100%',
-											marginTop: '25px',
-											fontSize: '14px',
-											display: 'flex',
-											flexDirection: 'column',
-											alignItems: 'center',
-										}}
-									>
+									<div className={styles.SignInInfo}>
 										<div>Signed in as {userEmail}</div>
-										<button onClick={() => signOut()}>Sign out</button>
+										<Button size="small" type="default" onClick={() => signOut()}>
+											Sign out
+										</Button>
 									</div>
 								</div>
 							</div>
