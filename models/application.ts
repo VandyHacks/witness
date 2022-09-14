@@ -10,6 +10,7 @@ export const ApplicationSchema = new Schema(
 		},
 		preferredName: {
 			type: String,
+			required: false,
 		},
 		lastName: {
 			type: String,
@@ -22,6 +23,10 @@ export const ApplicationSchema = new Schema(
 		dietaryRestrictions: {
 			type: Array,
 			required: true,
+		},
+		accomodationNeeds: {
+			type: String,
+			required: false,
 		},
 		phoneNumber: {
 			type: String,
