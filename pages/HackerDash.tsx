@@ -41,6 +41,15 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			method: 'POST',
 			body: JSON.stringify(values),
 		});
+		// submit resume file
+		if (values.resume) {
+			const formData = new FormData();
+			formData.append('resume', resumeToUpload);
+			await fetch('/api/upload-resume', {
+				method: 'POST',
+				body: formData,
+			});
+		}
 		window.location.reload();
 	};
 
@@ -78,10 +87,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	}
 
 	const [resumeFile, setResumeFile] = useState<UploadFile[]>([]);
+	const [resumeToUpload, setResumeToUpload] = useState<string | Blob>('');
 	
-	const dummyRequest = ({ onSuccess }: any) => {
+	const dummyRequest = (options: any) => {
+		setResumeToUpload(options.file);
 		setTimeout(() => {
-			onSuccess('ok');
+			options.onSuccess('ok');
 		}, 0);
 	};
 
@@ -162,6 +173,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item name="dietaryRestrictions" label="Dietary Restrictions">
 									<Checkbox.Group options={dietaryRestrictions} />
+								</Form.Item>
+								<Form.Item name="accomodationNeeds" label="Accomodation Needs">
+									<Input placeholder="Enter your accomodation needs" />
 								</Form.Item>
 								<Form.Item
 									name="dateOfBirth"
