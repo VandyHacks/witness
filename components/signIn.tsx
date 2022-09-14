@@ -1,57 +1,35 @@
 import { signIn } from 'next-auth/react';
 import { GoogleOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Space, Card, Image, Typography, Form, Input } from 'antd';
+import styles from '../styles/Signin.module.css';
 
 const { Item } = Form;
-const { Title } = Typography;
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
 
 export default function SignIn() {
 	return (
-		<div
-			style={{
-				backgroundImage: 'url(/background.png)',
-				alignItems: 'center',
-				height: '100vh',
-				width: '100vw',
-				backgroundSize: 'cover',
-				display: 'flex',
-				justifyContent: 'center',
-			}}
-		>
-			<Card
-				bordered={false}
-				style={{
-					width: 400,
-					height: DEV_DEPLOY ? 650 : 450,
-					display: 'flex',
-					borderRadius: '8px',
-					padding: '1.5rem',
-					justifyContent: 'center',
-					alignItems: 'center',
-					backgroundColor: '#e5c49b61',
-				}}
-			>
+		<div className={styles.SignIn}>
+			<Card bordered={false} className={styles.Card} style={{ height: DEV_DEPLOY ? '80%' : '70%' }}>
 				{/* <button onClick={() => signIn()}>Sign in</button> */}
 				<Space
 					direction="vertical"
+					size="small"
 					style={{
-						// justifyContent: 'center',
 						alignItems: 'center',
-					}}
-				>
-					<Image width="150px" src="/vhlogo-white.svg" alt="VandyHacks Logo" preview={false} />
+					}}>
+					<Image className={styles.Logo} src="/vhlogo-brown.svg" alt="VandyHacks Logo" preview={false} />
 					<br />
-					<Title style={{ color: '#714a00' }}>VandyHacks IX</Title>
+					<div className={styles.Title} style={{ color: '#714a00' }}>
+						VandyHacks IX
+					</div>
 					<Button
 						size="large"
 						type="primary"
 						icon={<GoogleOutlined />}
 						style={{ borderRadius: '4px' }}
-						onClick={() => signIn('google')}
-					>
+						onClick={() => signIn('google')}>
 						Sign in with Google
 					</Button>
 					<Button
@@ -59,8 +37,7 @@ export default function SignIn() {
 						type="primary"
 						icon={<GithubOutlined />}
 						style={{ borderRadius: '4px' }}
-						onClick={() => signIn('github')}
-					>
+						onClick={() => signIn('github')}>
 						Sign in with GitHub
 					</Button>
 					{DEV_DEPLOY && ( // email sign in only in dev
@@ -71,21 +48,18 @@ export default function SignIn() {
 							layout="vertical"
 							onFinish={values => signIn('credentials', { ...values })}
 							//   onFinishFailed={onFinishFailed}
-							autoComplete="off"
-						>
+							autoComplete="off">
 							<Item
 								label={<label style={{ color: 'white' }}>Email</label>}
 								name="email"
-								rules={[{ required: true, message: 'Please input your email!' }]}
-							>
+								rules={[{ required: true, message: 'Please input your email!' }]}>
 								<Input />
 							</Item>
 
 							<Item
 								label={<label style={{ color: 'white' }}>Password</label>}
 								name="password"
-								rules={[{ required: true, message: 'Please input your password!' }]}
-							>
+								rules={[{ required: true, message: 'Please input your password!' }]}>
 								<Input.Password />
 							</Item>
 
@@ -94,8 +68,7 @@ export default function SignIn() {
 								type="primary"
 								icon={<MailOutlined />}
 								style={{ borderRadius: '4px' }}
-								htmlType="submit"
-							>
+								htmlType="submit">
 								Sign in with Email
 							</Button>
 						</Form>
