@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, DatePicker, Form, Input, Radio, Row, Skeleton, Upload } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Form, Input, Radio, Row, Skeleton, Upload, UploadFile } from 'antd';
 import useSWR from 'swr';
 import TeamManager from '../components/TeamManager';
 import TeamSetup from '../components/TeamSetup';
@@ -28,7 +28,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	const { data: user } = useSWR('/api/user-data', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		return (await res.json()) as UserData;
-	});
+	}, { revalidateOnFocus: false, revalidateOnMount: true });
 
 	if (user && user.applicationStatus) {
 		setUserApplicationStatus?.(user.applicationStatus);
@@ -76,6 +76,29 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		// disable all dates from 18 years ago onwards
 		return current && current > moment().subtract(18, 'years');
 	}
+
+	const [resumeFile, setResumeFile] = useState<UploadFile[]>([]);
+	
+	const dummyRequest = ({ onSuccess }: any) => {
+		setTimeout(() => {
+			onSuccess('ok');
+		}, 0);
+	};
+
+	const onUploadChange = (info: any) => {
+		let { fileList } = info;
+		// if (info.file.status === 'uploading') {
+		// 	console.log("uploading");
+		// } else if (info.file.status === 'done') {
+		// 	console.log("done");
+		// }
+		setResumeFile(fileList);
+	};
+
+	const onUploadRemove = (file: any) => {
+		// console.log('removing');
+		setResumeFile([]);
+	};
 
 	return (
 		<>
@@ -215,16 +238,34 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									label={'Résumé (will be shared with sponsors)'}
-									rules={[{ required: true, message: 'Please upload your résumé!' }]}
+									rules={[{ required: true, validator(rule, value, callback) {
+										if (value && value.fileList.length > 0) {
+											const file = value.fileList[0].originFileObj;
+											if (!file) {
+												callback('Please upload your résumé!');
+											} else if (file.size > 1000000) {
+												callback('File must be smaller than 1MB!');
+											} else if (!file.type.includes('pdf')) {
+												callback('File must be a PDF!');
+											} else {
+												callback();
+											}
+										} else {
+											callback('Please upload your résumé!');
+										}
+									}, }]}
 									name="resume"
 									valuePropName="resume"
 								>
 									<Upload
 										name="resume"
-										action="/api/upload-resume"
+										customRequest={dummyRequest}
 										listType="picture"
 										accept=".pdf"
 										maxCount={1}
+										fileList={resumeFile}
+										onChange={onUploadChange}
+										onRemove={onUploadRemove}
 									>
 										<Button icon={<UploadOutlined />}>Click to Upload Résumé</Button>
 									</Upload>
