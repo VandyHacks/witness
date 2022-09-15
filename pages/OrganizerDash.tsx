@@ -8,6 +8,7 @@ import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
 import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
+import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
@@ -135,6 +136,11 @@ export default function OrganizerDash() {
 			)}
 			{preAddData && preAddData.length > 0 && (
 				<PreAddDisplay data={preAddData!} onDelete={user => handlePreAddDelete(user, mutate)} />
+			)}
+			<Divider />
+
+			{usersData && usersData.length > 0 && (
+				<ApplicantsDisplay usersData={usersData} />
 			)}
 		</Space>
 	);
