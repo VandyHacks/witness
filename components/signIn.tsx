@@ -54,7 +54,7 @@ export default function SignIn() {
 							autoComplete="off"
 						>
 							<Item
-								label={<label style={{ color: 'white' }}>Email</label>}
+								label={<label>Email</label>}
 								name="email"
 								rules={[{ required: true, message: 'Please input your email!' }]}
 							>
@@ -62,7 +62,7 @@ export default function SignIn() {
 							</Item>
 
 							<Item
-								label={<label style={{ color: 'white' }}>Password</label>}
+								label={<label>Password</label>}
 								name="password"
 								rules={[{ required: true, message: 'Please input your password!' }]}
 							>
