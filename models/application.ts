@@ -86,6 +86,9 @@ export const ApplicationSchema = new Schema(
 		shirtSize: {
 			type: String,
 		},
+		mlhComms: {
+			type: Boolean,
+		},
 	},
 	{
 		timestamps: true,

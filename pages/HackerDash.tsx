@@ -405,6 +405,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										.
 									</Checkbox>
 								</Form.Item>
+								<Form.Item valuePropName="checked" name="mlhComms">
+									<Checkbox>
+										I authorize MLH to send me an email where I can further opt into the MLH Hacker,
+										Events, or Organizer Newsletters and other communications from MLH.
+									</Checkbox>
+								</Form.Item>
 								<br />
 
 								<Button style={{ marginBottom: '60px' }} type="primary" htmlType="submit">
