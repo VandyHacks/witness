@@ -1,55 +1,71 @@
-import { Table, Tag, Button } from 'antd';
+import { Table, Tag, Button, Checkbox } from 'antd';
 import React from 'react';
 
-import { TeamData, ScoreData, UserData } from '../types/database';
+import { ApplicationData, UserData } from '../types/database';
 import { ExportToCsv } from 'export-to-csv';
+import team from '../models/team';
 
 export interface ApplicantsDisplayProps {
-	usersData: UserData[];
+	hackers: UserData[],
+	applications: ApplicationData[];
 }
+
+const APPLICATION_STATUSES = [
+	"Created",
+	"Declined",
+	"Started",
+	"Submitted",
+	"Accepted",
+	"Confirmed",
+	"Rejected",
+]
+
+const STATUS_COLORS = {
+	"Created": "magenta",
+	"Declined": "red",
+	"Started": "cyan",
+	"Submitted": "gold",
+	"Accepted": "success",
+	"Confirmed": "purple",
+	"Rejected": "volcano",
+};
 
 const newCols = [
 	{
-		title: 'Name',
+		title: 'Login Name',
 		dataIndex: 'name',
-		key: 'name',
 	},
-    {
+	{
+		title: 'First Name',
+		dataIndex: 'firstName',
+	},
+	{
+		title: 'Last Name',
+		dataIndex: 'lastName',
+	},
+	{
 		title: 'Email',
 		dataIndex: 'email',
-		key: 'email',
 	},
-    {
-		title: 'Grad Year',
-		dataIndex: 'gradYear',
-		key: 'gradYear',
+	{
+		title: 'Graduation Year',
+		dataIndex: 'graduationYear',
 	},
-    {
+	{
 		title: 'School',
 		dataIndex: 'school',
-		key: 'school',
 	},
-    {
-		title: 'Flight?',
-		dataIndex: 'flight',
-		key: 'flight',
+	{
+		title: '✈️',
+		dataIndex: 'applyTravelReimbursement',
+		render: (appliedTravel?: boolean) => (appliedTravel !== undefined) ? <Checkbox checked={appliedTravel} /> : '',
 	},
-    {
+	{
 		title: 'Status',
 		dataIndex: 'status',
-		key: 'status',
+		render: (status?: string) => (status) ? <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag> : '',
 	},
 ];
-
-const APPLICATION_STATUSES = [
-    "Created",
-    "Declined",
-    "Started",
-    "Submitted",
-    "Accepted",
-    "Confirmed",
-    "Rejected",
-]
 
 export const exportCSV: any = (work: any) => {
 	const csvExporter = new ExportToCsv({
@@ -61,19 +77,22 @@ export const exportCSV: any = (work: any) => {
 };
 
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
-	let data = props;
-	let usersData = props.usersData;
+	let hackers = props.hackers;
+	let applications = props.applications.reduce((acc, application) => {
+		return {...acc, [application._id.toString()]: application}
+	}, {});
 
-	let work = usersData.map(user => {
+	let work = hackers.map(hacker => {
+		let application = (hacker.application) ? (applications as any)[hacker.application.toString()] : {};
 		return {
-			...user,
-            status: APPLICATION_STATUSES[user.applicationStatus],
+			name: hacker.name,
+			...application,
+			status: APPLICATION_STATUSES[hacker.applicationStatus],
+			key: hacker._id,
 		};
 	});
 
 	return (
-		<>
-			
-		</>
+		<Table dataSource={work} columns={newCols}></Table>
 	);
 }

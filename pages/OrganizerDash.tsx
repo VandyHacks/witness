@@ -1,4 +1,4 @@
-import { Divider, Empty, notification, Skeleton, Space } from 'antd';
+import { Button, Divider, Empty, notification, Skeleton, Space } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
@@ -6,10 +6,11 @@ import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
 import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
-import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../types/database';
+import { ResponseError, ScoreData, TeamData, UserData, PreAddData, ApplicationData } from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
 import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
+import { signOut } from 'next-auth/react';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -75,6 +76,26 @@ export default function OrganizerDash() {
 		return (await res.json()) as UserData[];
 	});
 
+	const { data: hackers, error: hackersError } = useSWR('/api/users?usertype=HACKER', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of hackers.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as UserData[];
+	});
+
+	const { data: applications, error: applicationsError } = useSWR('/api/applications', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of applications.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as ApplicationData[];
+	});
+
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -108,6 +129,9 @@ export default function OrganizerDash() {
 
 	return (
 		<Space direction="vertical">
+			<Button size="small" type="default" onClick={() => signOut()}>
+				Sign out
+			</Button>
 			{!scheduleData && <Skeleton />}
 			{scheduleData && <OrganizerSchedule data={scheduleData} />}
 			<Divider />
@@ -139,8 +163,8 @@ export default function OrganizerDash() {
 			)}
 			<Divider />
 
-			{usersData && usersData.length > 0 && (
-				<ApplicantsDisplay usersData={usersData} />
+			{hackers && applications && (
+				<ApplicantsDisplay hackers={hackers} applications={applications} />
 			)}
 		</Space>
 	);
