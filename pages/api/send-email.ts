@@ -3,7 +3,7 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import log from '../../middleware/log';
-import { ApplicationStatus } from '../../types/database';
+import { ApplicationStatus, UserData } from '../../types/database';
 import { sendStatusEmail } from './emails/aws';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -13,11 +13,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     await dbConnect();
     switch (req.method) {
 		case 'GET':
-			const logins = await User.find({}).select('id name email userType');
+			const logins = await User.find({}).select('id name email applicationStatus');
 			// read usertype from vaken db
+
+			//let user = await User.findOne({ email: "patelsneh21@yahoo.com" });
+		   //sendStatusEmail(user, 3);
+			
 			return res.status(200).send(logins);
-		case 'POST':
-			const { formData: userData } = req.body;
+		case 'PATCH':
+			const { applicationData: userData } = req.body;
 			if (!Object.keys(userData).length) return res.status(400).send('A user needs to be selected.');
 
 			const statuses = {
@@ -25,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				ACCEPTED: [] as (string | never)[],
 				REJECTED: [] as (string | never)[],
 			};
-            
+
 			type statusIndex = 'SUBMITTED' | 'ACCEPTED' | 'REJECTED';
 
 			for (const user in userData) {
@@ -36,8 +40,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 			// set their type to the one provided
 			for (const status in statuses) {
-				await User.updateMany({ _id: { $in: statuses[status as statusIndex] } }, { applicationStatus: status });
-                sendStatusEmail(user, status)
+				//await User.updateMany({ _id: { $in: statuses[status as statusIndex] } }, { applicationStatus: status });
+                //sendStatusEmail(user, status)
+				console.log(status);
 			}
 
 			await log(session.userID, `Updated ${Object.keys(userData).length} user roles`);

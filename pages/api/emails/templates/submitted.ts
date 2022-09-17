@@ -262,14 +262,14 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hi ${escape(
-																					user.preferredName || user.name
+																					user.name
 																				)}, </div>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					Thanks for taking the time to complete your application! We’re so excited that you’re interested in being a part of <b>VandyHacks VIII: Space Edition</b>.
+																					Thanks for taking the time to complete your application! We’re so excited that you’re interested in being a part of <b>VandyHacks IX: Ocean Edition</b>.
 																				</div>
 																			</td>
 																		</tr>
@@ -277,13 +277,6 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
 																					We will be reviewing your submission soon, so be on the lookout for another email regarding your status.
-																				</div>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					Until then, stay hyped about VandyHacks! Like our page on <a href="https://www.facebook.com/vandyhacks/">Facebook</a> and follow us on <a href="https://www.instagram.com/vandyhacks/?hl=en">Instagram</a>.
 																				</div>
 																			</td>
 																		</tr>
@@ -455,7 +448,7 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 																										<tr>
 																											<td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																												<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:400;line-height:16px;text-align:center;color:#445566;"> You are receiving this application update because you applied at <a href="https://apply.vandyhacks.org" class="text-link" style="color: #5e6ebf;">apply.vandyhacks.org</a>. If you would like to opt-out of
-																													any future emails pertaining to VandyHacks VIII: Space Edition applications, please click <a href="https://apply.vandyhacks.org/api/unsubscribe?id=${
+																													any future emails pertaining to VandyHacks IX: Ocean Edition applications, please click <a href="https://apply.vandyhacks.org/api/unsubscribe?id=${
 																														user._id
 																													}" class="text-link" style="color: #5e6ebf;">here</a> </div>
 																											</td>
@@ -595,10 +588,10 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Thank you for applying!
-				Hi ${escape(user.preferredName || user.name)},
-				Thanks for taking the time to complete your application! We’re so excited that you’re interested in being a part of VandyHacks VIII: Space Edition.
+				Hi ${escape(user.name)},
+				Thanks for taking the time to complete your application! We’re so excited that you’re interested in being a part of VandyHacks IX: Ocean Edition.
 				We will be reviewing your submission soon, so be on the lookout for another email regarding your status.
-				Until then, stay hyped about VandyHacks! Like our page on Facebook and follow us on Instagram.
+				Until then, stay hyped about VandyHacks! Follow us on Instagram to get the latest VH updates!
 				Cheers,
 				The VandyHacks Team`,
 			},

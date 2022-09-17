@@ -7,7 +7,7 @@ import confirmed from './templates/confirmed';
 import rejected from './templates/rejected';
 import logger from '../logger';
 
-const AWS_REGION = process.env.AWS_Region as string;
+const AWS_REGION = process.env.AWS_REGION	 as string;
 
 if (AWS_REGION == null) {
 	throw new Error('AWS_REGION not set');
@@ -23,7 +23,6 @@ export function sendStatusEmail(user: UserData, status: ApplicationStatus): void
 		logger.info(`Skipping email to unsubscribed user`, user);
 	}
     */
-
 	let email: AWS.SES.SendEmailRequest;
 	switch (status) {
 		case ApplicationStatus.SUBMITTED:
@@ -42,11 +41,16 @@ export function sendStatusEmail(user: UserData, status: ApplicationStatus): void
 			throw new Error(`Unimplemented email for status "${status}" to user "${user.email}`);
 	}
 
+	// Email address is not verified. The following identities failed the check in region US-EAST-1: VandyHacks <info@vandyhacks.org>, sneh.r.patel@vanderbilt.edu
+	var sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(email).promise();
+	console.log(sendPromise);
+	/*
 	ses
 		.sendEmail(email)
 		.promise()
 		.then((data: any) => logger.info(`email submitted to SES for ${user.email}`, data))
 		.catch(logger.error);
+	*/
 }
 
 // eslint-disable-next-line import/no-anonymous-default-export
