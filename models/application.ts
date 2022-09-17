@@ -89,6 +89,31 @@ export const ApplicationSchema = new Schema(
 		mlhComms: {
 			type: Boolean,
 		},
+		beginner: {
+			type: Boolean,
+			required: true,
+		},
+		whyAttend: {
+			type: String,
+			required: true,
+		},
+		techIndustry: {
+			type: String,
+		},
+		techStack: {
+			type: String,
+		},
+		passion: {
+			type: String,
+		},
+		overnight: {
+			type: Boolean,
+			required: true,
+		},
+		prizeEligibility: {
+			type: Boolean,
+			required: true,
+		},
 	},
 	{
 		timestamps: true,

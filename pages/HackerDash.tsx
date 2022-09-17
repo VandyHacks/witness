@@ -254,6 +254,43 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Input placeholder="Enter your accomodation needs" />
 								</Form.Item>
 								<Form.Item
+									name="beginner"
+									label="Are you a first-time hacker?"
+									rules={[{ required: true, message: 'Please select an option!' }]}
+									tooltip="Beginner hackers are warmly welcomed!">
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="whyAttend"
+									label="Why would you like to attend VandyHacks?"
+									rules={[
+										{
+											required: true,
+											message: 'Please tell us why you want to attend VandyHacks!',
+										},
+									]}>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="techIndustry"
+									label="Which tech industry, if any, do you want to get into?">
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item name="techStack" label="Which tech stack, if any, are you familiar with?">
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="passion"
+									label="What are you passionate about?"
+									rules={[
+										{ required: true, message: 'Please tell us what you are passionate about :)' },
+									]}>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
 									name="motivation"
 									label="What do you hope to gain from VandyHacks?"
 									rules={[{ required: true, message: 'Please select at least one option!' }]}>
@@ -312,6 +349,24 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<Form.Item
 									label="Would you like to apply for travel reimbursements? "
 									name="applyTravelReimbursement"
+									rules={[{ required: true, message: 'Please select an answer!' }]}>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="overnight"
+									label="Will you be staying overnight in the venue and thus need access to shower?"
+									rules={[{ required: true, message: 'Please select an answer!' }]}>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="prizeEligibility"
+									label="Are you a U.S. Citizen, Permanent Resident, or granted the status of Immigrant, Refugee, Asylee or Deferred Action for Childhood Arrival (DACA), by the Bureau of Citizenship and Immigration Services?"
 									rules={[{ required: true, message: 'Please select an answer!' }]}>
 									<Radio.Group>
 										<Radio.Button value="yes">Yes</Radio.Button>
