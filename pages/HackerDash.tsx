@@ -264,8 +264,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<Form.Item name="dietaryRestrictions" label="Dietary Restrictions">
 									<Checkbox.Group options={dietaryRestrictions} />
 								</Form.Item>
-								<Form.Item name="accomodationNeeds" label="Accomodation Needs">
-									<Input placeholder="Enter your accomodation needs" />
+								<Form.Item name="accommodationNeeds" label="Do you have any accommodation needs?">
+									<Input placeholder="Enter your accommodation needs, if any" />
 								</Form.Item>
 								<Form.Item
 									name="firstTime"
