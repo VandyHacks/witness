@@ -67,7 +67,7 @@ export const ApplicationSchema = new Schema(
 			type: Array,
 			required: true,
 		},
-		accomodationNeeds: {
+		accommodationNeeds: {
 			type: String,
 			required: false,
 		},
