@@ -39,7 +39,8 @@ export default function Page() {
 					backgroundPosition: `${userApplicationStatus === ApplicationStatus.SUBMITTED ? 'center' : 'top'}`,
 					backgroundSize: 'cover',
 					height: `${userApplicationStatus === ApplicationStatus.SUBMITTED ? '100vh' : '100%'}`,
-				}}>
+				}}
+			>
 				{!session && status === 'unauthenticated' && <SignIn />}
 				{!session && status === 'loading' && <Skeleton />}
 				{session && (
