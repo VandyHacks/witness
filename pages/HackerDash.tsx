@@ -158,13 +158,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label="Phone Number"
-									name="phoneNumber"
-									rules={[{ required: true, message: 'Please input your phone number!' }]}
-								>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
 									label="Gender"
 									name="gender"
 									rules={[{ required: true, message: 'Please select an option!' }]}
@@ -175,12 +168,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Radio.Button value="other">Other</Radio.Button>
 										<Radio.Button value="preferNotToSay">Prefer Not to Say</Radio.Button>
 									</Radio.Group>
-								</Form.Item>
-								<Form.Item name="dietaryRestrictions" label="Dietary Restrictions">
-									<Checkbox.Group options={dietaryRestrictions} />
-								</Form.Item>
-								<Form.Item name="accomodationNeeds" label="Accomodation Needs">
-									<Input placeholder="Enter your accomodation needs" />
 								</Form.Item>
 								<Form.Item
 									name="dateOfBirth"
@@ -193,6 +180,13 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										format="MM-DD-YYYY"
 										defaultPickerValue={moment().subtract(18, 'years')}
 									/>
+								</Form.Item>
+								<Form.Item
+									label="Phone Number"
+									name="phoneNumber"
+									rules={[{ required: true, message: 'Please input your phone number!' }]}
+								>
+									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
 									label="School"
@@ -222,11 +216,102 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
+									label="Address Line 1"
+									name="address1"
+									rules={[{ required: true, message: 'Please input your address!' }]}
+								>
+									<Input className={styles.Input} />
+								</Form.Item>
+								<Form.Item label="Address Line 2" name="address2">
+									<Input className={styles.Input} />
+								</Form.Item>
+								<div className={styles.InputAddress}>
+									<Col span={10} className={styles.Col}>
+										<Form.Item
+											label="City"
+											name={'city'}
+											rules={[{ required: true, message: 'Please input your city!' }]}
+										>
+											<Input className={styles.Input + ' ' + styles.InputCity} />
+										</Form.Item>
+									</Col>
+									<Col span={4} className={styles.Col}>
+										<Form.Item
+											label="State"
+											name={'state'}
+											rules={[{ required: true, message: 'Please input your state!' }]}
+										>
+											<Input className={styles.Input + ' ' + styles.InputState} />
+										</Form.Item>
+									</Col>
+									<Col span={8} className={styles.Col}>
+										<Form.Item
+											label="ZIP Code"
+											name={'zip'}
+											rules={[{ required: true, message: 'Please input your zip code!' }]}
+										>
+											<Input className={styles.Input + ' ' + styles.InputZip} />
+										</Form.Item>
+									</Col>
+								</div>
+								<Form.Item
 									name="race"
 									label="Race"
 									rules={[{ required: true, message: 'Please select at least one option!' }]}
 								>
 									<Checkbox.Group options={race} />
+								</Form.Item>
+								<Form.Item name="dietaryRestrictions" label="Dietary Restrictions">
+									<Checkbox.Group options={dietaryRestrictions} />
+								</Form.Item>
+								<Form.Item name="accommodationNeeds" label="Do you have any accommodation needs?">
+									<Input placeholder="Enter your accommodation needs, if any" />
+								</Form.Item>
+								<Form.Item
+									name="firstTime"
+									label="Are you a first-time hacker?"
+									rules={[{ required: true, message: 'Please select an option!' }]}
+									tooltip="Beginner hackers are warmly welcomed!"
+								>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="whyAttend"
+									label="Why would you like to attend VandyHacks?"
+									rules={[
+										{
+											required: true,
+											message: 'Please tell us why you want to attend VandyHacks!',
+										},
+									]}
+								>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="techIndustry"
+									label="Which tech industry, if any, do you want to get into?"
+									rules={[{ required: true, message: 'Please enter your response!' }]}
+								>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="techStack"
+									label="Which tech stack, if any, are you familiar with?"
+									rules={[{ required: true, message: 'Please enter your response!' }]}
+								>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="passion"
+									label="What are you passionate about?"
+									rules={[
+										{ required: true, message: 'Please tell us what you are passionate about :)' },
+									]}
+								>
+									<Input placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="motivation"
@@ -236,23 +321,17 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Checkbox.Group options={motivation} />
 								</Form.Item>
 								<Form.Item
-									label="Would you like to apply for travel reimbursements? "
-									name="applyTravelReimbursement"
-									rules={[{ required: true, message: 'Please select an answer!' }]}
+									label="Shirt Size"
+									name="shirtSize"
+									rules={[{ required: true, message: 'Please select your shirt size!' }]}
 								>
 									<Radio.Group>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									label="Would you like to be contacted about volunteering at the event?"
-									name="volunteer"
-									rules={[{ required: true, message: 'Please select an answer!' }]}
-								>
-									<Radio.Group>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
+										<Radio.Button value="XS">XS</Radio.Button>
+										<Radio.Button value="S">S</Radio.Button>
+										<Radio.Button value="M">M</Radio.Button>
+										<Radio.Button value="L">L</Radio.Button>
+										<Radio.Button value="XL">XL</Radio.Button>
+										<Radio.Button value="XXL">XXL</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
@@ -295,56 +374,43 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Upload>
 								</Form.Item>
 								<Form.Item
-									label="Address Line 1"
-									name="address1"
-									rules={[{ required: true, message: 'Please input your address!' }]}
-								>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item label="Address Line 2" name="address2">
-									<Input className={styles.Input} />
-								</Form.Item>
-								<div className={styles.InputAddress}>
-									<Col span={10} className={styles.Col}>
-										<Form.Item
-											label="City"
-											name={'city'}
-											rules={[{ required: true, message: 'Please input your city!' }]}
-										>
-											<Input className={styles.Input + ' ' + styles.InputCity} />
-										</Form.Item>
-									</Col>
-									<Col span={4} className={styles.Col}>
-										<Form.Item
-											label="State"
-											name={'state'}
-											rules={[{ required: true, message: 'Please input your state!' }]}
-										>
-											<Input className={styles.Input + ' ' + styles.InputState} />
-										</Form.Item>
-									</Col>
-									<Col span={8} className={styles.Col}>
-										<Form.Item
-											label="ZIP Code"
-											name={'zip'}
-											rules={[{ required: true, message: 'Please input your zip code!' }]}
-										>
-											<Input className={styles.Input + ' ' + styles.InputZip} />
-										</Form.Item>
-									</Col>
-								</div>
-								<Form.Item
-									label="Shirt Size"
-									name="shirtSize"
-									rules={[{ required: true, message: 'Please select your shirt size!' }]}
+									label="Would you like to apply for travel reimbursements? "
+									name="applyTravelReimbursement"
+									rules={[{ required: true, message: 'Please select an answer!' }]}
 								>
 									<Radio.Group>
-										<Radio.Button value="XS">XS</Radio.Button>
-										<Radio.Button value="S">S</Radio.Button>
-										<Radio.Button value="M">M</Radio.Button>
-										<Radio.Button value="L">L</Radio.Button>
-										<Radio.Button value="XL">XL</Radio.Button>
-										<Radio.Button value="XXL">XXL</Radio.Button>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="overnight"
+									label="Will you be staying overnight in the venue and thus need access to shower?"
+									rules={[{ required: true, message: 'Please select an answer!' }]}
+								>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="prizeEligibility"
+									label="Are you a U.S. Citizen, Permanent Resident, or granted the status of Immigrant, Refugee, Asylee or Deferred Action for Childhood Arrival (DACA), by the Bureau of Citizenship and Immigration Services?"
+									rules={[{ required: true, message: 'Please select an answer!' }]}
+								>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									label="Would you like to be contacted about volunteering at the event?"
+									name="volunteer"
+									rules={[{ required: true, message: 'Please select an answer!' }]}
+								>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<br />
