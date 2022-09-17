@@ -254,7 +254,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Input placeholder="Enter your accomodation needs" />
 								</Form.Item>
 								<Form.Item
-									name="beginner"
+									name="firstTime"
 									label="Are you a first-time hacker?"
 									rules={[{ required: true, message: 'Please select an option!' }]}
 									tooltip="Beginner hackers are warmly welcomed!">
@@ -276,10 +276,14 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									name="techIndustry"
-									label="Which tech industry, if any, do you want to get into?">
+									label="Which tech industry, if any, do you want to get into?"
+									rules={[{ required: true, message: 'Please enter your response!' }]}>
 									<Input placeholder="Enter your response" />
 								</Form.Item>
-								<Form.Item name="techStack" label="Which tech stack, if any, are you familiar with?">
+								<Form.Item
+									name="techStack"
+									label="Which tech stack, if any, are you familiar with?"
+									rules={[{ required: true, message: 'Please enter your response!' }]}>
 									<Input placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
