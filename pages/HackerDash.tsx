@@ -370,7 +370,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										onChange={onUploadChange}
 										onRemove={onUploadRemove}
 									>
-										<Button icon={<UploadOutlined />}>Click to Upload Résumé</Button>
+										<Button icon={<UploadOutlined />}>Upload Résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
 								<Form.Item
