@@ -81,6 +81,7 @@ export interface ResponseError extends Error {
 
 export interface EventData {
 	_id: mongoose.Schema.Types.ObjectId,
+	name: String,
 	description: String,
 	startTime: String,
 	endTime: String,

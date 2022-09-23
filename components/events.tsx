@@ -4,30 +4,34 @@ import { useEffect, useState } from "react";
 import { EventData } from "../types/database";
 
 interface EventDisplay extends EventData {
-	setIsModalOpen: (open: boolean) => void;
+	setCurEvent: (open: String) => void;
 }
 
 const columns = [
     {
         title: 'Name',
-        dataIndex: 'description',
+        dataIndex: 'name',
     },
     {
-        title: 'Check-in',
+        title: 'Check In',
+        render: (_: any, record: EventDisplay) => {
+            return <Button onClick={() => record.setCurEvent(record.name)}>Check In</Button>
+        },
     }
 ];
 
 const Events = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [curEvent, setCurEvent] = useState(undefined);
     const [events, setEvents] = useState<EventDisplay[]>([]);
 
     useEffect(() => {
         fetch("/api/events")
             .then((res) => res.json())
             .then((data) => {
-                setEvents(data.map((obj: EventDisplay) => {
+                setEvents(data.map((obj: EventData) => {
                     return {
                         key: obj._id,
+                        setCurEvent,
                         ...obj
                     }
                 }));
@@ -37,11 +41,9 @@ const Events = () => {
     return (
         <>
             <Table sticky bordered dataSource={events} columns={columns} />
-            {/* <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-                <p>Some contents...</p>
-            </Modal> */}
+            <Modal title={`${curEvent} Check-in`} open={curEvent}>
+                
+            </Modal>
         </>
     );
 };
