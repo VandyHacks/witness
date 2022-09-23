@@ -19,8 +19,7 @@ export interface ManageFormProps {
 export default function ManageRoleForm(props: ManageFormProps) {
 	const { onSubmit } = props;
 	const layout = {
-		labelCol: { span: 8 },
-		wrapperCol: { span: 6 },
+		labelCol: { span: 16 },
 		labelAlign: 'left',
 	};
 

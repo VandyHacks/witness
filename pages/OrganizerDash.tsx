@@ -1,4 +1,4 @@
-import { Divider, Empty, notification, Skeleton, Space } from 'antd';
+import { Divider, Empty, notification, Skeleton, Space, Tabs } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
@@ -134,41 +134,90 @@ export default function OrganizerDash() {
 
 	return (
 		<Space direction="vertical">
-			{!scheduleData && <Skeleton />}
-			{scheduleData && <OrganizerSchedule data={scheduleData} />}
-			<Divider />
-			{teamsData && (
-				<>
-					{/* Add dropdown here w/ functionality */}
-					{usersData && scoresData && (
-						<AllScores teamData={teamsData} scoreData={scoresData} userData={usersData} />
-					)}
-				</>
-			)}
+			<Tabs
+				defaultActiveKey="1"
+				onChange={key => console.log(key)}
+				items={[
+					{
+						label: `Schedule`,
+						key: '1',
+						children: (
+							<>
+								{!scheduleData && <Skeleton />}
+								{scheduleData && <OrganizerSchedule data={scheduleData} />}
+							</>
+						),
+					},
+					{
+						label: `Judging`,
+						key: '2',
+						children: (
+							<>
+								{!teamsData && <Skeleton />}
+								{teamsData && (
+									<>
+										{/* Add dropdown here w/ functionality */}
+										{usersData && scoresData && (
+											<AllScores
+												teamData={teamsData}
+												scoreData={scoresData}
+												userData={usersData}
+											/>
+										)}
+									</>
+								)}
+							</>
+						),
+					},
+					{
+						label: `Manage Users`,
+						key: '3',
+						children: (
+							<>
+								{!userData && <Skeleton />}
+								{userData && userData.length == 0 && (
+									<Empty
+										image={Empty.PRESENTED_IMAGE_SIMPLE}
+										description={<span>No users lmao</span>}
+									/>
+								)}
+								{userData && userData.length > 0 && (
+									<ManageRoleForm
+										formData={userData}
+										onSubmit={formData => handleManageFormSubmit(formData, mutate)}
+									/>
+								)}
+							</>
+						),
+					},
+					{
+						label: `Pre-Add Users`,
+						key: '4',
+						children: (
+							<>
+								{preAddData && preAddData.length == 0 && (
+									<Empty
+										image={Empty.PRESENTED_IMAGE_SIMPLE}
+										description={<span>No preadded users lmao</span>}
+									/>
+								)}
+								{preAddData && preAddData.length > 0 && (
+									<PreAddDisplay
+										data={preAddData!}
+										onDelete={user => handlePreAddDelete(user, mutate)}
+									/>
+								)}
+								<PreAddForm />
+							</>
+						),
+					},
+				]}
+			/>
+
+			{/* <Divider />
 			{(!teamsData || !usersData || !scoresData || !preAddData) && <Skeleton />}
 			<Divider />
-			{!userData && <Skeleton />}
-			{userData && userData.length == 0 && (
-				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users lmao</span>} />
-			)}
-			{userData && userData.length > 0 && (
-				<ManageRoleForm formData={userData} onSubmit={formData => handleManageFormSubmit(formData, mutate)} />
-			)}
-			<Divider />
-			<PreAddForm />
-
-			{preAddData && preAddData.length == 0 && (
-				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />
-			)}
-			{preAddData && preAddData.length > 0 && (
-				<PreAddDisplay data={preAddData!} onDelete={user => handlePreAddDelete(user, mutate)} />
-			)}
-
-			<Divider />
-			{statusData && statusData.length > 0 && (
-				<SendEmailForm applicationData={statusData} onSubmit={formData => handleSendEmailFormSubmit(formData, mutate)} />
-			)}
-			<Divider />
+			<Divider /> */}
 		</Space>
 	);
 }

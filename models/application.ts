@@ -8,26 +8,23 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		preferredName: {
-			type: String,
-		},
 		lastName: {
 			type: String,
 			reqired: true,
+		},
+		preferredName: {
+			type: String,
+			required: false,
 		},
 		gender: {
 			type: String,
 			required: true,
 		},
-		dietaryRestrictions: {
-			type: Array,
-			required: true,
-		},
-		phoneNumber: {
+		dateOfBirth: {
 			type: String,
 			required: true,
 		},
-		dateOfBirth: {
+		phoneNumber: {
 			type: String,
 			required: true,
 		},
@@ -43,22 +40,6 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		race: {
-			type: Array,
-			required: true,
-		},
-		motivation: {
-			type: Array,
-			required: true,
-		},
-		attendingInPerson: {
-			type: Boolean,
-			required: true,
-		},
-		volunteer: {
-			type: Boolean,
-			required: true,
-		},
 		address1: {
 			type: String,
 			required: true,
@@ -72,15 +53,71 @@ export const ApplicationSchema = new Schema(
 		},
 		state: {
 			type: String,
-			required: true
+			required: true,
 		},
 		zip: {
 			type: String,
-			required: true
+			required: true,
+		},
+		race: {
+			type: Array,
+			required: true,
+		},
+		dietaryRestrictions: {
+			type: Array,
+			required: true,
+		},
+		accommodationNeeds: {
+			type: String,
+			required: false,
+		},
+		firstTime: {
+			type: Boolean,
+			required: true,
+		},
+		whyAttend: {
+			type: String,
+			required: true,
+		},
+		techIndustry: {
+			type: String,
+			required: true,
+		},
+		techStack: {
+			type: String,
+			required: true,
+		},
+		passion: {
+			type: String,
+			required: true,
+		},
+		motivation: {
+			type: Array,
+			required: true,
 		},
 		shirtSize: {
 			type: String,
-		}
+			required: true,
+		},
+		applyTravelReimbursement: {
+			type: Boolean,
+			required: true,
+		},
+		overnight: {
+			type: Boolean,
+			required: true,
+		},
+		prizeEligibility: {
+			type: Boolean,
+			required: true,
+		},
+		volunteer: {
+			type: Boolean,
+			required: true,
+		},
+		mlhComms: {
+			type: Boolean,
+		},
 	},
 	{
 		timestamps: true,

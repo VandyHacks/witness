@@ -1,0 +1,130 @@
+.Form {
+	background-image: url('/input-background.png');
+	background-position: center;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+	padding: 5em;
+	width: 70%;
+	margin: auto;
+}
+
+.SubmittedForm {
+	background-image: url('/form-background.svg');
+	background-repeat: no-repeat;
+	background-size: cover;
+	width: 60%;
+	text-align: center;
+	margin: auto;
+	display: flex;
+
+	flex-direction: column;
+	justify-content: center;
+}
+
+.Title {
+	width: 70%;
+	height: 150px;
+	margin: auto;
+	margin-bottom: 3em;
+	background-image: url('/form-title.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+.Input {
+	height: 40px;
+	font-size: large;
+}
+
+.InputAddress {
+	display: flex;
+}
+
+.InputCity {
+	width: 90%;
+}
+
+.InputState {
+	width: 80%;
+}
+
+.InputZip {
+	width: 80%;
+}
+.Submit {
+	background-image: url('/form-submit.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	background-color: transparent;
+	cursor: pointer;
+	width: 300px;
+	height: 120px;
+	border: 0;
+	margin: auto;
+	display: block;
+}
+
+.Submit:hover {
+	filter: brightness(107%);
+}
+
+.ThankYouMessage {
+	margin: auto;
+	padding: 5%;
+	font-size: 18px;
+	width: 70%;
+}
+.SignInInfo {
+	width: 100%;
+	margin-top: 25px;
+	font-size: 14px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+/* add media query for mobile screen */
+@media (max-width: 768px) {
+	.Form {
+		padding: 5em;
+		width: 100%;
+		font-size: xx-small;
+	}
+	.Title {
+		margin-bottom: 0;
+		height: 100px;
+	}
+	.InputAddress {
+		display: block;
+	}
+	.InputCity {
+		width: 100%;
+	}
+	.InputState {
+		width: 100%;
+	}
+	.InputZip {
+		width: 100%;
+	}
+	.Submit {
+		width: 200px;
+		height: 100px;
+	}
+	.Col {
+		max-width: 100%;
+	}
+	.Submit:hover {
+		width: 300px;
+	}
+	.SubmittedForm {
+		width: 90%;
+	}
+	.ThankYouMessage {
+		font-size: 12px;
+		width: 90%;
+	}
+	.SignInInfo {
+		font-size: 10px;
+	}
+}

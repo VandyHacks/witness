@@ -6,16 +6,17 @@ import { ApplicationStatus } from '../../types/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
-    if (!session || !session.user || !session.user.email) {
-        res.send(403);
-        return;
-    }
+	if (!session || !session.user || !session.user.email) 
+	{
+		res.send(403);
+		return;
+	}
 
 	await dbConnect();
 	switch (req.method) {
 		case 'GET':
 			let user = JSON.parse(JSON.stringify(await User.findOne({ email: session.user.email })));
-			if (!("applicationStatus" in user) && user.userType === "HACKER") {
+			if (!('applicationStatus' in user) && user.userType === 'HACKER') {
 				user.applicationStatus = ApplicationStatus.CREATED;
 			}
 
