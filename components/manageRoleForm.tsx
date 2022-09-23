@@ -44,7 +44,8 @@ export default function ManageRoleForm(props: ManageFormProps) {
 					}
 					colon={false}
 					key={config._id}
-					initialValue={config.userType}>
+					initialValue={config.userType}
+				>
 					<Select
 						placeholder="Select Role"
 						status={modified.includes(config._id) ? 'warning' : ''}
@@ -56,7 +57,8 @@ export default function ManageRoleForm(props: ManageFormProps) {
 							} else {
 								setModified([...modified.filter(user => user !== config._id)]);
 							}
-						}}>
+						}}
+					>
 						<Option value="HACKER">Hacker</Option>
 						<Option value="JUDGE">Judge</Option>
 						<Option value="ORGANIZER">Organizer</Option>
@@ -76,7 +78,8 @@ export default function ManageRoleForm(props: ManageFormProps) {
 							form.resetFields();
 							message.success('Successfuly reset form!');
 							setModified([]);
-						}}>
+						}}
+					>
 						Clear
 					</Button>
 				</Col>
