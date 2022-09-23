@@ -38,6 +38,14 @@ export const UserSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'Application',
 		},
+		nfcId: {
+			type: String,
+			unique: true,
+		},
+		eventsAttended: {
+			type: [Schema.Types.ObjectId],
+			ref: 'Event',
+		}
 	},
 	{
 		timestamps: true,
