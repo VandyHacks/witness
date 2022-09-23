@@ -1,4 +1,4 @@
-var AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 import { ApplicationStatus } from '../../../types/database';
 import { UserData } from '../../../types/database';
 import submitted from './templates/submitted';

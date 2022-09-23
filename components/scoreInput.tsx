@@ -2,7 +2,7 @@ import { Slider, InputNumber, Row, Col } from 'antd';
 import React from 'react';
 interface ScoreInputProps {
 	value: number;
-	onChange: (value: number) => void;
+	onChange: (value: number | null) => void;
 }
 
 export default function ScoreInput(props: ScoreInputProps) {

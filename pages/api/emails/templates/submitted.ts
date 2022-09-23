@@ -1,4 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
+import AWS from 'aws-sdk';
 import escape from 'escape-html';
 import { UserData } from '../../../../types/database';
 
