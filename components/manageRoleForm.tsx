@@ -20,7 +20,6 @@ export default function ManageRoleForm(props: ManageFormProps) {
 	const { onSubmit } = props;
 	const layout = {
 		labelCol: { span: 16 },
-		// wrapperCol: { span: 6 },
 		labelAlign: 'left',
 	};
 
