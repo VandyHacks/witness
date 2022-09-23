@@ -10,11 +10,11 @@ export const EventSchema = new Schema(
 			required: true,
 		},
 		startTime: {
-			type: Timestamp,
+			type: Date,
 			required: true,
 		},
 		endTime: {
-			type: Timestamp,
+			type: Date,
 			required: true,
 		},
 		description: {
