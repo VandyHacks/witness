@@ -257,14 +257,14 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hey ${escape(
-																					user.preferredName || user.name
+																					user.name
 																				)}! </div>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					We're so excited that you'll be joining us for <b>VandyHacks VIII: Space Edition</b>!
+																					We're so excited that you'll be joining us for <b>VandyHacks IX: Ocean Edition</b>!
 																				</div>
 																			</td>
 																		</tr>
@@ -623,8 +623,8 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 			},
 			Text: {
 				Charset: 'UTF-8',
-				Data: `Hey ${escape(user.preferredName || user.name)},
-				We're so excited that you'll be joining us for VandyHacks VIII: Space Edition!
+				Data: `Hey ${escape(user.name)},
+				We're so excited that you'll be joining us for VandyHacks IX: Ocean Edition!
 
 				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 7:00 PM CDT Friday, October 2nd, and wrap up by 4:00 PM CDT Sunday, October 4th.
 

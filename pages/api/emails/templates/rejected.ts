@@ -257,14 +257,14 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hi ${escape(
-																					user.preferredName || user.name
+																					user.name
 																				)}! </div>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																				Thank you for your interest in VandyHacks VIII: Space Edition. Unfortunately, we are unable to offer you a spot at this year's event. </b>
+																				Thank you for your interest in VandyHacks IX: Ocean Edition. Unfortunately, we are unable to offer you a spot at this year's event. </b>
 																				</div>
 																			</td>
 																		</tr>
@@ -584,8 +584,8 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 			},
 			Text: {
 				Charset: 'UTF-8',
-				Data: `Hi ${escape(user.preferredName || user.name)},
-                Thank you for your interest in VandyHacks VIII: Space Edition. Unfortunately, we are unable to offer you a spot at this year's event.
+				Data: `Hi ${escape(user.name)},
+                Thank you for your interest in VandyHacks IX: Ocean Edition. Unfortunately, we are unable to offer you a spot at this year's event.
                 We really appreciate your interest and hope you will apply to another VandyHacks opportunity in the future.
                 Best,
                 The VandyHacks Team`,
