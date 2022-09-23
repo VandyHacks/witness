@@ -9,6 +9,11 @@ export const EventSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		gcid: {
+			type: String,
+			required: false,
+			unique: true
+		},
 		startTime: {
 			type: Date,
 			required: true,

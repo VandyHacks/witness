@@ -23,9 +23,10 @@ const columns = [
 const Events = () => {
     const [curEvent, setCurEvent] = useState(undefined);
     const [events, setEvents] = useState<EventDisplay[]>([]);
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        fetch("/api/events")
+    const getData = () => {
+        return fetch("/api/events")
             .then((res) => res.json())
             .then((data) => {
                 setEvents(data.map((obj: EventData) => {
@@ -36,10 +37,22 @@ const Events = () => {
                     }
                 }));
             });
+    }
+
+    const syncCalendar = async () => {
+        setLoading(true);
+        await fetch("/api/sync-calendar");
+        getData().then(() => setLoading(false));
+    };
+
+    useEffect(() => {
+        getData();
     }, []);
 
     return (
         <>
+            <Button loading={loading} onClick={syncCalendar}>Sync Calendar Events</Button>
+            <br /><br />
             <Table sticky bordered dataSource={events} columns={columns} />
             <Modal title={`${curEvent} Check-in`} open={curEvent}>
                 
