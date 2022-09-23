@@ -1,29 +1,48 @@
-import { Table } from "antd";
+import { ConsoleSqlOutlined } from "@ant-design/icons";
+import { Button, Modal, Table } from "antd";
 import { useEffect, useState } from "react";
 import { EventData } from "../types/database";
 
-const columns = [{
-    title: 'Name',
-    dataIndex: 'description',
-}];
+interface EventDisplay extends EventData {
+	setIsModalOpen: (open: boolean) => void;
+}
+
+const columns = [
+    {
+        title: 'Name',
+        dataIndex: 'description',
+    },
+    {
+        title: 'Check-in',
+    }
+];
 
 const Events = () => {
-    const [events, setEvents] = useState<EventData[]>([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [events, setEvents] = useState<EventDisplay[]>([]);
+
     useEffect(() => {
         fetch("/api/events")
             .then((res) => res.json())
             .then((data) => {
-                setEvents(data.map((obj: EventData) => {
+                setEvents(data.map((obj: EventDisplay) => {
                     return {
                         key: obj._id,
-                        ...obj     
+                        ...obj
                     }
                 }));
             });
     }, []);
-    
+
     return (
-        <Table dataSource={events} columns={columns} />
+        <>
+            <Table sticky bordered dataSource={events} columns={columns} />
+            {/* <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+                <p>Some contents...</p>
+            </Modal> */}
+        </>
     );
 };
 
