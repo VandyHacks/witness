@@ -43,7 +43,7 @@ const Events = () => {
 	};
 
 	const handleCheckIn = async () => {
-		const response = await fetch("/api/event-checkin", {
+		const response = await fetch('/api/event-checkin', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ const Events = () => {
 				placement: 'bottomRight',
 			});
 		}
-		setNfcId("");
+		setNfcId('');
 	};
 
 	const handleCancel = () => {

@@ -188,8 +188,8 @@ export default function OrganizerDash() {
 					{
 						label: `Events`,
 						key: '5',
-						children: <Events />
-					}
+						children: <Events />,
+					},
 				]}
 			/>
 

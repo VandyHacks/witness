@@ -45,7 +45,7 @@ export const UserSchema = new Schema(
 		eventsAttended: {
 			type: [Schema.Types.ObjectId],
 			ref: 'Event',
-		}
+		},
 	},
 	{
 		timestamps: true,
