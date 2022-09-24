@@ -9,6 +9,7 @@ import { ScheduleDisplay } from '../types/client';
 import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
+import Events from '../components/events';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -183,6 +184,11 @@ export default function OrganizerDash() {
 								<PreAddForm />
 							</>
 						),
+					},
+					{
+						label: `Events`,
+						key: '5',
+						children: <Events />,
 					},
 				]}
 			/>
