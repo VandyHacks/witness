@@ -29,8 +29,7 @@ export default function Outline({ children, home, selectedKey }: OutlineProps) {
 					theme="dark"
 					mode="horizontal"
 					selectedKeys={[selectedKey]}
-					style={{ minWidth: '50vw', display: 'flex', justifyContent: 'flex-end' }}
-				>
+					style={{ minWidth: '50vw', display: 'flex', justifyContent: 'flex-end' }}>
 					{userType && (
 						<Menu.Item key="dashboard">
 							<Link href="/dashboard">Dashboard</Link>
@@ -65,8 +64,7 @@ export default function Outline({ children, home, selectedKey }: OutlineProps) {
 				<a
 					href="https://vercel.com?utm_source=vandyhacks-witness&utm_campaign=oss"
 					target="_blank"
-					rel="noopener noreferrer"
-				>
+					rel="noopener noreferrer">
 					Powered by{' '}
 					<span className={styles.ossBanner}>
 						<Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />

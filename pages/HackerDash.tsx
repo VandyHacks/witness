@@ -133,8 +133,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										justifyContent: 'center',
 										alignItems: 'center',
 										marginBottom: '30px',
-									}}
-								>
+									}}>
 									<div style={{ paddingRight: '20px' }}>Signed in as {userEmail}</div>
 									<Button size="small" type="default" onClick={() => signOut()}>
 										Sign out
@@ -143,32 +142,22 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<Form.Item
 									label="First Name"
 									name="firstName"
-									rules={[{ required: true, message: 'Please input your first name!' }]}
-								>
+									rules={[{ required: true, message: 'Please input your first name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
 									label="Last Name"
 									name="lastName"
-									rules={[{ required: true, message: 'Please input your last name!' }]}
-								>
+									rules={[{ required: true, message: 'Please input your last name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item label="Preferred Name" name="preferredName">
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label="Phone Number"
-									name="phoneNumber"
-									rules={[{ required: true, message: 'Please input your phone number!' }]}
-								>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
 									label="Gender"
 									name="gender"
-									rules={[{ required: true, message: 'Please select an option!' }]}
-								>
+									rules={[{ required: true, message: 'Please select an option!' }]}>
 									<Radio.Group>
 										<Radio.Button value="female">Female</Radio.Button>
 										<Radio.Button value="male">Male</Radio.Button>
@@ -176,17 +165,10 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Radio.Button value="preferNotToSay">Prefer Not to Say</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
-								<Form.Item name="dietaryRestrictions" label="Dietary Restrictions">
-									<Checkbox.Group options={dietaryRestrictions} />
-								</Form.Item>
-								<Form.Item name="accomodationNeeds" label="Accomodation Needs">
-									<Input placeholder="Enter your accomodation needs" />
-								</Form.Item>
 								<Form.Item
 									name="dateOfBirth"
 									label="Date of Birth"
-									rules={[{ required: true, message: 'Please select your date of birth!' }]}
-								>
+									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
 									<DatePicker
 										disabledDate={disabledDate}
 										placeholder="MM-DD-YYYY"
@@ -195,24 +177,27 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
+									label="Phone Number"
+									name="phoneNumber"
+									rules={[{ required: true, message: 'Please input your phone number!' }]}>
+									<Input className={styles.Input} />
+								</Form.Item>
+								<Form.Item
 									label="School"
 									name="school"
-									rules={[{ required: true, message: 'Please input your school!' }]}
-								>
+									rules={[{ required: true, message: 'Please input your school!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
 									label="Major"
 									name="major"
-									rules={[{ required: true, message: 'Please input your major!' }]}
-								>
+									rules={[{ required: true, message: 'Please input your major!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
 									label="Graduation Year"
 									name="graduationYear"
-									rules={[{ required: true, message: 'Please select your graduation year!' }]}
-								>
+									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
 									<Radio.Group>
 										<Radio.Button value="2023">2023</Radio.Button>
 										<Radio.Button value="2024">2024</Radio.Button>
@@ -222,37 +207,110 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
+									label="Address Line 1"
+									name="address1"
+									rules={[{ required: true, message: 'Please input your address!' }]}>
+									<Input className={styles.Input} />
+								</Form.Item>
+								<Form.Item label="Address Line 2" name="address2">
+									<Input className={styles.Input} />
+								</Form.Item>
+								<div className={styles.InputAddress}>
+									<Col span={10} className={styles.Col}>
+										<Form.Item
+											label="City"
+											name={'city'}
+											rules={[{ required: true, message: 'Please input your city!' }]}>
+											<Input className={styles.Input + ' ' + styles.InputCity} />
+										</Form.Item>
+									</Col>
+									<Col span={4} className={styles.Col}>
+										<Form.Item
+											label="State"
+											name={'state'}
+											rules={[{ required: true, message: 'Please input your state!' }]}>
+											<Input className={styles.Input + ' ' + styles.InputState} />
+										</Form.Item>
+									</Col>
+									<Col span={8} className={styles.Col}>
+										<Form.Item
+											label="ZIP Code"
+											name={'zip'}
+											rules={[{ required: true, message: 'Please input your zip code!' }]}>
+											<Input className={styles.Input + ' ' + styles.InputZip} />
+										</Form.Item>
+									</Col>
+								</div>
+								<Form.Item
 									name="race"
 									label="Race"
-									rules={[{ required: true, message: 'Please select at least one option!' }]}
-								>
+									rules={[{ required: true, message: 'Please select at least one option!' }]}>
 									<Checkbox.Group options={race} />
 								</Form.Item>
-								<Form.Item
-									name="motivation"
-									label="What do you hope to gain from VandyHacks?"
-									rules={[{ required: true, message: 'Please select at least one option!' }]}
-								>
-									<Checkbox.Group options={motivation} />
+								<Form.Item name="dietaryRestrictions" label="Dietary Restrictions">
+									<Checkbox.Group options={dietaryRestrictions} />
+								</Form.Item>
+								<Form.Item name="accommodationNeeds" label="Do you have any accommodation needs?">
+									<Input placeholder="Enter your accommodation needs, if any" />
 								</Form.Item>
 								<Form.Item
-									label="Would you like to apply for travel reimbursements? "
-									name="applyTravelReimbursement"
-									rules={[{ required: true, message: 'Please select an answer!' }]}
-								>
+									name="firstTime"
+									label="Are you a first-time hacker?"
+									rules={[{ required: true, message: 'Please select an option!' }]}
+									tooltip="Beginner hackers are warmly welcomed!">
 									<Radio.Group>
 										<Radio.Button value="yes">Yes</Radio.Button>
 										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									label="Would you like to be contacted about volunteering at the event?"
-									name="volunteer"
-									rules={[{ required: true, message: 'Please select an answer!' }]}
-								>
+									name="whyAttend"
+									label="Why would you like to attend VandyHacks?"
+									rules={[
+										{
+											required: true,
+											message: 'Please tell us why you want to attend VandyHacks!',
+										},
+									]}>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="techIndustry"
+									label="Which tech industry, if any, do you want to get into?"
+									rules={[{ required: true, message: 'Please enter your response!' }]}>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="techStack"
+									label="Which tech stack, if any, are you familiar with?"
+									rules={[{ required: true, message: 'Please enter your response!' }]}>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="passion"
+									label="What are you passionate about?"
+									rules={[
+										{ required: true, message: 'Please tell us what you are passionate about :)' },
+									]}>
+									<Input placeholder="Enter your response" />
+								</Form.Item>
+								<Form.Item
+									name="motivation"
+									label="What do you hope to gain from VandyHacks?"
+									rules={[{ required: true, message: 'Please select at least one option!' }]}>
+									<Checkbox.Group options={motivation} />
+								</Form.Item>
+								<Form.Item
+									label="Shirt Size"
+									name="shirtSize"
+									rules={[{ required: true, message: 'Please select your shirt size!' }]}>
 									<Radio.Group>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
+										<Radio.Button value="XS">XS</Radio.Button>
+										<Radio.Button value="S">S</Radio.Button>
+										<Radio.Button value="M">M</Radio.Button>
+										<Radio.Button value="L">L</Radio.Button>
+										<Radio.Button value="XL">XL</Radio.Button>
+										<Radio.Button value="XXL">XXL</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
@@ -279,8 +337,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										},
 									]}
 									name="resume"
-									valuePropName="resume"
-								>
+									valuePropName="resume">
 									<Upload
 										name="resume"
 										customRequest={dummyRequest}
@@ -289,62 +346,44 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										maxCount={1}
 										fileList={resumeFile}
 										onChange={onUploadChange}
-										onRemove={onUploadRemove}
-									>
-										<Button icon={<UploadOutlined />}>Click to Upload Résumé</Button>
+										onRemove={onUploadRemove}>
+										<Button icon={<UploadOutlined />}>Upload Résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
 								<Form.Item
-									label="Address Line 1"
-									name="address1"
-									rules={[{ required: true, message: 'Please input your address!' }]}
-								>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item label="Address Line 2" name="address2">
-									<Input className={styles.Input} />
-								</Form.Item>
-								<div className={styles.InputAddress}>
-									<Col span={10} className={styles.Col}>
-										<Form.Item
-											label="City"
-											name={'city'}
-											rules={[{ required: true, message: 'Please input your city!' }]}
-										>
-											<Input className={styles.Input + ' ' + styles.InputCity} />
-										</Form.Item>
-									</Col>
-									<Col span={4} className={styles.Col}>
-										<Form.Item
-											label="State"
-											name={'state'}
-											rules={[{ required: true, message: 'Please input your state!' }]}
-										>
-											<Input className={styles.Input + ' ' + styles.InputState} />
-										</Form.Item>
-									</Col>
-									<Col span={8} className={styles.Col}>
-										<Form.Item
-											label="ZIP Code"
-											name={'zip'}
-											rules={[{ required: true, message: 'Please input your zip code!' }]}
-										>
-											<Input className={styles.Input + ' ' + styles.InputZip} />
-										</Form.Item>
-									</Col>
-								</div>
-								<Form.Item
-									label="Shirt Size"
-									name="shirtSize"
-									rules={[{ required: true, message: 'Please select your shirt size!' }]}
-								>
+									label="Would you like to apply for travel reimbursements? "
+									name="applyTravelReimbursement"
+									rules={[{ required: true, message: 'Please select an answer!' }]}>
 									<Radio.Group>
-										<Radio.Button value="XS">XS</Radio.Button>
-										<Radio.Button value="S">S</Radio.Button>
-										<Radio.Button value="M">M</Radio.Button>
-										<Radio.Button value="L">L</Radio.Button>
-										<Radio.Button value="XL">XL</Radio.Button>
-										<Radio.Button value="XXL">XXL</Radio.Button>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="overnight"
+									label="Will you be staying overnight in the venue and thus need access to shower?"
+									rules={[{ required: true, message: 'Please select an answer!' }]}>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									name="prizeEligibility"
+									label="Are you a U.S. Citizen, Permanent Resident, or granted the status of Immigrant, Refugee, Asylee or Deferred Action for Childhood Arrival (DACA), by the Bureau of Citizenship and Immigration Services?"
+									rules={[{ required: true, message: 'Please select an answer!' }]}>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									label="Would you like to be contacted about volunteering at the event?"
+									name="volunteer"
+									rules={[{ required: true, message: 'Please select an answer!' }]}>
+									<Radio.Group>
+										<Radio.Button value="yes">Yes</Radio.Button>
+										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<br />
@@ -358,16 +397,14 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 													? Promise.resolve()
 													: Promise.reject(new Error('Please read and agree to submit.')),
 										},
-									]}
-								>
+									]}>
 									<Checkbox>
 										I have read and agree to the{' '}
 										<a
 											style={{ color: '#027cff' }}
 											target="_blank"
 											rel="noopener noreferrer"
-											href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf"
-										>
+											href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">
 											MLH Code of Conduct
 										</a>
 										.
@@ -383,8 +420,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 													? Promise.resolve()
 													: Promise.reject(new Error('Please read and agree to submit.')),
 										},
-									]}
-								>
+									]}>
 									<Checkbox>
 										I authorize you to share my application/registration information for event
 										administration, ranking, MLH administration, pre- and post-event informational
@@ -394,8 +430,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											style={{ color: '#027cff' }}
 											target="_blank"
 											rel="noopener noreferrer"
-											href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions"
-										>
+											href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions">
 											MLH Contest Terms and Conditions
 										</a>{' '}
 										and the{' '}
@@ -434,8 +469,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										href="https://www.instagram.com/vandyhacks"
 										target="_blank"
 										rel="noreferrer"
-										style={{ color: '#0000EE' }}
-									>
+										style={{ color: '#0000EE' }}>
 										Instagram
 									</a>{' '}
 									to stay updated on our news and announcements!

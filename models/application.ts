@@ -8,31 +8,23 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		preferredName: {
-			type: String,
-			required: false,
-		},
 		lastName: {
 			type: String,
 			reqired: true,
+		},
+		preferredName: {
+			type: String,
+			required: false,
 		},
 		gender: {
 			type: String,
 			required: true,
 		},
-		dietaryRestrictions: {
-			type: Array,
-			required: true,
-		},
-		accomodationNeeds: {
+		dateOfBirth: {
 			type: String,
-			required: false,
+			required: true,
 		},
 		phoneNumber: {
-			type: String,
-			required: true,
-		},
-		dateOfBirth: {
 			type: String,
 			required: true,
 		},
@@ -46,22 +38,6 @@ export const ApplicationSchema = new Schema(
 		},
 		graduationYear: {
 			type: String,
-			required: true,
-		},
-		race: {
-			type: Array,
-			required: true,
-		},
-		motivation: {
-			type: Array,
-			required: true,
-		},
-		applyTravelReimbursement: {
-			type: Boolean,
-			required: true,
-		},
-		volunteer: {
-			type: Boolean,
 			required: true,
 		},
 		address1: {
@@ -83,8 +59,61 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		race: {
+			type: Array,
+			required: true,
+		},
+		dietaryRestrictions: {
+			type: Array,
+			required: true,
+		},
+		accommodationNeeds: {
+			type: String,
+			required: false,
+		},
+		firstTime: {
+			type: Boolean,
+			required: true,
+		},
+		whyAttend: {
+			type: String,
+			required: true,
+		},
+		techIndustry: {
+			type: String,
+			required: true,
+		},
+		techStack: {
+			type: String,
+			required: true,
+		},
+		passion: {
+			type: String,
+			required: true,
+		},
+		motivation: {
+			type: Array,
+			required: true,
+		},
 		shirtSize: {
 			type: String,
+			required: true,
+		},
+		applyTravelReimbursement: {
+			type: Boolean,
+			required: true,
+		},
+		overnight: {
+			type: Boolean,
+			required: true,
+		},
+		prizeEligibility: {
+			type: Boolean,
+			required: true,
+		},
+		volunteer: {
+			type: Boolean,
+			required: true,
 		},
 		mlhComms: {
 			type: Boolean,
