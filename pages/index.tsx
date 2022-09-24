@@ -34,13 +34,14 @@ export default function Page() {
 			<Content
 				style={{
 					padding: session ? '30px' : '0px',
-					backgroundImage: `${session && session.userType === 'HACKER' ? 'url(form-background.png)' : ''}`,
+					backgroundImage: `${
+						session && session.userType === 'HACKER' ? 'url(form-background.png)' : 'inherit'
+					}`,
 					backgroundRepeat: 'no-repeat',
 					backgroundPosition: `${userApplicationStatus === ApplicationStatus.SUBMITTED ? 'center' : 'top'}`,
 					backgroundSize: 'cover',
 					height: `${userApplicationStatus === ApplicationStatus.SUBMITTED ? '100vh' : '100%'}`,
-				}}
-			>
+				}}>
 				{!session && status === 'unauthenticated' && <SignIn />}
 				{!session && status === 'loading' && <Skeleton />}
 				{session && (
