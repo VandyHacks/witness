@@ -13,12 +13,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const { nfcId, eventId } = req.body;
 			if (!nfcId || !eventId) return res.status(400).send('An NFC id and event id are needed');
 
-			const userUpdated = await User.findOneAndUpdate(
+			const result = await User.updateOne(
 				{ nfcId: nfcId },
-				{ $push: { eventsAttended: eventId } },
-				{ returnNewDocument: true }
+				{ $addToSet: { eventsAttended: eventId } },
 			);
-			if (!userUpdated) return res.status(404).send('User not found');
+			if (result.matchedCount === 0) return res.status(404).send('User not found');
+			// The user might have already checked in, but we can't tell
 			return res.status(200).send(`Checked in ${nfcId} for event ${eventId}`);
 		default:
 			return res.status(405).send('Method not supported brother');
