@@ -23,7 +23,7 @@ const columns = [
 const Events = () => {
 	const [curEvent, setCurEvent] = useState<EventDisplay | null>(null);
 	const [events, setEvents] = useState<EventDisplay[]>([]);
-	const [nfcID, setNfcID] = useState<string>('');
+	const [nfcId, setNfcId] = useState<string>('');
 	const [loading, setLoading] = useState(false);
 
 	const getData = () => {
@@ -49,8 +49,8 @@ const Events = () => {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				nfcID,
-				eventID: curEvent?._id,
+				nfcId,
+				eventId: curEvent?._id,
 			}),
 		});
 		if (response.ok) {
@@ -65,12 +65,12 @@ const Events = () => {
 				placement: 'bottomRight',
 			});
 		}
-		setNfcID("");
+		setNfcId("");
 	};
 
 	const handleCancel = () => {
 		setCurEvent(null);
-		setNfcID('');
+		setNfcId('');
 	};
 
 	const syncCalendar = async () => {
@@ -103,8 +103,8 @@ const Events = () => {
 				]}>
 				<Input
 					placeholder="NFC ID"
-					value={nfcID}
-					onChange={e => setNfcID(e.target.value)}
+					value={nfcId}
+					onChange={e => setNfcId(e.target.value)}
 					onPressEnter={handleCheckIn}
 				/>
 			</Modal>

@@ -10,16 +10,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'POST':
-			const { nfcID, eventID } = req.body;
-			if (!nfcID || !eventID) return res.status(400).send('An NFC id and event id are needed');
+			const { nfcId, eventId } = req.body;
+			if (!nfcId || !eventId) return res.status(400).send('An NFC id and event id are needed');
 
 			const userUpdated = await User.findOneAndUpdate(
-				{ nfcId: nfcID },
-				{ $push: { eventsAttended: eventID } },
+				{ nfcId: nfcId },
+				{ $push: { eventsAttended: eventId } },
 				{ returnNewDocument: true }
 			);
 			if (!userUpdated) return res.status(404).send('User not found');
-			return res.status(200).send(`Checked in ${nfcID} for event ${eventID}`);
+			return res.status(200).send(`Checked in ${nfcId} for event ${eventId}`);
 		default:
 			return res.status(405).send('Method not supported brother');
 	}
