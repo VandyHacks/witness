@@ -43,8 +43,7 @@ export default function PreAddForm() {
 							<Space key={key} align="start">
 								<Form.Item
 									name={[name, 'name']}
-									rules={[{ required: true, message: 'Name is required.' }]}
-								>
+									rules={[{ required: true, message: 'Name is required.' }]}>
 									<Input placeholder="Name" />
 								</Form.Item>
 								<Form.Item
@@ -54,16 +53,14 @@ export default function PreAddForm() {
 										{ type: 'email', message: 'Please enter a valid email.' },
 										{ required: true, message: 'Email is required.' },
 									]}
-									extra="should match with the email they sign in with"
-								>
+									extra="should match with the email they sign in with">
 									<Input placeholder="Email" style={{ width: 350 }} />
 								</Form.Item>
 								<Form.Item
 									{...restFields}
 									name={[name, 'userType']}
 									extra="their role on sign in"
-									rules={[{ required: true, message: 'Please select a role.' }]}
-								>
+									rules={[{ required: true, message: 'Please select a role.' }]}>
 									<Select placeholder="Select Role" style={{ width: 200 }}>
 										<Option value="HACKER">Hacker</Option>
 										<Option value="JUDGE">Judge</Option>

@@ -85,8 +85,7 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 						<Form.Item
 							name="teamName"
 							label="New Team Name"
-							rules={[{ required: true, message: 'Please enter a team name.' }]}
-						>
+							rules={[{ required: true, message: 'Please enter a team name.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">
@@ -99,8 +98,7 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 						<Form.Item
 							name="devpost"
 							label="New Devpost URL"
-							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}
-						>
+							rules={[{ required: true, message: 'Please enter a Devpost URL.' }]}>
 							<Input />
 						</Form.Item>
 						<Button type="primary" htmlType="submit" className="ant-col-offset-4">

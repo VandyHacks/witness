@@ -30,8 +30,7 @@ export default function TeamSelect(props: TeamSelectProps) {
 				value={currentTeamID ? currentTeamID : 'Select a team'}
 				style={{ width: 300, maxWidth: '60vw' }}
 				onChange={handleChange}
-				allowClear
-			>
+				allowClear>
 				{session?.userType === 'JUDGE' && (
 					<OptGroup label="My Teams">
 						{teamsData
