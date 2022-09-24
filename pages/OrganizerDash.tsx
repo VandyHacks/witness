@@ -10,7 +10,7 @@ import { ResponseError, ScoreData, TeamData, UserData, PreAddData, ApplicationDa
 import PreAddDisplay from '../components/preAddDisplay';
 import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
-import { signOut } from 'next-auth/react';
+import Events from '../components/events';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -216,6 +216,11 @@ export default function OrganizerDash() {
 								)}
 							</>
 						),
+					},
+					{
+						label: `Events`,
+						key: '6',
+						children: <Events />,
 					},
 				]}
 			/>

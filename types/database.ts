@@ -105,3 +105,12 @@ export interface ScheduleData {
 export interface ResponseError extends Error {
 	status?: number;
 }
+
+export interface EventData {
+	_id: mongoose.Schema.Types.ObjectId;
+	name: String;
+	description: String;
+	startTime: String;
+	endTime: String;
+	location: String;
+}
