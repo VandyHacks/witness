@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (alreadyCheckedIn) return res.status(451).send('User already checked in');
 
 			const result = await User.updateOne({ nfcId }, { $addToSet: { eventsAttended: eventId } });
-			if (result.matchedCount === 0) return res.status(404).send('User not found');
+			if (result.matchedCount === 0) return res.status(400).send('User not found');
 			return res.status(200).send(`Checked in ${nfcId} for event ${eventId}`);
 		default:
 			return res.status(405).send('Method not supported brother');
