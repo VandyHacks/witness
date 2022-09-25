@@ -7,7 +7,7 @@ import confirmed from './templates/confirmed';
 import rejected from './templates/rejected';
 import logger from '../logger';
 
-const AWS_REGION = process.env.AWS_REGION	 as string;
+const AWS_REGION = process.env.AWS_REGION as string;
 
 if (AWS_REGION == null) {
 	throw new Error('AWS_REGION not set');
@@ -42,7 +42,7 @@ export function sendStatusEmail(user: UserData, status: ApplicationStatus): void
 	}
 
 	// Email address is not verified. The following identities failed the check in region US-EAST-1: VandyHacks <info@vandyhacks.org>, sneh.r.patel@vanderbilt.edu
-	var sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(email).promise();
+	var sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(email).promise();
 	console.log(sendPromise);
 	/*
 	ses
