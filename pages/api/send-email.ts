@@ -1,4 +1,4 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
@@ -7,14 +7,14 @@ import { ApplicationStatus, UserData } from '../../types/database';
 import { sendStatusEmail } from './emails/aws';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-    const session = await getSession({ req });
-    if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
-    // TODO: add uniqueness validation try catch
-    await dbConnect();
-    switch (req.method) {
+	const session = await getSession({ req });
+	if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
+	// TODO: add uniqueness validation try catch
+	await dbConnect();
+	switch (req.method) {
 		case 'GET':
 			const logins = await User.find({}).select('id name email applicationStatus');
-			
+
 			return res.status(200).send(logins);
 		case 'PATCH':
 			const { applicationData: userData } = req.body;
@@ -31,13 +31,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			for (const user in userData) {
 				console.log(user, userData[user]);
 				statuses[userData[user] as statusIndex].push(user);
-                await User.updateOne()
+				await User.updateOne();
 			}
 
 			// set their type to the one provided
 			for (const status in statuses) {
 				//await User.updateMany({ _id: { $in: statuses[status as statusIndex] } }, { applicationStatus: status });
-                //sendStatusEmail(user, status)
+				//sendStatusEmail(user, status)
 				console.log(status);
 			}
 

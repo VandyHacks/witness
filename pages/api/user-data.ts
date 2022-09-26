@@ -6,8 +6,7 @@ import { ApplicationStatus } from '../../types/database';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
-	if (!session || !session.user || !session.user.email) 
-	{
+	if (!session || !session.user || !session.user.email) {
 		res.send(403);
 		return;
 	}
