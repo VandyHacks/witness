@@ -23,6 +23,7 @@ export const enum ApplicationStatus {
 	ACCEPTED,
 	CONFIRMED,
 	REJECTED,
+	CHECKED_IN
 }
 
 export interface ApplicationData {

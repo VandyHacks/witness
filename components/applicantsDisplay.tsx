@@ -3,22 +3,24 @@ import React, { useState } from 'react';
 
 import { ApplicationData, UserData } from '../types/database';
 import { ExportToCsv } from 'export-to-csv';
+import { CheckCircleOutlined, EyeOutlined } from '@ant-design/icons';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
 	applications: ApplicationData[];
 }
 
-const APPLICATION_STATUSES = ['Created', 'Declined', 'Started', 'Submitted', 'Accepted', 'Confirmed', 'Rejected'];
+const APPLICATION_STATUSES = ['Created', 'Declined', 'Started', 'Submitted', 'Accepted', 'Confirmed', 'Rejected', 'Checked In'];
 
 const STATUS_COLORS = {
-	Created: 'magenta',
-	Declined: 'red',
-	Started: 'cyan',
-	Submitted: 'gold',
-	Accepted: 'success',
-	Confirmed: 'purple',
-	Rejected: 'volcano',
+	'Created': 'magenta',
+	'Declined': 'red',
+	'Started': 'cyan',
+	'Submitted': 'gold',
+	'Accepted': 'success',
+	'Confirmed': 'purple',
+	'Rejected': 'volcano',
+	'Checked In': 'green',
 };
 
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
@@ -75,25 +77,14 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			render: (status?: string) => (status ? <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag> : ''),
 		},
 		{
-			title: 'Action',
+			title: '',
 			render: (text: any, record: any) => (
 				<>
-					{/* User id is record._id */}
-					{/* TODO: make buttons functional & style them accordingly */}
-					{/* Dropdown or buttons? */}
-					{/* <Button>Accept</Button> */}
-					{/* undecided = ApplicationStatus.APPLIED */}
-					{/* <Button>Undecided</Button> */}
-					{/* <Button>Reject</Button> */}
+					{ record.status === 'Confirmed' && <CheckCircleOutlined /> }&nbsp;&nbsp;
+					{ record.status !== 'Created' && <EyeOutlined onClick={() => openModal(record._id)} /> }
 				</>
 			),
-		},
-		{
-			title: 'More Info',
-			key: 'action',
-			render: (text: any, record: any) =>
-				record.status != 'Created' ? <Button onClick={() => openModal(record._id)}>View</Button> : <></>,
-		},
+		}
 	];
 
 	const openModal = (id: string) => {
@@ -108,7 +99,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 
 	return (
 		<>
-			<Table dataSource={allApplicantsData} columns={newCols}></Table>
+			<Table sticky dataSource={allApplicantsData} columns={newCols}></Table>
 			{isModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
