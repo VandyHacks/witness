@@ -144,7 +144,9 @@
   dependencies:
     tslib "^2.3.1"
 
-"@aws-sdk/client-s3@^3.163.0":
+
+
+"@aws-sdk/client-s3@^3.178.0":
   version "3.178.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.178.0.tgz#c77e06e10dca7627e75aba28b062701aa9563a09"
   integrity sha512-MyVmDj/eR/n5b8SRWKHK/U4c4HEppW+9uqaTLdYYlz9RpFyc3Pw1dWbwdvT65+Eb/ZOy4VkWPxzL+SAibvoFpw==
@@ -2668,21 +2670,10 @@ mongodb-connection-string-url@^2.5.3:
     "@types/whatwg-url" "^8.2.1"
     whatwg-url "^11.0.0"
 
-mongodb@*, mongodb@^4.9.1:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-4.10.0.tgz#49fc509c928ff126577d628ab09aaf1e5855cd22"
-  integrity sha512-My2QxLTw0Cc1O9gih0mz4mqo145Jq4rLAQx0Glk/Ha9iYBzYpt4I2QFNRIh35uNFNfe8KFQcdwY1/HKxXBkinw==
-  dependencies:
-    bson "^4.7.0"
-    denque "^2.1.0"
-    mongodb-connection-string-url "^2.5.3"
-    socks "^2.7.0"
-  optionalDependencies:
-    saslprep "^1.0.3"
 
-mongodb@4.9.1:
+mongodb@*, mongodb@4.9.1, mongodb@^4.9.1:
   version "4.9.1"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-4.9.1.tgz#0c769448228bcf9a6aa7d16daa3625b48312479e"
+  resolved "https://registry.npmjs.org/mongodb/-/mongodb-4.9.1.tgz"
   integrity sha512-ZhgI/qBf84fD7sI4waZBoLBNJYPQN5IOC++SBCiPiyhzpNKOxN/fi0tBHvH2dEC42HXtNEbFB0zmNz4+oVtorQ==
   dependencies:
     bson "^4.7.0"
@@ -2692,7 +2683,7 @@ mongodb@4.9.1:
   optionalDependencies:
     saslprep "^1.0.3"
 
-mongoose@^6.5.4:
+mongoose@^6.6.1:
   version "6.6.1"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-6.6.1.tgz#8aec30924b1a524924d9de4eb4746951f6aadd26"
   integrity sha512-hPDamnn6quL9TjIrOudqUS5sMilENmP/gfxoCIb+rDmlzawtM7+MVCAWrM9930fzD20N7qAema/zE9QIDuifhQ==
