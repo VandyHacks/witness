@@ -273,19 +273,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											message: 'Please tell us why you want to attend VandyHacks!',
 										},
 									]}>
-									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 3 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="techIndustry"
 									label="Which tech industry, if any, do you want to get into?"
 									rules={[{ required: true, message: 'Please enter your response!' }]}>
-									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 3 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="techStack"
 									label="Which tech stack, if any, are you familiar with?"
 									rules={[{ required: true, message: 'Please enter your response!' }]}>
-									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 3 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="passion"
@@ -293,7 +293,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									rules={[
 										{ required: true, message: 'Please tell us what you are passionate about :)' },
 									]}>
-									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 3 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="motivation"
