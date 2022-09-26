@@ -9,6 +9,7 @@ import { ApplicationStatus, UserData } from '../types/database';
 import styles from '../styles/Form.module.css';
 import { signOut } from 'next-auth/react';
 import moment from 'moment';
+import TextArea from 'antd/lib/input/TextArea';
 
 type HackerProps = {
 	userApplicationStatus?: number;
@@ -272,19 +273,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											message: 'Please tell us why you want to attend VandyHacks!',
 										},
 									]}>
-									<Input placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 2 }}placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="techIndustry"
 									label="Which tech industry, if any, do you want to get into?"
 									rules={[{ required: true, message: 'Please enter your response!' }]}>
-									<Input placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="techStack"
 									label="Which tech stack, if any, are you familiar with?"
 									rules={[{ required: true, message: 'Please enter your response!' }]}>
-									<Input placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="passion"
@@ -292,7 +293,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									rules={[
 										{ required: true, message: 'Please tell us what you are passionate about :)' },
 									]}>
-									<Input placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="motivation"
@@ -475,6 +476,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									to stay updated on our news and announcements!
 									<div className={styles.SignInInfo}>
 										<div>Signed in as {userEmail}</div>
+										<br />
 										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
 										</Button>
