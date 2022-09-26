@@ -273,7 +273,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											message: 'Please tell us why you want to attend VandyHacks!',
 										},
 									]}>
-									<TextArea autoSize={{ minRows: 2 }}placeholder="Enter your response" />
+									<TextArea autoSize={{ minRows: 2 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="techIndustry"
