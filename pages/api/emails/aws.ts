@@ -6,8 +6,9 @@ import accepted from './templates/accepted';
 import confirmed from './templates/confirmed';
 import rejected from './templates/rejected';
 import logger from '../logger';
+import travelForm from './templates/travelForm';
 
-const AWS_REGION = process.env.AWS_REGION	 as string;
+const AWS_REGION = process.env.AWS_REGION as string;
 
 if (AWS_REGION == null) {
 	throw new Error('AWS_REGION not set');
@@ -16,6 +17,14 @@ if (AWS_REGION == null) {
 AWS.config.update({ region: AWS_REGION });
 
 const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+
+export function sendTravelEmail(user: UserData): void {
+	let email: AWS.SES.SendEmailRequest;
+	email = travelForm(user)
+
+	var sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(email).promise();
+	console.log(sendPromise);
+}
 
 export function sendStatusEmail(user: UserData, status: ApplicationStatus): void {
 	/* Commenting out for now, no unsubscribed functionality yet
@@ -52,6 +61,5 @@ export function sendStatusEmail(user: UserData, status: ApplicationStatus): void
 		.catch(logger.error);
 	*/
 }
-
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { sendStatusEmail };
+export default { sendStatusEmail, sendTravelEmail};

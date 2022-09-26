@@ -3,7 +3,6 @@ import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
 import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
-import SendEmailForm, { ManageFormFields2 } from '../components/sendEmailForm';
 import OrganizerSchedule from '../components/schedule';
 import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
@@ -23,21 +22,6 @@ async function handleManageFormSubmit(roleData: ManageFormFields, mutate: Scoped
 
 	if (res.ok) {
 		mutate('/api/manage-role');
-		handleSubmitSuccess();
-	} else handleSubmitFailure(await res.text());
-}
-
-async function handleSendEmailFormSubmit(statusData: ManageFormFields2, mutate: ScopedMutator<any>) {
-	const res = await fetch(`/api/send-email`, {
-		method: 'PATCH',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ applicationData: statusData }),
-	});
-
-	if (res.ok) {
-		mutate('/api/send-email');
 		handleSubmitSuccess();
 	} else handleSubmitFailure(await res.text());
 }
@@ -120,17 +104,6 @@ export default function OrganizerDash() {
 		}
 
 		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
-	});
-
-	const { data: statusData, error: statusError } = useSWR('/api/send-email', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get hacker application statuses') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-
-		return (await res.json()) as { _id: string; name: string; email: string; applicationStatus: string }[];
 	});
 
 	return (
