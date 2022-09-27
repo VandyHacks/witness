@@ -20,9 +20,9 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 export function sendTravelEmail(user: UserData): void {
 	let email: AWS.SES.SendEmailRequest;
-	email = travelForm(user)
+	email = travelForm(user);
 
-	var sendPromise = new AWS.SES({apiVersion: '2010-12-01'}).sendEmail(email).promise();
+	var sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(email).promise();
 	console.log(sendPromise);
 }
 
@@ -62,4 +62,4 @@ export function sendStatusEmail(user: UserData, status: ApplicationStatus): void
 	*/
 }
 // eslint-disable-next-line import/no-anonymous-default-export
-export default { sendStatusEmail, sendTravelEmail};
+export default { sendStatusEmail, sendTravelEmail };
