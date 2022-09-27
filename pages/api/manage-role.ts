@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		case 'PATCH':
 			const { formData: userData } = req.body;
 			if (!Object.keys(userData).length) return res.status(400).send('A user needs to be selected.');
-			
+
 			const roles = {
 				HACKER: [] as (string | never)[],
 				JUDGE: [] as (string | never)[],
