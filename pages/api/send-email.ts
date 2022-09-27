@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 
 			await log(session.userID, `Updated ${Object.keys(userData).length} user roles`);
-			return res.status(200).send(`Assigned status to ${userData.length} users`);
+			return res.status(200).send(`Assigned statuses to ${userData.length} users`);
 		default:
 			return res.status(405).send('Method not supported brother');
 	}
