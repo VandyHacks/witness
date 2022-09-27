@@ -34,6 +34,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		let application = hacker.application ? (applications as any)[hacker.application.toString()] : {};
 		return {
 			name: hacker.name,
+			email: hacker.email,
 			...application,
 			status: APPLICATION_STATUSES[hacker.applicationStatus],
 			key: hacker._id,
