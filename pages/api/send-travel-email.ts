@@ -18,10 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			
 			return res.status(200).send(logins);
 		case 'POST':
-			const { UserData: userData } = req.body;
-
 			sendTravelEmail(req.body)
-			return res.status(200).send(`Send travel email to ${req.body.email}`);
+			return res.status(200).send(`Sent travel email to ${req.body.email}`);
 		default:
 			return res.status(405).send('Method not supported brother');
 	}

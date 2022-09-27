@@ -620,7 +620,7 @@ export default (user: UserData): AWS.SES.SendEmailRequest => ({
 		},
 		Subject: {
 			Charset: 'UTF-8',
-			Data: "We've Received Your Application!",
+			Data: "Apply for a Travel Reimbursement to VandyHacks IX!",
 		},
 	},
 	Source: 'VandyHacks <noreply@vandyhacks.org>',
