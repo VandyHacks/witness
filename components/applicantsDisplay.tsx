@@ -100,7 +100,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 
 	return (
 		<>
-			<Table sticky dataSource={allApplicantsData} columns={newCols}></Table>
+			<Table style={{width: "95vw"}} dataSource={allApplicantsData} columns={newCols}></Table>
 			{isModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
