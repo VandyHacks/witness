@@ -9,12 +9,7 @@ import accepted from './email/templates/accepted';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
-	if (session?.userType !== 'HACKER') {
-		res.send(403);
-		return;
-	}
-
-	if (!session || !session.user || !session.user.email) {
+	if (session?.userType !== 'ORGANIZER') {
 		res.send(403);
 		return;
 	}
@@ -22,25 +17,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'POST':
-			let user = await User.findOne({ email: session.user.email });
-			if (!('applicationStatus' in user) || user.applicationStatus !== ApplicationStatus.SUBMITTED) {
-				res.send(403);
-				return;
+			let user = await User.findOne({ application: req.body.id });
+			if (user.applicationStatus !== ApplicationStatus.SUBMITTED) {
+				return res.status(403).send("");
 			}
 
 			if (![ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED].includes(req.body.applicationStatus)) {
-				res.send(403);
-				return;
+				return res.status(405).send("");
 			}
 
-			user.updateOne({ applicationStatus: req.body.applicationStatus });
+			await User.updateOne({ application: req.body.id }, { applicationStatus: req.body.applicationStatus })
 			if (req.body.applicationStatus === ApplicationStatus.ACCEPTED) {
 				await sendEmail(accepted(user));
 			} else if (req.body.applicationStatus === ApplicationStatus.REJECTED) {
 				await sendEmail(rejected(user));
 			}
 
-			return res.send(200);
+			return res.status(200).send("");
 		default:
 			return res.status(405).send('Method not supported brother');
 	}
