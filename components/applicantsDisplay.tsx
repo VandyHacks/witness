@@ -1,9 +1,16 @@
 import { Table, Tag, Button, Checkbox, Modal, Input, Popover, Space } from 'antd';
 import type { InputRef } from 'antd';
-import React, { useRef, useState } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
 import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
-import { CheckCircleOutlined, ExclamationCircleOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
+import { ExportToCsv } from 'export-to-csv';
+import {
+	CheckCircleOutlined,
+	EyeOutlined,
+	CheckSquareTwoTone,
+	CheckOutlined,
+	ExclamationCircleOutlined,
+	SearchOutlined,
+} from '@ant-design/icons';
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
 import { useSWRConfig } from 'swr';
@@ -114,14 +121,30 @@ const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
 };
 
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isAppModalOpen, setIsAppModalOpen] = useState(false);
+	const [isCheckinModalOpen, setIsCheckinModalOpen] = useState(false);
 	const [singleApplicant, setSingleApplicant] = useState<ApplicationData | null>(null);
+
+	const checkinInputRef = useRef<InputRef>(null);
+
+	useEffect(() => {
+		// wait for modal to open then focus input
+		requestAnimationFrame(() => {
+			if (isCheckinModalOpen && checkinInputRef?.current) {
+				checkinInputRef.current.focus({
+					cursor: 'start',
+				});
+			}
+		});
+	}, [isCheckinModalOpen]);
+
 	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
 	const [searchText, setSearchText] = useState('');
 	const [searchedColumn, setSearchedColumn] = useState('');
 	const searchInput = useRef<InputRef>(null);
 
 	const { mutate } = useSWRConfig();
+
 	let hackers = props.hackers;
 	let applications = props.applications.reduce((acc, application) => {
 		return { ...acc, [application._id.toString()]: application };
@@ -317,24 +340,38 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			},
 		},
 		{
-			title: '',
+			title: 'Actions',
 			render: (text: any, record: any) => (
 				<>
-					{record.status === 'Confirmed' && <CheckCircleOutlined />}&nbsp;&nbsp;
-					{record.status !== 'Created' && <EyeOutlined onClick={() => openModal(record._id)} />}
+					{record.status === 'Accepted' && (
+						<Button shape="circle" icon={<CheckOutlined />} onClick={() => openCheckinModal(record._id)} />
+					)}
+					&nbsp;&nbsp;
+					{record.status !== 'Created' && (
+						<Button shape="circle" icon={<EyeOutlined />} onClick={() => openAppModal(record._id)} />
+					)}
 				</>
 			),
 		},
 	];
 
-	const openModal = (id: string) => {
-		setSingleApplicant(allApplicantsData.find(applicant => applicant._id === id));
-		// do a get request to get the application data
-		setIsModalOpen(true);
+	const openCheckinModal = (id: string) => {
+		setSingleApplicant(allApplicantsData.find(applicant => applicant.key === id));
+		setIsCheckinModalOpen(true);
 	};
 
-	const handleCloseModal = () => {
-		setIsModalOpen(false);
+	const handleCheckinCloseModal = () => {
+		setIsCheckinModalOpen(false);
+	};
+
+	const openAppModal = (id: string) => {
+		setSingleApplicant(allApplicantsData.find(applicant => applicant._id === id));
+		// do a get request to get the application data
+		setIsAppModalOpen(true);
+	};
+
+	const handleAppCloseModal = () => {
+		setIsAppModalOpen(false);
 	};
 
 	const createSingleApplicantEntry = ([field, response]: [string, string | boolean | string[] | undefined]) => {
@@ -369,16 +406,25 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				dataSource={allApplicantsData}
 				columns={newCols}
 				onChange={handleChange}></Table>
-			{isModalOpen && (
+			{isAppModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
-					visible={isModalOpen}
-					onOk={handleCloseModal}
-					onCancel={handleCloseModal}>
+					visible={isAppModalOpen}
+					onOk={handleAppCloseModal}
+					onCancel={handleAppCloseModal}>
 					{singleApplicant &&
 						Object.entries(singleApplicant)
 							.filter(([field, _]) => field in APPLICATION_KEY_MAP)
 							.map(createSingleApplicantEntry)}
+				</Modal>
+			)}
+			{isCheckinModalOpen && (
+				<Modal
+					title="Check in"
+					open={isCheckinModalOpen}
+					onOk={handleCheckinCloseModal}
+					onCancel={handleCheckinCloseModal}>
+					<Input placeholder="Enter NFC ID" ref={checkinInputRef} onPressEnter={() => console.log('ligma')} />
 				</Modal>
 			)}
 		</>

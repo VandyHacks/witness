@@ -87,7 +87,7 @@ export default function OrganizerDash() {
 	});
 
 	const { data: applications, error: applicationsError } = useSWR('/api/applications', async url => {
-		console.log("fetch time")
+		console.log('fetch time');
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of applications.') as ResponseError;

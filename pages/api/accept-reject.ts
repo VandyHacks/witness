@@ -19,21 +19,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		case 'POST':
 			let user = await User.findOne({ application: req.body.id });
 			if (user.applicationStatus !== ApplicationStatus.SUBMITTED) {
-				return res.status(403).send("");
+				return res.status(403).send('');
 			}
 
 			if (![ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED].includes(req.body.applicationStatus)) {
-				return res.status(405).send("");
+				return res.status(405).send('');
 			}
 
-			await User.updateOne({ application: req.body.id }, { applicationStatus: req.body.applicationStatus })
+			await User.updateOne({ application: req.body.id }, { applicationStatus: req.body.applicationStatus });
 			if (req.body.applicationStatus === ApplicationStatus.ACCEPTED) {
 				await sendEmail(accepted(user));
 			} else if (req.body.applicationStatus === ApplicationStatus.REJECTED) {
 				await sendEmail(rejected(user));
 			}
 
-			return res.status(200).send("");
+			return res.status(200).send('');
 		default:
 			return res.status(405).send('Method not supported brother');
 	}
