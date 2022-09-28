@@ -3,10 +3,9 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ApplicationStatus } from '../../types/database';
-import Application from '../../models/application';
 import sendEmail from './email/email';
-import confirmed from './email/templates/confirmed';
-import travelForm from './email/templates/travelForm';
+import rejected from './email/templates/rejected';
+import accepted from './email/templates/accepted';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -24,22 +23,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'POST':
 			let user = await User.findOne({ email: session.user.email });
-			if ('applicationStatus' in user && user.applicationStatus !== ApplicationStatus.CREATED) {
+			if (!('applicationStatus' in user) || user.applicationStatus !== ApplicationStatus.SUBMITTED) {
 				res.send(403);
 				return;
 			}
 
-			console.log(req.body);
+            if (![ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED].includes(req.body.applicationStatus)) {
+                res.send(403);
+                return;
+            }
 
-			const application = await Application.create(JSON.parse(req.body));
-
-			await User.findOneAndUpdate(
-				{ email: session.user.email },
-				{ application: application._id, applicationStatus: ApplicationStatus.SUBMITTED }
-			);
-
-			await sendEmail(confirmed(user));
-			if (req.body.applyTravelReimbursement) await sendEmail(travelForm(user));
+            user.updateOne({ applicationStatus: req.body.applicationStatus });
+            if (req.body.applicationStatus === ApplicationStatus.ACCEPTED) {
+                await sendEmail(accepted(user));
+            } else if (req.body.applicationStatus === ApplicationStatus.REJECTED) {
+                await sendEmail(rejected(user));
+            }
 
 			return res.send(200);
 		default:
