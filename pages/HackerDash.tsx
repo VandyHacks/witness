@@ -460,7 +460,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<br />
 
-								<Button loading={loading} style={{ marginBottom: '60px' }} type="primary" htmlType="submit">
+								<Button
+									loading={loading}
+									style={{ marginBottom: '60px' }}
+									type="primary"
+									htmlType="submit">
 									Submit
 								</Button>
 								<br />
