@@ -3,7 +3,14 @@ import type { InputRef } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
 import { ExportToCsv } from 'export-to-csv';
-import { CheckCircleOutlined, EyeOutlined, CheckSquareTwoTone, CheckOutlined, ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+	CheckCircleOutlined,
+	EyeOutlined,
+	CheckSquareTwoTone,
+	CheckOutlined,
+	ExclamationCircleOutlined,
+	SearchOutlined,
+} from '@ant-design/icons';
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
 import { useSWRConfig } from 'swr';
@@ -399,7 +406,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				dataSource={allApplicantsData}
 				columns={newCols}
 				onChange={handleChange}></Table>
-			{isModalOpen && (
+			{isAppModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
 					visible={isAppModalOpen}
