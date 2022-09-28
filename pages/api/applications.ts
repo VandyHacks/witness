@@ -11,6 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'GET':
 			const applications = await Application.find();
+			console.log("IN API")
 			return res.status(200).send(applications);
 		default:
 			return res.status(405).send('Method not supported brother');

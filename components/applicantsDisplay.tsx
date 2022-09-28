@@ -1,12 +1,13 @@
-import { Table, Tag, Button, Checkbox, Modal, Input, Space } from 'antd';
+import { Table, Tag, Button, Checkbox, Modal, Input, Popover, Space } from 'antd';
 import type { InputRef } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
-import { ApplicationData, UserData } from '../types/database';
-import { ExportToCsv } from 'export-to-csv';
-import { CheckCircleOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
+import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
+import { CheckCircleOutlined, ExclamationCircleOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
+import { useSWRConfig } from 'swr';
+import { ScopedMutator } from 'swr/dist/types';
 import Highlighter from 'react-highlight-words';
 
 export interface ApplicantsDisplayProps {
@@ -70,6 +71,48 @@ const APPLICATION_KEY_MAP = {
 	mlhComms: 'MLH Communications',
 };
 
+const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: ScopedMutator, hackers: any) => {
+	fetch('/api/accept-reject', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			id,
+			applicationStatus,
+		}),
+	}).then(() => {
+		const newHackers = JSON.parse(JSON.stringify(hackers));
+		const idx = newHackers.findIndex((x: any) => x.application === id);
+		newHackers[idx].applicationStatus = applicationStatus;
+		mutate(
+			'/api/users?usertype=HACKER',
+			async () => {
+				return newHackers;
+			},
+			{ revalidate: false }
+		);
+	});
+};
+
+const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
+	return (
+		<div>
+			<Button type="dashed" onClick={() => acceptReject(record._id, ApplicationStatus.REJECTED, mutate, hackers)}>
+				<ExclamationCircleOutlined />
+				Reject
+			</Button>
+			<Button
+				type="primary"
+				style={{ marginLeft: '8px' }}
+				onClick={() => acceptReject(record._id, ApplicationStatus.ACCEPTED, mutate, hackers)}>
+				<CheckCircleOutlined />
+				Accept
+			</Button>
+		</div>
+	);
+};
+
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [singleApplicant, setSingleApplicant] = useState<ApplicationData | null>(null);
@@ -78,6 +121,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	const [searchedColumn, setSearchedColumn] = useState('');
 	const searchInput = useRef<InputRef>(null);
 
+	const { mutate } = useSWRConfig();
 	let hackers = props.hackers;
 	let applications = props.applications.reduce((acc, application) => {
 		return { ...acc, [application._id.toString()]: application };
@@ -188,6 +232,10 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			),
 	});
 
+	const openResume = async (id: string) => {
+		window.open(`/api/get-resume?id=${id}`, '_blank');
+	};
+
 	const newCols: ColumnsType<ApplicantsDisplayProps> = [
 		{
 			title: 'Login Name',
@@ -228,6 +276,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			...getColumnSearchProps('school'),
 		},
 		{
+			title: 'Resume',
+			// If a user has a valid school field, that means they submitted the form and have also submitted a resume
+			render: (_: any, record: any) =>
+				record.school && <Button onClick={() => openResume(record.key)}>Open Resume</Button>,
+		},
+		{
 			title: '✈️',
 			dataIndex: 'applyTravelReimbursement',
 			filters: [{ text: '✈️', value: true }],
@@ -240,7 +294,6 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		{
 			title: 'Status',
 			dataIndex: 'status',
-			render: (status?: string) => (status ? <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag> : ''),
 			filters: [
 				{ text: 'Accepted', value: 'Accepted' },
 				{ text: 'Created', value: 'Created' },
@@ -249,6 +302,19 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			],
 			filteredValue: filteredInfo.status || null,
 			onFilter: (value: string | number | boolean, record: any): boolean => record.status.includes(value),
+			render: (status: string, record: any) => {
+				if (status === 'Submitted') {
+					return (
+						<Popover placement="left" content={createPopover(record, mutate, props.hackers)}>
+							<Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>
+						</Popover>
+					);
+				} else if (status) {
+					return <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>;
+				}
+
+				return '';
+			},
 		},
 		{
 			title: '',
@@ -272,7 +338,6 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	};
 
 	const createSingleApplicantEntry = ([field, response]: [string, string | boolean | string[] | undefined]) => {
-		console.log(field, response);
 		switch (typeof response) {
 			case 'string':
 				const dateTime = DateTime.fromISO(response);
