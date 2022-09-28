@@ -238,14 +238,17 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											label="ZIP Code"
 											name={'zip'}
 											rules={[
-												{ validator: (_, value) => {
-													return new Promise((res, rej) => {
-														const val = parseInt(value);
-														if (val === NaN) rej();
-														else if (val < 10000 || val > 99999) rej();
-														else res(null);
-													});
-												}, message: "Please input a valid 5 digit zip code!"}
+												{
+													validator: (_, value) => {
+														return new Promise((res, rej) => {
+															const val = parseInt(value);
+															if (val === NaN) rej();
+															else if (val < 10000 || val > 99999) rej();
+															else res(null);
+														});
+													},
+													message: 'Please input a valid 5 digit zip code!',
+												},
 											]}>
 											<Input className={styles.Input + ' ' + styles.InputZip} />
 										</Form.Item>
