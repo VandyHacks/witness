@@ -1,12 +1,13 @@
-import { Table, Tag, Button, Checkbox, Modal, Input } from 'antd';
+import { Table, Tag, Button, Checkbox, Modal, Input, Space } from 'antd';
 import type { InputRef } from 'antd';
 import React, { useState, useRef } from 'react';
 
 import { ApplicationData, UserData } from '../types/database';
 import { ExportToCsv } from 'export-to-csv';
-import { CheckCircleOutlined, EyeOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
@@ -74,9 +75,9 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	const [singleApplicant, setSingleApplicant] = useState<ApplicationData | null>(null);
 	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
 	const [searchText, setSearchText] = useState('');
-  	const [searchedColumn, setSearchedColumn] = useState('');
-  	const searchInput = useRef<InputRef>(null);
-	
+	const [searchedColumn, setSearchedColumn] = useState('');
+	const searchInput = useRef<InputRef>(null);
+
 	let hackers = props.hackers;
 	let applications = props.applications.reduce((acc, application) => {
 		return { ...acc, [application._id.toString()]: application };
@@ -91,35 +92,100 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			key: hacker._id,
 		};
 	});
-	
+
+	const clearFilters = () => {
+		setFilteredInfo({});
+		setSearchText('');
+	};
+
 	const handleChange = (pagination: any, filters: any, sorter: any) => {
 		setFilteredInfo(filters);
 	};
 
-	const handleSearch = (
-    	selectedKeys: string[],
-    	confirm: (param?: FilterConfirmProps) => void,
-    	dataIndex: any,
-  	) => {
-    	confirm();
-    	setSearchText(selectedKeys[0]);
-    	setSearchedColumn(dataIndex);
-  	};
+	const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: string) => {
+		confirm();
+		setSearchText(selectedKeys[0]);
+		setSearchedColumn(dataIndex);
+	};
 
-  	const handleReset = (clearFilters: () => void) => {
-    	clearFilters();
-    	setSearchText('');
-  	};
+	const handleReset = (clearFilters: () => void) => {
+		clearFilters();
+		setSearchText('');
+	};
 
 	const getColumnSearchProps = (dataIndex: string) => ({
-		filterDropdown: ({}) => (
+		filterDropdown: ({
+			setSelectedKeys,
+			selectedKeys,
+			confirm,
+			clearFilters,
+		}: {
+			setSelectedKeys: (selectedKeys: React.Key[]) => void;
+			selectedKeys: React.Key[];
+			confirm: (param?: FilterConfirmProps) => void;
+			clearFilters: () => void;
+		}) => (
 			<div style={{ padding: 8 }}>
-				<Input ref={searchInput} placeholder={`Search ${dataIndex}`} />
+				<Input
+					ref={searchInput}
+					placeholder={`Search ${dataIndex}`}
+					value={selectedKeys[0]}
+					onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+					style={{ marginBottom: 8, display: 'block' }}
+				/>
+				<Space>
+					<Button
+						type="primary"
+						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+						icon={<SearchOutlined />}
+						size="small"
+						style={{ width: 90, marginRight: 8 }}>
+						Search
+					</Button>
+					<Button
+						onClick={() => clearFilters && handleReset(clearFilters)}
+						size="small"
+						style={{ width: 90 }}>
+						Reset
+					</Button>
+					<Button
+						type="link"
+						size="small"
+						onClick={() => {
+							confirm({ closeDropdown: false });
+							setSearchText((selectedKeys as string[])[0]);
+							setSearchedColumn(dataIndex);
+						}}>
+						Filter
+					</Button>
+				</Space>
 			</div>
 		),
-		// filterIcon: (filtered: boolean) => (
-		// 	<SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-		// ),
+		filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+		onFilter: (value: string | number | boolean, record: any): boolean => {
+			if (record[dataIndex] === undefined || record[dataIndex] === null) {
+				return false;
+			}
+			return record[dataIndex].toString().toLowerCase().includes(value.toString().toLowerCase());
+		},
+		filteredValue: filteredInfo[dataIndex] || null,
+		onFilterDropdownOpenChange: (open: boolean) => {
+			if (open) {
+				setTimeout(() => searchInput.current?.select(), 100);
+			}
+		},
+		render: (text: string) =>
+			searchedColumn === dataIndex ? (
+				<Highlighter
+					highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+					searchWords={[searchText]}
+					autoEscape
+					textToHighlight={text?.toString()}
+				/>
+			) : (
+				text
+			),
 	});
 
 	const newCols: ColumnsType<ApplicantsDisplayProps> = [
@@ -130,10 +196,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		{
 			title: 'First Name',
 			dataIndex: 'firstName',
+			...getColumnSearchProps('firstName'),
 		},
 		{
 			title: 'Last Name',
 			dataIndex: 'lastName',
+			...getColumnSearchProps('lastName'),
 		},
 		{
 			title: 'Email',
@@ -147,25 +215,25 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				{ text: '2022', value: '2022' },
 				{ text: '2023', value: '2023' },
 				{ text: '2024', value: '2024' },
-				{ text: '2025', value: '2025'},
-				{ text: '2026', value: '2026'},
-				{ text: 'Other', value: 'Other'}
-			  ],
+				{ text: '2025', value: '2025' },
+				{ text: '2026', value: '2026' },
+				{ text: 'Other', value: 'Other' },
+			],
 			filteredValue: filteredInfo.graduationYear || null,
-			onFilter: (value: string | number | boolean, record: any):boolean => record.graduationYear === (value),
+			onFilter: (value: string | number | boolean, record: any): boolean => record.graduationYear === value,
 		},
 		{
 			title: 'School',
 			dataIndex: 'school',
+			...getColumnSearchProps('school'),
 		},
 		{
 			title: '✈️',
 			dataIndex: 'applyTravelReimbursement',
-			filters: [
-				{text: '✈️', value: true}
-			],
+			filters: [{ text: '✈️', value: true }],
 			filteredValue: filteredInfo.applyTravelReimbursement || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.applyTravelReimbursement === value,
+			onFilter: (value: string | number | boolean, record: any): boolean =>
+				record.applyTravelReimbursement === value,
 			render: (appliedTravel?: boolean) =>
 				appliedTravel !== undefined ? <Checkbox checked={appliedTravel} /> : '',
 		},
@@ -174,12 +242,13 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			dataIndex: 'status',
 			render: (status?: string) => (status ? <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag> : ''),
 			filters: [
-				{ text: 'Submitted', value: 'Submitted' },
 				{ text: 'Accepted', value: 'Accepted' },
-				{ text: 'Created', value: 'Created' }
-			  ],
+				{ text: 'Created', value: 'Created' },
+				{ text: 'Rejected', value: 'Rejected' },
+				{ text: 'Submitted', value: 'Submitted' },
+			],
 			filteredValue: filteredInfo.status || null,
-			onFilter: (value: string | number | boolean, record: any):boolean => record.status.includes(value),
+			onFilter: (value: string | number | boolean, record: any): boolean => record.status.includes(value),
 		},
 		{
 			title: '',
@@ -227,7 +296,14 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 
 	return (
 		<>
-			<Table style={{ width: '95vw' }} dataSource={allApplicantsData} columns={newCols} onChange={handleChange}></Table>
+			<Space style={{ marginBottom: 16, float: 'right' }}>
+				<Button onClick={clearFilters}>Clear filters</Button>
+			</Space>
+			<Table
+				style={{ width: '95vw' }}
+				dataSource={allApplicantsData}
+				columns={newCols}
+				onChange={handleChange}></Table>
 			{isModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
