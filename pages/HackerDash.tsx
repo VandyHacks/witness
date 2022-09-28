@@ -242,7 +242,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 														return new Promise((res, rej) => {
 															const val = parseInt(value);
 															if (val === NaN) rej();
-															else if (val < 10000 || val > 99999) rej();
+															else if (val < 501 || val > 99999) rej();
+															else if (value.length !== 5) rej();
 															else res(null);
 														});
 													},
