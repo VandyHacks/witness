@@ -1,12 +1,15 @@
 import { Table, Tag, Button, Checkbox, Modal, Input } from 'antd';
 import type { InputRef } from 'antd';
 import React, { useState, useRef } from 'react';
+import { Table, Tag, Button, Checkbox, Modal, Popover } from 'antd';
+import React, { useState } from 'react';
 
-import { ApplicationData, UserData } from '../types/database';
-import { ExportToCsv } from 'export-to-csv';
-import { CheckCircleOutlined, EyeOutlined } from '@ant-design/icons';
+import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
+import { CheckCircleOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
+import { useSWRConfig } from 'swr';
+import { ScopedMutator } from 'swr/dist/types';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
@@ -69,6 +72,36 @@ const APPLICATION_KEY_MAP = {
 	mlhComms: 'MLH Communications',
 };
 
+const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: ScopedMutator, hackers: any) => {
+	fetch("/api/accept-reject", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			id,
+			applicationStatus
+		}),
+	}).then(() => {
+		const idx = hackers.findIndex((x: any) => x.application === id);
+		hackers[idx].applicationStatus = applicationStatus;
+		mutate('/api/users?usertype=HACKER', hackers, false);
+	});
+}
+
+const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
+	return <div>
+		<Button type="dashed" onClick={() => acceptReject(record._id, ApplicationStatus.REJECTED, mutate, hackers)}>
+			<ExclamationCircleOutlined />
+			Reject
+		</Button>
+		<Button type="primary" style={{"marginLeft": "8px"}} onClick={() => acceptReject(record._id, ApplicationStatus.ACCEPTED, mutate, hackers)}>
+			<CheckCircleOutlined />
+			Accept
+		</Button>
+	</div>;
+};
+
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [singleApplicant, setSingleApplicant] = useState<ApplicationData | null>(null);
@@ -77,6 +110,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
   	const [searchedColumn, setSearchedColumn] = useState('');
   	const searchInput = useRef<InputRef>(null);
 	
+	const { mutate } = useSWRConfig();
 	let hackers = props.hackers;
 	let applications = props.applications.reduce((acc, application) => {
 		return { ...acc, [application._id.toString()]: application };
@@ -182,7 +216,6 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		{
 			title: 'Status',
 			dataIndex: 'status',
-			render: (status?: string) => (status ? <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag> : ''),
 			filters: [
 				{ text: 'Submitted', value: 'Submitted' },
 				{ text: 'Accepted', value: 'Accepted' },
@@ -190,6 +223,17 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			  ],
 			filteredValue: filteredInfo.status || null,
 			onFilter: (value: string | number | boolean, record: any):boolean => record.status.includes(value),
+			render: (status: string, record: any) => {
+				if (status === "Submitted") {
+					return <Popover placement="left" content={createPopover(record, mutate, props.hackers)}>
+						<Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>
+					</Popover>;
+				} else if (status) {
+					return <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>;
+				}
+
+				return "";
+			},
 		},
 		{
 			title: '',
