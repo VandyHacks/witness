@@ -41,7 +41,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
-		console.log(values);
 		await fetch('/api/apply', {
 			method: 'POST',
 			body: JSON.stringify(values),
@@ -461,7 +460,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<br />
 
-								<Button style={{ marginBottom: '60px' }} type="primary" htmlType="submit">
+								<Button loading={loading} style={{ marginBottom: '60px' }} type="primary" htmlType="submit">
 									Submit
 								</Button>
 								<br />
