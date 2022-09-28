@@ -1,13 +1,14 @@
-import { Table, Tag, Button, Checkbox, Modal, Input, Popover } from 'antd';
+import { Table, Tag, Button, Checkbox, Modal, Input, Popover, Space } from 'antd';
 import type { InputRef } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
 import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
 import { ExportToCsv } from 'export-to-csv';
-import { CheckCircleOutlined, EyeOutlined, CheckSquareTwoTone, CheckOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, EyeOutlined, CheckSquareTwoTone, CheckOutlined, ExclamationCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
+import Highlighter from 'react-highlight-words';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
@@ -71,34 +72,45 @@ const APPLICATION_KEY_MAP = {
 };
 
 const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: ScopedMutator, hackers: any) => {
-	fetch("/api/accept-reject", {
-		method: "POST",
+	fetch('/api/accept-reject', {
+		method: 'POST',
 		headers: {
-			"Content-Type": "application/json",
+			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify({
 			id,
-			applicationStatus
+			applicationStatus,
 		}),
 	}).then(() => {
 		const newHackers = JSON.parse(JSON.stringify(hackers));
 		const idx = newHackers.findIndex((x: any) => x.application === id);
 		newHackers[idx].applicationStatus = applicationStatus;
-		mutate('/api/users?usertype=HACKER', async () => { return newHackers }, { revalidate: false });
+		mutate(
+			'/api/users?usertype=HACKER',
+			async () => {
+				return newHackers;
+			},
+			{ revalidate: false }
+		);
 	});
-}
+};
 
 const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
-	return <div>
-		<Button type="dashed" onClick={() => acceptReject(record._id, ApplicationStatus.REJECTED, mutate, hackers)}>
-			<ExclamationCircleOutlined />
-			Reject
-		</Button>
-		<Button type="primary" style={{"marginLeft": "8px"}} onClick={() => acceptReject(record._id, ApplicationStatus.ACCEPTED, mutate, hackers)}>
-			<CheckCircleOutlined />
-			Accept
-		</Button>
-	</div>;
+	return (
+		<div>
+			<Button type="dashed" onClick={() => acceptReject(record._id, ApplicationStatus.REJECTED, mutate, hackers)}>
+				<ExclamationCircleOutlined />
+				Reject
+			</Button>
+			<Button
+				type="primary"
+				style={{ marginLeft: '8px' }}
+				onClick={() => acceptReject(record._id, ApplicationStatus.ACCEPTED, mutate, hackers)}>
+				<CheckCircleOutlined />
+				Accept
+			</Button>
+		</div>
+	);
 };
 
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
@@ -121,9 +133,9 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 
 	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
 	const [searchText, setSearchText] = useState('');
-  	const [searchedColumn, setSearchedColumn] = useState('');
-  	const searchInput = useRef<InputRef>(null);
-	
+	const [searchedColumn, setSearchedColumn] = useState('');
+	const searchInput = useRef<InputRef>(null);
+
 	const { mutate } = useSWRConfig();
 
 	let hackers = props.hackers;
@@ -140,35 +152,100 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			key: hacker._id,
 		};
 	});
-	
+
+	const clearFilters = () => {
+		setFilteredInfo({});
+		setSearchText('');
+	};
+
 	const handleChange = (pagination: any, filters: any, sorter: any) => {
 		setFilteredInfo(filters);
 	};
 
-	const handleSearch = (
-    	selectedKeys: string[],
-    	confirm: (param?: FilterConfirmProps) => void,
-    	dataIndex: any,
-  	) => {
-    	confirm();
-    	setSearchText(selectedKeys[0]);
-    	setSearchedColumn(dataIndex);
-  	};
+	const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: string) => {
+		confirm();
+		setSearchText(selectedKeys[0]);
+		setSearchedColumn(dataIndex);
+	};
 
-  	const handleReset = (clearFilters: () => void) => {
-    	clearFilters();
-    	setSearchText('');
-  	};
+	const handleReset = (clearFilters: () => void) => {
+		clearFilters();
+		setSearchText('');
+	};
 
 	const getColumnSearchProps = (dataIndex: string) => ({
-		filterDropdown: ({}) => (
+		filterDropdown: ({
+			setSelectedKeys,
+			selectedKeys,
+			confirm,
+			clearFilters,
+		}: {
+			setSelectedKeys: (selectedKeys: React.Key[]) => void;
+			selectedKeys: React.Key[];
+			confirm: (param?: FilterConfirmProps) => void;
+			clearFilters: () => void;
+		}) => (
 			<div style={{ padding: 8 }}>
-				<Input ref={searchInput} placeholder={`Search ${dataIndex}`} />
+				<Input
+					ref={searchInput}
+					placeholder={`Search ${dataIndex}`}
+					value={selectedKeys[0]}
+					onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+					style={{ marginBottom: 8, display: 'block' }}
+				/>
+				<Space>
+					<Button
+						type="primary"
+						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+						icon={<SearchOutlined />}
+						size="small"
+						style={{ width: 90, marginRight: 8 }}>
+						Search
+					</Button>
+					<Button
+						onClick={() => clearFilters && handleReset(clearFilters)}
+						size="small"
+						style={{ width: 90 }}>
+						Reset
+					</Button>
+					<Button
+						type="link"
+						size="small"
+						onClick={() => {
+							confirm({ closeDropdown: false });
+							setSearchText((selectedKeys as string[])[0]);
+							setSearchedColumn(dataIndex);
+						}}>
+						Filter
+					</Button>
+				</Space>
 			</div>
 		),
-		// filterIcon: (filtered: boolean) => (
-		// 	<SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
-		// ),
+		filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+		onFilter: (value: string | number | boolean, record: any): boolean => {
+			if (record[dataIndex] === undefined || record[dataIndex] === null) {
+				return false;
+			}
+			return record[dataIndex].toString().toLowerCase().includes(value.toString().toLowerCase());
+		},
+		filteredValue: filteredInfo[dataIndex] || null,
+		onFilterDropdownOpenChange: (open: boolean) => {
+			if (open) {
+				setTimeout(() => searchInput.current?.select(), 100);
+			}
+		},
+		render: (text: string) =>
+			searchedColumn === dataIndex ? (
+				<Highlighter
+					highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+					searchWords={[searchText]}
+					autoEscape
+					textToHighlight={text?.toString()}
+				/>
+			) : (
+				text
+			),
 	});
 
 	const openResume = async (id: string) => {
@@ -183,10 +260,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		{
 			title: 'First Name',
 			dataIndex: 'firstName',
+			...getColumnSearchProps('firstName'),
 		},
 		{
 			title: 'Last Name',
 			dataIndex: 'lastName',
+			...getColumnSearchProps('lastName'),
 		},
 		{
 			title: 'Email',
@@ -200,16 +279,17 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				{ text: '2022', value: '2022' },
 				{ text: '2023', value: '2023' },
 				{ text: '2024', value: '2024' },
-				{ text: '2025', value: '2025'},
-				{ text: '2026', value: '2026'},
-				{ text: 'Other', value: 'Other'}
-			  ],
+				{ text: '2025', value: '2025' },
+				{ text: '2026', value: '2026' },
+				{ text: 'Other', value: 'Other' },
+			],
 			filteredValue: filteredInfo.graduationYear || null,
-			onFilter: (value: string | number | boolean, record: any):boolean => record.graduationYear === (value),
+			onFilter: (value: string | number | boolean, record: any): boolean => record.graduationYear === value,
 		},
 		{
 			title: 'School',
 			dataIndex: 'school',
+			...getColumnSearchProps('school'),
 		},
 		{
 			title: 'Resume',
@@ -220,11 +300,10 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		{
 			title: '✈️',
 			dataIndex: 'applyTravelReimbursement',
-			filters: [
-				{text: '✈️', value: true}
-			],
+			filters: [{ text: '✈️', value: true }],
 			filteredValue: filteredInfo.applyTravelReimbursement || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.applyTravelReimbursement === value,
+			onFilter: (value: string | number | boolean, record: any): boolean =>
+				record.applyTravelReimbursement === value,
 			render: (appliedTravel?: boolean) =>
 				appliedTravel !== undefined ? <Checkbox checked={appliedTravel} /> : '',
 		},
@@ -232,22 +311,25 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: 'Status',
 			dataIndex: 'status',
 			filters: [
-				{ text: 'Submitted', value: 'Submitted' },
 				{ text: 'Accepted', value: 'Accepted' },
-				{ text: 'Created', value: 'Created' }
-			  ],
+				{ text: 'Created', value: 'Created' },
+				{ text: 'Rejected', value: 'Rejected' },
+				{ text: 'Submitted', value: 'Submitted' },
+			],
 			filteredValue: filteredInfo.status || null,
-			onFilter: (value: string | number | boolean, record: any):boolean => record.status.includes(value),
+			onFilter: (value: string | number | boolean, record: any): boolean => record.status.includes(value),
 			render: (status: string, record: any) => {
-				if (status === "Submitted") {
-					return <Popover placement="left" content={createPopover(record, mutate, props.hackers)}>
-						<Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>
-					</Popover>;
+				if (status === 'Submitted') {
+					return (
+						<Popover placement="left" content={createPopover(record, mutate, props.hackers)}>
+							<Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>
+						</Popover>
+					);
 				} else if (status) {
 					return <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>;
 				}
 
-				return "";
+				return '';
 			},
 		},
 		{
@@ -309,7 +391,14 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 
 	return (
 		<>
-			<Table style={{ width: '95vw' }} dataSource={allApplicantsData} columns={newCols} onChange={handleChange}></Table>
+			<Space style={{ marginBottom: 16, float: 'right' }}>
+				<Button onClick={clearFilters}>Clear filters</Button>
+			</Space>
+			<Table
+				style={{ width: '95vw' }}
+				dataSource={allApplicantsData}
+				columns={newCols}
+				onChange={handleChange}></Table>
 			{isModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
