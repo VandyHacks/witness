@@ -17,13 +17,13 @@ type HackerProps = {
 };
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus, userEmail }: HackerProps) {
 	const [loading, setLoading] = useState(false);
-	// const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
-	// 	const res = await fetch(url, { method: 'GET' });
-	// 	if (!res.ok) return;
-	// 	const { members, ...rest } = await res.json();
+	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) return;
+		const { members, ...rest } = await res.json();
 
-	// 	return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
-	// });
+		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
+	});
 
 	const { data: user } = useSWR(
 		'/api/user-data',
@@ -449,12 +449,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{/* {user.applicationStatus === ApplicationStatus.ACCEPTED && (
+					{user.applicationStatus === ApplicationStatus.ACCEPTED && (
 						<>
 							{!teamData && <TeamSetup />}
 							{teamData && <TeamManager profile={teamData} />}
 						</>
-					)} */}
+					)}
 				</>
 			)}
 		</>

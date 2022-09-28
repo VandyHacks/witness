@@ -9,7 +9,7 @@ export function handleSubmitSuccess(msg: string = 'Successfully updated!') {
 
 export function handleSubmitFailure(msg: string) {
 	notification['error']({
-		message: 'Oops woopsy, something went fucky wucky',
+		message: 'Oops, something went wrong.',
 		description: msg || 'Please try again or contact an organizer if the problem persists.',
 		placement: 'bottomRight',
 	});
