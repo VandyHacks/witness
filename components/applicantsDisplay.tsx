@@ -1,6 +1,6 @@
-import { Table, Tag, Button, Checkbox, Modal, Input } from 'antd';
+import { Table, Tag, Button, Checkbox, Modal, Input, Popover } from 'antd';
 import type { InputRef } from 'antd';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
 import { CheckCircleOutlined, ExclamationCircleOutlined, EyeOutlined } from '@ant-design/icons';
@@ -81,9 +81,10 @@ const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: 
 			applicationStatus
 		}),
 	}).then(() => {
-		const idx = hackers.findIndex((x: any) => x.application === id);
-		hackers[idx].applicationStatus = applicationStatus;
-		mutate('/api/users?usertype=HACKER', hackers, false);
+		const newHackers = JSON.parse(JSON.stringify(hackers));
+		const idx = newHackers.findIndex((x: any) => x.application === id);
+		newHackers[idx].applicationStatus = applicationStatus;
+		mutate('/api/users?usertype=HACKER', async () => { return newHackers }, { revalidate: false });
 	});
 }
 
