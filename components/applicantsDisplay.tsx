@@ -1,7 +1,5 @@
 import { Table, Tag, Button, Checkbox, Modal, Input } from 'antd';
 import type { InputRef } from 'antd';
-import React, { useState, useRef } from 'react';
-import { Table, Tag, Button, Checkbox, Modal, Popover } from 'antd';
 import React, { useState } from 'react';
 
 import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
