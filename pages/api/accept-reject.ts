@@ -28,17 +28,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return;
 			}
 
-            if (![ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED].includes(req.body.applicationStatus)) {
-                res.send(403);
-                return;
-            }
+			if (![ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED].includes(req.body.applicationStatus)) {
+				res.send(403);
+				return;
+			}
 
-            user.updateOne({ applicationStatus: req.body.applicationStatus });
-            if (req.body.applicationStatus === ApplicationStatus.ACCEPTED) {
-                await sendEmail(accepted(user));
-            } else if (req.body.applicationStatus === ApplicationStatus.REJECTED) {
-                await sendEmail(rejected(user));
-            }
+			user.updateOne({ applicationStatus: req.body.applicationStatus });
+			if (req.body.applicationStatus === ApplicationStatus.ACCEPTED) {
+				await sendEmail(accepted(user));
+			} else if (req.body.applicationStatus === ApplicationStatus.REJECTED) {
+				await sendEmail(rejected(user));
+			}
 
 			return res.send(200);
 		default:
