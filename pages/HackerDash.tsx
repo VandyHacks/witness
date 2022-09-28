@@ -41,7 +41,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
-		console.log(values);
 		await fetch('/api/apply', {
 			method: 'POST',
 			body: JSON.stringify(values),
@@ -237,7 +236,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Form.Item
 											label="ZIP Code"
 											name={'zip'}
-											rules={[{ required: true, message: 'Please input your zip code!' }]}>
+											rules={[
+												{
+													validator: (_, value) => {
+														return new Promise((res, rej) => {
+															const val = parseInt(value);
+															if (val === NaN) rej();
+															else if (val < 10000 || val > 99999) rej();
+															else res(null);
+														});
+													},
+													message: 'Please input a valid 5 digit zip code!',
+												},
+											]}>
 											<Input className={styles.Input + ' ' + styles.InputZip} />
 										</Form.Item>
 									</Col>
@@ -449,7 +460,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<br />
 
-								<Button style={{ marginBottom: '60px' }} type="primary" htmlType="submit">
+								<Button
+									loading={loading}
+									style={{ marginBottom: '60px' }}
+									type="primary"
+									htmlType="submit">
 									Submit
 								</Button>
 								<br />
