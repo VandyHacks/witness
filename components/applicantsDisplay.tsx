@@ -186,8 +186,13 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		setFilteredInfo(filters);
 	};
 
-	const handleSearch = (selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: string) => {
-		confirm();
+	const handleSearch = (
+		selectedKeys: string[],
+		confirm: (param?: FilterConfirmProps) => void,
+		dataIndex: string,
+		closeDropDown: boolean
+	) => {
+		confirm({ closeDropdown: closeDropDown });
 		setSearchText(selectedKeys[0]);
 		setSearchedColumn(dataIndex);
 	};
@@ -214,34 +219,30 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					ref={searchInput}
 					placeholder={`Search ${dataIndex}`}
 					value={selectedKeys[0]}
-					onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+					onChange={e => {
+						setSelectedKeys(e.target.value ? [e.target.value] : []);
+						handleSearch(selectedKeys as string[], confirm, dataIndex, false);
+					}}
+					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
 					style={{ marginBottom: 8, display: 'block' }}
 				/>
 				<Space>
 					<Button
 						type="primary"
-						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
 						icon={<SearchOutlined />}
 						size="small"
 						style={{ width: 90, marginRight: 8 }}>
 						Search
 					</Button>
 					<Button
-						onClick={() => clearFilters && handleReset(clearFilters)}
+						onClick={() => {
+							clearFilters && handleReset(clearFilters);
+							confirm({ closeDropdown: false });
+						}}
 						size="small"
 						style={{ width: 90 }}>
 						Reset
-					</Button>
-					<Button
-						type="link"
-						size="small"
-						onClick={() => {
-							confirm({ closeDropdown: false });
-							setSearchText((selectedKeys as string[])[0]);
-							setSearchedColumn(dataIndex);
-						}}>
-						Filter
 					</Button>
 				</Space>
 			</div>
@@ -417,7 +418,9 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	return (
 		<>
 			<Space style={{ marginBottom: 16, float: 'right' }}>
-				<Button onClick={clearFilters}>Clear filters</Button>
+				<Button type="primary" onClick={clearFilters}>
+					Clear filters
+				</Button>
 			</Space>
 			<Table
 				style={{ width: '95vw' }}
