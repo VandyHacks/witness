@@ -1,12 +1,11 @@
 import { Table, Tag, Button, Checkbox, Modal, Input, Popover, Space } from 'antd';
 import type { InputRef } from 'antd';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, SyntheticEvent } from 'react';
 import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
 import { ExportToCsv } from 'export-to-csv';
 import {
 	CheckCircleOutlined,
 	EyeOutlined,
-	CheckSquareTwoTone,
 	CheckOutlined,
 	ExclamationCircleOutlined,
 	SearchOutlined,
@@ -16,13 +15,13 @@ import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import Highlighter from 'react-highlight-words';
+import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
+import { ObjectId } from 'mongodb';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
 	applications: ApplicationData[];
 }
-
-type DataIndex = keyof UserData[];
 
 const APPLICATION_STATUSES = [
 	'Created',
@@ -100,6 +99,24 @@ const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: 
 			{ revalidate: false }
 		);
 	});
+};
+
+const handleUserCheckin = async (userId: string, nfcId: string, mutate: ScopedMutator) => {
+	const res = await fetch('/api/user-checkin', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify({
+			userId,
+			nfcId,
+		}),
+	});
+
+	if (res.ok) {
+		mutate('/api/users?usertype=HACKER');
+		handleSubmitSuccess(await res.text());
+	} else handleSubmitFailure(await res.text());
 };
 
 const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
@@ -356,7 +373,8 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	];
 
 	const openCheckinModal = (id: string) => {
-		setSingleApplicant(allApplicantsData.find(applicant => applicant.key === id));
+		let data = JSON.parse(JSON.stringify(allApplicantsData.find(applicant => applicant._id === id)));
+		setSingleApplicant(data);
 		setIsCheckinModalOpen(true);
 	};
 
@@ -424,7 +442,18 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					open={isCheckinModalOpen}
 					onOk={handleCheckinCloseModal}
 					onCancel={handleCheckinCloseModal}>
-					<Input placeholder="Enter NFC ID" ref={checkinInputRef} onPressEnter={() => console.log('ligma')} />
+					<Input
+						placeholder="Enter NFC ID"
+						ref={checkinInputRef}
+						onPressEnter={async event => {
+							await handleUserCheckin(
+								singleApplicant!.key!.toString(),
+								event.target.value as string,
+								mutate
+							);
+							handleCheckinCloseModal();
+						}}
+					/>
 				</Modal>
 			)}
 		</>
