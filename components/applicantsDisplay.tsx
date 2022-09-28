@@ -122,6 +122,10 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		// ),
 	});
 
+	const openResume = async (id: string) => {
+		window.open(`/api/get-resume?id=${id}`, '_blank');
+	};
+
 	const newCols: ColumnsType<ApplicantsDisplayProps> = [
 		{
 			title: 'Login Name',
@@ -157,6 +161,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		{
 			title: 'School',
 			dataIndex: 'school',
+		},
+		{
+			title: 'Resume',
+			// If a user has a valid school field, that means they submitted the form and have also submitted a resume
+			render: (_: any, record: any) =>
+				record.school && <Button onClick={() => openResume(record.key)}>Open Resume</Button>,
 		},
 		{
 			title: '✈️',
@@ -203,7 +213,6 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	};
 
 	const createSingleApplicantEntry = ([field, response]: [string, string | boolean | string[] | undefined]) => {
-		console.log(field, response);
 		switch (typeof response) {
 			case 'string':
 				const dateTime = DateTime.fromISO(response);
