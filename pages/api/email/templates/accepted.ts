@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { SendEmailRequest } from '@aws-sdk/client-ses';
-import escape from 'escape-html';
 import { UserData } from '../../../../types/database';
+import { escapeChars } from '../email';
 
 // TODO: Dedupe these emails. All the HTML is the same, the only difference is in the
 // actual lines presented to the user, which could be parameterized. Rich HTML content
@@ -198,7 +198,7 @@ export default (user: UserData): SendEmailRequest => ({
 																						<tr>
 																							<td style="width:520px;"> <center><a href="https://vandyhacks.org" target="_blank">
 
-							<img alt="" height="auto" src="https://storage.googleapis.com/vh-fall-2020-assets/VH_Pixel_Logo.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:30%;" width="520">
+							<img alt="" height="auto" src="https://vh-public-assets.s3.us-east-2.amazonaws.com/VH+Logo+Without+Text+Black.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:30%;" width="520">
 
 								</a> </center></td>
 																						</tr>
@@ -257,7 +257,7 @@ export default (user: UserData): SendEmailRequest => ({
 																	<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hi ${escape(
+																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hi ${escapeChars(
 																					user.name || user.name
 																				)}! </div>
 																			</td>
@@ -632,7 +632,7 @@ export default (user: UserData): SendEmailRequest => ({
 			},
 			Text: {
 				Charset: 'UTF-8',
-				Data: `Hi ${escape(user.name || user.name)},
+				Data: `Hi ${escapeChars(user.name || user.name)},
 				Congratulations! You’re invited to be a part of VandyHacks IX: Ocean Edition! We enjoyed reading your application and would love to see your ideas come to life during our virtual event on October 2nd-4th!
 
 				Head over to the application portal here and confirm your attendance by October 2nd, 12:00 PM CDT. Make sure you’ve also read and checked “agree” to our hackathon waiver under the hacker application.

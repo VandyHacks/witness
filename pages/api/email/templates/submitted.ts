@@ -1,7 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { SendEmailRequest } from '@aws-sdk/client-ses';
-import escape from 'escape-html';
 import { UserData } from '../../../../types/database';
+import { escapeChars } from '../email';
 
 // TODO: Dedupe these emails. All the HTML is the same, the only difference is in the
 // actual lines presented to the user, which could be parameterized. Rich HTML content
@@ -198,7 +198,7 @@ export default (user: UserData): SendEmailRequest => ({
 																						<tr>
 																							<td style="width:520px;"> <center><a href="https://vandyhacks.org" target="_blank">
 
-							<img alt="" height="auto" src="https://storage.googleapis.com/vh-fall-2020-assets/VH_Pixel_Logo.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:30%;" width="520">
+							<img alt="" height="auto" src="https://vh-public-assets.s3.us-east-2.amazonaws.com/VH+Logo+Without+Text+Black.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:30%;" width="520">
 
 								</a> </center></td>
 																						</tr>
@@ -262,7 +262,7 @@ export default (user: UserData): SendEmailRequest => ({
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hi ${escape(
+																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hi ${escapeChars(
 																					user.name
 																				)}, </div>
 																			</td>
@@ -589,7 +589,7 @@ export default (user: UserData): SendEmailRequest => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Thank you for applying!
-				Hi ${escape(user.name)},
+				Hi ${escapeChars(user.name)},
 				Thanks for taking the time to complete your application! We’re so excited that you’re interested in being a part of VandyHacks IX: Ocean Edition.
 				We will be reviewing your submission soon, so be on the lookout for another email regarding your status.
 				Until then, stay hyped about VandyHacks! Follow us on Instagram to get the latest VH updates!
