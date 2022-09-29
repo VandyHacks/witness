@@ -1,5 +1,6 @@
 import { SendEmailRequest } from '@aws-sdk/client-ses';
 import { UserData } from '../../../../types/database';
+import { escapeChars } from '../email';
 
 // TODO: Dedupe these emails. All the HTML is the same, the only difference is in the
 // actual lines presented to the user, which could be parameterized. Rich HTML content
@@ -196,7 +197,7 @@ export default (user: UserData): SendEmailRequest => ({
 																						<tr>
 																							<td style="width:520px;"> <center> <a href="https://vandyhacks.org" target="_blank">
 
-							<img alt="" height="auto" src="https://storage.googleapis.com/vh-fall-2020-assets/VH_Pixel_Logo.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:30%;" width="520">
+							<img alt="" height="auto" src="https://vh-public-assets.s3.us-east-2.amazonaws.com/VH+Logo+Without+Text+Black.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:30%;" width="520">
 
 								</a> </center></td>
 																						</tr>
@@ -255,7 +256,7 @@ export default (user: UserData): SendEmailRequest => ({
 																	<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hey ${escape(
+																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hey ${escapeChars(
 																					user.name
 																				)}! </div>
 																			</td>
@@ -622,7 +623,7 @@ export default (user: UserData): SendEmailRequest => ({
 			},
 			Text: {
 				Charset: 'UTF-8',
-				Data: `Hey ${escape(user.name)},
+				Data: `Hey ${escapeChars(user.name)},
 				We're so excited that you'll be joining us for VandyHacks IX: Ocean Edition!
 
 				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 7:00 PM CDT Friday, October 2nd, and wrap up by 4:00 PM CDT Sunday, October 4th.
