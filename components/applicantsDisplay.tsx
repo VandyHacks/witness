@@ -272,8 +272,8 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				{ text: '2026', value: '2026' },
 				{ text: 'Other', value: 'Other' },
 			],
-			filteredValue: filteredInfo.graduationYear || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.graduationYear === value,
+			filteredValue: filteredInfo["application.graduationYear"] || null,
+			onFilter: (value: string | number | boolean, record: any): boolean => record.application?.graduationYear === value,
 		},
 		{
 			title: 'School',
