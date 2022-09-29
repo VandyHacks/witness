@@ -190,36 +190,26 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
 					style={{ marginBottom: 8, display: 'block' }}
 				/>
-				<Space>
-					<Button
-						type="primary"
-						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
-						icon={<SearchOutlined />}
-						size="small"
-						style={{ width: 90, marginRight: 8 }}>
-						Search
-					</Button>
-					<Button
-						onClick={() => {
-							clearFilters && handleReset(clearFilters);
-							confirm({ closeDropdown: false });
-						}}
-						size="small"
-						style={{ width: 90 }}>
-						Reset
-					</Button>
-				</Space>
+				<Button
+					onClick={() => {
+						clearFilters && handleReset(clearFilters);
+						confirm({ closeDropdown: false });
+					}}
+					style={{ width: '100%' }}>
+					Reset
+				</Button>
 			</div>
 		),
 		filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
 		onFilter: (value: string | number | boolean, record: any): boolean => {
-			const recordValue = (dataIndex in record) ? record[dataIndex] : record.application?.[dataIndex];
+			const recordValue = dataIndex in record ? record[dataIndex] : record.application?.[dataIndex];
 			if (recordValue === undefined || recordValue === null) {
 				return false;
 			}
 			return recordValue.toString().toLowerCase().includes(value.toString().toLowerCase());
 		},
-		filteredValue: ((dataIndex in filteredInfo) ? filteredInfo[dataIndex] : filteredInfo["application." + dataIndex]) || null,
+		filteredValue:
+			(dataIndex in filteredInfo ? filteredInfo[dataIndex] : filteredInfo['application.' + dataIndex]) || null,
 		onFilterDropdownOpenChange: (open: boolean) => {
 			if (open) {
 				setTimeout(() => searchInput.current?.select(), 100);
@@ -231,7 +221,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
 					searchWords={[searchText]}
 					autoEscape
-					textToHighlight={text?.toString() ?? ""}
+					textToHighlight={text?.toString() ?? ''}
 				/>
 			) : (
 				text
@@ -273,8 +263,9 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				{ text: '2026', value: '2026' },
 				{ text: 'Other', value: 'Other' },
 			],
-			filteredValue: filteredInfo["application.graduationYear"] || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.application?.graduationYear === value,
+			filteredValue: filteredInfo['application.graduationYear'] || null,
+			onFilter: (value: string | number | boolean, record: any): boolean =>
+				record.application?.graduationYear === value,
 		},
 		{
 			title: 'School',
@@ -291,7 +282,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: '✈️',
 			dataIndex: ['application', 'applyTravelReimbursement'],
 			filters: [{ text: '✈️', value: true }],
-			filteredValue: filteredInfo["application.applyTravelReimbursement"] || null,
+			filteredValue: filteredInfo['application.applyTravelReimbursement'] || null,
 			onFilter: (value: string | number | boolean, record: any): boolean =>
 				record.application?.applyTravelReimbursement === value,
 			render: (appliedTravel?: boolean) =>
