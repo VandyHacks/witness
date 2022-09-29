@@ -198,13 +198,7 @@ export default function OrganizerDash() {
 					{
 						label: `Manage Applications`,
 						key: '5',
-						children: (
-							<>
-								{hackers && (
-									<ApplicantsDisplay hackers={hackers} />
-								)}
-							</>
-						),
+						children: <>{hackers && <ApplicantsDisplay hackers={hackers} />}</>,
 					},
 					{
 						label: `Events`,
