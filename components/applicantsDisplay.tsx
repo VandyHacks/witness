@@ -132,14 +132,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 	const { mutate } = useSWRConfig();
 
 	useEffect(() => {
-		// wait for modal to open then focus input
-		requestAnimationFrame(() => {
-			if (isCheckinModalOpen && checkinInputRef?.current) {
-				checkinInputRef.current.focus({
-					cursor: 'start',
-				});
-			}
-		});
+		if (isCheckinModalOpen) {
+			// wait for modal to open then focus input
+			requestAnimationFrame(() => {
+				checkinInputRef.current?.focus();
+			});
+		}
 	}, [isCheckinModalOpen]);
 
 	const handleUserCheckin = async () => {
@@ -153,7 +151,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				nfcId: checkinInputRef.current?.input?.value,
 			}),
 		});
-	
+
 		if (res.ok) {
 			setIsCheckinModalOpen(false);
 			mutate('/api/users?usertype=HACKER');
