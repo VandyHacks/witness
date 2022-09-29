@@ -28,8 +28,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				res.send(403);
 				return;
 			}
-
-			const application = await Application.create(JSON.parse(req.body));
+			
+			const body = JSON.parse(req.body);
+			const application = await Application.create(body);
 
 			await User.findOneAndUpdate(
 				{ email: session.user.email },
@@ -37,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			);
 
 			await sendEmail(submitted(user));
-			if (req.body.applyTravelReimbursement === "yes") await sendEmail(travelForm(user));
+			if (body.applyTravelReimbursement === "yes") await sendEmail(travelForm(user));
 
 			return res.send(200);
 		default:
