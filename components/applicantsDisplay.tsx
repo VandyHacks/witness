@@ -213,12 +213,13 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		),
 		filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
 		onFilter: (value: string | number | boolean, record: any): boolean => {
-			if (record[dataIndex] === undefined || record[dataIndex] === null) {
+			const recordValue = (dataIndex in record) ? record[dataIndex] : record.application?.[dataIndex];
+			if (recordValue === undefined || recordValue === null) {
 				return false;
 			}
-			return record[dataIndex].toString().toLowerCase().includes(value.toString().toLowerCase());
+			return recordValue.toString().toLowerCase().includes(value.toString().toLowerCase());
 		},
-		filteredValue: filteredInfo[dataIndex] || null,
+		filteredValue: ((dataIndex in filteredInfo) ? filteredInfo[dataIndex] : filteredInfo["application." + dataIndex]) || null,
 		onFilterDropdownOpenChange: (open: boolean) => {
 			if (open) {
 				setTimeout(() => searchInput.current?.select(), 100);
