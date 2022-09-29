@@ -24,7 +24,7 @@ const Events = () => {
 	const [events, setEvents] = useState<EventDisplay[]>([]);
 	const [nfcId, setNfcId] = useState<string>('');
 	const [loading, setLoading] = useState(false);
-	
+
 	const input = useRef<InputRef>(null);
 
 	useEffect(() => {
