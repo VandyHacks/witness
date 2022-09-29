@@ -230,7 +230,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
 					searchWords={[searchText]}
 					autoEscape
-					textToHighlight={text?.toString()}
+					textToHighlight={text?.toString() ?? ""}
 				/>
 			) : (
 				text
