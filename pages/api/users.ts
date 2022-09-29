@@ -14,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			// validate usertype
 			if (!userType || !USER_TYPES.includes(userType)) return res.status(400).send('Invalid user type');
 
+			// Construct query and await at the end
 			let users = User.find({ userType });
 			if (userType == 'HACKER') {
 				users = users.populate('application');

@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'POST':
 			const { id, applicationStatus: status } = req.body;
-			let user = await User.findOne({ _id: id });
+			let user = await User.findById(id);
 			if (user.applicationStatus !== ApplicationStatus.SUBMITTED) {
 				return res.status(403).send('');
 			}
@@ -27,7 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return res.status(405).send('');
 			}
 
-			await User.updateOne({ _id: id }, { applicationStatus: status });
+			user.applicationStatus = status;
+			await user.save();
 			if (status === ApplicationStatus.ACCEPTED) {
 				await sendEmail(accepted(user));
 			} else if (status === ApplicationStatus.REJECTED) {
