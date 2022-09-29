@@ -14,8 +14,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			// validate usertype
 			if (!userType || !USER_TYPES.includes(userType)) return res.status(400).send('Invalid user type');
 
-			const users = await User.find({ userType });
-			return res.status(200).send(users);
+			// Construct query and await at the end
+			let users = User.find({ userType });
+			if (userType == 'HACKER') {
+				users = users.populate('application');
+			}
+
+			return res.status(200).send(await users);
 		default:
 			return res.status(405).send('Method not supported brother');
 	}
