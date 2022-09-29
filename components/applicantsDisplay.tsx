@@ -1,12 +1,10 @@
 import { Table, Tag, Button, Checkbox, Modal, Input, Popover, Space } from 'antd';
 import type { InputRef } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
-import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
-import { ExportToCsv } from 'export-to-csv';
+import { ApplicationStatus, UserData } from '../types/database';
 import {
 	CheckCircleOutlined,
 	EyeOutlined,
-	CheckSquareTwoTone,
 	CheckOutlined,
 	ExclamationCircleOutlined,
 	SearchOutlined,
@@ -19,7 +17,6 @@ import Highlighter from 'react-highlight-words';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
-	applications: ApplicationData[];
 }
 
 const APPLICATION_STATUSES = [
@@ -87,8 +84,8 @@ const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: 
 			applicationStatus,
 		}),
 	}).then(() => {
-		const newHackers = JSON.parse(JSON.stringify(hackers));
-		const idx = newHackers.findIndex((x: any) => x.application === id);
+		const newHackers: UserData[] = JSON.parse(JSON.stringify(hackers)); // Deep copies the object
+		const idx = newHackers.findIndex((x: any) => x._id === id);
 		newHackers[idx].applicationStatus = applicationStatus;
 		mutate(
 			'/api/users?usertype=HACKER',
@@ -119,11 +116,19 @@ const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
 };
 
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
+	const hackers = props.hackers.map(x => ({ ...x, key: x._id }));
+
 	const [isAppModalOpen, setIsAppModalOpen] = useState(false);
 	const [isCheckinModalOpen, setIsCheckinModalOpen] = useState(false);
-	const [singleApplicant, setSingleApplicant] = useState<ApplicationData | null>(null);
+	const [selectedApplicant, setSelectedApplicant] = useState<UserData | null>(null);
+	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
+	const [searchText, setSearchText] = useState('');
+	const [searchedColumn, setSearchedColumn] = useState('');
 
 	const checkinInputRef = useRef<InputRef>(null);
+	const searchInput = useRef<InputRef>(null);
+
+	const { mutate } = useSWRConfig();
 
 	useEffect(() => {
 		// wait for modal to open then focus input
@@ -135,28 +140,6 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			}
 		});
 	}, [isCheckinModalOpen]);
-
-	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
-	const [searchText, setSearchText] = useState('');
-	const [searchedColumn, setSearchedColumn] = useState('');
-	const searchInput = useRef<InputRef>(null);
-
-	const { mutate } = useSWRConfig();
-
-	let hackers = props.hackers;
-	let applications = props.applications.reduce((acc, application) => {
-		return { ...acc, [application._id.toString()]: application };
-	}, {});
-	let allApplicantsData = hackers.map(hacker => {
-		let application = hacker.application ? (applications as any)[hacker.application.toString()] : {};
-		return {
-			name: hacker.name,
-			email: hacker.email,
-			...application,
-			status: APPLICATION_STATUSES[hacker.applicationStatus],
-			key: hacker._id,
-		};
-	});
 
 	const clearFilters = () => {
 		setFilteredInfo({});
@@ -258,19 +241,19 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		window.open(`/api/get-resume?id=${id}`, '_blank');
 	};
 
-	const newCols: ColumnsType<ApplicantsDisplayProps> = [
+	const newCols: ColumnsType<UserData> = [
 		{
 			title: 'Login Name',
 			dataIndex: 'name',
 		},
 		{
 			title: 'First Name',
-			dataIndex: 'firstName',
+			dataIndex: ['application', 'firstName'],
 			...getColumnSearchProps('firstName'),
 		},
 		{
 			title: 'Last Name',
-			dataIndex: 'lastName',
+			dataIndex: ['application', 'lastName'],
 			...getColumnSearchProps('lastName'),
 		},
 		{
@@ -280,7 +263,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		},
 		{
 			title: 'Graduation Year',
-			dataIndex: 'graduationYear',
+			dataIndex: ['application', 'graduationYear'],
 			filters: [
 				{ text: '2022', value: '2022' },
 				{ text: '2023', value: '2023' },
@@ -294,7 +277,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		},
 		{
 			title: 'School',
-			dataIndex: 'school',
+			dataIndex: ['application', 'school'],
 			...getColumnSearchProps('school'),
 		},
 		{
@@ -305,7 +288,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		},
 		{
 			title: '✈️',
-			dataIndex: 'applyTravelReimbursement',
+			dataIndex: ['application', 'applyTravelReimbursement'],
 			filters: [{ text: '✈️', value: true }],
 			filteredValue: filteredInfo.applyTravelReimbursement || null,
 			onFilter: (value: string | number | boolean, record: any): boolean =>
@@ -315,24 +298,26 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		},
 		{
 			title: 'Status',
-			dataIndex: 'status',
+			dataIndex: 'applicationStatus',
 			filters: [
-				{ text: 'Accepted', value: 'Accepted' },
-				{ text: 'Created', value: 'Created' },
-				{ text: 'Rejected', value: 'Rejected' },
-				{ text: 'Submitted', value: 'Submitted' },
+				{ text: 'Accepted', value: ApplicationStatus.ACCEPTED },
+				{ text: 'Created', value: ApplicationStatus.CREATED },
+				{ text: 'Rejected', value: ApplicationStatus.REJECTED },
+				{ text: 'Submitted', value: ApplicationStatus.SUBMITTED },
+				{ text: 'Checked In', value: ApplicationStatus.CHECKED_IN },
 			],
-			filteredValue: filteredInfo.status || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.status.includes(value),
-			render: (status: string, record: any) => {
-				if (status === 'Submitted') {
+			filteredValue: filteredInfo.applicationStatus || null,
+			onFilter: (value: string | number | boolean, record: any): boolean => record.applicationStatus == value,
+			render: (applicationStatus: ApplicationStatus, record: any) => {
+				const statusName = APPLICATION_STATUSES[applicationStatus as number];
+				if (statusName === 'Submitted') {
 					return (
 						<Popover placement="left" content={createPopover(record, mutate, props.hackers)}>
-							<Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>
+							<Tag color={(STATUS_COLORS as any)[statusName]}>{statusName}</Tag>
 						</Popover>
 					);
-				} else if (status) {
-					return <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>;
+				} else if (statusName) {
+					return <Tag color={(STATUS_COLORS as any)[statusName]}>{statusName}</Tag>;
 				}
 
 				return '';
@@ -342,20 +327,20 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: 'Actions',
 			render: (text: any, record: any) => (
 				<>
-					{record.status === 'Accepted' && (
-						<Button shape="circle" icon={<CheckOutlined />} onClick={() => openCheckinModal(record._id)} />
+					{record.applicationStatus === ApplicationStatus.ACCEPTED && (
+						<Button shape="circle" icon={<CheckOutlined />} onClick={() => openCheckinModal(record)} />
 					)}
 					&nbsp;&nbsp;
-					{record.status !== 'Created' && (
-						<Button shape="circle" icon={<EyeOutlined />} onClick={() => openAppModal(record._id)} />
+					{record.applicationStatus !== ApplicationStatus.CREATED && (
+						<Button shape="circle" icon={<EyeOutlined />} onClick={() => openAppModal(record)} />
 					)}
 				</>
 			),
 		},
 	];
 
-	const openCheckinModal = (id: string) => {
-		setSingleApplicant(allApplicantsData.find(applicant => applicant.key === id));
+	const openCheckinModal = (applicant: UserData) => {
+		setSelectedApplicant(applicant);
 		setIsCheckinModalOpen(true);
 	};
 
@@ -363,9 +348,8 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		setIsCheckinModalOpen(false);
 	};
 
-	const openAppModal = (id: string) => {
-		setSingleApplicant(allApplicantsData.find(applicant => applicant._id === id));
-		// do a get request to get the application data
+	const openAppModal = (applicant: UserData) => {
+		setSelectedApplicant(applicant);
 		setIsAppModalOpen(true);
 	};
 
@@ -402,19 +386,15 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					Clear filters
 				</Button>
 			</Space>
-			<Table
-				style={{ width: '95vw' }}
-				dataSource={allApplicantsData}
-				columns={newCols}
-				onChange={handleChange}></Table>
+			<Table style={{ width: '95vw' }} dataSource={hackers} columns={newCols} onChange={handleChange}></Table>
 			{isAppModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
 					visible={isAppModalOpen}
 					onOk={handleAppCloseModal}
 					onCancel={handleAppCloseModal}>
-					{singleApplicant &&
-						Object.entries(singleApplicant)
+					{selectedApplicant &&
+						Object.entries(selectedApplicant.application!)
 							.filter(([field, _]) => field in APPLICATION_KEY_MAP)
 							.map(createSingleApplicantEntry)}
 				</Modal>

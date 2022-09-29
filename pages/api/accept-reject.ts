@@ -17,19 +17,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'POST':
-			let user = await User.findOne({ application: req.body.id });
+			const { id, applicationStatus: status } = req.body;
+			let user = await User.findOne({ _id: id });
 			if (user.applicationStatus !== ApplicationStatus.SUBMITTED) {
 				return res.status(403).send('');
 			}
 
-			if (![ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED].includes(req.body.applicationStatus)) {
+			if (![ApplicationStatus.ACCEPTED, ApplicationStatus.REJECTED].includes(status)) {
 				return res.status(405).send('');
 			}
 
-			await User.updateOne({ application: req.body.id }, { applicationStatus: req.body.applicationStatus });
-			if (req.body.applicationStatus === ApplicationStatus.ACCEPTED) {
+			await User.updateOne({ _id: id }, { applicationStatus: status });
+			if (status === ApplicationStatus.ACCEPTED) {
 				await sendEmail(accepted(user));
-			} else if (req.body.applicationStatus === ApplicationStatus.REJECTED) {
+			} else if (status === ApplicationStatus.REJECTED) {
 				await sendEmail(rejected(user));
 			}
 

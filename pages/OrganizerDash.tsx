@@ -86,17 +86,6 @@ export default function OrganizerDash() {
 		return (await res.json()) as UserData[];
 	});
 
-	const { data: applications, error: applicationsError } = useSWR('/api/applications', async url => {
-		console.log('fetch time');
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of applications.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as ApplicationData[];
-	});
-
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -132,7 +121,6 @@ export default function OrganizerDash() {
 		<Space direction="vertical">
 			<Tabs
 				defaultActiveKey="1"
-				onChange={key => console.log(key)}
 				items={[
 					{
 						label: `Schedule`,
@@ -212,8 +200,8 @@ export default function OrganizerDash() {
 						key: '5',
 						children: (
 							<>
-								{hackers && applications && (
-									<ApplicantsDisplay hackers={hackers} applications={applications} />
+								{hackers && (
+									<ApplicantsDisplay hackers={hackers} />
 								)}
 							</>
 						),
