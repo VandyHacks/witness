@@ -29,8 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				return;
 			}
 
-			console.log(req.body);
-
 			const application = await Application.create(JSON.parse(req.body));
 
 			await User.findOneAndUpdate(
