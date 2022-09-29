@@ -1,6 +1,5 @@
-import { ConsoleSqlOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, notification, Table } from 'antd';
-import { useEffect, useState } from 'react';
+import { Button, Input, InputRef, Modal, notification, Table } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 import { EventData } from '../types/database';
 
 interface EventDisplay extends EventData {
@@ -25,6 +24,15 @@ const Events = () => {
 	const [events, setEvents] = useState<EventDisplay[]>([]);
 	const [nfcId, setNfcId] = useState<string>('');
 	const [loading, setLoading] = useState(false);
+	
+	const input = useRef<InputRef>(null);
+
+	useEffect(() => {
+		// wait for modal to open then focus input
+		if (curEvent) {
+			setTimeout(() => input.current?.focus());
+		}
+	}, [curEvent]);
 
 	const getData = () => {
 		return fetch('/api/events')
@@ -102,6 +110,7 @@ const Events = () => {
 					</Button>,
 				]}>
 				<Input
+					ref={input}
 					placeholder="NFC ID"
 					value={nfcId}
 					onChange={e => setNfcId(e.target.value)}
