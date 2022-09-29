@@ -36,9 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				{ application: application._id, applicationStatus: ApplicationStatus.SUBMITTED }
 			);
 
-			console.log(req.body);
 			await sendEmail(submitted(user));
-			if (req.body.applyTravelReimbursement) await sendEmail(travelForm(user));
+			if (req.body.applyTravelReimbursement === "yes") await sendEmail(travelForm(user));
 
 			return res.send(200);
 		default:
