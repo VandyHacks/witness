@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				res.send(403);
 				return;
 			}
-			
+
 			const body = JSON.parse(req.body);
 			const application = await Application.create(body);
 
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			);
 
 			await sendEmail(submitted(user));
-			if (body.applyTravelReimbursement === "yes") await sendEmail(travelForm(user));
+			if (body.applyTravelReimbursement === 'yes') await sendEmail(travelForm(user));
 
 			return res.send(200);
 		default:

@@ -33,6 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			Key: `resumes/${id}.pdf`,
 		});
 		(resume.Body as any).pipe(res);
+		res.setHeader('Content-Type', 'application/pdf');
 		return res.status(200);
 	} catch (e: any) {
 		if (e.$metadata.httpStatusCode == 404) return res.status(404).send('Resume not found');
