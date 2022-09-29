@@ -290,9 +290,9 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: '✈️',
 			dataIndex: ['application', 'applyTravelReimbursement'],
 			filters: [{ text: '✈️', value: true }],
-			filteredValue: filteredInfo.applyTravelReimbursement || null,
+			filteredValue: filteredInfo["application.applyTravelReimbursement"] || null,
 			onFilter: (value: string | number | boolean, record: any): boolean =>
-				record.applyTravelReimbursement === value,
+				record.application?.applyTravelReimbursement === value,
 			render: (appliedTravel?: boolean) =>
 				appliedTravel !== undefined ? <Checkbox checked={appliedTravel} /> : '',
 		},
