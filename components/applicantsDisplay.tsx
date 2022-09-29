@@ -14,6 +14,7 @@ import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import Highlighter from 'react-highlight-words';
+import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
@@ -140,6 +141,25 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			}
 		});
 	}, [isCheckinModalOpen]);
+
+	const handleUserCheckin = async () => {
+		const res = await fetch('/api/user-checkin', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				userId: selectedApplicant?._id,
+				nfcId: checkinInputRef.current?.input?.value,
+			}),
+		});
+	
+		if (res.ok) {
+			setIsCheckinModalOpen(false);
+			mutate('/api/users?usertype=HACKER');
+			handleSubmitSuccess(await res.text());
+		} else handleSubmitFailure(await res.text());
+	};
 
 	const clearFilters = () => {
 		setFilteredInfo({});
@@ -403,9 +423,14 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				<Modal
 					title="Check in"
 					open={isCheckinModalOpen}
-					onOk={handleCheckinCloseModal}
-					onCancel={handleCheckinCloseModal}>
-					<Input placeholder="Enter NFC ID" ref={checkinInputRef} onPressEnter={() => console.log('ligma')} />
+					onOk={handleUserCheckin}
+					onCancel={handleCheckinCloseModal}
+					footer={[
+						<Button key="submit" type="primary" onClick={handleUserCheckin}>
+							Check in
+						</Button>,
+					]}>
+					<Input placeholder="NFC ID" ref={checkinInputRef} onPressEnter={handleUserCheckin} />
 				</Modal>
 			)}
 		</>
