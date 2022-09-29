@@ -4,6 +4,9 @@ import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ApplicationStatus } from '../../types/database';
 import Application from '../../models/application';
+import sendEmail from './email/email';
+import confirmed from './email/templates/confirmed';
+import travelForm from './email/templates/travelForm';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -32,6 +35,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				{ email: session.user.email },
 				{ application: application._id, applicationStatus: ApplicationStatus.SUBMITTED }
 			);
+
+			await sendEmail(confirmed(user));
+			if (req.body.applyTravelReimbursement) await sendEmail(travelForm(user));
 
 			return res.send(200);
 		default:

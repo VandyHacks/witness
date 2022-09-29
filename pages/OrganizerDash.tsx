@@ -1,4 +1,4 @@
-import { Divider, Empty, notification, Skeleton, Space, Tabs } from 'antd';
+import { Empty, Skeleton, Space, Tabs } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
@@ -6,8 +6,9 @@ import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
 import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
-import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../types/database';
+import { ResponseError, ScoreData, TeamData, UserData, PreAddData, ApplicationData } from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
+import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 import Events from '../components/events';
 
@@ -73,6 +74,27 @@ export default function OrganizerDash() {
 			throw error;
 		}
 		return (await res.json()) as UserData[];
+	});
+
+	const { data: hackers, error: hackersError } = useSWR('/api/users?usertype=HACKER', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of hackers.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as UserData[];
+	});
+
+	const { data: applications, error: applicationsError } = useSWR('/api/applications', async url => {
+		console.log('fetch time');
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get list of applications.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as ApplicationData[];
 	});
 
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
@@ -186,17 +208,23 @@ export default function OrganizerDash() {
 						),
 					},
 					{
-						label: `Events`,
+						label: `Manage Applications`,
 						key: '5',
+						children: (
+							<>
+								{hackers && applications && (
+									<ApplicantsDisplay hackers={hackers} applications={applications} />
+								)}
+							</>
+						),
+					},
+					{
+						label: `Events`,
+						key: '6',
 						children: <Events />,
 					},
 				]}
 			/>
-
-			{/* <Divider />
-			{(!teamsData || !usersData || !scoresData || !preAddData) && <Skeleton />}
-			<Divider />
-			<Divider /> */}
 		</Space>
 	);
 }
