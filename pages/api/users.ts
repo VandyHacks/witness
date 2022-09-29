@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
+import Application from '../../models/application';
 import User, { USER_TYPES } from '../../models/user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
@@ -17,6 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			// Construct query and await at the end
 			let users = User.find({ userType });
 			if (userType == 'HACKER') {
+				Application; // Don't remove or the import will get optimized out and the populate will fail
 				users = users.populate('application');
 			}
 
