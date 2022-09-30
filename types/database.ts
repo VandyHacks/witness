@@ -23,6 +23,33 @@ export const enum ApplicationStatus {
 	ACCEPTED,
 	CONFIRMED,
 	REJECTED,
+	CHECKED_IN,
+}
+
+export interface ApplicationData {
+	_id: mongoose.Schema.Types.ObjectId;
+	firstName: string;
+	preferredName: string;
+	lastName: string;
+	gender: string;
+	dietaryRestrictions: string[];
+	accomodationNeeds: string;
+	phoneNumber: string;
+	dateOfBirth: string;
+	school: string;
+	major: string;
+	graduationYear: string;
+	race: string[];
+	motivation: string[];
+	applyTravelReimbursement: boolean;
+	volunteer: boolean;
+	address1: string;
+	address2: string;
+	city: string;
+	state: string;
+	zip: string;
+	shirtSize: string;
+	mlhComms: boolean;
 }
 
 export interface UserData {
@@ -32,6 +59,7 @@ export interface UserData {
 	image: string;
 	userType: string;
 	team?: mongoose.Schema.Types.ObjectId;
+	application?: mongoose.Schema.Types.ObjectId;
 	applicationStatus: ApplicationStatus;
 }
 
