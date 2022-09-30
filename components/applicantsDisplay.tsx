@@ -1,12 +1,10 @@
 import { Table, Tag, Button, Checkbox, Modal, Input, Popover, Space } from 'antd';
 import type { InputRef } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
-import { ApplicationData, ApplicationStatus, UserData } from '../types/database';
-import { ExportToCsv } from 'export-to-csv';
+import { ApplicationStatus, UserData } from '../types/database';
 import {
 	CheckCircleOutlined,
 	EyeOutlined,
-	CheckSquareTwoTone,
 	CheckOutlined,
 	ExclamationCircleOutlined,
 	SearchOutlined,
@@ -16,10 +14,10 @@ import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import Highlighter from 'react-highlight-words';
+import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];
-	applications: ApplicationData[];
 }
 
 const APPLICATION_STATUSES = [
@@ -87,8 +85,8 @@ const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: 
 			applicationStatus,
 		}),
 	}).then(() => {
-		const newHackers = JSON.parse(JSON.stringify(hackers));
-		const idx = newHackers.findIndex((x: any) => x.application === id);
+		const newHackers: UserData[] = JSON.parse(JSON.stringify(hackers)); // Deep copies the object
+		const idx = newHackers.findIndex((x: any) => x._id === id);
 		newHackers[idx].applicationStatus = applicationStatus;
 		mutate(
 			'/api/users?usertype=HACKER',
@@ -119,44 +117,47 @@ const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
 };
 
 export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
+	const hackers = props.hackers.map(x => ({ ...x, key: x._id }));
+
 	const [isAppModalOpen, setIsAppModalOpen] = useState(false);
 	const [isCheckinModalOpen, setIsCheckinModalOpen] = useState(false);
-	const [singleApplicant, setSingleApplicant] = useState<ApplicationData | null>(null);
-
-	const checkinInputRef = useRef<InputRef>(null);
-
-	useEffect(() => {
-		// wait for modal to open then focus input
-		requestAnimationFrame(() => {
-			if (isCheckinModalOpen && checkinInputRef?.current) {
-				checkinInputRef.current.focus({
-					cursor: 'start',
-				});
-			}
-		});
-	}, [isCheckinModalOpen]);
-
+	const [selectedApplicant, setSelectedApplicant] = useState<UserData | null>(null);
 	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
 	const [searchText, setSearchText] = useState('');
 	const [searchedColumn, setSearchedColumn] = useState('');
+
+	const checkinInputRef = useRef<InputRef>(null);
 	const searchInput = useRef<InputRef>(null);
 
 	const { mutate } = useSWRConfig();
 
-	let hackers = props.hackers;
-	let applications = props.applications.reduce((acc, application) => {
-		return { ...acc, [application._id.toString()]: application };
-	}, {});
-	let allApplicantsData = hackers.map(hacker => {
-		let application = hacker.application ? (applications as any)[hacker.application.toString()] : {};
-		return {
-			name: hacker.name,
-			email: hacker.email,
-			...application,
-			status: APPLICATION_STATUSES[hacker.applicationStatus],
-			key: hacker._id,
-		};
-	});
+	useEffect(() => {
+		if (isCheckinModalOpen) {
+			// wait for modal to open then focus input
+			requestAnimationFrame(() => {
+				checkinInputRef.current?.focus();
+			});
+		}
+	}, [isCheckinModalOpen]);
+
+	const handleUserCheckin = async () => {
+		const res = await fetch('/api/user-checkin', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				userId: selectedApplicant?._id,
+				nfcId: checkinInputRef.current?.input?.value,
+			}),
+		});
+
+		if (res.ok) {
+			setIsCheckinModalOpen(false);
+			mutate('/api/users?usertype=HACKER');
+			handleSubmitSuccess(await res.text());
+		} else handleSubmitFailure(await res.text());
+	};
 
 	const clearFilters = () => {
 		setFilteredInfo({});
@@ -207,35 +208,26 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
 					style={{ marginBottom: 8, display: 'block' }}
 				/>
-				<Space>
-					<Button
-						type="primary"
-						onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
-						icon={<SearchOutlined />}
-						size="small"
-						style={{ width: 90, marginRight: 8 }}>
-						Search
-					</Button>
-					<Button
-						onClick={() => {
-							clearFilters && handleReset(clearFilters);
-							confirm({ closeDropdown: false });
-						}}
-						size="small"
-						style={{ width: 90 }}>
-						Reset
-					</Button>
-				</Space>
+				<Button
+					onClick={() => {
+						clearFilters && handleReset(clearFilters);
+						confirm({ closeDropdown: false });
+					}}
+					style={{ width: '100%' }}>
+					Reset
+				</Button>
 			</div>
 		),
 		filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
 		onFilter: (value: string | number | boolean, record: any): boolean => {
-			if (record[dataIndex] === undefined || record[dataIndex] === null) {
+			const recordValue = dataIndex in record ? record[dataIndex] : record.application?.[dataIndex];
+			if (recordValue === undefined || recordValue === null) {
 				return false;
 			}
-			return record[dataIndex].toString().toLowerCase().includes(value.toString().toLowerCase());
+			return recordValue.toString().toLowerCase().includes(value.toString().toLowerCase());
 		},
-		filteredValue: filteredInfo[dataIndex] || null,
+		filteredValue:
+			(dataIndex in filteredInfo ? filteredInfo[dataIndex] : filteredInfo['application.' + dataIndex]) || null,
 		onFilterDropdownOpenChange: (open: boolean) => {
 			if (open) {
 				setTimeout(() => searchInput.current?.select(), 100);
@@ -247,7 +239,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
 					searchWords={[searchText]}
 					autoEscape
-					textToHighlight={text?.toString()}
+					textToHighlight={text?.toString() ?? ''}
 				/>
 			) : (
 				text
@@ -258,19 +250,19 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		window.open(`/api/get-resume?id=${id}`, '_blank');
 	};
 
-	const newCols: ColumnsType<ApplicantsDisplayProps> = [
+	const newCols: ColumnsType<UserData> = [
 		{
 			title: 'Login Name',
 			dataIndex: 'name',
 		},
 		{
 			title: 'First Name',
-			dataIndex: 'firstName',
+			dataIndex: ['application', 'firstName'],
 			...getColumnSearchProps('firstName'),
 		},
 		{
 			title: 'Last Name',
-			dataIndex: 'lastName',
+			dataIndex: ['application', 'lastName'],
 			...getColumnSearchProps('lastName'),
 		},
 		{
@@ -280,7 +272,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		},
 		{
 			title: 'Graduation Year',
-			dataIndex: 'graduationYear',
+			dataIndex: ['application', 'graduationYear'],
 			filters: [
 				{ text: '2022', value: '2022' },
 				{ text: '2023', value: '2023' },
@@ -289,12 +281,13 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				{ text: '2026', value: '2026' },
 				{ text: 'Other', value: 'Other' },
 			],
-			filteredValue: filteredInfo.graduationYear || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.graduationYear === value,
+			filteredValue: filteredInfo['application.graduationYear'] || null,
+			onFilter: (value: string | number | boolean, record: any): boolean =>
+				record.application?.graduationYear === value,
 		},
 		{
 			title: 'School',
-			dataIndex: 'school',
+			dataIndex: ['application', 'school'],
 			...getColumnSearchProps('school'),
 		},
 		{
@@ -305,34 +298,36 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		},
 		{
 			title: '✈️',
-			dataIndex: 'applyTravelReimbursement',
+			dataIndex: ['application', 'applyTravelReimbursement'],
 			filters: [{ text: '✈️', value: true }],
-			filteredValue: filteredInfo.applyTravelReimbursement || null,
+			filteredValue: filteredInfo['application.applyTravelReimbursement'] || null,
 			onFilter: (value: string | number | boolean, record: any): boolean =>
-				record.applyTravelReimbursement === value,
+				record.application?.applyTravelReimbursement === value,
 			render: (appliedTravel?: boolean) =>
 				appliedTravel !== undefined ? <Checkbox checked={appliedTravel} /> : '',
 		},
 		{
 			title: 'Status',
-			dataIndex: 'status',
+			dataIndex: 'applicationStatus',
 			filters: [
-				{ text: 'Accepted', value: 'Accepted' },
-				{ text: 'Created', value: 'Created' },
-				{ text: 'Rejected', value: 'Rejected' },
-				{ text: 'Submitted', value: 'Submitted' },
+				{ text: 'Accepted', value: ApplicationStatus.ACCEPTED },
+				{ text: 'Created', value: ApplicationStatus.CREATED },
+				{ text: 'Rejected', value: ApplicationStatus.REJECTED },
+				{ text: 'Submitted', value: ApplicationStatus.SUBMITTED },
+				{ text: 'Checked In', value: ApplicationStatus.CHECKED_IN },
 			],
-			filteredValue: filteredInfo.status || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.status.includes(value),
-			render: (status: string, record: any) => {
-				if (status === 'Submitted') {
+			filteredValue: filteredInfo.applicationStatus || null,
+			onFilter: (value: string | number | boolean, record: any): boolean => record.applicationStatus == value,
+			render: (applicationStatus: ApplicationStatus, record: any) => {
+				const statusName = APPLICATION_STATUSES[applicationStatus as number];
+				if (statusName === 'Submitted') {
 					return (
 						<Popover placement="left" content={createPopover(record, mutate, props.hackers)}>
-							<Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>
+							<Tag color={(STATUS_COLORS as any)[statusName]}>{statusName}</Tag>
 						</Popover>
 					);
-				} else if (status) {
-					return <Tag color={(STATUS_COLORS as any)[status]}>{status}</Tag>;
+				} else if (statusName) {
+					return <Tag color={(STATUS_COLORS as any)[statusName]}>{statusName}</Tag>;
 				}
 
 				return '';
@@ -342,20 +337,20 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: 'Actions',
 			render: (text: any, record: any) => (
 				<>
-					{record.status === 'Accepted' && (
-						<Button shape="circle" icon={<CheckOutlined />} onClick={() => openCheckinModal(record._id)} />
+					{record.applicationStatus === ApplicationStatus.ACCEPTED && (
+						<Button shape="circle" icon={<CheckOutlined />} onClick={() => openCheckinModal(record)} />
 					)}
 					&nbsp;&nbsp;
-					{record.status !== 'Created' && (
-						<Button shape="circle" icon={<EyeOutlined />} onClick={() => openAppModal(record._id)} />
+					{record.applicationStatus !== ApplicationStatus.CREATED && (
+						<Button shape="circle" icon={<EyeOutlined />} onClick={() => openAppModal(record)} />
 					)}
 				</>
 			),
 		},
 	];
 
-	const openCheckinModal = (id: string) => {
-		setSingleApplicant(allApplicantsData.find(applicant => applicant.key === id));
+	const openCheckinModal = (applicant: UserData) => {
+		setSelectedApplicant(applicant);
 		setIsCheckinModalOpen(true);
 	};
 
@@ -363,9 +358,8 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 		setIsCheckinModalOpen(false);
 	};
 
-	const openAppModal = (id: string) => {
-		setSingleApplicant(allApplicantsData.find(applicant => applicant._id === id));
-		// do a get request to get the application data
+	const openAppModal = (applicant: UserData) => {
+		setSelectedApplicant(applicant);
 		setIsAppModalOpen(true);
 	};
 
@@ -402,19 +396,15 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 					Clear filters
 				</Button>
 			</Space>
-			<Table
-				style={{ width: '95vw' }}
-				dataSource={allApplicantsData}
-				columns={newCols}
-				onChange={handleChange}></Table>
+			<Table style={{ width: '95vw' }} dataSource={hackers} columns={newCols} onChange={handleChange}></Table>
 			{isAppModalOpen && (
 				<Modal
 					title="Hacker's Application Form"
 					visible={isAppModalOpen}
 					onOk={handleAppCloseModal}
 					onCancel={handleAppCloseModal}>
-					{singleApplicant &&
-						Object.entries(singleApplicant)
+					{selectedApplicant &&
+						Object.entries(selectedApplicant.application!)
 							.filter(([field, _]) => field in APPLICATION_KEY_MAP)
 							.map(createSingleApplicantEntry)}
 				</Modal>
@@ -423,9 +413,14 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				<Modal
 					title="Check in"
 					open={isCheckinModalOpen}
-					onOk={handleCheckinCloseModal}
-					onCancel={handleCheckinCloseModal}>
-					<Input placeholder="Enter NFC ID" ref={checkinInputRef} onPressEnter={() => console.log('ligma')} />
+					onOk={handleUserCheckin}
+					onCancel={handleCheckinCloseModal}
+					footer={[
+						<Button key="submit" type="primary" onClick={handleUserCheckin}>
+							Check in
+						</Button>,
+					]}>
+					<Input placeholder="NFC ID" ref={checkinInputRef} onPressEnter={handleUserCheckin} />
 				</Modal>
 			)}
 		</>
