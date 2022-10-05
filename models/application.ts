@@ -101,7 +101,7 @@ export const ApplicationSchema = new Schema(
 		},
 		applyTravelReimbursement: {
 			type: Boolean,
-			required: true,
+			required: false,
 		},
 		overnight: {
 			type: Boolean,
