@@ -116,6 +116,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		setResumeFile([]);
 	};
 
+	const confirmDecline = async (status: ApplicationStatus) => {
+		setLoading(true);
+		console.log('Confirming');
+		await fetch('/api/confirm-decline', {
+			method: 'POST',
+			body: JSON.stringify({ applicationStatus: status }),
+		});
+		window.location.reload();
+	};
+
 	return (
 		<>
 			{!user && <Skeleton />}
@@ -241,7 +251,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 													validator: (_, value) => {
 														return new Promise((res, rej) => {
 															const val = parseInt(value);
-															if (val === NaN) rej();
+															if (isNaN(val)) rej();
 															else if (val < 501 || val > 99999) rej();
 															else if (value.length !== 5) rej();
 															else res(null);
@@ -492,8 +502,118 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									to stay updated on our news and announcements!
 									<div className={styles.SignInInfo}>
 										<div>Signed in as {session?.user?.email}</div>
-										<br />
-										<Button size="small" type="default" onClick={() => signOut()}>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
+								</div>
+							</div>
+						</>
+					)}
+					{user.applicationStatus === ApplicationStatus.ACCEPTED && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									Congratulations!
+									<br />
+									You have been accepted to VandyHacks!
+									<br />
+									<br />
+									Click below to accept or reject your position at VandyHacks as soon as possible.
+									<div style={{ paddingTop: '10px' }}>
+										<Button onClick={() => confirmDecline(ApplicationStatus.CONFIRMED)}>
+											Confirm
+										</Button>
+										&nbsp;&nbsp;
+										<Button onClick={() => confirmDecline(ApplicationStatus.DECLINED)}>
+											Decline
+										</Button>
+									</div>
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
+								</div>
+							</div>
+						</>
+					)}
+					{user.applicationStatus === ApplicationStatus.CONFIRMED && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									Congratulations!
+									<br />
+									You have been accepted to VandyHacks!
+									<div style={{ width: '100%', height: '16px' }}></div>
+									{/* Click here to join our Discord. <br /> */}
+									More information will appear here as we get closer to the hackathon!
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
+								</div>
+							</div>
+						</>
+					)}
+					{user.applicationStatus === ApplicationStatus.REJECTED && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									<br />
+									Unfortunately, your application to VandyHacks has been rejected. We hope you apply
+									again next year!
+									<br />
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
+								</div>
+							</div>
+						</>
+					)}
+					{user.applicationStatus === ApplicationStatus.DECLINED && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									<br />
+									We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake
+									and you&apos;d like to attend, please email us at{' '}
+									<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
+										info@vandyhacks.org
+									</a>
+									.
+									<br />
+									We hope to see you next year!
+									<br />
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
 											Sign out
 										</Button>
 									</div>

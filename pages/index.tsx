@@ -38,9 +38,10 @@ export default function Page() {
 						session && session.userType === 'HACKER' ? 'url(form-background.png)' : 'inherit'
 					}`,
 					backgroundRepeat: 'no-repeat',
-					backgroundPosition: `${userApplicationStatus === ApplicationStatus.SUBMITTED ? 'center' : 'top'}`,
+					backgroundPosition: `center`,
 					backgroundSize: 'cover',
-					height: `${userApplicationStatus === ApplicationStatus.SUBMITTED ? '100vh' : '100%'}`,
+					height: `100%`,
+					minHeight: `100vh`,
 				}}>
 				{!session && status === 'unauthenticated' && <SignIn />}
 				{!session && status === 'loading' && <Skeleton />}

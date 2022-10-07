@@ -294,7 +294,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: 'Resume',
 			// If a user has a valid school field, that means they submitted the form and have also submitted a resume
 			render: (_: any, record: any) =>
-				record.school && <Button onClick={() => openResume(record.key)}>Open Resume</Button>,
+				record.application?.school && <Button onClick={() => openResume(record.key)}>Open Resume</Button>,
 		},
 		{
 			title: '✈️',
