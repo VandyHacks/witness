@@ -251,7 +251,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 													validator: (_, value) => {
 														return new Promise((res, rej) => {
 															const val = parseInt(value);
-															if (val === NaN) rej();
+															if (isNaN(val)) rej();
 															else if (val < 501 || val > 99999) rej();
 															else if (value.length !== 5) rej();
 															else res(null);
@@ -598,8 +598,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									<br />
-									We're sorry to see you declined your spot at VandyHacks. If this was a mistake and
-									you'd like to attend, please email us at{' '}
+									We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake
+									and you&apos;d like to attend, please email us at{' '}
 									<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
 										info@vandyhacks.org
 									</a>
