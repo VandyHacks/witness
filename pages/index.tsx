@@ -51,7 +51,6 @@ export default function Page() {
 							<HackerDash
 								userApplicationStatus={userApplicationStatus}
 								setUserApplicationStatus={setUserApplicationStatus}
-								userEmail={session.user?.email}
 							/>
 						)}
 						{session.userType === 'JUDGE' && <JudgeDash />}

@@ -7,17 +7,17 @@ import TeamSetup from '../components/TeamSetup';
 import { TeamProfile } from '../types/client';
 import { ApplicationStatus, UserData } from '../types/database';
 import styles from '../styles/Form.module.css';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
 
 type HackerProps = {
 	userApplicationStatus?: number;
 	setUserApplicationStatus?: (newType: number) => void;
-	userEmail?: string | null;
 };
-export default function HackerDash({ userApplicationStatus, setUserApplicationStatus, userEmail }: HackerProps) {
+export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
+	const { data: session, status } = useSession();
 	// const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
 	// 	const res = await fetch(url, { method: 'GET' });
 	// 	if (!res.ok) return;
@@ -134,7 +134,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										alignItems: 'center',
 										marginBottom: '30px',
 									}}>
-									<div style={{ paddingRight: '20px' }}>Signed in as {userEmail}</div>
+									<div style={{ paddingRight: '20px' }}>Signed in as {session?.user?.email}</div>
 									<Button size="small" type="default" onClick={() => signOut()}>
 										Sign out
 									</Button>
@@ -491,7 +491,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</a>{' '}
 									to stay updated on our news and announcements!
 									<div className={styles.SignInInfo}>
-										<div>Signed in as {userEmail}</div>
+										<div>Signed in as {session?.user?.email}</div>
 										<br />
 										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
