@@ -505,20 +505,31 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						<>
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
-									Thank you for applying to VandyHacks!
+									Congratulations! 
 									<br />
-									You will hear back from us soon :&#41;
+									You have been accepted to VandyHacks!
+									<br /><br />
+									Click here to join our Discord. <br />More information will appear here
+									as we get closer to the hackathon!
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<br />
+										<Button size="small" type="default" onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
+								</div>
+							</div>
+						</>
+					)}
+					{user.applicationStatus === ApplicationStatus.REJECTED  && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
 									<br />
+									Unfortunately, your application to VandyHacks has been
+									rejected. We hope you apply again next year!
 									<br />
-									In the meantime, follow us on{' '}
-									<a
-										href="https://www.instagram.com/vandyhacks"
-										target="_blank"
-										rel="noreferrer"
-										style={{ color: '#0000EE' }}>
-										Instagram
-									</a>{' '}
-									to stay updated on our news and announcements!
 									<div className={styles.SignInInfo}>
 										<div>Signed in as {session?.user?.email}</div>
 										<br />
