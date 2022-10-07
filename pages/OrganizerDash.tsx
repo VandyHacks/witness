@@ -1,4 +1,4 @@
-import { Empty, Skeleton, Space, Tabs } from 'antd';
+import { Button, Empty, Skeleton, Space, Tabs } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
@@ -11,6 +11,8 @@ import PreAddDisplay from '../components/preAddDisplay';
 import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 import Events from '../components/events';
+import styles from '../styles/Form.module.css';
+import { signOut, useSession } from 'next-auth/react';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -117,96 +119,106 @@ export default function OrganizerDash() {
 		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
 	});
 
+	const { data: session, status } = useSession();
+
 	return (
-		<Space direction="vertical">
-			<Tabs
-				defaultActiveKey="1"
-				items={[
-					{
-						label: `Schedule`,
-						key: '1',
-						children: (
-							<>
-								{!scheduleData && <Skeleton />}
-								{scheduleData && <OrganizerSchedule data={scheduleData} />}
-							</>
-						),
-					},
-					{
-						label: `Judging`,
-						key: '2',
-						children: (
-							<>
-								{!teamsData && <Skeleton />}
-								{teamsData && (
-									<>
-										{/* Add dropdown here w/ functionality */}
-										{usersData && scoresData && (
-											<AllScores
-												teamData={teamsData}
-												scoreData={scoresData}
-												userData={usersData}
-											/>
-										)}
-									</>
-								)}
-							</>
-						),
-					},
-					{
-						label: `Manage Users`,
-						key: '3',
-						children: (
-							<>
-								{!userData && <Skeleton />}
-								{userData && userData.length == 0 && (
-									<Empty
-										image={Empty.PRESENTED_IMAGE_SIMPLE}
-										description={<span>No users lmao</span>}
-									/>
-								)}
-								{userData && userData.length > 0 && (
-									<ManageRoleForm
-										formData={userData}
-										onSubmit={formData => handleManageFormSubmit(formData, mutate)}
-									/>
-								)}
-							</>
-						),
-					},
-					{
-						label: `Pre-Add Users`,
-						key: '4',
-						children: (
-							<>
-								{preAddData && preAddData.length == 0 && (
-									<Empty
-										image={Empty.PRESENTED_IMAGE_SIMPLE}
-										description={<span>No preadded users lmao</span>}
-									/>
-								)}
-								{preAddData && preAddData.length > 0 && (
-									<PreAddDisplay
-										data={preAddData!}
-										onDelete={user => handlePreAddDelete(user, mutate)}
-									/>
-								)}
-								<PreAddForm />
-							</>
-						),
-					},
-					{
-						label: `Manage Applications`,
-						key: '5',
-						children: <>{hackers && <ApplicantsDisplay hackers={hackers} />}</>,
-					},
-					{
-						label: `Events`,
-						key: '6',
-						children: <Events />,
-					},
-				]}
-			/>
-		</Space>
+		<>
+			<div style={{ display: 'flex' }}>
+				<Button size="small" type="default" onClick={() => signOut()}>
+					Sign out
+				</Button>
+				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+			</div>
+			<Space direction="vertical">
+				<Tabs
+					defaultActiveKey="1"
+					items={[
+						{
+							label: `Schedule`,
+							key: '1',
+							children: (
+								<>
+									{!scheduleData && <Skeleton />}
+									{scheduleData && <OrganizerSchedule data={scheduleData} />}
+								</>
+							),
+						},
+						{
+							label: `Judging`,
+							key: '2',
+							children: (
+								<>
+									{!teamsData && <Skeleton />}
+									{teamsData && (
+										<>
+											{/* Add dropdown here w/ functionality */}
+											{usersData && scoresData && (
+												<AllScores
+													teamData={teamsData}
+													scoreData={scoresData}
+													userData={usersData}
+												/>
+											)}
+										</>
+									)}
+								</>
+							),
+						},
+						{
+							label: `Manage Users`,
+							key: '3',
+							children: (
+								<>
+									{!userData && <Skeleton />}
+									{userData && userData.length == 0 && (
+										<Empty
+											image={Empty.PRESENTED_IMAGE_SIMPLE}
+											description={<span>No users lmao</span>}
+										/>
+									)}
+									{userData && userData.length > 0 && (
+										<ManageRoleForm
+											formData={userData}
+											onSubmit={formData => handleManageFormSubmit(formData, mutate)}
+										/>
+									)}
+								</>
+							),
+						},
+						{
+							label: `Pre-Add Users`,
+							key: '4',
+							children: (
+								<>
+									{preAddData && preAddData.length == 0 && (
+										<Empty
+											image={Empty.PRESENTED_IMAGE_SIMPLE}
+											description={<span>No preadded users lmao</span>}
+										/>
+									)}
+									{preAddData && preAddData.length > 0 && (
+										<PreAddDisplay
+											data={preAddData!}
+											onDelete={user => handlePreAddDelete(user, mutate)}
+										/>
+									)}
+									<PreAddForm />
+								</>
+							),
+						},
+						{
+							label: `Manage Applications`,
+							key: '5',
+							children: <>{hackers && <ApplicantsDisplay hackers={hackers} />}</>,
+						},
+						{
+							label: `Events`,
+							key: '6',
+							children: <Events />,
+						},
+					]}
+				/>
+			</Space>
+		</>
 	);
 }
