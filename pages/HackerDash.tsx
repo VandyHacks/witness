@@ -501,6 +501,35 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
+					{user.applicationStatus === ApplicationStatus.ACCEPTED  && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									Thank you for applying to VandyHacks!
+									<br />
+									You will hear back from us soon :&#41;
+									<br />
+									<br />
+									In the meantime, follow us on{' '}
+									<a
+										href="https://www.instagram.com/vandyhacks"
+										target="_blank"
+										rel="noreferrer"
+										style={{ color: '#0000EE' }}>
+										Instagram
+									</a>{' '}
+									to stay updated on our news and announcements!
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<br />
+										<Button size="small" type="default" onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
+								</div>
+							</div>
+						</>
+					)}
 					{/* {user.applicationStatus === ApplicationStatus.ACCEPTED && (
 						<>
 							{!teamData && <TeamSetup />}
