@@ -265,50 +265,18 @@ export default (user: UserData): SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																				Congratulations! You’re invited to be a part of <b>VandyHacks IX: Ocean Edition</b>! We enjoyed reading your application and would love to see your ideas come to life during our virtual event on <b>October 2nd-4th</b>!
+																				Congratulations! You’re invited to be a part of <b>VandyHacks IX: Ocean Edition</b>! We enjoyed reading your application and would love to see your ideas come to life during our event on <b>October 21st-23rd</b>!
 																				</div>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					Head over to the application portal <a href="https://apply.vandyhacks.org">here</a> and confirm your attendance by October 2nd, 12:00 PM CDT.
-																					<b>Make sure you’ve read and checked “agree” to our hackathon waiver</b> under the hacker application.
+																					Head over to the application portal <a href="https://apply.vandyhacks.org">here</a> and confirm your attendance by October 20th, 12:00 PM CDT.
 																				</div>
 																			</td>
 																		</tr>
-																		<tr>
-																<td
-																	align="left"
-																	style="font-size:0px;padding:10px 25px;word-break:break-word;"
-																>
-																	<div
-																		style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"
-																	>
-																		Finally, please make sure to do the following in preparation for
-																		the event:
-																		<ul>
-																			<li>
-																				<b
-																					>Join our Discord
-																					<a href="https://discord.gg/MbbfBWW">here</a></b
-																				>
-																				for communication before, during, and after the hackathon!
-																			</li>
-																			<li>
-																				<b
-																					>Review the full hackathon schedule
-																					<a href="https://vandyhacks.org/">here!</a></b
-																				>
-																			</li>
-																			<li style="list-style: none;">
-																				*NOTE: We will be baking nutella hand pies at 5:00 PM CDT
-																				on Saturday, October 3rd, so get your <a href="https://docs.google.com/document/d/1hhhk-tC7PL-CA3skxnJJ8b40xb0zECMYAH9AUFad2gE/edit?usp=sharing">ingredients</a> ready!
-																			</li>
-																		</ul>
-																	</div>
-																</td>
-															</tr>
+										
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
@@ -633,14 +601,9 @@ export default (user: UserData): SendEmailRequest => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Hi ${escapeChars(user.name || user.name)},
-				Congratulations! You’re invited to be a part of VandyHacks IX: Ocean Edition! We enjoyed reading your application and would love to see your ideas come to life during our virtual event on October 2nd-4th!
+				Congratulations! You’re invited to be a part of VandyHacks IX: Ocean Edition! We enjoyed reading your application and would love to see your ideas come to life during our event on October 21st-23rd!
 
-				Head over to the application portal here and confirm your attendance by October 2nd, 12:00 PM CDT. Make sure you’ve also read and checked “agree” to our hackathon waiver under the hacker application.
-
-				Finally, please make sure to do the following in preparation for the event:
-				Join our Discord here for communication before, during, and after the hackathon!
-				Review the full hackathon schedule here!
-				*NOTE: We will be baking nutella hand pies at 5:00 PM CDT on Saturday, October 3rd, so get your ingredients ready!
+				Head over to the application portal here and confirm your attendance by October 20th, 12:00 PM CDT.
 
 				If you have any questions or concerns, check out our FAQ or reach out to us at info@vandyhacks.org.
 
