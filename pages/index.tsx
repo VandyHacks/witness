@@ -41,7 +41,7 @@ export default function Page() {
 					backgroundPosition: `center`,
 					backgroundSize: 'cover',
 					height: `100%`,
-					minHeight: `100vh`
+					minHeight: `100vh`,
 				}}>
 				{!session && status === 'unauthenticated' && <SignIn />}
 				{!session && status === 'loading' && <Skeleton />}

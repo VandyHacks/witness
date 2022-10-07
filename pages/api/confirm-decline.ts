@@ -7,7 +7,7 @@ import sendEmail from './email/email';
 import confirmed from './email/templates/confirmed';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
-	console.log("HERE");
+	console.log('HERE');
 	const session = await getSession({ req });
 	if (session?.userType !== 'HACKER') {
 		res.send(403);
