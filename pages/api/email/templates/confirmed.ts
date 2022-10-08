@@ -271,7 +271,7 @@ export default (user: UserData): SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 7:00 PM CDT Friday, October 2nd, and wrap up by 4:00 PM CDT Sunday, October 4th.
+																					This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 8:00 PM CDT Friday, October 21st, and wrap up by 3:00 PM CDT Sunday, October 23rd.
 																				</div>
 																			</td>
 																		</tr>
@@ -298,12 +298,8 @@ export default (user: UserData): SendEmailRequest => ({
 																					<a href="https://vandyhacks.org/">here!</a></b
 																				>
 																			</li>
-																			<li style="list-style: none;">
-																				*NOTE: We will be baking nutella hand pies at 5:00 PM CDT
-																				on Saturday, October 3rd, so get your <a href="https://docs.google.com/document/d/1hhhk-tC7PL-CA3skxnJJ8b40xb0zECMYAH9AUFad2gE/edit?usp=sharing">ingredients</a> ready!
-																			</li>
 																			<li>
-																				Like our page on <a href="https://www.facebook.com/vandyhacks/">Facebook</a> and follow us on <a href="https://www.instagram.com/vandyhacks/?hl=en">Instagram</a> for some sneak peeks at the organizers in action!
+																				Follow us on <a href="https://www.instagram.com/vandyhacks/?hl=en">Instagram</a> for some sneak peeks at the organizers in action!
 																			</li>
 																		</ul>
 																	</div>
@@ -626,16 +622,15 @@ export default (user: UserData): SendEmailRequest => ({
 				Data: `Hey ${escapeChars(user.name)},
 				We're so excited that you'll be joining us for VandyHacks IX: Ocean Edition!
 
-				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 7:00 PM CDT Friday, October 2nd, and wrap up by 4:00 PM CDT Sunday, October 4th.
+				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 8:00 PM CDT Friday, October 21st, and wrap up by 3:00 PM CDT Sunday, October 23rd.
 
 				In the meantime, be sure to complete the following:
 
 				Join our Discord here for communication before, during, and after the hackathon!
 				Review the full hackathon schedule here!
-				*NOTE: We will be baking nutella hand pies at 5:00 PM CDT on Saturday, October 3rd, so get your ingredients ready!
-				Like our page on Facebook and follow us on Instagram for sneak peeks of the organizers in action!
+				Follow us on Instagram for sneak peeks of the organizers in action!
 
-				NOTE: If you are no longer able to attend, please indicate this in the portal ASAP so that we can get an accurate attendance count.
+				NOTE: If you are no longer able to attend, please email us ASAP so that we can get an accurate attendance count.
 
 				See you soon!
 				The VandyHacks Team`,
