@@ -606,7 +606,7 @@ export default (user: UserData): SendEmailRequest => ({
 		},
 		Subject: {
 			Charset: 'UTF-8',
-			Data: "Applications Closing Soon!",
+			Data: 'Applications Closing Soon!',
 		},
 	},
 	Source: 'VandyHacks <noreply@vandyhacks.org>',
