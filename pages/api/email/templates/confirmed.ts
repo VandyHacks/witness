@@ -288,7 +288,7 @@ export default (user: UserData): SendEmailRequest => ({
 																			<li>
 																				<b
 																					>Join our Discord
-																					<a href="https://discord.gg/MbbfBWW">here</a></b
+																					<a href="https://vhl.ink/discord">here</a></b
 																				>
 																				for communication before, during, and after the hackathon!
 																			</li>
