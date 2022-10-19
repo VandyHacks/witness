@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { SendEmailRequest } from '@aws-sdk/client-ses';
 import { UserData } from '../../../../types/database';
 import { escapeChars } from '../email';
@@ -20,7 +21,7 @@ export default (user: UserData): SendEmailRequest => ({
 				<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 				<head>
-					<title> See You Soon! </title>
+					<title> Applications Closing Soon!! </title>
 					<!--[if !mso]><!-- -->
 					<meta http-equiv="X-UA-Compatible" content="IE=edge">
 					<!--<![endif]-->
@@ -195,7 +196,7 @@ export default (user: UserData): SendEmailRequest => ({
 																				<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
 																					<tbody>
 																						<tr>
-																							<td style="width:520px;"> <center> <a href="https://vandyhacks.org" target="_blank">
+																							<td style="width:520px;"> <center><a href="https://vandyhacks.org" target="_blank">
 
 							<img alt="" height="auto" src="https://vh-public-assets.s3.us-east-2.amazonaws.com/VH+Logo+Without+Text+Black.png" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:30%;" width="520">
 
@@ -256,66 +257,41 @@ export default (user: UserData): SendEmailRequest => ({
 																	<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hey ${escapeChars(
+																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:20px;font-weight:bold;line-height:24px;text-align:left;color:#212b35;"> Applications Closing Soon! </div>
+																			</td>
+																		</tr>
+																		<tr>
+																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"> Hi ${escapeChars(
 																					user.name
-																				)}! </div>
+																				)}, </div>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					We're so excited that you'll be joining us for <b>VandyHacks IX: Ocean Edition</b>!
+																				We've noticed you've created an application with us, but we do not have a record of your submission.
 																				</div>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 8:00 PM CDT Friday, October 21st, and wrap up by 3:00 PM CDT Sunday, October 23rd.
+																				We would love to have you join VandyHacks IX! Make sure you apply at <a href="https://vandyhacks.org">vandyhacks.org</a> by October 14th, at 11.59pm to have the chance to create unique projects, win prizes, attend workshops/speaker events, network with our sponsors, receive cool swag, eat free food, and so much more!
 																				</div>
 																			</td>
 																		</tr>
 																		<tr>
-																<td
-																	align="left"
-																	style="font-size:0px;padding:10px 25px;word-break:break-word;"
-																>
-																	<div
-																		style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;"
-																	>
-																		In the meantime, be sure to complete the following:
-																		<ul>
-																			<li>
-																				<b
-																					>Join our Discord
-																					<a href="https://vhl.ink/discord">here</a></b
-																				>
-																				for communication before, during, and after the hackathon!
-																			</li>
-																			<li>
-																				<b
-																					>Review the full hackathon schedule
-																					<a href="https://vandyhacks.org/">here!</a></b
-																				>
-																			</li>
-																			<li>
-																				Follow us on <a href="https://www.instagram.com/vandyhacks/?hl=en">Instagram</a> for some sneak peeks at the organizers in action!
-																			</li>
-																		</ul>
-																	</div>
-																</td>
-															</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					<b>NOTE:</b> If you are no longer able to attend, please indicate this in the <a href="https://apply.vandyhacks.org">portal</a> ASAP so that we can get an accurate attendance count.
+																				Feel free to email us at <a href= "info@vandyhacks.org">info@vandyhacks.org</a> if you have any questions.
 																				</div>
 																			</td>
 																		</tr>
-																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					See you soon!
+																					Cheers,
 																				</div>
 																			</td>
 																		</tr>
@@ -479,8 +455,8 @@ export default (user: UserData): SendEmailRequest => ({
 																										</tr>
 																										<tr>
 																											<td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-																												<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:400;line-height:16px;text-align:center;color:#445566;"> You are receiving this application update because you applied at <a href="https://apply.vandyhacks.org" class="text-link" style="color: #5e6ebf;">apply.vandyhacks.org</a>. If you would like to opt-out of
-																													any future emails pertaining to VandyHacks applications, please click <a href="https://apply.vandyhacks.org/api/unsubscribe?id=${
+																												<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:400;line-height:16px;text-align:center;color:#445566;"> You are receiving this application update because you created an account at <a href="https://apply.vandyhacks.org" class="text-link" style="color: #5e6ebf;">apply.vandyhacks.org</a>. If you would like to opt-out of
+																													any future emails pertaining to VandyHacks IX: Ocean Edition applications, please click <a href="https://apply.vandyhacks.org/api/unsubscribe?id=${
 																														user._id
 																													}" class="text-link" style="color: #5e6ebf;">here</a> </div>
 																											</td>
@@ -619,26 +595,18 @@ export default (user: UserData): SendEmailRequest => ({
 			},
 			Text: {
 				Charset: 'UTF-8',
-				Data: `Hey ${escapeChars(user.name)},
-				We're so excited that you'll be joining us for VandyHacks IX: Ocean Edition!
-
-				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 8:00 PM CDT Friday, October 21st, and wrap up by 3:00 PM CDT Sunday, October 23rd.
-
-				In the meantime, be sure to complete the following:
-
-				Join our Discord here for communication before, during, and after the hackathon!
-				Review the full hackathon schedule here!
-				Follow us on Instagram for sneak peeks of the organizers in action!
-
-				NOTE: If you are no longer able to attend, please email us ASAP so that we can get an accurate attendance count.
-
-				See you soon!
+				Data: `Applications Closing Soon!
+				Hi ${escapeChars(user.name)},
+				We’ve noticed you’ve created an application with us, but we do not have a record of your submission. We would love to have you join VandyHacks IX!
+				Make sure you apply at vandyhacks.org by October 14th, at 11.59pm to have the chance to create unique projects, win prizes, attend workshops/speaker events, network with our sponsors, receive cool swag, eat free food, and so much more! 
+				Feel free to email us at info@vandyhacks.org if you have any questions
+				Cheers,
 				The VandyHacks Team`,
 			},
 		},
 		Subject: {
 			Charset: 'UTF-8',
-			Data: 'See you soon!',
+			Data: 'Applications Closing Soon!',
 		},
 	},
 	Source: 'VandyHacks <noreply@vandyhacks.org>',

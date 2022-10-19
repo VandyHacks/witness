@@ -555,7 +555,13 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<br />
 									You have been accepted to VandyHacks!
 									<div style={{ width: '100%', height: '16px' }}></div>
-									{/* Click here to join our Discord. <br /> */}
+									<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+										<Button size="large" type="link">
+											Click here to join our Discord
+										</Button>
+									</a>
+									<br />
+									<br />
 									More information will appear here as we get closer to the hackathon!
 									<div className={styles.SignInInfo}>
 										<div>Signed in as {session?.user?.email}</div>

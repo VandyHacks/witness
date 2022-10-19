@@ -310,10 +310,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: 'Status',
 			dataIndex: 'applicationStatus',
 			filters: [
-				{ text: 'Accepted', value: ApplicationStatus.ACCEPTED },
 				{ text: 'Created', value: ApplicationStatus.CREATED },
-				{ text: 'Rejected', value: ApplicationStatus.REJECTED },
+				{ text: 'Declined', value: ApplicationStatus.DECLINED },
 				{ text: 'Submitted', value: ApplicationStatus.SUBMITTED },
+				{ text: 'Accepted', value: ApplicationStatus.ACCEPTED },
+				{ text: 'Confirmed', value: ApplicationStatus.CONFIRMED },
+				{ text: 'Rejected', value: ApplicationStatus.REJECTED },
 				{ text: 'Checked In', value: ApplicationStatus.CHECKED_IN },
 			],
 			filteredValue: filteredInfo.applicationStatus || null,
@@ -337,7 +339,7 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: 'Actions',
 			render: (text: any, record: any) => (
 				<>
-					{record.applicationStatus === ApplicationStatus.ACCEPTED && (
+					{record.applicationStatus === ApplicationStatus.CONFIRMED && (
 						<Button shape="circle" icon={<CheckOutlined />} onClick={() => openCheckinModal(record)} />
 					)}
 					&nbsp;&nbsp;
