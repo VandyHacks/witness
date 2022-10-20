@@ -1,4 +1,5 @@
 import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag } from 'antd';
+import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import { handleSubmitFailure } from '../lib/helpers';
@@ -55,8 +56,8 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 		wrapperCol: { span: 20 },
 	};
 	return (
-		<>
-			<Descriptions bordered>
+		<Content style={{ width: '60vw', margin: 'auto' }}>
+			<Descriptions bordered style={{ backgroundColor: 'white' }}>
 				<Descriptions.Item label="Team Name" span={24}>
 					{name}
 				</Descriptions.Item>
@@ -109,6 +110,6 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 			</Collapse>
 			<Divider />
 			<LeaveButton onLeave={handleLeaveTeam} />
-		</>
+		</Content>
 	);
 }

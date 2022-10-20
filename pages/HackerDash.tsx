@@ -19,13 +19,13 @@ type HackerProps = {
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
 	const { data: session, status } = useSession();
-	// const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
-	// 	const res = await fetch(url, { method: 'GET' });
-	// 	if (!res.ok) return;
-	// 	const { members, ...rest } = await res.json();
+	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) return;
+		const { members, ...rest } = await res.json();
 
-	// 	return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
-	// });
+		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
+	});
 
 	const { data: user } = useSWR(
 		'/api/user-data',
@@ -594,6 +594,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)}
 					{user.applicationStatus === ApplicationStatus.CONFIRMED && (
 						<>
+							{/* Hacking start code */}
+							{!teamData && <TeamSetup />}
+							{teamData && <TeamManager profile={teamData} />}
+							{/* Pre-hacking code */}
+							{/*
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Congratulations!
@@ -620,6 +625,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</div>
 								</div>
 							</div>
+							*/}
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
@@ -672,12 +678,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{/* {user.applicationStatus === ApplicationStatus.ACCEPTED && (
-						<>
-							{!teamData && <TeamSetup />}
-							{teamData && <TeamManager profile={teamData} />}
-						</>
-					)} */}
 				</>
 			)}
 		</Content>
