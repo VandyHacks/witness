@@ -89,24 +89,27 @@ const Events = () => {
 	}, [curEvent]);
 
 	const getData = () => {
-		return fetch('/api/events')
+		const result = fetch('/api/events-count')
 			.then(res => res.json())
-			.then(data => {
-				// get list of eventIds
-				const eventIds = data.map((obj: EventData) => obj._id);
-				// fetch counts for each event
-				console.log('this is event ids', eventIds);
-				setEvents(
-					data.map((obj: EventData) => {
-						return {
-							key: obj._id,
-							setCurEvent,
-							...obj,
-							// count: eventCount,
-						};
-					})
-				);
+			.then(eventCount => {
+				return fetch('/api/events')
+					.then(res => res.json())
+					.then(events => {
+						setEvents(
+							events.map((event: EventData) => {
+								const count = eventCount.find((e: any) => e._id === event._id);
+								return {
+									key: event._id,
+									...event,
+									setCurEvent,
+									count: count ? count.count : 0,
+								};
+							})
+						);
+					});
 			});
+
+		return result;
 	};
 
 	const handleCheckIn = async () => {
@@ -133,6 +136,7 @@ const Events = () => {
 			});
 		}
 		setNfcId('');
+		getData();
 	};
 
 	const handleCancel = () => {
