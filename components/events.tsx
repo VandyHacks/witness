@@ -12,6 +12,7 @@ const columns: ColumnsType<EventDisplay> = [
 	{
 		title: 'Day',
 		dataIndex: 'startTime',
+		key: 'day',
 		render: (startTime: string) => {
 			let date = new Date(startTime).toDateString();
 			date = date.substring(0, date.length - 5);
@@ -22,6 +23,7 @@ const columns: ColumnsType<EventDisplay> = [
 	{
 		title: 'Time',
 		dataIndex: 'startTime',
+		key: 'time',
 		render: (startTime: string, record: EventDisplay) => {
 			const start = new Date(startTime);
 			const end = new Date(record.endTime.toString());
@@ -49,15 +51,19 @@ const columns: ColumnsType<EventDisplay> = [
 	{
 		title: 'Name',
 		dataIndex: 'name',
+		key: 'name',
 		width: '40%',
 	},
 	{
 		title: 'Count',
 		dataIndex: 'count',
+		key: 'count',
 		width: '10%',
 	},
 	{
 		title: 'Check In',
+		dataIndex: 'checkIn',
+		key: 'checkIn',
 		render: (_: any, record: EventDisplay) => {
 			return <Button onClick={() => record.setCurEvent(record)}>Check In</Button>;
 		},
