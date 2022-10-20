@@ -133,7 +133,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 				width: '100vw',
 				height: '100vh',
 				padding: '30px',
-				backgroundImage: `${session && session.userType === 'HACKER' ? 'url(form-background.png)' : 'inherit'}`,
+				backgroundImage: `${
+					user?.applicationStatus === ApplicationStatus.CONFIRMED
+						? 'url(background-2.png)'
+						: 'url(form-background.png)'
+				}`,
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: `center`,
 				backgroundSize: 'cover',
