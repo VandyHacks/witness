@@ -134,6 +134,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					<Form.Item className={styles.Title}> </Form.Item>
 
 					{user.applicationStatus === ApplicationStatus.CREATED && (
+						/*
 						<Form layout={'vertical'} onFinish={onFinish} scrollToFirstError={true}>
 							<div className={styles.Form}>
 								<div
@@ -373,7 +374,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload Résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								{/* <Form.Item
+								<Form.Item
 									label="Would you like to apply for travel reimbursements? "
 									name="applyTravelReimbursement"
 									rules={[{ required: true, message: 'Please select an answer!' }]}>
@@ -381,7 +382,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Radio.Button value="yes">Yes</Radio.Button>
 										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
-								</Form.Item> */}
+								</Form.Item>
 								<Form.Item
 									name="overnight"
 									label="Will you be staying overnight in the venue and thus need access to shower?"
@@ -481,6 +482,36 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<br />
 							</div>
 						</Form>
+						*/
+						<div className={styles.SubmittedForm}>
+							<div className={styles.ThankYouMessage}>
+								Application for VandyHacks VHIX is officially closed!
+								<br />
+								<br />
+								The deadline was October 19th, 11:59 PM CST.
+								<br />
+								<br />
+								You can stay up to date with the event by following us on{' '}
+								<a
+									href="https://www.instagram.com/vandyhacks"
+									target="_blank"
+									rel="noreferrer"
+									style={{ color: '#0000EE' }}>
+									Instagram
+								</a>
+								!
+								<div className={styles.SignInInfo}>
+									<div>Signed in as {session?.user?.email}</div>
+									<Button
+										style={{ marginTop: '8px' }}
+										size="small"
+										type="default"
+										onClick={() => signOut()}>
+										Sign out
+									</Button>
+								</div>
+							</div>
+						</div>
 					)}
 					{user.applicationStatus === ApplicationStatus.SUBMITTED && (
 						<>
