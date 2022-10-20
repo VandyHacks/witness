@@ -1,6 +1,5 @@
 import { Button, Input, InputRef, Modal, notification, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { date } from 'faker';
 import { useEffect, useRef, useState } from 'react';
 import { EventData } from '../types/database';
 
@@ -59,6 +58,9 @@ const columns: ColumnsType<EventDisplay> = [
 		dataIndex: 'count',
 		key: 'count',
 		width: '10%',
+		render: (count: number) => {
+			return <span>{count ? count : 0}</span>;
+		},
 	},
 	{
 		title: 'Check In',
@@ -90,12 +92,17 @@ const Events = () => {
 		return fetch('/api/events')
 			.then(res => res.json())
 			.then(data => {
+				// get list of eventIds
+				const eventIds = data.map((obj: EventData) => obj._id);
+				// fetch counts for each event
+				console.log('this is event ids', eventIds);
 				setEvents(
 					data.map((obj: EventData) => {
 						return {
 							key: obj._id,
 							setCurEvent,
 							...obj,
+							// count: eventCount,
 						};
 					})
 				);
