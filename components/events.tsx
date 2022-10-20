@@ -1,4 +1,6 @@
 import { Button, Input, InputRef, Modal, notification, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+import { date } from 'faker';
 import { useEffect, useRef, useState } from 'react';
 import { EventData } from '../types/database';
 
@@ -6,16 +8,60 @@ interface EventDisplay extends EventData {
 	setCurEvent: (open: EventDisplay) => void;
 }
 
-const columns = [
+const columns: ColumnsType<EventDisplay> = [
+	{
+		title: 'Day',
+		dataIndex: 'startTime',
+		render: (startTime: string) => {
+			let date = new Date(startTime).toDateString();
+			date = date.substring(0, date.length - 5);
+			return date;
+		},
+		width: '15%',
+	},
+	{
+		title: 'Time',
+		dataIndex: 'startTime',
+		render: (startTime: string, record: EventDisplay) => {
+			const start = new Date(startTime);
+			const end = new Date(record.endTime.toString());
+			const startHours = start.getHours() % 12 || 12;
+			const startMinutes = start.getMinutes();
+			const endHours = end.getHours() % 12 || 12;
+			const endMinutes = end.getMinutes();
+			const startAmPm = start.getHours() >= 12 ? 'PM' : 'AM';
+			const endAmPm = end.getHours() >= 12 ? 'PM' : 'AM';
+			return (
+				<span>
+					{startHours}:{startMinutes < 10 ? `0${startMinutes}` : startMinutes} {startAmPm} - {endHours}:
+					{endMinutes < 10 ? `0${endMinutes}` : endMinutes} {endAmPm}
+				</span>
+			);
+		},
+		sorter: (a: EventDisplay, b: EventDisplay) => {
+			const aStart = new Date(a.startTime.toString());
+			const bStart = new Date(b.startTime.toString());
+			return aStart.getTime() - bStart.getTime();
+		},
+		sortOrder: 'ascend',
+		width: '15%',
+	},
 	{
 		title: 'Name',
 		dataIndex: 'name',
+		width: '40%',
+	},
+	{
+		title: 'Count',
+		dataIndex: 'count',
+		width: '10%',
 	},
 	{
 		title: 'Check In',
 		render: (_: any, record: EventDisplay) => {
 			return <Button onClick={() => record.setCurEvent(record)}>Check In</Button>;
 		},
+		width: '20%',
 	},
 ];
 
