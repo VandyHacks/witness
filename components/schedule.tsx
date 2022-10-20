@@ -4,34 +4,35 @@ import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { OrganizerScheduleDisplay, ScheduleDisplay } from '../types/client';
 import { UploadOutlined } from '@ant-design/icons';
+import { JudgingSessionData } from '../types/database';
 
 const { Panel } = Collapse;
 
 interface ScheduleProps {
-	data: ScheduleDisplay[];
+	data: JudgingSessionData[];
 	cutoffIndex?: number;
 }
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
-function TableCell(data: OrganizerScheduleDisplay | null) {
+function TableCell(data: JudgingSessionData | null) {
 	return data ? (
 		<Space direction="vertical">
 			<Collapse ghost>
 				<Panel header={<u>{data.teamName}</u>} key="info">
 					<ul>
 						<li key={`${data.teamName}-hackers`}>
-							<span>Hackers: </span>
+							{/* <span>Hackers: </span>
 							{data.memberNames.map(name => (
 								<Tag key={name}>{name}</Tag>
-							))}
+							))} */}
 						</li>
 						<li key={`${data.teamName}-devpost`}>
-							<Link href={data.devpost}>
+							{/* <Link href={data.devpost}>
 								<a style={{ color: '#1890ff' }} target="_blank">
 									{' '}
 									View Devpost
 								</a>
-							</Link>
+							</Link> */}
 						</li>
 					</ul>
 				</Panel>
@@ -39,18 +40,8 @@ function TableCell(data: OrganizerScheduleDisplay | null) {
 			<div>
 				<ul>
 					<li>
-						<span>Judges: </span>
-						{data.judges.map(judge => (
-							<Tag key={judge.id}>{judge.name}</Tag>
-						))}
-					</li>
-					<li>
-						<Link href={data.zoom}>
-							<a style={{ color: '#1890ff' }} target="_blank">
-								{' '}
-								Join Room
-							</a>
-						</Link>
+						<span>Judge: </span>
+						<Tag key={data.judgeName as string}>{data.judgeName}</Tag>
 					</li>
 				</ul>
 			</div>
@@ -86,19 +77,51 @@ function handleFailure(message: string) {
 	});
 }
 
-export default function OrganizerSchedule(props: ScheduleProps) {
-	const { data } = props;
-	// const numRooms = parseInt(NUM_ROOMS || '5');
-	const numRooms = 4;
+function generateTimes(start: Date, end: Date, interval: number) {
+	const times = [];
+	let current = start;
+	while (current < end) {
+		console.log(current)
+		times.push(current);
+		current = new Date(current.getTime() + interval * 60000);
+	}
+	return times;
+}
 
-	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
-	const rooms = useMemo(
+export default function OrganizerSchedule(props: ScheduleProps) {
+	let { data } = props;
+
+	// TODO: DELETE THIS AND GET DATA FROM BACKEND
+	// Need to make _id an optional field in JudgingSessionData for this to work
+	data = [
+		{
+			time: "2022-10-23T15:00:00.000Z",
+			teamName: "Team 1",
+			judgeName: "Judge 1",
+		},
+		{
+			time: "2022-10-23T15:10:00.000Z",
+			teamName: "Team 1",
+			judgeName: "Judge 2",
+		},
+		{
+			time: "2022-10-23T15:00:00.000Z",
+			teamName: "Team 2",
+			judgeName: "Judge 1",
+		},
+		{
+			time: "2022-10-23T15:30:00.000Z",
+			teamName: "Team 3",
+			judgeName: "Judge 1",
+		}
+	]
+
+	const teams = useMemo(
 		() =>
-			Array(numRooms)
-				.fill(null)
-				.map((_, i) => `https://vhl.ink/room-${i + 1}`),
-		[numRooms]
+			[...new Set(data.map(x => x.teamName))],
+		[data]
 	);
+
 	const columns = useMemo(
 		() => [
 			{
@@ -108,31 +131,42 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				width: 100,
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
-			...rooms.map((roomURL, roomNum) => ({
-				title: <a href={roomURL}>Room {roomNum + 1}</a>,
-				dataIndex: roomURL,
-				key: (roomNum + 1).toString(),
+			...teams.map((teamName, teamIdx) => ({
+				title: teamName as string,
+				dataIndex: teamName as string,
+				key: teamName as string,
 				render: TableCell,
 			})),
 		],
-		[rooms]
+		[teams]
 	);
+
+	// 10:00 AM - 11:00 AM, 10 minute increments
+	const sessionOne = generateTimes(new Date("2022-10-23T10:00:00"), new Date("2022-10-23T11:00:00"), 10);
+	// 11:30 AM - 12:30 PM, 10 minute increments
+	const sessionTwo = generateTimes(new Date("2022-10-23T11:30:00"), new Date("2022-10-23T12:30:00"), 10);
+
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
 		const dataAsMap = new Map();
-		data.forEach(assignment => {
-			const { time, zoom } = assignment;
-			if (!dataAsMap.has(time)) {
-				dataAsMap.set(time, Object.fromEntries(rooms.map(room => [room, null])));
-			}
-			dataAsMap.get(time)[zoom] = assignment;
+		sessionOne.forEach(time => {
+			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
+		})
+		sessionTwo.forEach(time => {
+			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
+		})
+
+		console.log(dataAsMap)
+		data.forEach(session => {
+			const { time, teamName } = session;
+			dataAsMap.get(time)[teamName as string] = session;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],
 			...pair[1],
 			key: pair[0],
 		}));
-	}, [data, rooms]);
+	}, [data, teams, sessionOne, sessionTwo]);
 
 	const [loading, setLoading] = useState(false);
 	return (
