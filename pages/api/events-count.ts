@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'GET':
 			if (req.query.eventId && ObjectId.isValid(req.query.eventId.toString())) {
-				const count = await user.countDocuments({ eventsAttended: req.query.eventId }).countDocuments();
+				const count = await user.find({ eventsAttended: { $eq: req.query.eventId } }).countDocuments();
 				return res.status(200).send(JSON.stringify(count));
 			} else {
 				return res.status(400).send('Bad Request');
