@@ -10,6 +10,7 @@ import styles from '../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
+import { Content } from 'antd/lib/layout/layout';
 
 type HackerProps = {
 	userApplicationStatus?: number;
@@ -127,7 +128,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	};
 
 	return (
-		<>
+		<Content
+			style={{
+				width: '100vw',
+				height: '100vh',
+				padding: '30px',
+				backgroundImage: `${session && session.userType === 'HACKER' ? 'url(form-background.png)' : 'inherit'}`,
+				backgroundRepeat: 'no-repeat',
+				backgroundPosition: `center`,
+				backgroundSize: 'cover',
+			}}>
 			{!user && <Skeleton />}
 			{user && (
 				<>
@@ -666,6 +676,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)} */}
 				</>
 			)}
-		</>
+		</Content>
 	);
 }
