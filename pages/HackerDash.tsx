@@ -595,6 +595,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{user.applicationStatus === ApplicationStatus.CONFIRMED && (
 						<>
 							{/* Hacking start code */}
+							<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+								<Button size="small" type="default" onClick={() => signOut()}>
+									Sign out
+								</Button>
+								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+							</div>
 							{!teamData && <TeamSetup />}
 							{teamData && <TeamManager profile={teamData} />}
 							{/* Pre-hacking code */}

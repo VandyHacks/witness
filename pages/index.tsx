@@ -32,8 +32,10 @@ export default function Page() {
 			</Head>
 			<Layout
 				style={{
+					padding: session?.userType !== 'HACKER' ? '30px' : '0px',
 					height: `100vh`,
 					width: `100vw`,
+					backgroundColor: 'white',
 				}}>
 				{!session && status === 'unauthenticated' && <SignIn />}
 				{!session && status === 'loading' && <Skeleton />}

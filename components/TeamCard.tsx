@@ -15,7 +15,7 @@ export default function TeamCard(props: Props) {
 		wrapperCol: { span: 16 },
 	};
 	return (
-		<Card title={title} type="inner" style={{ maxWidth: '50vw' }}>
+		<Card title={title} type="inner" style={{ maxWidth: '50vw', margin: 'auto' }}>
 			<Form {...layout} labelAlign="left" onFinish={onSubmit}>
 				{fields.map(field => (
 					<Form.Item
