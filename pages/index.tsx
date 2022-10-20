@@ -32,7 +32,7 @@ export default function Page() {
 			</Head>
 			<Layout
 				style={{
-					padding: session?.userType !== 'HACKER' ? '30px' : '0px',
+					padding: session?.userType === undefined || session?.userType === 'HACKER' ? '0px' : '30px',
 					height: `100vh`,
 					width: `100vw`,
 					backgroundColor: 'white',
