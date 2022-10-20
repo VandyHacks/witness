@@ -15,38 +15,39 @@ interface ScheduleProps {
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
 function TableCell(data: JudgingSessionData | null) {
-	return data ? (
-		<Space direction="vertical">
-			<Collapse ghost>
-				<Panel header={<u>{data.teamName}</u>} key="info">
-					<ul>
-						<li key={`${data.teamName}-hackers`}>
-							{/* <span>Hackers: </span>
-							{data.memberNames.map(name => (
-								<Tag key={name}>{name}</Tag>
-							))} */}
-						</li>
-						<li key={`${data.teamName}-devpost`}>
-							{/* <Link href={data.devpost}>
-								<a style={{ color: '#1890ff' }} target="_blank">
-									{' '}
-									View Devpost
-								</a>
-							</Link> */}
-						</li>
-					</ul>
-				</Panel>
-			</Collapse>
-			<div>
-				<ul>
-					<li>
-						<span>Judge: </span>
-						<Tag key={data.judgeName as string}>{data.judgeName}</Tag>
-					</li>
-				</ul>
-			</div>
-		</Space>
-	) : null;
+	return data ? ({
+		props: {
+			style: { background: "#fafafa" }
+		},
+		children: (
+			<Space direction="vertical">
+				{/* <Collapse ghost>
+					<Panel header={<u>{data.teamName}</u>} key="info">
+						<ul>
+							<li key={`${data.teamName}-hackers`}>
+								<span>Hackers: </span>
+								{data.memberNames.map(name => (
+									<Tag key={name}>{name}</Tag>
+								))}
+							</li>
+							<li key={`${data.teamName}-devpost`}>
+								<Link href={data.devpost}>
+									<a style={{ color: '#1890ff' }} target="_blank">
+										{' '}
+										View Devpost
+									</a>
+								</Link>
+							</li>
+						</ul>
+					</Panel>
+				</Collapse> */}
+				<div>
+					{/* <span>Judge: </span> */}
+					<Tag key={data.judgeName as string}>{data.judgeName}</Tag>
+				</div>
+			</Space>
+		)
+	}) : null;
 }
 
 enum EditingStates {
@@ -113,7 +114,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			time: "2022-10-23T15:30:00.000Z",
 			teamName: "Team 3",
 			judgeName: "Judge 1",
-		}
+		},
 	]
 
 	const teams = useMemo(
@@ -131,7 +132,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				width: 100,
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
-			...teams.map((teamName, teamIdx) => ({
+			...teams.map((teamName) => ({
 				title: teamName as string,
 				dataIndex: teamName as string,
 				key: teamName as string,
@@ -159,6 +160,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 		console.log(dataAsMap)
 		data.forEach(session => {
 			const { time, teamName } = session;
+			if (!dataAsMap.has(time)) {
+				dataAsMap.set(time, Object.fromEntries(teams.map(team => [team, null])));
+			}
 			dataAsMap.get(time)[teamName as string] = session;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
@@ -176,7 +180,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			pagination={false}
 			sticky
 			bordered
-			scroll={{ x: true }}
+			scroll={{ x: "max-content" }}
 			summary={_ => (
 				<Table.Summary fixed={true}>
 					{/* <Table.Summary.Row style={editingStyles[editingState]}> */}
