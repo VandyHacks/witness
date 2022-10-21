@@ -14,6 +14,7 @@ const columns: ColumnsType<EventDisplay> = [
 		key: 'day',
 		render: (startTime: string) => {
 			let date = new Date(startTime).toDateString();
+			// TODO use a date format string instead for clarity
 			date = date.substring(0, date.length - 5);
 			return date;
 		},
@@ -24,6 +25,7 @@ const columns: ColumnsType<EventDisplay> = [
 		dataIndex: 'startTime',
 		key: 'time',
 		render: (startTime: string, record: EventDisplay) => {
+			// TODO use a date format string instead for clarity
 			const start = new Date(startTime);
 			const end = new Date(record.endTime.toString());
 			const startHours = start.getHours() % 12 || 12;
@@ -89,6 +91,7 @@ const Events = () => {
 	}, [curEvent]);
 
 	const getData = () => {
+		// TODO: rethink this function: is it better to combine /events-count and /events api?
 		const result = fetch('/api/events-count')
 			.then(res => res.json())
 			.then(eventCount => {
@@ -97,6 +100,7 @@ const Events = () => {
 					.then(events => {
 						setEvents(
 							events.map((event: EventData) => {
+								// TODO convert startTime and endTime here so we don't have to do it in the render function
 								const count = eventCount.find((e: any) => e._id === event._id);
 								return {
 									key: event._id,
@@ -136,6 +140,7 @@ const Events = () => {
 			});
 		}
 		setNfcId('');
+		// TODO: use useSWR and mutate to update data for good practice
 		getData();
 	};
 

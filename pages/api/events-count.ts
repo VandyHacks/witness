@@ -11,6 +11,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'GET':
+			// MongoDB aggregate pipeline
+			// First lookup all users
+			// Then match all users whose checkIns exist
+			// Then project to get event IDs with count of checkins
 			const count = await Event.aggregate([
 				{
 					$lookup: {
