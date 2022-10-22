@@ -115,13 +115,3 @@ export interface EventData {
 	endTime: String;
 	location: String;
 }
-<<<<<<< HEAD
-=======
-
-export interface JudgingSessionData {
-	_id?: mongoose.Schema.Types.ObjectId;
-	teamName: String;
-	judgeName: String;
-	time: String;
-}
->>>>>>> 2951584 (Enable team management for when hacking starts)
