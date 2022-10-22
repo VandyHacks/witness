@@ -15,13 +15,14 @@ interface ScheduleProps {
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
 function TableCell(data: JudgingSessionData | null) {
-	return data ? ({
-		props: {
-			style: { background: "#fafafa" }
-		},
-		children: (
-			<Space direction="vertical">
-				{/* <Collapse ghost>
+	return data
+		? {
+				props: {
+					style: { background: '#fafafa' },
+				},
+				children: (
+					<Space direction="vertical">
+						{/* <Collapse ghost>
 					<Panel header={<u>{data.teamName}</u>} key="info">
 						<ul>
 							<li key={`${data.teamName}-hackers`}>
@@ -41,13 +42,14 @@ function TableCell(data: JudgingSessionData | null) {
 						</ul>
 					</Panel>
 				</Collapse> */}
-				<div>
-					{/* <span>Judge: </span> */}
-					<Tag key={data.judgeName as string}>{data.judgeName}</Tag>
-				</div>
-			</Space>
-		)
-	}) : null;
+						<div>
+							{/* <span>Judge: </span> */}
+							<Tag key={data.judgeName as string}>{data.judgeName}</Tag>
+						</div>
+					</Space>
+				),
+		  }
+		: null;
 }
 
 enum EditingStates {
@@ -82,7 +84,7 @@ function generateTimes(start: Date, end: Date, interval: number) {
 	const times = [];
 	let current = start;
 	while (current < end) {
-		console.log(current)
+		console.log(current);
 		times.push(current);
 		current = new Date(current.getTime() + interval * 60000);
 	}
@@ -96,32 +98,28 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 	// Need to make _id an optional field in JudgingSessionData for this to work
 	data = [
 		{
-			time: "2022-10-23T15:00:00.000Z",
-			teamName: "Team 1",
-			judgeName: "Judge 1",
+			time: '2022-10-23T15:00:00.000Z',
+			teamName: 'Team 1',
+			judgeName: 'Judge 1',
 		},
 		{
-			time: "2022-10-23T15:10:00.000Z",
-			teamName: "Team 1",
-			judgeName: "Judge 2",
+			time: '2022-10-23T15:10:00.000Z',
+			teamName: 'Team 1',
+			judgeName: 'Judge 2',
 		},
 		{
-			time: "2022-10-23T15:00:00.000Z",
-			teamName: "Team 2",
-			judgeName: "Judge 1",
+			time: '2022-10-23T15:00:00.000Z',
+			teamName: 'Team 2',
+			judgeName: 'Judge 1',
 		},
 		{
-			time: "2022-10-23T15:30:00.000Z",
-			teamName: "Team 3",
-			judgeName: "Judge 1",
+			time: '2022-10-23T15:30:00.000Z',
+			teamName: 'Team 3',
+			judgeName: 'Judge 1',
 		},
-	]
+	];
 
-	const teams = useMemo(
-		() =>
-			[...new Set(data.map(x => x.teamName))],
-		[data]
-	);
+	const teams = useMemo(() => [...new Set(data.map(x => x.teamName))], [data]);
 
 	const columns = useMemo(
 		() => [
@@ -132,7 +130,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				width: 100,
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
-			...teams.map((teamName) => ({
+			...teams.map(teamName => ({
 				title: teamName as string,
 				dataIndex: teamName as string,
 				key: teamName as string,
@@ -143,21 +141,21 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 	);
 
 	// 10:00 AM - 11:00 AM, 10 minute increments
-	const sessionOne = generateTimes(new Date("2022-10-23T10:00:00"), new Date("2022-10-23T11:00:00"), 10);
+	const sessionOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
 	// 11:30 AM - 12:30 PM, 10 minute increments
-	const sessionTwo = generateTimes(new Date("2022-10-23T11:30:00"), new Date("2022-10-23T12:30:00"), 10);
+	const sessionTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
 
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
 		const dataAsMap = new Map();
 		sessionOne.forEach(time => {
 			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
-		})
+		});
 		sessionTwo.forEach(time => {
 			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
-		})
+		});
 
-		console.log(dataAsMap)
+		console.log(dataAsMap);
 		data.forEach(session => {
 			const { time, teamName } = session;
 			if (!dataAsMap.has(time)) {
@@ -180,7 +178,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			pagination={false}
 			sticky
 			bordered
-			scroll={{ x: "max-content" }}
+			scroll={{ x: 'max-content' }}
 			summary={_ => (
 				<Table.Summary fixed={true}>
 					{/* <Table.Summary.Row style={editingStyles[editingState]}> */}
