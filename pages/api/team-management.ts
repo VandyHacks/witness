@@ -5,7 +5,7 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ObjectId, MongoServerError } from 'mongodb';
-import log from '../../middleware/log';
+// import log from '../../middleware/log';
 import { TeamProfile } from '../../types/client';
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 7);
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				team.members.push(hacker);
 				await team.save();
-				await log(session.userID, `Joined team ${team.name} (join code ${team.joinCode})`);
+				// await log(session.userID, `Joined team ${team.name} (join code ${team.joinCode})`);
 				return res.status(201).send(team);
 			} else if (teamName && teamName.trim()) {
 				try {
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				try {
 					await team.save();
-					await log(session.userID, `Created team ${team.name} (join code ${team.joinCode})`);
+					// await log(session.userID, `Created team ${team.name} (join code ${team.joinCode})`);
 				} catch (e) {
 					if (e instanceof MongoServerError && e.errmsg.includes('name')) {
 						return res.status(400).send('This team name is already taken!');
@@ -86,15 +86,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 							'Make sure your Devpost URL is formatted correctly — does it start with https://devpost.com?'
 						);
 				}
-				await log(
-					session.userID,
-					`Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`
-				);
+				// await log(
+				// 	session.userID,
+				// 	`Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`
+				// );
 				team.devpost = devpost;
 			}
 
 			if (teamName && teamName.trim()) {
-				await log(session.userID, `Changed team name ${team.name} => ${teamName} (join code ${team.joinCode})`);
+				// await log(session.userID, `Changed team name ${team.name} => ${teamName} (join code ${team.joinCode})`);
 				team.name = teamName.trim();
 			}
 
@@ -117,11 +117,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			team.members = team.members.filter((member: ObjectId) => member.toString() !== userID);
 			if (!team.members.length) {
 				await Team.deleteOne({ members: session.userID });
-				await log(session.userID, `Deleted team ${team.name} (join code ${team.joinCode})`);
+				// await log(session.userID, `Deleted team ${team.name} (join code ${team.joinCode})`);
 				return res.status(200).send(`Team ${team.name} deleted successfully.`);
 			}
 
-			await log(session.userID, `Removed member from team ${team.name} (join code ${team.joinCode})`);
+			// await log(session.userID, `Removed member from team ${team.name} (join code ${team.joinCode})`);
 			await team.save();
 			return res.status(200).send(team);
 		}

@@ -134,7 +134,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 				height: '100vh',
 				padding: '30px',
 				backgroundImage: `${
-					user?.applicationStatus === ApplicationStatus.CONFIRMED
+					(user?.applicationStatus === ApplicationStatus.CONFIRMED || user?.applicationStatus === ApplicationStatus.CHECKED_IN)
 						? 'url(background-2.png)'
 						: 'url(form-background.png)'
 				}`,
