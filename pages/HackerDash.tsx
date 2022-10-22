@@ -131,7 +131,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		<Content
 			style={{
 				width: '100vw',
-				height: '100vh',
+				height: '100%',
 				padding: '30px',
 				backgroundImage: `${
 					(user?.applicationStatus === ApplicationStatus.CONFIRMED || user?.applicationStatus === ApplicationStatus.CHECKED_IN)

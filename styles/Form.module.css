@@ -23,9 +23,9 @@
 
 .Title {
 	width: 70%;
-	height: 150px;
+	height: 100px;
 	margin: auto;
-	margin-bottom: 3em;
+	margin-bottom: 1.5em;
 	background-image: url('/vh-banner.png');
 	background-repeat: no-repeat;
 	background-position: center;
