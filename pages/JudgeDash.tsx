@@ -1,4 +1,4 @@
-import { Button, Divider, notification, Skeleton } from 'antd';
+import { Divider, notification, Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
@@ -7,7 +7,7 @@ import { JudgeSchedule } from '../components/schedule';
 import TeamSelect from '../components/teamSelect';
 import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
 import { ResponseError, TeamData } from '../types/database';
-import { signOut } from 'next-auth/react';
+import Logout from '../components/Logout';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
 const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
@@ -159,9 +159,7 @@ export default function JudgeDash() {
 
 	return (
 		<>
-			<Button size="small" type="default" onClick={() => signOut()}>
-				Sign out
-			</Button>
+			<Logout />
 			{scheduleData && (
 				<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
 			)}

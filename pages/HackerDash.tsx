@@ -10,6 +10,7 @@ import styles from '../styles/Form.module.css';
 import { signOut } from 'next-auth/react';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
+import Logout from '../components/Logout';
 
 type HackerProps = {
 	userApplicationStatus?: number;
@@ -134,10 +135,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										alignItems: 'center',
 										marginBottom: '30px',
 									}}>
-									<div style={{ paddingRight: '20px' }}>Signed in as {userEmail}</div>
-									<Button size="small" type="default" onClick={() => signOut()}>
-										Sign out
-									</Button>
+									{/* <Logout /> */}
 								</div>
 								<Form.Item
 									label="First Name"

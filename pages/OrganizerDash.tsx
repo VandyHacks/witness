@@ -11,6 +11,7 @@ import PreAddDisplay from '../components/preAddDisplay';
 import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 import Events from '../components/events';
+import Logout from '../components/Logout';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -119,6 +120,7 @@ export default function OrganizerDash() {
 
 	return (
 		<Space direction="vertical">
+			<Logout />
 			<Tabs
 				defaultActiveKey="1"
 				items={[
