@@ -547,37 +547,37 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{user.applicationStatus === ApplicationStatus.CONFIRMED ||
-						(user.applicationStatus === ApplicationStatus.CHECKED_IN && (
-							<>
-								<div className={styles.SubmittedForm}>
-									<div className={styles.ThankYouMessage}>
-										Congratulations!
-										<br />
-										You have been accepted to VandyHacks!
-										<div style={{ width: '100%', height: '16px' }}></div>
-										<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
-											<Button size="large" type="link">
-												Click here to join our Discord
-											</Button>
-										</a>
-										<br />
-										<br />
-										More information will appear here as we get closer to the hackathon!
-										<div className={styles.SignInInfo}>
-											<div>Signed in as {session?.user?.email}</div>
-											<Button
-												style={{ marginTop: '8px' }}
-												size="small"
-												type="default"
-												onClick={() => signOut()}>
-												Sign out
-											</Button>
-										</div>
+					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
+						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
+						<>
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									Congratulations!
+									<br />
+									You have been accepted to VandyHacks!
+									<div style={{ width: '100%', height: '16px' }}></div>
+									<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+										<Button size="large" type="link">
+											Click here to join our Discord
+										</Button>
+									</a>
+									<br />
+									<br />
+									More information will appear here as we get closer to the hackathon!
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
 									</div>
 								</div>
-							</>
-						))}
+							</div>
+						</>
+					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
 						<>
 							<div className={styles.SubmittedForm}>
