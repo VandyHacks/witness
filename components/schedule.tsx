@@ -245,16 +245,6 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 				</Link>
 			),
 		},
-		{
-			title: 'Room',
-			dataIndex: 'room',
-			key: 'room',
-			render: (link: URL) => (
-				<a href={link.toString()} target="_blank" rel="noreferrer">
-					<Button type="link">Join room</Button>
-				</a>
-			),
-		},
 	];
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
 		time: item.time,
