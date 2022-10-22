@@ -4,13 +4,15 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 export const JudgingSessionSchema = new Schema({
-	teamName: {
-		type: String,
+	team: {
+		type: Schema.Types.ObjectId,
 		required: true,
+		ref: 'Team',
 	},
-	judgeName: {
-		type: String,
+	judge: {
+		type: Schema.Types.ObjectId,
 		required: true,
+		ref: 'User',
 	},
 	time: {
 		type: String,
