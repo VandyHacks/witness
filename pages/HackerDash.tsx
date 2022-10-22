@@ -547,7 +547,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{user.applicationStatus === ApplicationStatus.CONFIRMED && (
+					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
+						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 						<>
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
