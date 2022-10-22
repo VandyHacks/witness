@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'GET':
 			if (!calendarID) return res.send(451);
-			const ics = await fetch(`https://www.google.com/calendar/ical/${calendarID}/basic.ics`).then(data =>
+			const ics = await fetch(`https://www.google.com/calendar/ical/${calendarID}/public/basic.ics`).then(data =>
 				data.text()
 			);
 			const calendarEvents = parseICS(ics);
