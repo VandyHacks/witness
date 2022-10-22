@@ -88,10 +88,20 @@ export default function OrganizerDash() {
 		return (await res.json()) as UserData[];
 	});
 
-	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
+	/*const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get schedule.') as ResponseError;
+			error.status = res.status;
+			throw error;
+		}
+		return (await res.json()) as ScheduleDisplay[];
+	});*/
+
+	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR('/api/judging-sessions', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) {
+			const error = new Error('Failed to get judging sessions') as ResponseError;
 			error.status = res.status;
 			throw error;
 		}
@@ -138,8 +148,8 @@ export default function OrganizerDash() {
 							key: '1',
 							children: (
 								<>
-									{!scheduleData && <Skeleton />}
-									{scheduleData && <OrganizerSchedule data={scheduleData} />}
+									{!judgingSessionsData && <Skeleton />}
+									{judgingSessionsData && <OrganizerSchedule data={judgingSessionsData} />}
 								</>
 							),
 						},

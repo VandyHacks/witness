@@ -44,7 +44,7 @@ function TableCell(data: JudgingSessionData | null) {
 				</Collapse> */}
 						<div>
 							{/* <span>Judge: </span> */}
-							<Tag key={data.judgeName as string}>{data.judgeName}</Tag>
+							<Tag key={data.judge.name as string}>{data.judge.name}</Tag>
 						</div>
 					</Space>
 				),
@@ -94,32 +94,7 @@ function generateTimes(start: Date, end: Date, interval: number) {
 export default function OrganizerSchedule(props: ScheduleProps) {
 	let { data } = props;
 
-	// TODO: DELETE THIS AND GET DATA FROM BACKEND
-	// Need to make _id an optional field in JudgingSessionData for this to work
-	data = [
-		{
-			time: '2022-10-23T15:00:00.000Z',
-			teamName: 'Team 1',
-			judgeName: 'Judge 1',
-		},
-		{
-			time: '2022-10-23T15:10:00.000Z',
-			teamName: 'Team 1',
-			judgeName: 'Judge 2',
-		},
-		{
-			time: '2022-10-23T15:00:00.000Z',
-			teamName: 'Team 2',
-			judgeName: 'Judge 1',
-		},
-		{
-			time: '2022-10-23T15:30:00.000Z',
-			teamName: 'Team 3',
-			judgeName: 'Judge 1',
-		},
-	];
-
-	const teams = useMemo(() => [...new Set(data.map(x => x.teamName))], [data]);
+	const teams = useMemo(() => [...new Set(data.map(x => x.team.projectName))], [data]);
 
 	const columns = useMemo(
 		() => [
@@ -157,11 +132,11 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 
 		console.log(dataAsMap);
 		data.forEach(session => {
-			const { time, teamName } = session;
+			const { time, team } = session;
 			if (!dataAsMap.has(time)) {
 				dataAsMap.set(time, Object.fromEntries(teams.map(team => [team, null])));
 			}
-			dataAsMap.get(time)[teamName as string] = session;
+			dataAsMap.get(time)[team.projectName as string] = session;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],
