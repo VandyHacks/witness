@@ -137,7 +137,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					user?.applicationStatus === ApplicationStatus.CONFIRMED ||
 					user?.applicationStatus === ApplicationStatus.CHECKED_IN
 						? 'url(background-2.png)'
-						: 'url(form-background.png)'
+						: user?.applicationStatus != null ? 'url(background-1.png)' : ''
 				}`,
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: `center`,
