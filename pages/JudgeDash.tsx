@@ -6,7 +6,7 @@ import JudgingForm from '../components/judgingForm';
 import { JudgeSchedule } from '../components/schedule';
 import TeamSelect from '../components/teamSelect';
 import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
-import { ResponseError, TeamData } from '../types/database';
+import { JudgingSessionData, ResponseError, TeamData } from '../types/database';
 import { signOut } from 'next-auth/react';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
@@ -59,8 +59,8 @@ async function handleSubmit(
 
 export default function JudgeDash() {
 	const [teamID, setTeamID] = useState('');
-	const [currentScheduleItem, setCurrentScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
-	const [nextScheduleItem, setNextScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
+	const [currentScheduleItem, setCurrentScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
+	const [nextScheduleItem, setNextScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [nextIndex, setNextIndex] = useState(-1);
 	const { mutate } = useSWRConfig();
 	const judgingLength = parseInt(JUDGING_LENGTH || '0');
@@ -112,16 +112,16 @@ export default function JudgeDash() {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as ScheduleDisplay[];
+		return (await res.json()) as JudgingSessionData[];
 	});
 
 	// Initialize state if data was just received
 	useEffect(() => {
 		if (nextIndex === -1 && scheduleData) {
 			const now = Date.now();
-			let index = scheduleData.findIndex(el => now < new Date(el.time).getTime());
+			let index = scheduleData.findIndex(el => now < new Date(el.time as string).getTime());
 			if (index === -1) index = scheduleData.length;
-			let currentlyGoingTime = new Date(scheduleData[index - 1]?.time).getTime() + judgingLength;
+			let currentlyGoingTime = new Date(scheduleData[index - 1]?.time as string).getTime() + judgingLength;
 			setNextScheduleItem(scheduleData[index]);
 			setCurrentScheduleItem(now < currentlyGoingTime ? scheduleData[index - 1] : undefined);
 			setNextIndex(index);
@@ -134,12 +134,15 @@ export default function JudgeDash() {
 			const now = Date.now();
 			if (scheduleData && nextIndex > -1) {
 				// Data has been received and state is initialized
-				let time2 = new Date(scheduleData[scheduleData.length - 1]?.time).getTime() + judgingLength;
+				let time2 = new Date(scheduleData[scheduleData.length - 1]?.time as string).getTime() + judgingLength;
 				if (now <= time2) {
 					// Not yet done judging
-					let time3 = new Date(currentScheduleItem?.time || 0).getTime() + judgingLength;
+					let time3 = new Date((currentScheduleItem?.time as string) || 0).getTime() + judgingLength;
 
-					if (nextIndex < scheduleData.length && now >= new Date(nextScheduleItem?.time || 0).getTime()) {
+					if (
+						nextIndex < scheduleData.length &&
+						now >= new Date((nextScheduleItem?.time as string) || 0).getTime()
+					) {
 						// Next event should be current
 						setNextScheduleItem(scheduleData[nextIndex + 1]);
 						setCurrentScheduleItem(scheduleData[nextIndex]);
