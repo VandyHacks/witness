@@ -6,7 +6,7 @@ import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
 import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
-import { ResponseError, ScoreData, TeamData, UserData, PreAddData, ApplicationData } from '../types/database';
+import { ResponseError, ScoreData, TeamData, UserData, PreAddData, ApplicationData, JudgingSessionData } from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
 import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
@@ -105,7 +105,7 @@ export default function OrganizerDash() {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as ScheduleDisplay[];
+		return (await res.json()) as JudgingSessionData[];
 	});
 
 	const { data: preAddData, error: Error } = useSWR('/api/preadd', async url => {
