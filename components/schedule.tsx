@@ -258,11 +258,9 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 	];
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
 		time: item.time,
-		project: { name: item.teamName, link: new URL(item.devpost) },
-		teamMembers: item.memberNames,
-		judges: item.judgeNames,
-		form: item.teamId,
-		room: item.zoom,
+		project: { name: item.team.projectName, link: new URL(item.team.devpostURL) },
+		teamMembers: item.team.members,
+		judge: item.judge,
 	}));
 	return (
 		<Table
