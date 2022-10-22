@@ -561,7 +561,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{user.applicationStatus === ApplicationStatus.CONFIRMED && (
+					{(user.applicationStatus === ApplicationStatus.CONFIRMED || user.applicationStatus == ApplicationStatus.CHECKED_IN) && (
 						<>
 							{/* Hacking start code */}
 							<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
