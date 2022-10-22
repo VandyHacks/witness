@@ -339,7 +339,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			title: 'Actions',
 			render: (text: any, record: any) => (
 				<>
-					{[ApplicationStatus.ACCEPTED, ApplicationStatus.CHECKED_IN, ApplicationStatus.CONFIRMED, ApplicationStatus.DECLINED].includes(record.applicationStatus) && (
+					{[
+						ApplicationStatus.ACCEPTED,
+						ApplicationStatus.CHECKED_IN,
+						ApplicationStatus.CONFIRMED,
+						ApplicationStatus.DECLINED,
+					].includes(record.applicationStatus) && (
 						<Button shape="circle" icon={<CheckOutlined />} onClick={() => openCheckinModal(record)} />
 					)}
 					&nbsp;&nbsp;
