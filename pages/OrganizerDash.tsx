@@ -13,6 +13,8 @@ import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 import Events from '../components/events';
 import styles from '../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
+import { generateTimes } from '../components/schedule';
+import { SetStateAction, useEffect, useState } from 'react';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -45,6 +47,53 @@ async function handlePreAddDelete(user: PreAddData, mutate: ScopedMutator<any>) 
 	} else handleSubmitFailure(await res.text());
 }
 
+
+function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
+
+	let sessions = [];
+
+	const timesJudged = 2;
+	const numSessions = timesJudged * teams.length;
+
+	const perTimes = Math.floor(numSessions / times.length);
+	let remTimes = numSessions % times.length;
+
+	let teamIdx = 0
+	let judgeIdx = 0;
+
+	for(let i = 0; i < times.length; i++) {
+		const currSessions = perTimes + (remTimes > 0 ? 1 : 0);
+		remTimes--;
+		for(let j = 0; j < currSessions; j++) {
+			sessions.push({
+				team: teams[teamIdx],
+				judge: judges[judgeIdx],
+				time: times[i].toISOString() as String,
+			})
+			teamIdx = (teamIdx + 1) % teams.length;
+			judgeIdx = (judgeIdx + 1) % judges.length;
+		}
+	}
+
+	return sessions;
+}
+
+
+function generateSchedule(teams: TeamData[], judges: UserData[]) {
+
+	const numTeams = teams.length;
+
+	const teamsPerSession = Math.floor(numTeams / 2);
+
+	const timesOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
+	const timesTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
+
+	const sessionsA = matchTeams(teams.slice(0, teamsPerSession), judges, timesOne);
+	const sessionsB = matchTeams(teams.slice(teamsPerSession, numTeams), judges, timesTwo);
+
+	return sessionsA.concat(sessionsB);
+}
+
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
 
@@ -68,7 +117,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScoreData[];
 	});
 
-	const { data: usersData, error: usersError } = useSWR('/api/users?usertype=JUDGE', async url => {
+	const { data: judgeData, error: judgeError } = useSWR('/api/users?usertype=JUDGE', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get list of judges.') as ResponseError;
@@ -131,6 +180,9 @@ export default function OrganizerDash() {
 
 	const { data: session, status } = useSession();
 
+	const [testingSchedule, setTestingSchedule] = useState(false);
+	const [sampleScheduleData, setSampleSchedule] = useState<JudgingSessionData[] | undefined>(undefined);
+
 	return (
 		<>
 			<div style={{ display: 'flex' }}>
@@ -148,8 +200,16 @@ export default function OrganizerDash() {
 							key: '1',
 							children: (
 								<>
+									{teamsData && judgeData && (testingSchedule ? 
+									<Button onClick={() => {setTestingSchedule(false); }} style={{marginBottom: "10px"}}>Confirm Schedule</Button>
+									: <Button onClick={() => {setTestingSchedule(true); setSampleSchedule(generateSchedule(teamsData, judgeData)); }} style={{marginBottom: "10px"}}>Create Sample Judging Schedule</Button>)}
 									{!judgingSessionsData && <Skeleton />}
-									{judgingSessionsData && <OrganizerSchedule data={judgingSessionsData} />}
+									{!testingSchedule && judgingSessionsData && <OrganizerSchedule data={judgingSessionsData} handleChange={function (value: SetStateAction<string>): void {
+										throw new Error('Function not implemented.');
+									} } />}
+									{testingSchedule && sampleScheduleData && <OrganizerSchedule data={sampleScheduleData} handleChange={function (value: SetStateAction<string>): void {
+										throw new Error('Function not implemented.');
+									} } />}
 								</>
 							),
 						},
@@ -162,11 +222,11 @@ export default function OrganizerDash() {
 									{teamsData && (
 										<>
 											{/* Add dropdown here w/ functionality */}
-											{usersData && scoresData && (
+											{judgeData && scoresData && (
 												<AllScores
 													teamData={teamsData}
 													scoreData={scoresData}
-													userData={usersData}
+													userData={judgeData}
 												/>
 											)}
 										</>

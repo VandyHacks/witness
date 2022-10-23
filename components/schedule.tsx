@@ -82,7 +82,7 @@ function handleFailure(message: string) {
 	});
 }
 
-function generateTimes(start: Date, end: Date, interval: number) {
+export function generateTimes(start: Date, end: Date, interval: number) {
 	const times = [];
 	let current = start;
 	while (current < end) {
