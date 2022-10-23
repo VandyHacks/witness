@@ -1,5 +1,5 @@
 import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin } from 'antd';
-import React, { useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { OrganizerScheduleDisplay, ScheduleDisplay } from '../types/client';
@@ -12,6 +12,7 @@ const { Panel } = Collapse;
 interface ScheduleProps {
 	data: JudgingSessionData[];
 	cutoffIndex?: number;
+	handleChange: Dispatch<SetStateAction<string>>;
 }
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
@@ -198,9 +199,8 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 	);
 }
 
-export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
+export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
 	const [showPast, setShowPast] = useState(false);
-	let key = 0;
 	const columns = [
 		{
 			title: 'Time',
@@ -237,13 +237,13 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
 		},
 		{
-			title: 'Judging Form',
-			dataIndex: 'form',
-			key: 'form',
-			render: (id: string) => (
-				<Link href={`/judging?id=${id}`} passHref>
-					<Button type="link">Go to form</Button>
-				</Link>
+			title: 'Form',
+			dataIndex: 'teamId',
+			key: 'teamId',
+			render: (teamId: any) => (
+				<Button type="primary" onClick={() => handleChange(teamId)}>
+					Judge Team
+				</Button>
 			),
 		},
 	];
@@ -253,6 +253,7 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			project: { name: item.team.name, link: new URL(item.team.devpost) },
 			teamMembers: item.team.members,
 			judge: item.judge,
+			teamId: item.team._id,
 		};
 	});
 

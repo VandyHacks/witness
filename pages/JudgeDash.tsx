@@ -169,7 +169,7 @@ export default function JudgeDash() {
 				</Button>
 				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
 			</div>
-			{scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={0} />}
+			{scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={0} handleChange={setTeamID} />}
 			<br />
 			<br />
 			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} />}
