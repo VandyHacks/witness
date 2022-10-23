@@ -216,9 +216,11 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			render: ({ name, link, locationNum }: { name: string; link: URL, locationNum: number }) => (
+			render: ({ name, link, locationNum }: { name: string; link: URL; locationNum: number }) => (
 				<>
-					<td>{name} (Table {locationNum})</td>
+					<td>
+						{name} (Table {locationNum})
+					</td>
 					<Link href={link} passHref>
 						<a style={{ color: '#1890ff' }} target="_blank">
 							Devpost
