@@ -648,13 +648,13 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 							{!teamData && <TeamSetup />}
 							{teamData && (
-								<>
+								<div style={{ width: '60vw', margin: 'auto' }}>
 									<Content style={{ width: '60vw', margin: 'auto' }}>
 										<Table columns={judgingSessionColumns} dataSource={judgingSessionData} />
 									</Content>
 									<Divider />
 									<TeamManager profile={teamData} />
-								</>
+								</div>
 							)}
 							{/* Pre-hacking code */}
 							{/*
