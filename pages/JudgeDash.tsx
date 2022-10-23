@@ -58,13 +58,13 @@ async function handleSubmit(
 }
 
 export default function JudgeDash() {
+	const { data: session, status } = useSession();
 	const [teamID, setTeamID] = useState('');
 	const [currentScheduleItem, setCurrentScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [nextScheduleItem, setNextScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [nextIndex, setNextIndex] = useState(-1);
 	const { mutate } = useSWRConfig();
 	const judgingLength = parseInt(JUDGING_LENGTH || '0');
-	const { data: session, status } = useSession();
 
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {

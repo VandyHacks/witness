@@ -112,7 +112,7 @@ export interface EventData {
 
 export interface JudgingSessionData {
 	_id: mongoose.Schema.Types.ObjectId;
-	team: Team;
+	team: TeamData;
 	judge: UserData;
 	time: String;
 }

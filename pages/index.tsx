@@ -1,5 +1,4 @@
-import { Skeleton } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
+import { Layout, Skeleton } from 'antd';
 import { signIn, useSession } from 'next-auth/react';
 import { useState } from 'react';
 import SignIn from '../components/signIn';
@@ -31,23 +30,17 @@ export default function Page() {
 					content="Come join VH IX at Vanderbilt University on Oct 21-23, 2022. ✨"
 				/>
 			</Head>
-			<Content
+			<Layout
 				style={{
-					padding: session ? '30px' : '0px',
-					backgroundImage: `${
-						session && session.userType === 'HACKER' ? 'url(form-background.png)' : 'inherit'
-					}`,
-					backgroundRepeat: 'no-repeat',
-					backgroundPosition: `center`,
-					backgroundSize: 'cover',
-					height: `100%`,
-					minHeight: `100vh`,
+					padding: session?.userType === undefined || session?.userType === 'HACKER' ? '0px' : '30px',
+					height: `100vh`,
+					width: `100vw`,
+					backgroundColor: 'white',
 				}}>
 				{!session && status === 'unauthenticated' && <SignIn />}
 				{!session && status === 'loading' && <Skeleton />}
 				{session && (
 					<>
-						<br />
 						{session.userType === 'HACKER' && (
 							<HackerDash
 								userApplicationStatus={userApplicationStatus}
@@ -58,7 +51,7 @@ export default function Page() {
 						{session.userType === 'ORGANIZER' && <OrganizerDash />}
 					</>
 				)}
-			</Content>
+			</Layout>
 		</>
 	);
 }
