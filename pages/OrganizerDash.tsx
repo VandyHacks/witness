@@ -25,6 +25,8 @@ import { generateTimes } from '../components/schedule';
 import { SetStateAction, useEffect, useState } from 'react';
 import Title from 'antd/lib/typography/Title';
 
+const TIMES_JUDGED = 3;
+
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
 		method: 'PATCH',
@@ -59,8 +61,7 @@ async function handlePreAddDelete(user: PreAddData, mutate: ScopedMutator<any>) 
 function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
 	let sessions = [];
 
-	const timesJudged = 2;
-	const numSessions = timesJudged * teams.length;
+	const numSessions = TIMES_JUDGED * teams.length;
 
 	const perTimes = Math.floor(numSessions / times.length);
 	let remTimes = numSessions % times.length;
@@ -202,6 +203,9 @@ export default function OrganizerDash() {
 		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
 	});
 
+	const isScheduleImpossible = () =>
+		teamsData && judgeData && (teamsData.length * TIMES_JUDGED) / 12 > judgeData.length;
+
 	const { data: session, status } = useSession();
 
 	const [testingSchedule, setTestingSchedule] = useState(false);
@@ -248,6 +252,17 @@ export default function OrganizerDash() {
 										))}
 									{!judgingSessionsData && <Skeleton />}
 									<br />
+
+									<>
+										{isScheduleImpossible() ? (
+											<div>oops woopsy, something went fucky wucky</div>
+										) : (
+											<div>schedule is possible!!</div>
+										)}
+										<div>Count of Teams: {teamsData?.length}</div>
+										<div>Count of Judges: {judgeData?.length}</div>
+									</>
+
 									{testingSchedule && <Title>Expo A</Title>}
 									{testingSchedule && sampleScheduleAData && (
 										<OrganizerSchedule
