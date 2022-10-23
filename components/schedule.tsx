@@ -6,6 +6,7 @@ import { OrganizerScheduleDisplay, ScheduleDisplay } from '../types/client';
 import { UploadOutlined } from '@ant-design/icons';
 import { JudgingSessionData } from '../types/database';
 import { User } from 'next-auth';
+import Title from 'antd/lib/skeleton/Title';
 
 const { Panel } = Collapse;
 
@@ -258,6 +259,13 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 
 	return (
 		<Table
+			locale={{
+				emptyText: (
+					<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+						<h3>Stay tuned! You will see your teams that you will judge soon!</h3>
+					</div>
+				),
+			}}
 			dataSource={dataSource}
 			columns={columns}
 			pagination={false}

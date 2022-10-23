@@ -170,7 +170,7 @@ export default function JudgeDash() {
 
 	return (
 		<>
-			<div style={{ display: 'flex' }}>
+			<div style={{ display: 'flex', paddingBottom: '20px' }}>
 				<Button size="small" type="default" onClick={() => signOut()}>
 					Sign out
 				</Button>
