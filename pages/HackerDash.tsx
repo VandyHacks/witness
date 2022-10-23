@@ -650,9 +650,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							{teamData && (
 								<div style={{ width: '60vw', margin: 'auto' }}>
 									<Content style={{ width: '60vw', margin: 'auto' }}>
-										<Table columns={judgingSessionColumns} dataSource={judgingSessionData} />
+										<Table
+											locale={{
+												emptyText: (
+													<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+														<h3>Stay tuned! You will see your schedule soon!</h3>
+													</div>
+												),
+											}}
+											columns={judgingSessionColumns}
+											dataSource={undefined}
+										/>
+										<Divider />
 									</Content>
-									{/* <Divider /> */}
 									<TeamManager profile={teamData} />
 								</div>
 							)}
