@@ -17,6 +17,7 @@
 		"@types/escape-html": "^1.0.2",
 		"@types/formidable": "^2.0.5",
 		"antd": "^4.23.0",
+		"csv-writer": "^1.6.0",
 		"dotenv": "^16.0.2",
 		"escape-html": "^1.0.3",
 		"export-to-csv": "^0.2.1",

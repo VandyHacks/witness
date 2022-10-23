@@ -1,12 +1,12 @@
 import { Button, Divider, notification, Skeleton } from 'antd';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import JudgingForm from '../components/judgingForm';
 import { JudgeSchedule } from '../components/schedule';
 import TeamSelect from '../components/teamSelect';
 import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
-import { ResponseError, TeamData } from '../types/database';
+import { JudgingSessionData, ResponseError, TeamData } from '../types/database';
 import { signOut, useSession } from 'next-auth/react';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
@@ -60,8 +60,8 @@ async function handleSubmit(
 export default function JudgeDash() {
 	const { data: session, status } = useSession();
 	const [teamID, setTeamID] = useState('');
-	const [currentScheduleItem, setCurrentScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
-	const [nextScheduleItem, setNextScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
+	const [currentScheduleItem, setCurrentScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
+	const [nextScheduleItem, setNextScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [nextIndex, setNextIndex] = useState(-1);
 	const { mutate } = useSWRConfig();
 	const judgingLength = parseInt(JUDGING_LENGTH || '0');
@@ -106,23 +106,23 @@ export default function JudgeDash() {
 		}
 	);
 
-	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
+	const { data: scheduleData, error: scheduleError } = useSWR('/api/judging-sessions', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get schedule.') as ResponseError;
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as ScheduleDisplay[];
+		return (await res.json()) as JudgingSessionData[];
 	});
 
 	// Initialize state if data was just received
 	useEffect(() => {
 		if (nextIndex === -1 && scheduleData) {
 			const now = Date.now();
-			let index = scheduleData.findIndex(el => now < new Date(el.time).getTime());
+			let index = scheduleData.findIndex(el => now < new Date(el.time as string).getTime());
 			if (index === -1) index = scheduleData.length;
-			let currentlyGoingTime = new Date(scheduleData[index - 1]?.time).getTime() + judgingLength;
+			let currentlyGoingTime = new Date(scheduleData[index - 1]?.time as string).getTime() + judgingLength;
 			setNextScheduleItem(scheduleData[index]);
 			setCurrentScheduleItem(now < currentlyGoingTime ? scheduleData[index - 1] : undefined);
 			setNextIndex(index);
@@ -135,12 +135,15 @@ export default function JudgeDash() {
 			const now = Date.now();
 			if (scheduleData && nextIndex > -1) {
 				// Data has been received and state is initialized
-				let time2 = new Date(scheduleData[scheduleData.length - 1]?.time).getTime() + judgingLength;
+				let time2 = new Date(scheduleData[scheduleData.length - 1]?.time as string).getTime() + judgingLength;
 				if (now <= time2) {
 					// Not yet done judging
-					let time3 = new Date(currentScheduleItem?.time || 0).getTime() + judgingLength;
+					let time3 = new Date((currentScheduleItem?.time as string) || 0).getTime() + judgingLength;
 
-					if (nextIndex < scheduleData.length && now >= new Date(nextScheduleItem?.time || 0).getTime()) {
+					if (
+						nextIndex < scheduleData.length &&
+						now >= new Date((nextScheduleItem?.time as string) || 0).getTime()
+					) {
 						// Next event should be current
 						setNextScheduleItem(scheduleData[nextIndex + 1]);
 						setCurrentScheduleItem(scheduleData[nextIndex]);
@@ -158,20 +161,29 @@ export default function JudgeDash() {
 		return () => clearInterval(interval);
 	});
 
+	const handleTeamChange: Dispatch<SetStateAction<string>> = e => {
+		setTeamID(e);
+		setTimeout(() => {
+			window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+		}, 200);
+	};
+
 	return (
 		<>
-			<div style={{ display: 'flex' }}>
+			<div style={{ display: 'flex', paddingBottom: '20px' }}>
 				<Button size="small" type="default" onClick={() => signOut()}>
 					Sign out
 				</Button>
 				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
 			</div>
 			{scheduleData && (
-				<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
+				<JudgeSchedule data={scheduleData} cutoffIndex={nextIndex} handleChange={handleTeamChange} />
 			)}
 			<br />
 			<br />
-			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} />}
+			{teamsData && formData && (
+				<TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={handleTeamChange} />
+			)}
 			{(!scheduleData || !teamsData) && <Skeleton />}
 			<Divider />
 			{formData && (
