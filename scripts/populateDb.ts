@@ -1,16 +1,17 @@
 import { faker } from '@faker-js/faker';
 const { ObjectID } = require('mongodb');
 import mongoose from 'mongoose';
-import { UserData, TeamData, ScoreData, ScheduleData, ApplicationStatus } from '../types/database';
+import { UserData, TeamData, ScoreData, JudgingSessionData, ApplicationStatus } from '../types/database';
 import { config as dotenvConfig } from 'dotenv';
 import dbConnect from '../middleware/database';
 
 import User from '../models/user';
 import Team from '../models/team';
 import Score from '../models/scores';
-import Schedule from '../models/schedule';
+import JudgingSession from '../models/JudgingSession';
 
 import { parse } from 'ts-command-line-args';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 dotenvConfig();
 
@@ -29,11 +30,11 @@ interface Arguments {
 export const args = {
 	// Defaults
 	...{
-		numHackers: 500,
-		numJudges: 20,
-		judgingLength: 10 * 1000, // 10 seconds
+		numHackers: 56,
+		numJudges: 13,
+		judgingLength: 10 * 1000 * 60, // 10 min
 		numRooms: 5,
-		startTimeStamp: Date.now() + 60 * 1000, // 1 minute from now
+		startTimeStamp: new Date('2022-10-23T10:00:00').getTime(), // Start time 
 		userType: 'HACKER',
 	},
 	...parse<Arguments>(
@@ -101,12 +102,12 @@ function generateUser(userType: string): UserData {
 	};
 }
 
-function generateTeam(members: mongoose.Schema.Types.ObjectId[]): TeamData {
+function generateTeam(members: mongoose.Schema.Types.ObjectId[], devPostIncrement: number): TeamData {
 	return {
 		_id: new ObjectID(),
 		name: `${faker.commerce.productName()} ${faker.commerce.productName()}`,
 		joinCode: faker.datatype.uuid(),
-		devpost: `https://devpost.com/${faker.datatype.string()}`,
+		devpost: `https://devpost.com/${devPostIncrement}`,
 		members: members,
 		scores: [],
 	};
@@ -146,7 +147,7 @@ async function populateDatabase() {
 	const judges = Array(args.numJudges - 1)
 		.fill(null)
 		.map(_ => generateUser('JUDGE'));
-
+	
 	// include yourself as a judge
 	if (args.userType === 'JUDGE') {
 		judges.splice(0, 1);
@@ -163,19 +164,22 @@ async function populateDatabase() {
 	console.log('Putting hackers into teams...');
 	const teams = [];
 	const hackersCopy = hackers.slice();
+	let devPostIncrement = 0;
 	while (hackersCopy.length > 0) {
-		const members = hackersCopy.splice(0, Math.floor(Math.random() * 4 + 1));
-		const team = generateTeam(members.map(member => member._id));
+		const members = hackersCopy.splice(0, Math.floor((Math.random() * 4) + 1));
+		if (members[0] === null) {
+			break;
+		}
+		console.log(members);
+		const team = generateTeam(members.map(member => member._id), devPostIncrement);
+		devPostIncrement = devPostIncrement + 1;
 		members.forEach(member => (member.team = team._id));
 		teams.push(team);
 	}
-	console.log('Creating schedule...');
+	console.log('Creating judging sessions...');
 	// Get zoom rooms (this is actually how it'll be done in prod too)
-	const rooms = Array(args.numRooms)
-		.fill(null)
-		.map((_, i) => `https://vhl.ink/room-${i + 1}`);
-	// Fill schedule
-	const schedule: ScheduleData[] = [];
+	// Fill 
+	const judgingSessions: JudgingSessionData[] = [];
 	const teamsCopy = teams.slice();
 	let timestamp = args.startTimeStamp;
 	while (teamsCopy.length > 0) {
@@ -184,24 +188,22 @@ async function populateDatabase() {
 		for (let i = 0; i < teamsInThisTimeSlot; i++) {
 			const judgesCopy = judges.slice();
 			const team = teamsCopy.pop() as TeamData;
-			schedule.push({
+			judgingSessions.push({
 				_id: new ObjectID(),
-				team: team._id,
-				// Takes a random subset of judges (without replacement)
-				judges: Array(3)
-					.fill(null)
-					.map(_ => judgesCopy.splice(Math.floor(Math.random() * judgesCopy.length), 1)[0]._id),
-				zoom: rooms[i],
-				time: new Date(timestamp),
+				team,
+				// Takes a random judge (without replacement)
+				judge: judgesCopy[Math.floor(Math.random() * (judgesCopy.length))],
+				time: (new Date(timestamp)).toISOString(),
 			});
 		}
 		timestamp += args.judgingLength;
 	}
 
+	
 	// Generate scores
 	console.log('Scoring...');
-	const scores = schedule.flatMap(item => item.judges.map(judge => generateScore(item.team, judge)));
-
+	const scores = judgingSessions.map(item => generateScore(item.team._id, item.judge._id));
+	 
 	console.log('Inserting teams...');
 	let teamsCount = (await Team.insertMany(teams)).length;
 	console.log('Inserting users...');
@@ -211,15 +213,51 @@ async function populateDatabase() {
 	console.log('Inserting scores...');
 	let scoresCount = (await Score.insertMany(scores)).length;
 	console.log('Inserting schedule...');
-	let schedulesCount = (await Schedule.insertMany(schedule)).length;
+	let judgingSessionCount = (await JudgingSession.insertMany(judgingSessions)).length;
 
 	console.log('==========DONE==========');
 	console.log(`Teams: ${teamsCount}`);
 	console.log(`Users: ${usersCount}`);
 	console.log(`Scores: ${scoresCount}`);
-	console.log(`Schedules: ${schedulesCount}`);
+	console.log(`JudgingSessions: ${judgingSessionCount}`);
 
 	process.exit(0);
 }
 
-populateDatabase();
+async function generateJudgingSessions() {
+	console.log('Connecting to DB...');
+	try {
+		await dbConnect(args.databaseUrl);
+	} catch (e) {
+		console.error(
+			'Error connecting to database. Make sure you specify the DATABASE_URL env variable when you run the script.'
+		);
+	}
+	const judgingSessions: JudgingSessionData[] = [];
+	const teamsCopy = await Team.find({});
+	const allJudges = await User.find({userType: "JUDGE"});
+	console.log(allJudges);
+	let timestamp = args.startTimeStamp;
+	while (teamsCopy.length > 0) {
+		let teamsInThisTimeSlot = Math.floor(1 + Math.random() * 5);
+		if (teamsInThisTimeSlot > teamsCopy.length) teamsInThisTimeSlot = teamsCopy.length;
+		for (let i = 0; i < teamsInThisTimeSlot; i++) {
+			const judgesCopy = allJudges.slice();
+			const team = teamsCopy.pop() as TeamData;
+			judgingSessions.push({
+				_id: new ObjectID(),
+				team,
+				// Takes a random judge (without replacement)
+				judge: judgesCopy[Math.floor(Math.random() * (judgesCopy.length))],
+				time: (new Date(timestamp)).toISOString(),
+			});
+		}
+		timestamp += args.judgingLength;
+	}
+	console.log('Inserting schedule...');
+	let judgingSessionCount = (await JudgingSession.insertMany(judgingSessions)).length;
+	process.exit(0);
+}
+
+//populateDatabase();
+generateJudgingSessions();
