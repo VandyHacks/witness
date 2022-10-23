@@ -74,6 +74,8 @@ export interface TeamData {
 	devpost: string;
 	members: mongoose.Schema.Types.ObjectId[];
 	scores: mongoose.Schema.Types.ObjectId[];
+	locationNum?: number;
+	createdAt: Date;
 }
 
 export interface ScoreData {
@@ -112,7 +114,7 @@ export interface EventData {
 
 export interface JudgingSessionData {
 	_id: mongoose.Schema.Types.ObjectId;
-	team: Team;
+	team: TeamData;
 	judge: UserData;
 	time: String;
 }

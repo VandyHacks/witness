@@ -86,20 +86,6 @@ function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
 	return sessions;
 }
 
-function generateSchedule(teams: TeamData[], judges: UserData[]) {
-	const numTeams = teams.length;
-
-	const teamsPerSession = Math.floor(numTeams / 2);
-
-	const timesOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
-	const timesTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
-
-	const sessionsA = matchTeams(teams.slice(0, teamsPerSession), judges, timesOne);
-	const sessionsB = matchTeams(teams.slice(teamsPerSession, numTeams), judges, timesTwo);
-
-	return sessionsA.concat(sessionsB);
-}
-
 function generateScheduleA(teams: TeamData[], judges: UserData[]) {
 	const numTeams = teams.length;
 	const teamsPerSession = Math.floor(numTeams / 2);
@@ -203,6 +189,22 @@ export default function OrganizerDash() {
 		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
 	});
 
+	const handleConfirmSchedule = async (judgingSessions: JudgingSessionData[]) => {
+		const res = await fetch('/api/confirm-judging-sessions', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				newJudgingSessions: judgingSessions,
+			}),
+		});
+
+		if (res.ok) {
+			handleSubmitSuccess(await res.text());
+		} else handleSubmitFailure(await res.text());
+	};
+
 	const isScheduleImpossible = () =>
 		teamsData && judgeData && (teamsData.length * TIMES_JUDGED) / 12 > judgeData.length;
 
@@ -234,6 +236,8 @@ export default function OrganizerDash() {
 										(testingSchedule ? (
 											<Button
 												onClick={() => {
+													handleConfirmSchedule(sampleScheduleAData!);
+													handleConfirmSchedule(sampleScheduleBData!);
 													setTestingSchedule(false);
 												}}
 												style={{ marginBottom: '10px' }}>
