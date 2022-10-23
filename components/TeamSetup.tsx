@@ -1,4 +1,5 @@
 import { Col, Divider, Row } from 'antd';
+import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import { handleSubmitFailure } from '../lib/helpers';
@@ -23,7 +24,7 @@ async function handleSubmit(formData: NewTeamFields | { joinCode: string }, muta
 export default function TeamSetup() {
 	const { mutate } = useSWRConfig();
 	return (
-		<>
+		<Content style={{}}>
 			<Row justify="center">
 				<Col span={12}>
 					<TeamCard
@@ -52,6 +53,6 @@ export default function TeamSetup() {
 					/>
 				</Col>
 			</Row>
-		</>
+		</Content>
 	);
 }
