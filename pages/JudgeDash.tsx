@@ -181,9 +181,7 @@ export default function JudgeDash() {
 			)}
 			<br />
 			<br />
-			{teamsData && formData && (
-				<TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={handleTeamChange} />
-			)}
+			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={handleTeamChange} />}
 			{(!scheduleData || !teamsData) && <Skeleton />}
 			<Divider />
 			{formData && (
