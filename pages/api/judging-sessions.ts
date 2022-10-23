@@ -4,8 +4,12 @@ import JudgingSession from '../../models/JudgingSession';
 import Team from '../../models/team';
 import User from '../../models/user';
 
-async function getHackerSchedule(res: NextApiResponse) {
-	return res.status(403).send('Forbidden');
+async function getHackerSchedule(res: NextApiResponse, userID: string) {
+	const team = await Team.findOne({members: userID});
+	const data = await JudgingSession.find({team: team})
+		.populate('team judge')
+		.lean();
+	return res.status(200).send(data);
 }
 
 async function getOrganizerSchedule(res: NextApiResponse) {
@@ -33,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	const userType = session?.userType;
 	switch (userType) {
 		case 'HACKER':
-			return getHackerSchedule(res);
+			return getHackerSchedule(res, session?.userID as string);
 		case 'ORGANIZER':
 			return getOrganizerSchedule(res);
 		case 'JUDGE':
