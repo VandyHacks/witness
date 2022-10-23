@@ -262,6 +262,7 @@ export default function OrganizerDash() {
 										) : (
 											<Button
 												onClick={() => {
+													if (!window.confirm("Are you sure you want to create a new schedule?")) return;
 													setTestingSchedule(true);
 													setSampleScheduleA(generateScheduleA(teamsData, judgeData));
 													setSampleScheduleB(generateScheduleB(teamsData, judgeData));
