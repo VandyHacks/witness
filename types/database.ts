@@ -1,15 +1,9 @@
-export interface Team {
-	members: string[];
-	name: string;
-	devpost: URL;
-}
-
-export interface JudgingData {
-	time: number;
-	team: Team;
-	judges: string[];
-	zoomURL: URL;
-}
+// export interface JudgingData {
+// 	time: number;
+// 	team: Team;
+// 	judges: string[];
+// 	zoomURL: URL;
+// }
 
 //New Interfaces
 
@@ -118,7 +112,7 @@ export interface EventData {
 
 export interface JudgingSessionData {
 	_id: mongoose.Schema.Types.ObjectId;
-	team: Team;
+	team: TeamData;
 	judge: UserData;
 	time: String;
 }
