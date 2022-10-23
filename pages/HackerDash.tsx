@@ -10,6 +10,7 @@ import styles from '../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
+import { Content } from 'antd/lib/layout/layout';
 
 type HackerProps = {
 	userApplicationStatus?: number;
@@ -18,13 +19,13 @@ type HackerProps = {
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
 	const { data: session, status } = useSession();
-	// const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
-	// 	const res = await fetch(url, { method: 'GET' });
-	// 	if (!res.ok) return;
-	// 	const { members, ...rest } = await res.json();
+	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) return;
+		const { members, ...rest } = await res.json();
 
-	// 	return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
-	// });
+		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
+	});
 
 	const { data: user } = useSWR(
 		'/api/user-data',
@@ -127,7 +128,23 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	};
 
 	return (
-		<>
+		<Content
+			style={{
+				width: '100vw',
+				height: '100%',
+				padding: '30px',
+				backgroundImage: `${
+					user?.applicationStatus === ApplicationStatus.CONFIRMED ||
+					user?.applicationStatus === ApplicationStatus.CHECKED_IN
+						? 'url(background-2.png)'
+						: user?.applicationStatus != null
+						? 'url(background-1.png)'
+						: ''
+				}`,
+				backgroundRepeat: 'no-repeat',
+				backgroundPosition: `center`,
+				backgroundSize: 'cover',
+			}}>
 			{!user && <Skeleton />}
 			{user && (
 				<>
@@ -550,6 +567,17 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 						<>
+							{/* Hacking start code */}
+							<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+								<Button size="small" type="default" onClick={() => signOut()}>
+									Sign out
+								</Button>
+								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+							</div>
+							{!teamData && <TeamSetup />}
+							{teamData && <TeamManager profile={teamData} />}
+							{/* Pre-hacking code */}
+							{/*
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Congratulations!
@@ -576,6 +604,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</div>
 								</div>
 							</div>
+							*/}
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
@@ -628,14 +657,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{/* {user.applicationStatus === ApplicationStatus.ACCEPTED && (
-						<>
-							{!teamData && <TeamSetup />}
-							{teamData && <TeamManager profile={teamData} />}
-						</>
-					)} */}
 				</>
 			)}
-		</>
+		</Content>
 	);
 }

@@ -7,7 +7,7 @@ import { JudgeSchedule } from '../components/schedule';
 import TeamSelect from '../components/teamSelect';
 import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
 import { ResponseError, TeamData } from '../types/database';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
 const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
@@ -58,6 +58,7 @@ async function handleSubmit(
 }
 
 export default function JudgeDash() {
+	const { data: session, status } = useSession();
 	const [teamID, setTeamID] = useState('');
 	const [currentScheduleItem, setCurrentScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
 	const [nextScheduleItem, setNextScheduleItem] = useState<ScheduleDisplay | undefined>(undefined);
@@ -159,9 +160,12 @@ export default function JudgeDash() {
 
 	return (
 		<>
-			<Button size="small" type="default" onClick={() => signOut()}>
-				Sign out
-			</Button>
+			<div style={{ display: 'flex' }}>
+				<Button size="small" type="default" onClick={() => signOut()}>
+					Sign out
+				</Button>
+				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+			</div>
 			{scheduleData && (
 				<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
 			)}
