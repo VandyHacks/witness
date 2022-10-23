@@ -24,6 +24,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { generateTimes } from '../components/schedule';
 import { SetStateAction, useEffect, useState } from 'react';
 import Title from 'antd/lib/typography/Title';
+import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const TIMES_JUDGED = 3;
 
@@ -205,6 +206,21 @@ export default function OrganizerDash() {
 		} else handleSubmitFailure(await res.text());
 	};
 
+	useEffect(() => {
+		if (!judgingSessionsData) return;
+		const time = new Date('2022-10-23T11:00:00').getTime();
+		const sampleScheduleA = judgingSessionsData.filter(
+			judgingSession => new Date(judgingSession.time as string).getTime() < time
+		);
+		const sampleScheduleB = judgingSessionsData.filter(
+			judgingSession => new Date(judgingSession.time as string).getTime() >= time
+		);
+		console.log(sampleScheduleA);
+		console.log(sampleScheduleB);
+		setSampleScheduleA(sampleScheduleA);
+		setSampleScheduleB(sampleScheduleB);
+	}, [judgingSessionsData]);
+
 	const isScheduleImpossible = () =>
 		teamsData && judgeData && (teamsData.length * TIMES_JUDGED) / 12 > judgeData.length;
 
@@ -267,8 +283,8 @@ export default function OrganizerDash() {
 										<div>Count of Judges: {judgeData?.length}</div>
 									</>
 
-									{testingSchedule && <Title>Expo A</Title>}
-									{testingSchedule && sampleScheduleAData && (
+									{<Title>Expo A</Title>}
+									{sampleScheduleAData && (
 										<OrganizerSchedule
 											data={sampleScheduleAData}
 											handleChange={function (value: SetStateAction<string>): void {
@@ -279,8 +295,8 @@ export default function OrganizerDash() {
 										/>
 									)}
 									<div style={{ height: '20px' }} />
-									{testingSchedule && <Title>Expo B</Title>}
-									{testingSchedule && sampleScheduleBData && (
+									{<Title>Expo B</Title>}
+									{sampleScheduleBData && (
 										<OrganizerSchedule
 											data={sampleScheduleBData}
 											handleChange={function (value: SetStateAction<string>): void {
