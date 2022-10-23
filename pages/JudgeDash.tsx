@@ -163,7 +163,9 @@ export default function JudgeDash() {
 
 	const handleTeamChange: Dispatch<SetStateAction<string>> = e => {
 		setTeamID(e);
-		window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+		setTimeout(() => {
+			window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+		}, 200);
 	};
 
 	return (
