@@ -1,4 +1,4 @@
-import { Button, Empty, Skeleton, Space, Tabs } from 'antd';
+import { Button, Divider, Empty, Skeleton, Space, Tabs } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import AllScores from '../components/allScores';
@@ -306,6 +306,7 @@ export default function OrganizerDash() {
 											sessionTimeEnd={new Date('2022-10-23T12:30:00')}
 										/>
 									)}
+									<Divider />
 								</>
 							),
 						},
