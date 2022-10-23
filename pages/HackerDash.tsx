@@ -652,7 +652,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Content style={{ width: '60vw', margin: 'auto' }}>
 										<Table columns={judgingSessionColumns} dataSource={judgingSessionData} />
 									</Content>
-									<Divider />
+									{/* <Divider /> */}
 									<TeamManager profile={teamData} />
 								</div>
 							)}

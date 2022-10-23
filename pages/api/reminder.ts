@@ -4,9 +4,9 @@ import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ApplicationStatus } from '../../types/database';
 import sendEmail from './email/email';
-import reminderToSubmit from './email/templates/reminderToSubmit';
-import reminderToConfirm from './email/templates/reminderToConfirm';
-import preEventInfo from './email/templates/preEventInfo';
+// import reminderToSubmit from './email/templates/reminderToSubmit';
+// import reminderToConfirm from './email/templates/reminderToConfirm';
+// import preEventInfo from './email/templates/preEventInfo';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
