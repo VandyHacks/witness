@@ -6,7 +6,15 @@ import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
 import OrganizerSchedule from '../components/schedule';
 import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
 import { ScheduleDisplay } from '../types/client';
-import { ResponseError, ScoreData, TeamData, UserData, PreAddData, ApplicationData, JudgingSessionData } from '../types/database';
+import {
+	ResponseError,
+	ScoreData,
+	TeamData,
+	UserData,
+	PreAddData,
+	ApplicationData,
+	JudgingSessionData,
+} from '../types/database';
 import PreAddDisplay from '../components/preAddDisplay';
 import ApplicantsDisplay from '../components/applicantsDisplay';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
@@ -15,6 +23,7 @@ import styles from '../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import { generateTimes } from '../components/schedule';
 import { SetStateAction, useEffect, useState } from 'react';
+import Title from 'antd/lib/typography/Title';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -47,9 +56,7 @@ async function handlePreAddDelete(user: PreAddData, mutate: ScopedMutator<any>) 
 	} else handleSubmitFailure(await res.text());
 }
 
-
 function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
-
 	let sessions = [];
 
 	const timesJudged = 2;
@@ -58,18 +65,18 @@ function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
 	const perTimes = Math.floor(numSessions / times.length);
 	let remTimes = numSessions % times.length;
 
-	let teamIdx = 0
+	let teamIdx = 0;
 	let judgeIdx = 0;
 
-	for(let i = 0; i < times.length; i++) {
+	for (let i = 0; i < times.length; i++) {
 		const currSessions = perTimes + (remTimes > 0 ? 1 : 0);
 		remTimes--;
-		for(let j = 0; j < currSessions; j++) {
+		for (let j = 0; j < currSessions; j++) {
 			sessions.push({
 				team: teams[teamIdx],
 				judge: judges[judgeIdx],
 				time: times[i].toISOString() as String,
-			})
+			});
 			teamIdx = (teamIdx + 1) % teams.length;
 			judgeIdx = (judgeIdx + 1) % judges.length;
 		}
@@ -78,9 +85,7 @@ function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
 	return sessions;
 }
 
-
 function generateSchedule(teams: TeamData[], judges: UserData[]) {
-
 	const numTeams = teams.length;
 
 	const teamsPerSession = Math.floor(numTeams / 2);
@@ -92,6 +97,22 @@ function generateSchedule(teams: TeamData[], judges: UserData[]) {
 	const sessionsB = matchTeams(teams.slice(teamsPerSession, numTeams), judges, timesTwo);
 
 	return sessionsA.concat(sessionsB);
+}
+
+function generateScheduleA(teams: TeamData[], judges: UserData[]) {
+	const numTeams = teams.length;
+	const teamsPerSession = Math.floor(numTeams / 2);
+	const timesOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
+	const sessionsA = matchTeams(teams.slice(0, teamsPerSession), judges, timesOne);
+	return sessionsA;
+}
+
+function generateScheduleB(teams: TeamData[], judges: UserData[]) {
+	const numTeams = teams.length;
+	const teamsPerSession = Math.floor(numTeams / 2);
+	const timesTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
+	const sessionsB = matchTeams(teams.slice(teamsPerSession, numTeams), judges, timesTwo);
+	return sessionsB;
 }
 
 export default function OrganizerDash() {
@@ -147,15 +168,18 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScheduleDisplay[];
 	});*/
 
-	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR('/api/judging-sessions', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get judging sessions') as ResponseError;
-			error.status = res.status;
-			throw error;
+	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR(
+		'/api/judging-sessions',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+			if (!res.ok) {
+				const error = new Error('Failed to get judging sessions') as ResponseError;
+				error.status = res.status;
+				throw error;
+			}
+			return (await res.json()) as JudgingSessionData[];
 		}
-		return (await res.json()) as JudgingSessionData[];
-	});
+	);
 
 	const { data: preAddData, error: Error } = useSWR('/api/preadd', async url => {
 		const res = await fetch(url, { method: 'GET' });
@@ -181,7 +205,8 @@ export default function OrganizerDash() {
 	const { data: session, status } = useSession();
 
 	const [testingSchedule, setTestingSchedule] = useState(false);
-	const [sampleScheduleData, setSampleSchedule] = useState<JudgingSessionData[] | undefined>(undefined);
+	const [sampleScheduleAData, setSampleScheduleA] = useState<JudgingSessionData[] | undefined>(undefined);
+	const [sampleScheduleBData, setSampleScheduleB] = useState<JudgingSessionData[] | undefined>(undefined);
 
 	return (
 		<>
@@ -200,16 +225,52 @@ export default function OrganizerDash() {
 							key: '1',
 							children: (
 								<>
-									{teamsData && judgeData && (testingSchedule ? 
-									<Button onClick={() => {setTestingSchedule(false); }} style={{marginBottom: "10px"}}>Confirm Schedule</Button>
-									: <Button onClick={() => {setTestingSchedule(true); setSampleSchedule(generateSchedule(teamsData, judgeData)); }} style={{marginBottom: "10px"}}>Create Sample Judging Schedule</Button>)}
+									{teamsData &&
+										judgeData &&
+										(testingSchedule ? (
+											<Button
+												onClick={() => {
+													setTestingSchedule(false);
+												}}
+												style={{ marginBottom: '10px' }}>
+												Confirm Schedule
+											</Button>
+										) : (
+											<Button
+												onClick={() => {
+													setTestingSchedule(true);
+													setSampleScheduleA(generateScheduleA(teamsData, judgeData));
+													setSampleScheduleB(generateScheduleB(teamsData, judgeData));
+												}}
+												style={{ marginBottom: '10px' }}>
+												Create Sample Judging Schedule
+											</Button>
+										))}
 									{!judgingSessionsData && <Skeleton />}
-									{!testingSchedule && judgingSessionsData && <OrganizerSchedule data={judgingSessionsData} handleChange={function (value: SetStateAction<string>): void {
-										throw new Error('Function not implemented.');
-									} } />}
-									{testingSchedule && sampleScheduleData && <OrganizerSchedule data={sampleScheduleData} handleChange={function (value: SetStateAction<string>): void {
-										throw new Error('Function not implemented.');
-									} } />}
+									<br />
+									{testingSchedule && <Title>Expo A</Title>}
+									{testingSchedule && sampleScheduleAData && (
+										<OrganizerSchedule
+											data={sampleScheduleAData}
+											handleChange={function (value: SetStateAction<string>): void {
+												throw new Error('Function not implemented.');
+											}}
+											sessionTimeStart={new Date('2022-10-23T10:00:00')}
+											sessionTimeEnd={new Date('2022-10-23T11:00:00')}
+										/>
+									)}
+									<div style={{ height: '20px' }} />
+									{testingSchedule && <Title>Expo B</Title>}
+									{testingSchedule && sampleScheduleBData && (
+										<OrganizerSchedule
+											data={sampleScheduleBData}
+											handleChange={function (value: SetStateAction<string>): void {
+												throw new Error('Function not implemented.');
+											}}
+											sessionTimeStart={new Date('2022-10-23T11:30:00')}
+											sessionTimeEnd={new Date('2022-10-23T12:30:00')}
+										/>
+									)}
 								</>
 							),
 						},

@@ -13,6 +13,8 @@ interface ScheduleProps {
 	data: JudgingSessionData[];
 	cutoffIndex?: number;
 	handleChange: (teamId: string) => void;
+	sessionTimeStart?: Date;
+	sessionTimeEnd?: Date;
 }
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
@@ -94,7 +96,7 @@ export function generateTimes(start: Date, end: Date, interval: number) {
 }
 
 export default function OrganizerSchedule(props: ScheduleProps) {
-	let { data } = props;
+	let { data, sessionTimeStart, sessionTimeEnd } = props;
 
 	const teams = useMemo(() => [...new Set(data.map(x => x.team.name))], [data]);
 
@@ -117,18 +119,14 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 		[teams]
 	);
 
-	// 10:00 AM - 11:00 AM, 10 minute increments
-	const sessionOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
-	// 11:30 AM - 12:30 PM, 10 minute increments
-	const sessionTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
+	sessionTimeStart = sessionTimeStart || new Date();
+	sessionTimeEnd = sessionTimeEnd || new Date();
+	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, 10);
 
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
 		const dataAsMap = new Map();
-		sessionOne.forEach(time => {
-			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
-		});
-		sessionTwo.forEach(time => {
+		sessionTimes.forEach(time => {
 			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
 		});
 
@@ -145,57 +143,58 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			...pair[1],
 			key: pair[0],
 		}));
-	}, [data, teams, sessionOne, sessionTwo]);
+	}, [data, teams, sessionTimes]);
 
 	const [loading, setLoading] = useState(false);
 	return (
-		<Table
-			dataSource={tableData}
-			columns={columns}
-			pagination={false}
-			sticky
-			bordered
-			scroll={{ x: 'max-content' }}
-			summary={_ => (
-				<Table.Summary fixed={true}>
-					{/* <Table.Summary.Row style={editingStyles[editingState]}> */}
-					<Table.Summary.Row>
-						<Table.Summary.Cell index={0} colSpan={100}>
-							<Space direction="vertical">
-								{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-								<a href="/api/export-schedule" target="_blank" download>
-									<strong>Export schedule</strong>
-								</a>
-								{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-								<a href="/api/export-schedule-detailed" target="_blank" download>
-									<strong>Export detailed schedule</strong>
-								</a>
-								<Upload
-									disabled={loading}
-									name="file"
-									accept=".csv"
-									maxCount={1}
-									action="/api/schedule"
-									onChange={async (info: any) => {
-										console.log(info);
-										if (info.file.status == 'error') {
-											handleFailure(info.file.response);
-										} else if (info.file.status == 'done') {
-											handleSuccess();
-										}
-									}}>
-									<Button icon={<UploadOutlined />}>
-										<Space style={{ marginLeft: '10px' }}>
-											Click to Upload {loading && <Spin size="small" />}
-										</Space>
-									</Button>
-								</Upload>
-							</Space>
-						</Table.Summary.Cell>
-					</Table.Summary.Row>
-				</Table.Summary>
-			)}
-		/>
+		<div style={{ width: '95vw' }}>
+			<Table
+				dataSource={tableData}
+				columns={columns}
+				pagination={false}
+				sticky
+				bordered
+				scroll={{ x: 'max-content' }}
+				// TODO: convert export schedule to use /api/judging-sessions instead of /api/schedule
+				/*
+				summary={_ => (
+					<Table.Summary fixed={true}>
+						<Table.Summary.Row>
+							<Table.Summary.Cell index={0} colSpan={100}>
+								<Space direction="vertical">
+									<a href="/api/export-schedule" target="_blank" download>
+										<strong>Export schedule</strong>
+									</a>
+									<a href="/api/export-schedule-detailed" target="_blank" download>
+										<strong>Export detailed schedule</strong>
+									</a>
+									<Upload
+										disabled={loading}
+										name="file"
+										accept=".csv"
+										maxCount={1}
+										action="/api/schedule"
+										onChange={async (info: any) => {
+											console.log(info);
+											if (info.file.status == 'error') {
+												handleFailure(info.file.response);
+											} else if (info.file.status == 'done') {
+												handleSuccess();
+											}
+										}}>
+										<Button icon={<UploadOutlined />}>
+											<Space style={{ marginLeft: '10px' }}>
+												Click to Upload {loading && <Spin size="small" />}
+											</Space>
+										</Button>
+									</Upload>
+								</Space>
+							</Table.Summary.Cell>
+						</Table.Summary.Row>
+					</Table.Summary>
+				)}*/
+			/>
+		</div>
 	);
 }
 
