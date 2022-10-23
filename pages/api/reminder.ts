@@ -27,8 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			for (const user in users) {
 				//console.log(users[user]['email']) //The user to send an email to.
 				let userToEmail = await User.findById(users[user]['id']);
-				const template = preEventInfo(userToEmail);
-				sendEmail(template);
+				// const template = preEventInfo(userToEmail);
+				// sendEmail(template);
 			}
 
 			return res.status(200).send('Sent email');
