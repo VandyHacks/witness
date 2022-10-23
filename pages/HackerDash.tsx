@@ -1,6 +1,20 @@
 import { useEffect, useState } from 'react';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, DatePicker, Divider, Form, Input, Radio, Row, Skeleton, Table, Upload, UploadFile } from 'antd';
+import {
+	Button,
+	Checkbox,
+	Col,
+	DatePicker,
+	Divider,
+	Form,
+	Input,
+	Radio,
+	Row,
+	Skeleton,
+	Table,
+	Upload,
+	UploadFile,
+} from 'antd';
 import useSWR from 'swr';
 import TeamManager from '../components/TeamManager';
 import TeamSetup from '../components/TeamSetup';
@@ -139,31 +153,35 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 				// add 10 minutes
 				let endTime = new Date(startTime.getTime() + 10 * 60000);
 				// return <>{startTime.getHours()}:{startTime.getMinutes()} - {endTime.getHours()}:{endTime.getMinutes()}</>
-				return <>
-					{startTime.toLocaleTimeString('default', {
-						hour: '2-digit',
-						minute: '2-digit'
-					})} - {endTime.toLocaleTimeString('default', {
-						hour: '2-digit',
-						minute: '2-digit'
-					})}</>
-					;
-			}
+				return (
+					<>
+						{startTime.toLocaleTimeString('default', {
+							hour: '2-digit',
+							minute: '2-digit',
+						})}{' '}
+						-{' '}
+						{endTime.toLocaleTimeString('default', {
+							hour: '2-digit',
+							minute: '2-digit',
+						})}
+					</>
+				);
+			},
 		},
 		{
 			title: 'Table',
 			dataIndex: 'team',
 			key: 'team',
 			width: '25vw',
-			render: loc => <>{loc.locationNum}</>
+			render: loc => <>{loc.locationNum}</>,
 		},
 		{
 			title: 'Judge',
 			dataIndex: 'judge',
 			key: 'judge',
 			width: '50vw',
-			render: judge => <>{judge.name}</>
-		}
+			render: judge => <>{judge.name}</>,
+		},
 	];
 
 	const [judgingSessionData, setJudgingSessionData] = useState<JudgingSessionData[]>();
@@ -173,8 +191,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			.then(res => res.json())
 			.then(data => {
 				setJudgingSessionData(data);
-			})
-	}
+			});
+	};
 
 	useEffect(() => {
 		getJudgingSessionData();
@@ -186,13 +204,14 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 				width: '100vw',
 				height: '100%',
 				padding: '30px',
-				backgroundImage: `${user?.applicationStatus === ApplicationStatus.CONFIRMED ||
+				backgroundImage: `${
+					user?.applicationStatus === ApplicationStatus.CONFIRMED ||
 					user?.applicationStatus === ApplicationStatus.CHECKED_IN
-					? 'url(background-2.png)'
-					: user?.applicationStatus != null
+						? 'url(background-2.png)'
+						: user?.applicationStatus != null
 						? 'url(background-1.png)'
 						: ''
-					}`,
+				}`,
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: `center`,
 				backgroundAttachment: 'fixed',
@@ -619,26 +638,26 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)}
 					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
-							<>
-								{/* Hacking start code */}
-								<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-									<Button size="small" type="default" onClick={() => signOut()}>
-										Sign out
-									</Button>
-									<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
-								</div>
-								{!teamData && <TeamSetup />}
-								{teamData &&
-									<>
-										<Content style={{ width: '60vw', margin: 'auto' }}>
-											<Table columns={judgingSessionColumns} dataSource={judgingSessionData} />
-										</Content>
-										<Divider />
-										<TeamManager profile={teamData} />
-									</>
-								}
-								{/* Pre-hacking code */}
-								{/*
+						<>
+							{/* Hacking start code */}
+							<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+								<Button size="small" type="default" onClick={() => signOut()}>
+									Sign out
+								</Button>
+								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+							</div>
+							{!teamData && <TeamSetup />}
+							{teamData && (
+								<>
+									<Content style={{ width: '60vw', margin: 'auto' }}>
+										<Table columns={judgingSessionColumns} dataSource={judgingSessionData} />
+									</Content>
+									<Divider />
+									<TeamManager profile={teamData} />
+								</>
+							)}
+							{/* Pre-hacking code */}
+							{/*
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Congratulations!
@@ -666,8 +685,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</div>
 							</div>
 							*/}
-							</>
-						)}
+						</>
+					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
 						<>
 							<div className={styles.SubmittedForm}>

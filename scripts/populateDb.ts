@@ -34,7 +34,7 @@ export const args = {
 		numJudges: 13,
 		judgingLength: 10 * 1000 * 60, // 10 min
 		numRooms: 5,
-		startTimeStamp: new Date('2022-10-23T10:00:00').getTime(), // Start time 
+		startTimeStamp: new Date('2022-10-23T10:00:00').getTime(), // Start time
 		userType: 'HACKER',
 	},
 	...parse<Arguments>(
@@ -147,7 +147,7 @@ async function populateDatabase() {
 	const judges = Array(args.numJudges - 1)
 		.fill(null)
 		.map(_ => generateUser('JUDGE'));
-	
+
 	// include yourself as a judge
 	if (args.userType === 'JUDGE') {
 		judges.splice(0, 1);
@@ -166,19 +166,22 @@ async function populateDatabase() {
 	const hackersCopy = hackers.slice();
 	let devPostIncrement = 0;
 	while (hackersCopy.length > 0) {
-		const members = hackersCopy.splice(0, Math.floor((Math.random() * 4) + 1));
+		const members = hackersCopy.splice(0, Math.floor(Math.random() * 4 + 1));
 		if (members[0] === null) {
 			break;
 		}
 		console.log(members);
-		const team = generateTeam(members.map(member => member._id), devPostIncrement);
+		const team = generateTeam(
+			members.map(member => member._id),
+			devPostIncrement
+		);
 		devPostIncrement = devPostIncrement + 1;
 		members.forEach(member => (member.team = team._id));
 		teams.push(team);
 	}
 	console.log('Creating judging sessions...');
 	// Get zoom rooms (this is actually how it'll be done in prod too)
-	// Fill 
+	// Fill
 	const judgingSessions: JudgingSessionData[] = [];
 	const teamsCopy = teams.slice();
 	let timestamp = args.startTimeStamp;
@@ -192,18 +195,17 @@ async function populateDatabase() {
 				_id: new ObjectID(),
 				team,
 				// Takes a random judge (without replacement)
-				judge: judgesCopy[Math.floor(Math.random() * (judgesCopy.length))],
-				time: (new Date(timestamp)).toISOString(),
+				judge: judgesCopy[Math.floor(Math.random() * judgesCopy.length)],
+				time: new Date(timestamp).toISOString(),
 			});
 		}
 		timestamp += args.judgingLength;
 	}
 
-	
 	// Generate scores
 	console.log('Scoring...');
 	const scores = judgingSessions.map(item => generateScore(item.team._id, item.judge._id));
-	 
+
 	console.log('Inserting teams...');
 	let teamsCount = (await Team.insertMany(teams)).length;
 	console.log('Inserting users...');
@@ -235,7 +237,7 @@ async function generateJudgingSessions() {
 	}
 	const judgingSessions: JudgingSessionData[] = [];
 	const teamsCopy = await Team.find({});
-	const allJudges = await User.find({userType: "JUDGE"});
+	const allJudges = await User.find({ userType: 'JUDGE' });
 	console.log(allJudges);
 	let timestamp = args.startTimeStamp;
 	while (teamsCopy.length > 0) {
@@ -248,8 +250,8 @@ async function generateJudgingSessions() {
 				_id: new ObjectID(),
 				team,
 				// Takes a random judge (without replacement)
-				judge: judgesCopy[Math.floor(Math.random() * (judgesCopy.length))],
-				time: (new Date(timestamp)).toISOString(),
+				judge: judgesCopy[Math.floor(Math.random() * judgesCopy.length)],
+				time: new Date(timestamp).toISOString(),
 			});
 		}
 		timestamp += args.judgingLength;

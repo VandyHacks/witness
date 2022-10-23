@@ -5,10 +5,8 @@ import Team from '../../models/team';
 import User from '../../models/user';
 
 async function getHackerSchedule(res: NextApiResponse, userID: string) {
-	const team = await Team.findOne({members: userID});
-	const data = await JudgingSession.find({team: team})
-		.populate('team judge')
-		.lean();
+	const team = await Team.findOne({ members: userID });
+	const data = await JudgingSession.find({ team: team }).populate('team judge').lean();
 	return res.status(200).send(data);
 }
 

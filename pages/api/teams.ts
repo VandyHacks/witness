@@ -25,10 +25,10 @@ export default async function handler(
 				const judgeID = session!.userID as ObjectId;
 
 				const teamsAssigned = await JudgingSession.find({ judge: judgeID }).select('team');
-				const teamsAssignedIDs = teamsAssigned.map((team) => team.team.toString());
+				const teamsAssignedIDs = teamsAssigned.map(team => team.team.toString());
 
 				const teamsJudged = await Scores.find({ judge: judgeID }).select('_id');
-				const teamsJudgedIDs = teamsJudged.map((team) => team._id.toString());
+				const teamsJudgedIDs = teamsJudged.map(team => team._id.toString());
 
 				const teamsData = teams.map(team => {
 					return {
