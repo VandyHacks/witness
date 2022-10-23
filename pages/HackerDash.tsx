@@ -659,7 +659,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 												),
 											}}
 											columns={judgingSessionColumns}
-											dataSource={undefined}
+											dataSource={judgingSessionData}
 										/>
 										<Divider />
 									</Content>
