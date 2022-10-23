@@ -12,7 +12,7 @@ const { Panel } = Collapse;
 interface ScheduleProps {
 	data: JudgingSessionData[];
 	cutoffIndex?: number;
-	handleChange: Dispatch<SetStateAction<string>>;
+	handleChange: (teamId: string) => void;
 }
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
@@ -237,7 +237,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
 		},
 		{
-			title: 'Form',
+			title: 'Action',
 			dataIndex: 'teamId',
 			key: 'teamId',
 			render: (teamId: any) => (

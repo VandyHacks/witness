@@ -1,5 +1,5 @@
 import { Button, Divider, notification, Skeleton } from 'antd';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
 import JudgingForm from '../components/judgingForm';
@@ -161,6 +161,11 @@ export default function JudgeDash() {
 		return () => clearInterval(interval);
 	});
 
+	const handleTeamChange: Dispatch<SetStateAction<string>> = e => {
+		setTeamID(e);
+		window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+	};
+
 	return (
 		<>
 			<div style={{ display: 'flex' }}>
@@ -169,10 +174,12 @@ export default function JudgeDash() {
 				</Button>
 				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
 			</div>
-			{scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={0} handleChange={setTeamID} />}
+			{scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={0} handleChange={handleTeamChange} />}
 			<br />
 			<br />
-			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} />}
+			{teamsData && formData && (
+				<TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={handleTeamChange} />
+			)}
 			{(!scheduleData || !teamsData) && <Skeleton />}
 			<Divider />
 			{formData && (
