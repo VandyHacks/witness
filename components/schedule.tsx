@@ -94,7 +94,7 @@ function generateTimes(start: Date, end: Date, interval: number) {
 export default function OrganizerSchedule(props: ScheduleProps) {
 	let { data } = props;
 
-	const teams = useMemo(() => [...new Set(data.map(x => x.team.projectName))], [data]);
+	const teams = useMemo(() => [...new Set(data.map(x => x.team.name))], [data]);
 
 	const columns = useMemo(
 		() => [
@@ -136,7 +136,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			if (!dataAsMap.has(time)) {
 				dataAsMap.set(time, Object.fromEntries(teams.map(team => [team, null])));
 			}
-			dataAsMap.get(time)[team.projectName as string] = session;
+			dataAsMap.get(time)[team.name as string] = session;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],
@@ -248,7 +248,7 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 	];
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
 		time: item.time,
-		project: { name: item.team.projectName, link: new URL(item.team.devpostURL) },
+		project: { name: item.team.name, link: new URL(item.team.devpostURL) },
 		teamMembers: item.team.members,
 		judge: item.judge,
 	}));

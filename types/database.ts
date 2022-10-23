@@ -1,6 +1,6 @@
 export interface Team {
 	members: string[];
-	projectName: string;
+	name: string;
 	devpostURL: URL;
 }
 
