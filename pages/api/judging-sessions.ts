@@ -18,10 +18,10 @@ async function getOrganizerSchedule(res: NextApiResponse) {
 	return res.status(200).send(data);
 }
 
-async function getJudgeSchedule(res: NextApiResponse) {
+async function getJudgeSchedule(res: NextApiResponse, userID: string) {
 	Team;
 	User; // Don't remove or the import will get optimized out and the populate will fail
-	const data = await JudgingSession.find()
+	const data = await JudgingSession.find({ judge: userID })
 		.populate('team judge')
 		.populate({ path: 'team', populate: { path: 'members' } })
 		.lean();
@@ -37,6 +37,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		case 'ORGANIZER':
 			return getOrganizerSchedule(res);
 		case 'JUDGE':
-			return getJudgeSchedule(res);
+			return getJudgeSchedule(res, session?.userID as string);
 	}
 }
