@@ -248,7 +248,6 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 		},
 	];
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
-		console.log('this is item: ', item);
 		return {
 			time: item.time,
 			project: { name: item.team.name, link: new URL(item.team.devpost) },
