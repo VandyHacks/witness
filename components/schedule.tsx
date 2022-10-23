@@ -231,7 +231,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
 		},
 		{
-			title: 'Judges',
+			title: 'Judge',
 			dataIndex: 'judge',
 			key: 'judge',
 			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
