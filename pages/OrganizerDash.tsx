@@ -27,10 +27,6 @@ import Title from 'antd/lib/typography/Title';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const TIMES_JUDGED = 3;
-const SESSION_A_START_TIME = '2022-10-23T10:30:00';
-const SESSION_A_END_TIME = '2022-10-23T11:30:00';
-const SESSION_B_START_TIME = '2022-10-23T12:00:00';
-const SESSION_B_END_TIME = '2022-10-23T13:00:00';
 
 async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
 	const res = await fetch(`/api/manage-role`, {
@@ -94,7 +90,7 @@ function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
 function generateScheduleA(teams: TeamData[], judges: UserData[]) {
 	const numTeams = teams.length;
 	const teamsPerSession = Math.floor(numTeams / 2);
-	const timesOne = generateTimes(new Date(SESSION_A_START_TIME), new Date(SESSION_A_END_TIME), 10);
+	const timesOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
 	const sessionsA = matchTeams(teams.slice(0, teamsPerSession), judges, timesOne);
 	return sessionsA;
 }
@@ -102,7 +98,7 @@ function generateScheduleA(teams: TeamData[], judges: UserData[]) {
 function generateScheduleB(teams: TeamData[], judges: UserData[]) {
 	const numTeams = teams.length;
 	const teamsPerSession = Math.floor(numTeams / 2);
-	const timesTwo = generateTimes(new Date(SESSION_B_START_TIME), new Date(SESSION_B_END_TIME), 10);
+	const timesTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
 	const sessionsB = matchTeams(teams.slice(teamsPerSession, numTeams), judges, timesTwo);
 	return sessionsB;
 }
@@ -212,8 +208,7 @@ export default function OrganizerDash() {
 
 	useEffect(() => {
 		if (!judgingSessionsData) return;
-		// Session A is before this time
-		const time = new Date(SESSION_B_START_TIME).getTime();
+		const time = new Date('2022-10-23T11:00:00').getTime();
 		const sampleScheduleA = judgingSessionsData.filter(
 			judgingSession => new Date(judgingSession.time as string).getTime() < time
 		);
@@ -301,8 +296,8 @@ export default function OrganizerDash() {
 											handleChange={function (value: SetStateAction<string>): void {
 												throw new Error('Function not implemented.');
 											}}
-											sessionTimeStart={new Date(SESSION_A_START_TIME)}
-											sessionTimeEnd={new Date(SESSION_A_END_TIME)}
+											sessionTimeStart={new Date('2022-10-23T10:00:00')}
+											sessionTimeEnd={new Date('2022-10-23T11:00:00')}
 										/>
 									)}
 									<div style={{ height: '20px' }} />
@@ -313,8 +308,8 @@ export default function OrganizerDash() {
 											handleChange={function (value: SetStateAction<string>): void {
 												throw new Error('Function not implemented.');
 											}}
-											sessionTimeStart={new Date(SESSION_B_START_TIME)}
-											sessionTimeEnd={new Date(SESSION_B_END_TIME)}
+											sessionTimeStart={new Date('2022-10-23T11:30:00')}
+											sessionTimeEnd={new Date('2022-10-23T12:30:00')}
 										/>
 									)}
 									<Divider />
