@@ -216,9 +216,11 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			render: ({ name, link }: { name: string; link: URL }) => (
+			render: ({ name, link, locationNum }: { name: string; link: URL; locationNum: number }) => (
 				<>
-					<td>{name}</td>
+					<td>
+						{name} (Table {locationNum})
+					</td>
 					<Link href={link} passHref>
 						<a style={{ color: '#1890ff' }} target="_blank">
 							Devpost
@@ -253,7 +255,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
 		return {
 			time: item.time,
-			project: { name: item.team.name, link: new URL(item.team.devpost) },
+			project: { name: item.team.name, link: new URL(item.team.devpost), locationNum: item.team.locationNum },
 			teamMembers: item.team.members,
 			judge: item.judge,
 			teamId: item.team._id,
