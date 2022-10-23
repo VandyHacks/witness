@@ -106,7 +106,7 @@ export default function JudgeDash() {
 		}
 	);
 
-	const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
+	const { data: scheduleData, error: scheduleError } = useSWR('/api/judging-sessions', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get schedule.') as ResponseError;
@@ -169,9 +169,7 @@ export default function JudgeDash() {
 				</Button>
 				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
 			</div>
-			{scheduleData && (
-				<JudgeSchedule data={scheduleData} cutoffIndex={currentScheduleItem ? nextIndex - 1 : nextIndex} />
-			)}
+			{scheduleData && <JudgeSchedule data={scheduleData} cutoffIndex={0} />}
 			<br />
 			<br />
 			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={setTeamID} />}

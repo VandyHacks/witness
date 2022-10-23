@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { OrganizerScheduleDisplay, ScheduleDisplay } from '../types/client';
 import { UploadOutlined } from '@ant-design/icons';
 import { JudgingSessionData } from '../types/database';
+import { User } from 'next-auth';
 
 const { Panel } = Collapse;
 
@@ -227,13 +228,13 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			title: 'Team Members',
 			dataIndex: 'teamMembers',
 			key: 'teamMembers',
-			render: (members: string[]) => members.map(member => <Tag key={member + key++}>{member}</Tag>),
+			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
 		},
 		{
 			title: 'Judges',
-			dataIndex: 'judges',
-			key: 'judges',
-			render: (judges: string[]) => judges.map(judge => <Tag key={judge + key++}>{judge}</Tag>),
+			dataIndex: 'judge',
+			key: 'judge',
+			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
 		},
 		{
 			title: 'Judging Form',
@@ -246,12 +247,16 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			),
 		},
 	];
-	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
-		time: item.time,
-		project: { name: item.team.name, link: new URL(item.team.devpostURL) },
-		teamMembers: item.team.members,
-		judge: item.judge,
-	}));
+	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
+		console.log('this is item: ', item);
+		return {
+			time: item.time,
+			project: { name: item.team.name, link: new URL(item.team.devpost) },
+			teamMembers: item.team.members,
+			judge: item.judge,
+		};
+	});
+
 	return (
 		<Table
 			dataSource={dataSource}

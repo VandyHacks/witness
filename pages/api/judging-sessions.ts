@@ -9,8 +9,22 @@ async function getHackerSchedule(res: NextApiResponse) {
 }
 
 async function getOrganizerSchedule(res: NextApiResponse) {
-	Team;User; // Don't remove or the import will get optimized out and the populate will fail
-	const data = await JudgingSession.find().populate("team judge");
+	Team;
+	User; // Don't remove or the import will get optimized out and the populate will fail
+	const data = await JudgingSession.find()
+		.populate('team judge')
+		.populate({ path: 'team', populate: { path: 'members' } })
+		.lean();
+	return res.status(200).send(data);
+}
+
+async function getJudgeSchedule(res: NextApiResponse) {
+	Team;
+	User; // Don't remove or the import will get optimized out and the populate will fail
+	const data = await JudgingSession.find()
+		.populate('team judge')
+		.populate({ path: 'team', populate: { path: 'members' } })
+		.lean();
 	return res.status(200).send(data);
 }
 
@@ -22,8 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return getHackerSchedule(res);
 		case 'ORGANIZER':
 			return getOrganizerSchedule(res);
-			break;
 		case 'JUDGE':
-			break;
+			return getJudgeSchedule(res);
 	}
 }

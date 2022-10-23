@@ -1,7 +1,7 @@
 export interface Team {
 	members: string[];
 	name: string;
-	devpostURL: URL;
+	devpost: URL;
 }
 
 export interface JudgingData {
