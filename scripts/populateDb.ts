@@ -110,6 +110,7 @@ function generateTeam(members: mongoose.Schema.Types.ObjectId[], devPostIncremen
 		devpost: `https://devpost.com/${devPostIncrement}`,
 		members: members,
 		scores: [],
+		createdAt: new Date(),
 	};
 }
 
