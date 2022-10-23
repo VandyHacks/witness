@@ -38,5 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return getOrganizerSchedule(res);
 		case 'JUDGE':
 			return getJudgeSchedule(res, session?.userID as string);
+		default:
+			return res.status(403).send('Forbidden');
 	}
 }
