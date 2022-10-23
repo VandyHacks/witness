@@ -110,12 +110,15 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				width: 100,
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
-			...teams.map(teamName => ({
-				title: teamName as string,
-				dataIndex: teamName as string,
-				key: teamName as string,
-				render: TableCell,
-			})),
+			...teams.map(teamName => {
+				let locationNum = data.find(x => x.team.name === teamName)?.team.locationNum;
+				return {
+					title: (teamName as string) + ' (Table ' + locationNum + ')',
+					dataIndex: teamName as string,
+					key: teamName as string,
+					render: TableCell,
+				};
+			}),
 		],
 		[teams]
 	);
@@ -131,7 +134,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
 		});
 
-		console.log(dataAsMap);
+		// console.log(dataAsMap);
 		data.forEach(session => {
 			const { time, team } = session;
 			if (!dataAsMap.has(time)) {
