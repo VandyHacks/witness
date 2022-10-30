@@ -1,6 +1,6 @@
 # Witness
 
-Witness is VandyHacks's in-house judging platform. On this platform, hackers can manage their team and submit their project, judges can see a dynamically updating schedule of all their assigned projects and submit feedback for them, and organizers can manage the whole process at a high level and optimally match judges with teams.
+Witness is VandyHacks's in-house judging and application management platform. On this platform, hackers can manage their team and submit their project, judges can see a dynamically updating schedule of all their assigned projects and submit feedback for them, and organizers can manage the whole process at a high level and optimally match judges with teams.
 
 -   [Witness](#witness)
     -   [Tooling](#tooling)
