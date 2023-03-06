@@ -22,7 +22,7 @@
 		"escape-html": "^1.0.3",
 		"export-to-csv": "^0.2.1",
 		"formidable": "^2.0.1",
-		"luxon": "^3.0.3",
+		"luxon": "^3.3.0",
 		"mongodb": "^4.9.1",
 		"mongoose": "^6.6.1",
 		"nanoid": "^4.0.0",
@@ -38,7 +38,7 @@
 	"devDependencies": {
 		"@faker-js/faker": "^7.3.0",
 		"@types/faker": "^5.5.8",
-		"@types/luxon": "^3.0.1",
+		"@types/luxon": "^3.2.0",
 		"@types/mongodb": "^4.0.7",
 		"@types/react": "17.0.43",
 		"@types/react-highlight-words": "^0.16.4",
