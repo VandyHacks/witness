@@ -1,111 +1,28 @@
 import { Button, Divider, Empty, Skeleton, Space, Tabs } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
-import { ScopedMutator } from 'swr/dist/types';
-import AllScores from '../components/allScores';
-import ManageRoleForm, { ManageFormFields } from '../components/manageRoleForm';
-import OrganizerSchedule from '../components/schedule';
-import PreAddForm, { PreAddFormFields } from '../components/preAddForm';
-import { ScheduleDisplay } from '../types/client';
-import {
-	ResponseError,
-	ScoreData,
-	TeamData,
-	UserData,
-	PreAddData,
-	ApplicationData,
-	JudgingSessionData,
-} from '../types/database';
-import PreAddDisplay from '../components/preAddDisplay';
-import ApplicantsDisplay from '../components/applicantsDisplay';
-import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
-import Events from '../components/events';
-import styles from '../styles/Form.module.css';
+import AllScores from '../../components/allScores';
+import ManageRoleForm from '../../components/manageRoleForm';
+import OrganizerSchedule from '../../components/schedule';
+import PreAddForm from '../../components/preAddForm';
+import { ResponseError, ScoreData, TeamData, UserData, PreAddData, JudgingSessionData } from '../../types/database';
+import PreAddDisplay from '../../components/preAddDisplay';
+import ApplicantsDisplay from '../../components/applicantsDisplay';
+import Events from '../../components/events';
 import { signOut, useSession } from 'next-auth/react';
-import { generateTimes } from '../components/schedule';
 import { SetStateAction, useEffect, useState } from 'react';
 import Title from 'antd/lib/typography/Title';
-import { ConsoleSqlOutlined } from '@ant-design/icons';
-
-const TIMES_JUDGED = 3;
-
-async function handleManageFormSubmit(roleData: ManageFormFields, mutate: ScopedMutator<any>) {
-	const res = await fetch(`/api/manage-role`, {
-		method: 'PATCH',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ formData: roleData }),
-	});
-
-	if (res.ok) {
-		mutate('/api/manage-role');
-		handleSubmitSuccess();
-	} else handleSubmitFailure(await res.text());
-}
-
-async function handlePreAddDelete(user: PreAddData, mutate: ScopedMutator<any>) {
-	console.log('logging user obj', user);
-	const res = await fetch('/api/preadd', {
-		method: 'DELETE',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ userId: user._id }),
-	});
-
-	if (res.ok) {
-		mutate('/api/preadd');
-		handleSubmitSuccess(await res.text());
-	} else handleSubmitFailure(await res.text());
-}
-
-function matchTeams(teams: TeamData[], judges: UserData[], times: Date[]) {
-	let sessions = [];
-
-	const numSessions = TIMES_JUDGED * teams.length;
-
-	const perTimes = Math.floor(numSessions / times.length);
-	let remTimes = numSessions % times.length;
-
-	let teamIdx = 0;
-	let judgeIdx = 0;
-
-	for (let i = 0; i < times.length; i++) {
-		const currSessions = perTimes + (remTimes > 0 ? 1 : 0);
-		remTimes--;
-		for (let j = 0; j < currSessions; j++) {
-			sessions.push({
-				team: teams[teamIdx],
-				judge: judges[judgeIdx],
-				time: times[i].toISOString() as String,
-			});
-			teamIdx = (teamIdx + 1) % teams.length;
-			judgeIdx = (judgeIdx + 1) % judges.length;
-		}
-	}
-
-	return sessions;
-}
-
-function generateScheduleA(teams: TeamData[], judges: UserData[]) {
-	const numTeams = teams.length;
-	const teamsPerSession = Math.floor(numTeams / 2);
-	const timesOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
-	const sessionsA = matchTeams(teams.slice(0, teamsPerSession), judges, timesOne);
-	return sessionsA;
-}
-
-function generateScheduleB(teams: TeamData[], judges: UserData[]) {
-	const numTeams = teams.length;
-	const teamsPerSession = Math.floor(numTeams / 2);
-	const timesTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
-	const sessionsB = matchTeams(teams.slice(teamsPerSession, numTeams), judges, timesTwo);
-	return sessionsB;
-}
+import {
+	generateScheduleA,
+	generateScheduleB,
+	handleManageFormSubmit,
+	handlePreAddDelete,
+	TIMES_JUDGED,
+} from '../../utils/organizer-utils';
 
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
 
+	// Get teams data from API
 	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -116,6 +33,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as TeamData[];
 	});
 
+	// Get scores data from API
 	const { data: scoresData, error: scoresError } = useSWR('/api/scores', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -126,6 +44,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScoreData[];
 	});
 
+	// Get judges data from API
 	const { data: judgeData, error: judgeError } = useSWR('/api/users?usertype=JUDGE', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -136,6 +55,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as UserData[];
 	});
 
+	// Get hackers data from API
 	const { data: hackers, error: hackersError } = useSWR('/api/users?usertype=HACKER', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -156,6 +76,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as ScheduleDisplay[];
 	});*/
 
+	// Get judging sessions data from API
 	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR(
 		'/api/judging-sessions',
 		async url => {
@@ -169,6 +90,7 @@ export default function OrganizerDash() {
 		}
 	);
 
+	// Get preadd data from API
 	const { data: preAddData, error: Error } = useSWR('/api/preadd', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -179,6 +101,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as PreAddData[];
 	});
 
+	// Get all users roles from API
 	const { data: userData, error } = useSWR('/api/manage-role', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -190,24 +113,11 @@ export default function OrganizerDash() {
 		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
 	});
 
-	const handleConfirmSchedule = async (judgingSessions: JudgingSessionData[]) => {
-		const res = await fetch('/api/confirm-judging-sessions', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				newJudgingSessions: judgingSessions,
-			}),
-		});
-
-		if (res.ok) {
-			handleSubmitSuccess(await res.text());
-		} else handleSubmitFailure(await res.text());
-	};
-
 	useEffect(() => {
+		// Exit early if we don't have data yet
 		if (!judgingSessionsData) return;
+
+		// Sort judging sessions by time
 		const time = new Date('2022-10-23T11:00:00').getTime();
 		const sampleScheduleA = judgingSessionsData.filter(
 			judgingSession => new Date(judgingSession.time as string).getTime() < time
@@ -215,20 +125,27 @@ export default function OrganizerDash() {
 		const sampleScheduleB = judgingSessionsData.filter(
 			judgingSession => new Date(judgingSession.time as string).getTime() >= time
 		);
-		console.log(sampleScheduleA);
-		console.log(sampleScheduleB);
+
+		// Set the data
 		setSampleScheduleA(sampleScheduleA);
 		setSampleScheduleB(sampleScheduleB);
 	}, [judgingSessionsData]);
 
+	// Check if schedule is impossible
 	const isScheduleImpossible = () =>
 		teamsData && judgeData && (teamsData.length * TIMES_JUDGED) / 12 > judgeData.length;
 
+	// Get session data
 	const { data: session, status } = useSession();
 
+	// React state
 	const [testingSchedule, setTestingSchedule] = useState(false);
 	const [sampleScheduleAData, setSampleScheduleA] = useState<JudgingSessionData[] | undefined>(undefined);
 	const [sampleScheduleBData, setSampleScheduleB] = useState<JudgingSessionData[] | undefined>(undefined);
+
+	function handleConfirmSchedule(arg0: JudgingSessionData[]) {
+		throw new Error('Function not implemented.');
+	}
 
 	return (
 		<>
