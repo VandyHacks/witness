@@ -75,7 +75,7 @@ const columns: ColumnsType<EventDisplay> = [
 	},
 ];
 
-const Events = () => {
+export default function Events() {
 	const [curEvent, setCurEvent] = useState<EventDisplay | null>(null);
 	const [events, setEvents] = useState<EventDisplay[]>([]);
 	const [nfcId, setNfcId] = useState<string>('');
@@ -187,6 +187,4 @@ const Events = () => {
 			</Modal>
 		</>
 	);
-};
-
-export default Events;
+}
