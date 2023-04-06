@@ -1,4 +1,4 @@
-import ScoreInput from './scoreInput';
+import ScoreInput from './ScoreInput';
 import { Form, Input, Button } from 'antd';
 import { JudgingFormFields } from '../../types/client';
 import { useEffect } from 'react';
