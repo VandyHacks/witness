@@ -6,6 +6,7 @@ import Schedule from '../../models/schedule';
 import Scores from '../../models/scores';
 import { ObjectId } from 'mongodb';
 import { TeamSelectData } from '../../types/client';
+import JudgingSession from '../../models/JudgingSession';
 
 export default async function handler(
 	req: NextApiRequest,
@@ -21,35 +22,20 @@ export default async function handler(
 				return res.status(200).send(teams);
 			}
 			case 'JUDGE': {
-				const judgeID = session!.userID;
-				const scores = await Scores.find();
-				const scoresMap = new Map();
-				// map team ID to array of judges
-				// this answers if the team has been judged by the judge or not
-				scores.forEach(s => {
-					const teamId = s.team.toString();
-					const judgeId = s.judge.toString();
-					if (scoresMap.has(teamId)) scoresMap.get(teamId).push(judgeId);
-					else scoresMap.set(teamId, [judgeId]);
-				});
+				const judgeID = session!.userID as ObjectId;
 
-				const schedule = await Schedule.find();
-				const scheduleMap = new Map();
-				// map teamID to array of judges as well
-				// this answers if the team has been assigned to a judge
-				schedule.forEach(s => {
-					scheduleMap.set(
-						s.team.toString(),
-						s.judges.map((judge: ObjectId) => judge.toString())
-					);
-				});
+				const teamsAssigned = await JudgingSession.find({ judge: judgeID }).select('team');
+				const teamsAssignedIDs = teamsAssigned.map(team => team.team.toString());
+
+				const teamsJudged = await Scores.find({ judge: judgeID }).select('_id');
+				const teamsJudgedIDs = teamsJudged.map(team => team._id.toString());
 
 				const teamsData = teams.map(team => {
 					return {
 						_id: team._id,
 						name: team.name,
-						isMine: scheduleMap.get(team.id.toString())?.includes(judgeID),
-						haveJudged: scoresMap.get(team.id.toString())?.includes(judgeID),
+						isMine: teamsAssignedIDs.includes(team._id.toString()),
+						haveJudged: teamsJudgedIDs.includes(team._id.toString()),
 					};
 				});
 

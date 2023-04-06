@@ -1,61 +1,60 @@
 import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin } from 'antd';
-import React, { useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { OrganizerScheduleDisplay, ScheduleDisplay } from '../types/client';
 import { UploadOutlined } from '@ant-design/icons';
+import { JudgingSessionData } from '../types/database';
+import { User } from 'next-auth';
+import Title from 'antd/lib/skeleton/Title';
 
 const { Panel } = Collapse;
 
 interface ScheduleProps {
-	data: ScheduleDisplay[];
+	data: JudgingSessionData[];
 	cutoffIndex?: number;
+	handleChange: (teamId: string) => void;
+	sessionTimeStart?: Date;
+	sessionTimeEnd?: Date;
 }
 
 // Data should include everything in ScheduleDisplay except for startTime and zoomURL
-function TableCell(data: OrganizerScheduleDisplay | null) {
-	return data ? (
-		<Space direction="vertical">
-			<Collapse ghost>
-				<Panel header={<u>{data.teamName}</u>} key="info">
-					<ul>
-						<li key={`${data.teamName}-hackers`}>
-							<span>Hackers: </span>
-							{data.memberNames.map(name => (
-								<Tag key={name}>{name}</Tag>
-							))}
-						</li>
-						<li key={`${data.teamName}-devpost`}>
-							<Link href={data.devpost}>
-								<a style={{ color: '#1890ff' }} target="_blank">
-									{' '}
-									View Devpost
-								</a>
-							</Link>
-						</li>
-					</ul>
-				</Panel>
-			</Collapse>
-			<div>
-				<ul>
-					<li>
-						<span>Judges: </span>
-						{data.judges.map(judge => (
-							<Tag key={judge.id}>{judge.name}</Tag>
-						))}
-					</li>
-					<li>
-						<Link href={data.zoom}>
-							<a style={{ color: '#1890ff' }} target="_blank">
-								{' '}
-								Join Room
-							</a>
-						</Link>
-					</li>
-				</ul>
-			</div>
-		</Space>
-	) : null;
+function TableCell(data: JudgingSessionData | null) {
+	return data
+		? {
+				props: {
+					style: { background: '#fafafa' },
+				},
+				children: (
+					<Space direction="vertical">
+						{/* <Collapse ghost>
+					<Panel header={<u>{data.teamName}</u>} key="info">
+						<ul>
+							<li key={`${data.teamName}-hackers`}>
+								<span>Hackers: </span>
+								{data.memberNames.map(name => (
+									<Tag key={name}>{name}</Tag>
+								))}
+							</li>
+							<li key={`${data.teamName}-devpost`}>
+								<Link href={data.devpost}>
+									<a style={{ color: '#1890ff' }} target="_blank">
+										{' '}
+										View Devpost
+									</a>
+								</Link>
+							</li>
+						</ul>
+					</Panel>
+				</Collapse> */}
+						<div>
+							{/* <span>Judge: </span> */}
+							<Tag key={data.judge.name as string}>{data.judge.name}</Tag>
+						</div>
+					</Space>
+				),
+		  }
+		: null;
 }
 
 enum EditingStates {
@@ -86,19 +85,22 @@ function handleFailure(message: string) {
 	});
 }
 
-export default function OrganizerSchedule(props: ScheduleProps) {
-	const { data } = props;
-	// const numRooms = parseInt(NUM_ROOMS || '5');
-	const numRooms = 4;
+export function generateTimes(start: Date, end: Date, interval: number) {
+	const times = [];
+	let current = start;
+	while (current < end) {
+		console.log(current);
+		times.push(current);
+		current = new Date(current.getTime() + interval * 60000);
+	}
+	return times;
+}
 
-	// const { value: data, setValue: setStickyData } = useStickyState(data, 'judgingState');
-	const rooms = useMemo(
-		() =>
-			Array(numRooms)
-				.fill(null)
-				.map((_, i) => `https://vhl.ink/room-${i + 1}`),
-		[numRooms]
-	);
+export default function OrganizerSchedule(props: ScheduleProps) {
+	let { data, sessionTimeStart, sessionTimeEnd } = props;
+
+	const teams = useMemo(() => [...new Set(data.map(x => x.team.name))], [data]);
+
 	const columns = useMemo(
 		() => [
 			{
@@ -108,87 +110,100 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				width: 100,
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
-			...rooms.map((roomURL, roomNum) => ({
-				title: <a href={roomURL}>Room {roomNum + 1}</a>,
-				dataIndex: roomURL,
-				key: (roomNum + 1).toString(),
-				render: TableCell,
-			})),
+			...teams.map(teamName => {
+				let locationNum = data.find(x => x.team.name === teamName)?.team.locationNum;
+				return {
+					title: (teamName as string) + ' (Table ' + locationNum + ')',
+					dataIndex: teamName as string,
+					key: teamName as string,
+					render: TableCell,
+				};
+			}),
 		],
-		[rooms]
+		[teams]
 	);
+
+	sessionTimeStart = sessionTimeStart || new Date();
+	sessionTimeEnd = sessionTimeEnd || new Date();
+	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, 10);
+
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
 		const dataAsMap = new Map();
-		data.forEach(assignment => {
-			const { time, zoom } = assignment;
+		sessionTimes.forEach(time => {
+			dataAsMap.set(time.toISOString(), Object.fromEntries(teams.map(team => [team, null])));
+		});
+
+		// console.log(dataAsMap);
+		data.forEach(session => {
+			const { time, team } = session;
 			if (!dataAsMap.has(time)) {
-				dataAsMap.set(time, Object.fromEntries(rooms.map(room => [room, null])));
+				dataAsMap.set(time, Object.fromEntries(teams.map(team => [team, null])));
 			}
-			dataAsMap.get(time)[zoom] = assignment;
+			dataAsMap.get(time)[team.name as string] = session;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],
 			...pair[1],
 			key: pair[0],
 		}));
-	}, [data, rooms]);
+	}, [data, teams, sessionTimes]);
 
 	const [loading, setLoading] = useState(false);
 	return (
-		<Table
-			dataSource={tableData}
-			columns={columns}
-			pagination={false}
-			sticky
-			bordered
-			scroll={{ x: true }}
-			summary={_ => (
-				<Table.Summary fixed={true}>
-					{/* <Table.Summary.Row style={editingStyles[editingState]}> */}
-					<Table.Summary.Row>
-						<Table.Summary.Cell index={0} colSpan={100}>
-							<Space direction="vertical">
-								{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-								<a href="/api/export-schedule" target="_blank" download>
-									<strong>Export schedule</strong>
-								</a>
-								{/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-								<a href="/api/export-schedule-detailed" target="_blank" download>
-									<strong>Export detailed schedule</strong>
-								</a>
-								<Upload
-									disabled={loading}
-									name="file"
-									accept=".csv"
-									maxCount={1}
-									action="/api/schedule"
-									onChange={async (info: any) => {
-										console.log(info);
-										if (info.file.status == 'error') {
-											handleFailure(info.file.response);
-										} else if (info.file.status == 'done') {
-											handleSuccess();
-										}
-									}}>
-									<Button icon={<UploadOutlined />}>
-										<Space style={{ marginLeft: '10px' }}>
-											Click to Upload {loading && <Spin size="small" />}
-										</Space>
-									</Button>
-								</Upload>
-							</Space>
-						</Table.Summary.Cell>
-					</Table.Summary.Row>
-				</Table.Summary>
-			)}
-		/>
+		<div style={{ width: '95vw' }}>
+			<Table
+				dataSource={tableData}
+				columns={columns}
+				pagination={false}
+				sticky
+				bordered
+				scroll={{ x: 'max-content' }}
+				// TODO: convert export schedule to use /api/judging-sessions instead of /api/schedule
+				/*
+				summary={_ => (
+					<Table.Summary fixed={true}>
+						<Table.Summary.Row>
+							<Table.Summary.Cell index={0} colSpan={100}>
+								<Space direction="vertical">
+									<a href="/api/export-schedule" target="_blank" download>
+										<strong>Export schedule</strong>
+									</a>
+									<a href="/api/export-schedule-detailed" target="_blank" download>
+										<strong>Export detailed schedule</strong>
+									</a>
+									<Upload
+										disabled={loading}
+										name="file"
+										accept=".csv"
+										maxCount={1}
+										action="/api/schedule"
+										onChange={async (info: any) => {
+											console.log(info);
+											if (info.file.status == 'error') {
+												handleFailure(info.file.response);
+											} else if (info.file.status == 'done') {
+												handleSuccess();
+											}
+										}}>
+										<Button icon={<UploadOutlined />}>
+											<Space style={{ marginLeft: '10px' }}>
+												Click to Upload {loading && <Spin size="small" />}
+											</Space>
+										</Button>
+									</Upload>
+								</Space>
+							</Table.Summary.Cell>
+						</Table.Summary.Row>
+					</Table.Summary>
+				)}*/
+			/>
+		</div>
 	);
 }
 
-export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
+export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
 	const [showPast, setShowPast] = useState(false);
-	let key = 0;
 	const columns = [
 		{
 			title: 'Time',
@@ -201,9 +216,11 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			render: ({ name, link }: { name: string; link: URL }) => (
+			render: ({ name, link, locationNum }: { name: string; link: URL; locationNum: number }) => (
 				<>
-					<td>{name}</td>
+					<td>
+						{name} (Table {locationNum})
+					</td>
 					<Link href={link} passHref>
 						<a style={{ color: '#1890ff' }} target="_blank">
 							Devpost
@@ -216,45 +233,44 @@ export function JudgeSchedule({ data, cutoffIndex }: ScheduleProps) {
 			title: 'Team Members',
 			dataIndex: 'teamMembers',
 			key: 'teamMembers',
-			render: (members: string[]) => members.map(member => <Tag key={member + key++}>{member}</Tag>),
+			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
 		},
 		{
-			title: 'Judges',
-			dataIndex: 'judges',
-			key: 'judges',
-			render: (judges: string[]) => judges.map(judge => <Tag key={judge + key++}>{judge}</Tag>),
+			title: 'Judge',
+			dataIndex: 'judge',
+			key: 'judge',
+			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
 		},
 		{
-			title: 'Judging Form',
-			dataIndex: 'form',
-			key: 'form',
-			render: (id: string) => (
-				<Link href={`/judging?id=${id}`} passHref>
-					<Button type="link">Go to form</Button>
-				</Link>
-			),
-		},
-		{
-			title: 'Room',
-			dataIndex: 'room',
-			key: 'room',
-			render: (link: URL) => (
-				<a href={link.toString()} target="_blank" rel="noreferrer">
-					<Button type="link">Join room</Button>
-				</a>
+			title: 'Action',
+			dataIndex: 'teamId',
+			key: 'teamId',
+			render: (teamId: any) => (
+				<Button type="primary" onClick={() => handleChange(teamId)}>
+					Judge Team
+				</Button>
 			),
 		},
 	];
-	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => ({
-		time: item.time,
-		project: { name: item.teamName, link: new URL(item.devpost) },
-		teamMembers: item.memberNames,
-		judges: item.judgeNames,
-		form: item.teamId,
-		room: item.zoom,
-	}));
+	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
+		return {
+			time: item.time,
+			project: { name: item.team.name, link: new URL(item.team.devpost), locationNum: item.team.locationNum },
+			teamMembers: item.team.members,
+			judge: item.judge,
+			teamId: item.team._id,
+		};
+	});
+
 	return (
 		<Table
+			locale={{
+				emptyText: (
+					<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+						<h3>Stay tuned! You will see your teams that you will judge soon!</h3>
+					</div>
+				),
+			}}
 			dataSource={dataSource}
 			columns={columns}
 			pagination={false}

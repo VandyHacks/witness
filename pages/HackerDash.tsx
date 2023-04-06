@@ -1,16 +1,31 @@
 import { useEffect, useState } from 'react';
 import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Col, DatePicker, Form, Input, Radio, Row, Skeleton, Upload, UploadFile } from 'antd';
+import {
+	Button,
+	Checkbox,
+	Col,
+	DatePicker,
+	Divider,
+	Form,
+	Input,
+	Radio,
+	Row,
+	Skeleton,
+	Table,
+	Upload,
+	UploadFile,
+} from 'antd';
 import useSWR from 'swr';
 import TeamManager from '../components/TeamManager';
 import TeamSetup from '../components/TeamSetup';
 import { TeamProfile } from '../types/client';
-import { ApplicationStatus, UserData } from '../types/database';
+import { ApplicationStatus, UserData, JudgingSessionData } from '../types/database';
 import styles from '../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
+import { ColumnsType } from 'antd/es/table';
 
 type HackerProps = {
 	userApplicationStatus?: number;
@@ -127,6 +142,62 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		window.location.reload();
 	};
 
+	const judgingSessionColumns: ColumnsType<JudgingSessionData> = [
+		{
+			title: 'Time',
+			dataIndex: 'time',
+			key: 'name',
+			width: '25vw',
+			render: time => {
+				let startTime = new Date(time);
+				// add 10 minutes
+				let endTime = new Date(startTime.getTime() + 10 * 60000);
+				// return <>{startTime.getHours()}:{startTime.getMinutes()} - {endTime.getHours()}:{endTime.getMinutes()}</>
+				return (
+					<>
+						{startTime.toLocaleTimeString('default', {
+							hour: '2-digit',
+							minute: '2-digit',
+						})}{' '}
+						-{' '}
+						{endTime.toLocaleTimeString('default', {
+							hour: '2-digit',
+							minute: '2-digit',
+						})}
+					</>
+				);
+			},
+		},
+		{
+			title: 'Table',
+			dataIndex: 'team',
+			key: 'team',
+			width: '25vw',
+			render: loc => <>{loc.locationNum}</>,
+		},
+		{
+			title: 'Judge',
+			dataIndex: 'judge',
+			key: 'judge',
+			width: '50vw',
+			render: judge => <>{judge.name}</>,
+		},
+	];
+
+	const [judgingSessionData, setJudgingSessionData] = useState<JudgingSessionData[]>();
+
+	const getJudgingSessionData = () => {
+		fetch('/api/judging-sessions')
+			.then(res => res.json())
+			.then(data => {
+				setJudgingSessionData(data);
+			});
+	};
+
+	useEffect(() => {
+		getJudgingSessionData();
+	}, []);
+
 	return (
 		<Content
 			style={{
@@ -143,11 +214,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 				}`,
 				backgroundRepeat: 'no-repeat',
 				backgroundPosition: `center`,
+				backgroundAttachment: 'fixed',
 				backgroundSize: 'cover',
 			}}>
 			{!user && <Skeleton />}
 			{user && (
-				<>
+				<div style={{ overflow: 'auto' }}>
 					<Form.Item className={styles.Title}> </Form.Item>
 
 					{user.applicationStatus === ApplicationStatus.CREATED && (
@@ -575,7 +647,25 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
 							</div>
 							{!teamData && <TeamSetup />}
-							{teamData && <TeamManager profile={teamData} />}
+							{teamData && (
+								<div style={{ width: '60vw', margin: 'auto' }}>
+									<Content style={{ width: '60vw', margin: 'auto' }}>
+										<Table
+											locale={{
+												emptyText: (
+													<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+														<h3>Stay tuned! You will see your schedule soon!</h3>
+													</div>
+												),
+											}}
+											columns={judgingSessionColumns}
+											dataSource={judgingSessionData}
+										/>
+										<Divider />
+									</Content>
+									<TeamManager profile={teamData} />
+								</div>
+							)}
 							{/* Pre-hacking code */}
 							{/*
 							<div className={styles.SubmittedForm}>
@@ -657,7 +747,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-				</>
+				</div>
 			)}
 		</Content>
 	);

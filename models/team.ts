@@ -32,6 +32,7 @@ const TeamSchema = new Schema(
 			},
 		},
 		scores: { type: [Schema.Types.ObjectId], ref: 'Scores' },
+		locationNum: { type: Number, reqiured: false },
 	},
 	{
 		timestamps: true,
