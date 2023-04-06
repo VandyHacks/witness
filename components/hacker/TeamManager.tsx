@@ -2,9 +2,9 @@ import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag
 import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
-import { handleSubmitFailure } from '../lib/helpers';
-import { TeamProfile } from '../types/client';
-import LeaveButton from './LeaveButton';
+import { handleSubmitFailure } from '../../lib/helpers';
+import { TeamProfile } from '../../types/client';
+import LeaveButton from '../LeaveButton';
 const { Panel } = Collapse;
 
 async function handleSubmit(formData: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) {
