@@ -57,14 +57,14 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 	};
 	return (
 		<Content style={{ width: '60vw', margin: 'auto' }}>
-			<Descriptions bordered style={{ backgroundColor: 'white' }}>
-				<Descriptions.Item label="Team Name" span={24}>
+			<Descriptions bordered style={{ backgroundColor: 'white' }} column={1}>
+				<Descriptions.Item label="Team Name">
 					{name}
 				</Descriptions.Item>
-				<Descriptions.Item label="Join Code" span={24}>
+				<Descriptions.Item label="Join Code">
 					<Tag>{joinCode}</Tag>
 				</Descriptions.Item>
-				<Descriptions.Item label="Devpost" span={24}>
+				<Descriptions.Item label="Devpost">
 					<a style={{ color: '#1890ff' }} href={devpost.toString()} target="_blank" rel="noreferrer">
 						{devpost}
 					</a>
