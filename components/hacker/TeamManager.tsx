@@ -58,9 +58,7 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 	return (
 		<Content style={{ width: '60vw', margin: 'auto' }}>
 			<Descriptions bordered style={{ backgroundColor: 'white' }} column={1}>
-				<Descriptions.Item label="Team Name">
-					{name}
-				</Descriptions.Item>
+				<Descriptions.Item label="Team Name">{name}</Descriptions.Item>
 				<Descriptions.Item label="Join Code">
 					<Tag>{joinCode}</Tag>
 				</Descriptions.Item>
