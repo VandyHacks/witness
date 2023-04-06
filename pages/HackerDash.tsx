@@ -16,8 +16,8 @@ import {
 	UploadFile,
 } from 'antd';
 import useSWR from 'swr';
-import TeamManager from '../components/TeamManager';
-import TeamSetup from '../components/TeamSetup';
+import TeamManager from '../components/hacker/TeamManager';
+import TeamSetup from '../components/hacker/TeamSetup';
 import { TeamProfile } from '../types/client';
 import { ApplicationStatus, UserData, JudgingSessionData } from '../types/database';
 import styles from '../styles/Form.module.css';
