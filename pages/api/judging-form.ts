@@ -22,10 +22,10 @@ async function validateJudgingForm(judgingForm: any): Promise<string | JudgingFo
 }
 
 /**
- *
- * @param req
- * @param res
- * @returns
+ * validates and updates/submits judging form
+ * @param req request containing the team that is scored
+ * @param res response
+ * @returns response containing the submitted scores
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse<JudgingFormFields | string>) {
 	// team that is judged
