@@ -15,10 +15,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	if (session?.userType !== 'HACKER') return res.status(403).send('Forbidden');
 	// TODO: add uniqueness validation try catch
 	await dbConnect();
-	const hacker = await User.findById(session.userID);
+	const hacker = await User.findById(session.user._id);
 	switch (req.method) {
 		case 'GET':
-			const team = await Team.findOne({ members: session.userID })
+			const team = await Team.findOne({ members: session.user._id })
 				.populate({ path: 'members', model: User })
 				.lean();
 			return res.status(team ? 200 : 409).send(team);
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				team.members.push(hacker);
 				await team.save();
-				await log(session.userID, `Joined team ${team.name} (join code ${team.joinCode})`);
+				await log(session.user._id, `Joined team ${team.name} (join code ${team.joinCode})`);
 				return res.status(201).send(team);
 			} else if (teamName && teamName.trim()) {
 				try {
@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				try {
 					await team.save();
-					await log(session.userID, `Created team ${team.name} (join code ${team.joinCode})`);
+					await log(session.user._id, `Created team ${team.name} (join code ${team.joinCode})`);
 				} catch (e) {
 					if (e instanceof MongoServerError && e.errmsg.includes('name')) {
 						return res.status(400).send('This team name is already taken!');
@@ -71,7 +71,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 		}
 		case 'PATCH': {
-			const team = await Team.findOne({ members: session.userID });
+			const team = await Team.findOne({ members: session.user._id });
 			if (!team) return res.status(404).send('Team not found');
 
 			const { teamName, devpost } = req.body;
@@ -87,14 +87,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 						);
 				}
 				await log(
-					session.userID,
+					session.user._id,
 					`Changed team devpost ${team.devpost} => ${devpost} (join code ${team.joinCode})`
 				);
 				team.devpost = devpost;
 			}
 
 			if (teamName && teamName.trim()) {
-				await log(session.userID, `Changed team name ${team.name} => ${teamName} (join code ${team.joinCode})`);
+				await log(
+					session.user._id,
+					`Changed team name ${team.name} => ${teamName} (join code ${team.joinCode})`
+				);
 				team.name = teamName.trim();
 			}
 
@@ -112,16 +115,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		}
 		case 'DELETE': {
 			const { userID } = session;
-			let team = await Team.findOne({ members: session.userID });
+			let team = await Team.findOne({ members: session.user._id });
 			if (!team) return res.status(404).send('Team not found');
 			team.members = team.members.filter((member: ObjectId) => member.toString() !== userID);
 			if (!team.members.length) {
-				await Team.deleteOne({ members: session.userID });
-				await log(session.userID, `Deleted team ${team.name} (join code ${team.joinCode})`);
+				await Team.deleteOne({ members: session.user._id });
+				await log(session.user._id, `Deleted team ${team.name} (join code ${team.joinCode})`);
 				return res.status(200).send(`Team ${team.name} deleted successfully.`);
 			}
 
-			await log(session.userID, `Removed member from team ${team.name} (join code ${team.joinCode})`);
+			await log(session.user._id, `Removed member from team ${team.name} (join code ${team.joinCode})`);
 			await team.save();
 			return res.status(200).send(team);
 		}

@@ -8,6 +8,7 @@ import dbConnect from '../../../middleware/database';
 import User from '../../../models/user';
 import PreAdd from '../../../models/preadd';
 import log from '../../../middleware/log';
+import { JWT } from 'next-auth/jwt';
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env?.VERCEL_ENV!);
@@ -126,13 +127,18 @@ export default async function auth(req: any, res: any) {
 			 * @param token Contains user type
 			 * @returns session with user id and user type inside
 			 */
-			async session({ session, token }) {
-				// TODO: Why is userID assigned to session not session.user?
-				if (!session.userType || !session.userID) {
-					session.userType = token.userType;
+			async session({ session, token }: { session: any; token: any }) {
+				// // TODO: Why is userID assigned to session not session.user?
+				// if (!session.user.type || !session.user._id) {
+				// 	session.user.type = token.userType;
 
-					// TODO: where is the documentation for token.sub?
-					session.userID = token.sub;
+				// 	// TODO: where is the documentation for token.sub?
+				// 	session.user._id = token.sub;
+				// }
+
+				if (session?.user) {
+					session.user._id = token.sub;
+					session.user.userType = token.type;
 				}
 
 				console.log('Session: ', session);

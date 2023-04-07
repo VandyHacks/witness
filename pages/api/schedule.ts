@@ -218,13 +218,13 @@ export default async function handler(
 ) {
 	const session = await getSession({ req });
 	if (!session) return res.status(403).send('Forbidden');
-	else if (!session.userType) return res.status(418).send('No user type');
-	const userID = session.userID as string;
+	else if (!session.user.type) return res.status(418).send('No user type');
+	const userID = session.user._id as string;
 	await import('../../models/team');
 	if (req.method === 'GET') {
-		console.log('user type:', session.userType);
+		console.log('user type:', session.user.type);
 		let schedule;
-		switch (session.userType) {
+		switch (session.user.type) {
 			case 'JUDGE':
 				schedule = await getJudgeSchedule(userID);
 				break;

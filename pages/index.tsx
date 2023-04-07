@@ -41,14 +41,14 @@ export default function Page() {
 				{!session && status === 'loading' && <Skeleton />}
 				{session && (
 					<>
-						{session.userType === 'HACKER' && (
+						{session.user.type === 'HACKER' && (
 							<HackerDash
 								userApplicationStatus={userApplicationStatus}
 								setUserApplicationStatus={setUserApplicationStatus}
 							/>
 						)}
-						{session.userType === 'JUDGE' && <JudgeDash />}
-						{session.userType === 'ORGANIZER' && <OrganizerDash />}
+						{session.user.type === 'JUDGE' && <JudgeDash />}
+						{session.user.type === 'ORGANIZER' && <OrganizerDash />}
 					</>
 				)}
 			</Layout>

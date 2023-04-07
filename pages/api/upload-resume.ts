@@ -42,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 	await s3.putObject({
 		Bucket: `${process.env.VH_S3_BUCKET!}.s3.us-east-2.amazonaws.com`,
-		Key: `resumes/${session.userID}.pdf`,
+		Key: `resumes/${session.user._id}.pdf`,
 		Body: fs.readFileSync(data.files.resume.filepath),
 	});
 

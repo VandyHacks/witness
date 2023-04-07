@@ -20,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	const teamID = req.query.id;
 	const session = await getSession({ req });
 	if (session?.userType !== 'JUDGE') return res.status(403).send('Forbidden');
-	const judgeID = session.userID;
+	const judgeID = session.user._id;
 	await dbConnect();
 
 	switch (req.method) {
