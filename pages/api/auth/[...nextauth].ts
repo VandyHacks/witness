@@ -138,7 +138,7 @@ export default async function auth(req: any, res: any) {
 
 				if (session?.user) {
 					session.user._id = token.sub;
-					session.user.userType = token.type;
+					session.user.type = token.userType;
 				}
 
 				console.log('Session: ', session);
