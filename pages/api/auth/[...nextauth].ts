@@ -26,6 +26,7 @@ export default async function auth(req: any, res: any) {
 			// add username / pass login for dev builds for easier testing
 			...(DEV_DEPLOY
 				? [
+						// Credentials docs: https://next-auth.js.org/providers/credentials
 						CredentialsProvider({
 							// The name to display on the sign in form (e.g. "Sign in with...")
 							name: 'Dev Credentials',
@@ -34,7 +35,7 @@ export default async function auth(req: any, res: any) {
 								email: { label: 'Email', type: 'text', placeholder: 'test@vandyhacks.dev' },
 								password: { label: 'Password', type: 'password' },
 							},
-							async authorize(credentials, req) {
+							async authorize(credentials) {
 								if (!credentials) return null;
 								const { email, password } = credentials;
 								if (password !== process.env.TEST_PASSWD) return null;
@@ -51,19 +52,30 @@ export default async function auth(req: any, res: any) {
 				  ]
 				: []),
 		],
+
 		secret: process.env.SESSION_SECRET as string,
+
 		session: {
 			strategy: 'jwt',
 		},
 		callbacks: {
+			/**
+			 * Put user id inside JWT token
+			 * @param token JWT token
+			 * @param user Logged in user
+			 * @returns JWT token with user's id encrypted inside
+			 */
 			async jwt({ token, user }) {
 				await dbConnect();
 				if (user) {
+					console.log("User's data from the form: ", user);
 					const { email } = user;
 					// user is only defined on first sign in
 					const login = await User.findOne({ email });
+					console.log("User's data in database: ", login);
 					if (!login.userType) {
 						const preadded = await PreAdd.findOne({ email });
+						console.log('Preadded user: ', preadded);
 						if (preadded) {
 							login.userType = preadded.userType;
 							await login.save(); // ensure role has persisted before future action
@@ -81,11 +93,20 @@ export default async function auth(req: any, res: any) {
 
 				return token;
 			},
+
+			/**
+			 * Update session's user.id with token.uid
+			 * @param session
+			 * @param token Contains user id
+			 * @returns session with user.id inside
+			 */
 			async session({ session, token }) {
 				if (!session.userType || !session.userID) {
 					session.userType = token.userType;
 					session.userID = token.sub;
 				}
+
+				console.log('Session: ', session);
 				return session;
 			},
 		},
