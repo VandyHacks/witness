@@ -15,14 +15,18 @@ const DEV_DEPLOY =
 export default async function auth(req: any, res: any) {
 	await NextAuth(req, res, {
 		providers: [
+			// GitHubProvider docs: https://next-auth.js.org/providers/github
 			GitHubProvider({
 				clientId: process.env.GITHUB_ID as string,
 				clientSecret: process.env.GITHUB_SECRET as string,
 			}),
+
+			// GoogleProvider docs: https://next-auth.js.org/providers/google
 			GoogleProvider({
 				clientId: process.env.GOOGLE_ID as string,
 				clientSecret: process.env.GOOGLE_SECRET as string,
 			}),
+
 			// add username / pass login for dev builds for easier testing
 			...(DEV_DEPLOY
 				? [
@@ -35,12 +39,19 @@ export default async function auth(req: any, res: any) {
 								email: { label: 'Email', type: 'text', placeholder: 'test@vandyhacks.dev' },
 								password: { label: 'Password', type: 'password' },
 							},
+
 							async authorize(credentials) {
 								if (!credentials) return null;
+
+								// get user email and password from credentials
 								const { email, password } = credentials;
+
+								// validate password by comparing with TEST_PASSWD
 								if (password !== process.env.TEST_PASSWD) return null;
 
 								await dbConnect();
+
+								// validate whether user exists in database
 								const user = await User.findOne({
 									email,
 								});
@@ -58,51 +69,69 @@ export default async function auth(req: any, res: any) {
 		session: {
 			strategy: 'jwt',
 		},
+
+		// Callbacks doc: https://next-auth.js.org/configuration/callbacks
 		callbacks: {
 			/**
-			 * Put user id inside JWT token
 			 * @param token JWT token
 			 * @param user Logged in user
-			 * @returns JWT token with user's id encrypted inside
+			 * @returns JWT token with user's usertype
 			 */
 			async jwt({ token, user }) {
 				await dbConnect();
+
 				if (user) {
 					console.log("User's data from the form: ", user);
+
 					const { email } = user;
 					// user is only defined on first sign in
 					const login = await User.findOne({ email });
 					console.log("User's data in database: ", login);
+
+					// Determine if we need to assign a userType for the logged in user
 					if (!login.userType) {
+						// TODO: What is PreAdd?
 						const preadded = await PreAdd.findOne({ email });
 						console.log('Preadded user: ', preadded);
+
 						if (preadded) {
 							login.userType = preadded.userType;
-							await login.save(); // ensure role has persisted before future action
+							// ensure role has persisted before future action
+							await login.save();
 							await log(login.id, `Found in preadd list, assigned role ${login.userType}`);
+
 							// mark preadd entry as joined
 							preadded.status = 'JOINED';
 							await preadded.save();
 						} else {
+							// If user is not preadded, assign its userType as HACKER
 							login.userType = 'HACKER';
 							await login.save();
 						}
 					}
+
+					// Store the logged in user's userType in token
 					token.userType = login.userType;
 				}
+
+				console.log('Token: ', token);
 
 				return token;
 			},
 
 			/**
-			 * Update session's user.id with token.uid
+			 * Update session's user id and user type with token.sub
+			 * and token.userType
 			 * @param session
-			 * @param token Contains user id
-			 * @returns session with user.id inside
+			 * @param token Contains user type
+			 * @returns session with user id and user type inside
 			 */
 			async session({ session, token }) {
+				// TODO: Why is userID assigned to session not session.user?
 				if (!session.userType || !session.userID) {
 					session.userType = token.userType;
+
+					// TODO: where is the documentation for token.sub?
 					session.userID = token.sub;
 				}
 
