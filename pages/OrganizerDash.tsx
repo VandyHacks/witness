@@ -10,6 +10,7 @@ import {
 	ResponseError,
 	ScoreData,
 	TeamData,
+	UserTestData,
 	UserData,
 	PreAddData,
 	ApplicationData,
@@ -25,6 +26,7 @@ import { generateTimes } from '../components/schedule';
 import { SetStateAction, useEffect, useState } from 'react';
 import Title from 'antd/lib/typography/Title';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
+import TestEmailNotice from '../models/TestEmailNotice';
 
 const TIMES_JUDGED = 3;
 
@@ -105,6 +107,16 @@ function generateScheduleB(teams: TeamData[], judges: UserData[]) {
 
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
+
+	// const { data: testUserData, error: testUserDataError } = useSWR('/api/test-email-notice', async url => {
+	// 	const res = await fetch(url, { method: 'GET' });
+	// 	if (!res.ok) {
+	// 		const error = new Error('Failed to get list of teams.') as ResponseError;
+	// 		error.status = res.status;
+	// 		throw error;
+	// 	}
+	// 	return (await res.json()) as UserTestData[];
+	// });
 
 	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
 		const res = await fetch(url, { method: 'GET' });
@@ -206,6 +218,37 @@ export default function OrganizerDash() {
 		} else handleSubmitFailure(await res.text());
 	};
 
+	const testEmail = [
+		{
+			_id: '12313',
+			name: 'gabe',
+			email: 'gabriel.h.dong@vanderbilt.edu',
+		},
+		{
+			_id: '123w13',
+			name: 'gabe',
+			email: 'gabrielhdong@gmail.com',
+		},
+		{
+			_id: '123132',
+			name: 'gabe',
+			email: 'gabrieldong2731@gmail.com',
+		},
+	];
+
+	const sendJudgeScheduleEmailReminder = () => {
+		testEmail?.forEach(hacker => {
+			console.log(hacker);
+			fetch('/api/judge-notice', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ hacker }),
+			});
+		});
+	};
+
 	useEffect(() => {
 		if (!judgingSessionsData) return;
 		const time = new Date('2022-10-23T11:00:00').getTime();
@@ -215,8 +258,8 @@ export default function OrganizerDash() {
 		const sampleScheduleB = judgingSessionsData.filter(
 			judgingSession => new Date(judgingSession.time as string).getTime() >= time
 		);
-		console.log(sampleScheduleA);
-		console.log(sampleScheduleB);
+		// console.log(sampleScheduleA);
+		// console.log(sampleScheduleB);
 		setSampleScheduleA(sampleScheduleA);
 		setSampleScheduleB(sampleScheduleB);
 	}, [judgingSessionsData]);
@@ -254,6 +297,8 @@ export default function OrganizerDash() {
 												onClick={() => {
 													handleConfirmSchedule(sampleScheduleAData!);
 													handleConfirmSchedule(sampleScheduleBData!);
+													// make email function
+													sendJudgeScheduleEmailReminder();
 													setTestingSchedule(false);
 												}}
 												style={{ marginBottom: '10px' }}>
@@ -262,6 +307,7 @@ export default function OrganizerDash() {
 										) : (
 											<Button
 												onClick={() => {
+													console.log(hackers);
 													if (
 														!window.confirm(
 															'Are you sure you want to create a new schedule?'
@@ -269,6 +315,7 @@ export default function OrganizerDash() {
 													)
 														return;
 													setTestingSchedule(true);
+
 													setSampleScheduleA(generateScheduleA(teamsData, judgeData));
 													setSampleScheduleB(generateScheduleB(teamsData, judgeData));
 												}}
