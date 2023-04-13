@@ -89,7 +89,7 @@ export function generateTimes(start: Date, end: Date, interval: number) {
 	const times = [];
 	let current = start;
 	while (current < end) {
-		console.log(current);
+		//console.log(current);
 		times.push(current);
 		current = new Date(current.getTime() + interval * 60000);
 	}

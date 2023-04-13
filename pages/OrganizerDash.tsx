@@ -146,6 +146,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as UserData[];
 	});
 
+	//EMAIL TESTING PURPOSES
 	const { data: testhackers, error: testhackersError } = useSWR('/api/judge-notice?usertype=HACKER', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -208,6 +209,7 @@ export default function OrganizerDash() {
 
 
 	const sendJudgeScheduleEmailReminder = () => {
+		//change this to hackers to connect to Users
 		testhackers?.forEach(hacker => {
 			fetch('/api/judge-notice', {
 				method: 'POST',

@@ -8,6 +8,8 @@ import judgingNotice from './email/templates/judgingNotice';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	switch (req.method) {
+		
+		//TESTING PURPOSES
 		case 'GET':
 			const session = await getSession({ req });
 			if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
