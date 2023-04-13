@@ -10,7 +10,6 @@ import {
 	ResponseError,
 	ScoreData,
 	TeamData,
-	UserTestData,
 	UserData,
 	PreAddData,
 	ApplicationData,
@@ -26,7 +25,6 @@ import { generateTimes } from '../components/schedule';
 import { SetStateAction, useEffect, useState } from 'react';
 import Title from 'antd/lib/typography/Title';
 import { ConsoleSqlOutlined } from '@ant-design/icons';
-import TestEmailNotice from '../models/TestEmailNotice';
 
 const TIMES_JUDGED = 3;
 
@@ -108,16 +106,6 @@ function generateScheduleB(teams: TeamData[], judges: UserData[]) {
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
 
-	// const { data: testUserData, error: testUserDataError } = useSWR('/api/test-email-notice', async url => {
-	// 	const res = await fetch(url, { method: 'GET' });
-	// 	if (!res.ok) {
-	// 		const error = new Error('Failed to get list of teams.') as ResponseError;
-	// 		error.status = res.status;
-	// 		throw error;
-	// 	}
-	// 	return (await res.json()) as UserTestData[];
-	// });
-
 	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -158,7 +146,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as UserData[];
 	});
 
-	/*const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
+	const { data: testhackers, error: testhackersError } = useSWR('/api/judge-notice?usertype=HACKER', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
 			const error = new Error('Failed to get schedule.') as ResponseError;
@@ -166,7 +154,7 @@ export default function OrganizerDash() {
 			throw error;
 		}
 		return (await res.json()) as ScheduleDisplay[];
-	});*/
+	});
 
 	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR(
 		'/api/judging-sessions',
@@ -218,27 +206,9 @@ export default function OrganizerDash() {
 		} else handleSubmitFailure(await res.text());
 	};
 
-	const testEmail = [
-		{
-			_id: '12313',
-			name: 'gabe',
-			email: 'gabriel.h.dong@vanderbilt.edu',
-		},
-		{
-			_id: '123w13',
-			name: 'gabe',
-			email: 'gabrielhdong@gmail.com',
-		},
-		{
-			_id: '123132',
-			name: 'gabe',
-			email: 'gabrieldong2731@gmail.com',
-		},
-	];
 
 	const sendJudgeScheduleEmailReminder = () => {
-		testEmail?.forEach(hacker => {
-			console.log(hacker);
+		hackers?.forEach(hacker => {
 			fetch('/api/judge-notice', {
 				method: 'POST',
 				headers: {
@@ -307,7 +277,7 @@ export default function OrganizerDash() {
 										) : (
 											<Button
 												onClick={() => {
-													console.log(hackers);
+													//console.log(hackers);
 													if (
 														!window.confirm(
 															'Are you sure you want to create a new schedule?'
