@@ -2,9 +2,9 @@ import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag
 import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
-import { handleSubmitFailure } from '../lib/helpers';
-import { TeamProfile } from '../types/client';
-import LeaveButton from './LeaveButton';
+import { handleSubmitFailure } from '../../lib/helpers';
+import { TeamProfile } from '../../types/client';
+import LeaveButton from '../LeaveButton';
 const { Panel } = Collapse;
 
 async function handleSubmit(formData: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) {
@@ -57,14 +57,12 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 	};
 	return (
 		<Content style={{ width: '60vw', margin: 'auto' }}>
-			<Descriptions bordered style={{ backgroundColor: 'white' }}>
-				<Descriptions.Item label="Team Name" span={24}>
-					{name}
-				</Descriptions.Item>
-				<Descriptions.Item label="Join Code" span={24}>
+			<Descriptions bordered style={{ backgroundColor: 'white' }} column={1}>
+				<Descriptions.Item label="Team Name">{name}</Descriptions.Item>
+				<Descriptions.Item label="Join Code">
 					<Tag>{joinCode}</Tag>
 				</Descriptions.Item>
-				<Descriptions.Item label="Devpost" span={24}>
+				<Descriptions.Item label="Devpost">
 					<a style={{ color: '#1890ff' }} href={devpost.toString()} target="_blank" rel="noreferrer">
 						{devpost}
 					</a>
