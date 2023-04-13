@@ -15,6 +15,10 @@ const DEV_DEPLOY =
 
 export default async function auth(req: any, res: any) {
 	await NextAuth(req, res, {
+		session: {
+			strategy: 'jwt',
+		},
+
 		providers: [
 			// GitHubProvider docs: https://next-auth.js.org/providers/github
 			GitHubProvider({
@@ -66,10 +70,6 @@ export default async function auth(req: any, res: any) {
 		],
 
 		secret: process.env.SESSION_SECRET as string,
-
-		session: {
-			strategy: 'jwt',
-		},
 
 		// Callbacks doc: https://next-auth.js.org/configuration/callbacks
 		callbacks: {
@@ -131,7 +131,6 @@ export default async function auth(req: any, res: any) {
 				// if (!session.user.type || !session.user._id) {
 				// 	session.user.type = token.userType;
 
-				// 	// TODO: where is the documentation for token.sub?
 				// 	session.user._id = token.sub;
 				// }
 
