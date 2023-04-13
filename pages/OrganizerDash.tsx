@@ -146,17 +146,6 @@ export default function OrganizerDash() {
 		return (await res.json()) as UserData[];
 	});
 
-	//EMAIL TESTING PURPOSES
-	const { data: testhackers, error: testhackersError } = useSWR('/api/judge-notice?usertype=HACKER', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get schedule.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as ScheduleDisplay[];
-	});
-
 	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR(
 		'/api/judging-sessions',
 		async url => {
@@ -209,15 +198,14 @@ export default function OrganizerDash() {
 
 
 	const sendJudgeScheduleEmailReminder = () => {
-		//change this to hackers to connect to Users
-		testhackers?.forEach(hacker => {
-			fetch('/api/judge-notice', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ hacker }),
-			});
+		hackers?.forEach(hacker => {
+			// fetch('/api/judge-notice', {
+			// 	method: 'POST',
+			// 	headers: {
+			// 		'Content-Type': 'application/json',
+			// 	},
+			// 	body: JSON.stringify({ hacker }),
+			// });
 		});
 	};
 

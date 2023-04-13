@@ -8,29 +8,10 @@ import judgingNotice from './email/templates/judgingNotice';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	switch (req.method) {
-		
-		//TESTING PURPOSES
-		case 'GET':
-			const session = await getSession({ req });
-			if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
-			// TODO: add uniqueness validation try catch
-			await dbConnect();
-			const userType = req.query.usertype as string;
-			// validate usertype
-			if (!userType || !USER_TYPES.includes(userType)) return res.status(400).send('Invalid user type');
-
-			// Construct query and await at the end
-			let userstest = UserTestEmail.find({ userType });
-			if (userType == 'HACKER') {
-				Application; // Don't remove or the import will get optimized out and the populate will fail
-				userstest = userstest.populate('application');
-			}
-
-			return res.status(200).send(await userstest);
 
 		case 'POST':
 			try {
-				await sendEmail(judgingNotice(req.body.hacker));
+				// await sendEmail(judgingNotice(req.body.hacker));
 
 				return res.status(200).send('');
 			} catch (error) {
