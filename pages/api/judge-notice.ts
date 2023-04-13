@@ -28,7 +28,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 		case 'POST':
 			try {
-				// await sendEmail(judgingNotice(req.body.hacker));
+				await sendEmail(judgingNotice(req.body.hacker));
 
 				return res.status(200).send('');
 			} catch (error) {

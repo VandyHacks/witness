@@ -208,7 +208,7 @@ export default function OrganizerDash() {
 
 
 	const sendJudgeScheduleEmailReminder = () => {
-		hackers?.forEach(hacker => {
+		testhackers?.forEach(hacker => {
 			fetch('/api/judge-notice', {
 				method: 'POST',
 				headers: {
