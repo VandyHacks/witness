@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return res.status(201).send(scores);
 		}
 
-		// update scores
+		// validate and update scores
 		case 'PATCH': {
 			// validate judging form
 			const validateResults = await validateJudgingForm(req.body);
