@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import Application from '../../models/application';
-import UserTestEmail, { USER_TYPES }  from '../../models/usertest';
 import sendEmail from './email/email';
 import judgingNotice from './email/templates/judgingNotice';
 
@@ -11,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 		case 'POST':
 			try {
-				// await sendEmail(judgingNotice(req.body.hacker));
+				await sendEmail(judgingNotice(req.body.hacker));
 
 				return res.status(200).send('');
 			} catch (error) {
