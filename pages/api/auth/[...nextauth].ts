@@ -128,7 +128,6 @@ export default async function auth(req: any, res: any) {
 			 * @returns session with user id and user type inside
 			 */
 			async session({ session, token }: { session: any; token: any }) {
-				// // TODO: Why is userID assigned to session not session.user?
 				// if (!session.user.type || !session.user._id) {
 				// 	session.user.type = token.userType;
 
