@@ -4,12 +4,23 @@ import JudgingSession from '../../models/JudgingSession';
 import Team from '../../models/team';
 import User from '../../models/user';
 
+/**
+ * gets a judging schedule for a team
+ * @param res response
+ * @param userID ID of the team
+ * @returns response containing judging schedule
+ */
 async function getHackerSchedule(res: NextApiResponse, userID: string) {
 	const team = await Team.findOne({ members: userID });
 	const data = await JudgingSession.find({ team: team }).populate('team judge').lean();
 	return res.status(200).send(data);
 }
 
+/**
+ * gets judging schedules for all teams
+ * @param res response
+ * @returns response containing judging schedule for all teams
+ */
 async function getOrganizerSchedule(res: NextApiResponse) {
 	Team;
 	User; // Don't remove or the import will get optimized out and the populate will fail
@@ -20,6 +31,12 @@ async function getOrganizerSchedule(res: NextApiResponse) {
 	return res.status(200).send(data);
 }
 
+/**
+ * gets judging schedule for a judge
+ * @param res response
+ * @param userID ID of the judge
+ * @returns response containing judging schedule for a judge
+ */
 async function getJudgeSchedule(res: NextApiResponse, userID: string) {
 	Team;
 	User; // Don't remove or the import will get optimized out and the populate will fail
@@ -30,6 +47,12 @@ async function getJudgeSchedule(res: NextApiResponse, userID: string) {
 	return res.status(200).send(data);
 }
 
+/**
+ * gets the correct judging schedule(s) for a specific user (hacker, judge, or organizer)
+ * @param req request containing the user type
+ * @param res response
+ * @returns response containing the correct judging schedule(s)
+ */
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
 	const userType = session?.userType;

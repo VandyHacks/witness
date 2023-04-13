@@ -120,7 +120,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				};
 			}),
 		],
-		[teams]
+		[teams, data]
 	);
 
 	sessionTimeStart = sessionTimeStart || new Date();
