@@ -1,7 +1,7 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Row, Select, Space } from 'antd';
 import React, { Dispatch, SetStateAction } from 'react';
-import { TeamSelectData } from '../types/client';
+import { TeamSelectData } from '../../types/client';
 import { useSession } from 'next-auth/react';
 const { Option, OptGroup } = Select;
 

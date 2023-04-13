@@ -2,9 +2,9 @@ import { Button, Divider, notification, Skeleton } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
-import JudgingForm from '../components/judgingForm';
+import JudgingForm from '../components/judges/JudgingForm';
 import { JudgeSchedule } from '../components/schedule';
-import TeamSelect from '../components/teamSelect';
+import TeamSelect from '../components/judges/TeamSelect';
 import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
 import { JudgingSessionData, ResponseError, TeamData } from '../types/database';
 import { signOut, useSession } from 'next-auth/react';
@@ -78,14 +78,14 @@ export default function JudgeDash() {
 	});
 
 	const [isNewForm, setIsNewForm] = useState(false);
-	// Get data for form component, formData will be falsy if teamId is not yet set.
+	// Get data for form component, formData will be false if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
 		async (url, id) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
 			if (!res.ok) {
 				if (res.status === 404) {
-					const emptyJudgeForm = {
+					const emptyJudgeForm: JudgingFormFields = {
 						technicalAbility: 0,
 						creativity: 0,
 						utility: 0,
@@ -93,7 +93,7 @@ export default function JudgeDash() {
 						wowFactor: 0,
 						comments: '',
 						feedback: '',
-					} as JudgingFormFields;
+					};
 					setIsNewForm(true);
 					return emptyJudgeForm;
 				}

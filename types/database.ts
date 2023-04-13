@@ -1,12 +1,3 @@
-// export interface JudgingData {
-// 	time: number;
-// 	team: Team;
-// 	judges: string[];
-// 	zoomURL: URL;
-// }
-
-//New Interfaces
-
 import mongoose from 'mongoose';
 
 export const enum ApplicationStatus {
