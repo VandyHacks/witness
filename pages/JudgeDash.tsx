@@ -1,19 +1,23 @@
-import { Button, Divider, notification, Skeleton } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { signOut, useSession } from 'next-auth/react';
 import useSWR, { useSWRConfig } from 'swr';
 import { ScopedMutator } from 'swr/dist/types';
+import { JudgingSessionData, ResponseError } from '../types/database';
+import { JudgingFormFields, TeamSelectData } from '../types/client';
+import { Button, Divider, notification, Skeleton } from 'antd';
 import JudgingForm from '../components/judges/JudgingForm';
 import { JudgeSchedule } from '../components/schedule';
 import TeamSelect from '../components/judges/TeamSelect';
-import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
-import { JudgingSessionData, ResponseError, TeamData } from '../types/database';
-import { signOut, useSession } from 'next-auth/react';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
 const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
-// let { JUDGING_LENGTH } = process.env;
 const JUDGING_LENGTH = '600000';
 
+/**
+ * handles successful judging form submission
+ * @param isNew true if submitting form for first time, false if updating form
+ * @param setIsNewForm updates form to no longer be new
+ */
 function handleSubmitSuccess(isNew: boolean, setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>) {
 	notification['success']({
 		message: `Successfully ${isNew ? 'submitted' : 'updated'}!`,
@@ -22,6 +26,10 @@ function handleSubmitSuccess(isNew: boolean, setIsNewForm: React.Dispatch<React.
 	setIsNewForm(false);
 }
 
+/**
+ * handles failed judging form submission
+ * @param errorDescription error message sent upon failure
+ */
 function handleSubmitFailure(errorDescription: string) {
 	if (errorDescription === '') {
 		errorDescription = GENERIC_ERROR_DESCRIPTION;
@@ -33,6 +41,14 @@ function handleSubmitFailure(errorDescription: string) {
 	});
 }
 
+/**
+ * handles judging form submissions
+ * @param formData data from judging form
+ * @param mutate
+ * @param teamId team that judge is judging
+ * @param isNewForm true if submitting form for first time, false if updating form
+ * @param setIsNewForm updates form to no longer be new
+ */
 async function handleSubmit(
 	formData: JudgingFormFields,
 	mutate: ScopedMutator<any>,
@@ -40,6 +56,7 @@ async function handleSubmit(
 	isNewForm: boolean,
 	setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>
 ) {
+	// validates and then submits/updates judging form for given team
 	const res = await fetch(`/api/judging-form?id=${teamId}`, {
 		method: isNewForm ? 'POST' : 'PATCH',
 		headers: {
@@ -48,6 +65,7 @@ async function handleSubmit(
 		body: JSON.stringify(formData),
 	});
 
+	// handle form based on success or failure
 	if (res.ok) {
 		mutate('/api/teams');
 		mutate('/api/judging-form');
@@ -58,11 +76,15 @@ async function handleSubmit(
 }
 
 export default function JudgeDash() {
-	const { data: session, status } = useSession();
+	// session data
+	const { data: session } = useSession();
+	// state for teamID that judge is judging
 	const [teamID, setTeamID] = useState('');
 	const [currentScheduleItem, setCurrentScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [nextScheduleItem, setNextScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [nextIndex, setNextIndex] = useState(-1);
+	// state for whether the judging form is new or being updated
+	const [isNewForm, setIsNewForm] = useState(false);
 	const { mutate } = useSWRConfig();
 	const judgingLength = parseInt(JUDGING_LENGTH || '0');
 
@@ -77,13 +99,13 @@ export default function JudgeDash() {
 		return (await res.json()) as TeamSelectData[];
 	});
 
-	const [isNewForm, setIsNewForm] = useState(false);
 	// Get data for form component, formData will be false if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
 		async (url, id) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
 			if (!res.ok) {
+				// if judging form is new
 				if (res.status === 404) {
 					const emptyJudgeForm: JudgingFormFields = {
 						technicalAbility: 0,
@@ -101,11 +123,13 @@ export default function JudgeDash() {
 				error.status = res.status;
 				throw error;
 			}
+			// if judging form is being updated
 			setIsNewForm(false);
 			return (await res.json()) as JudgingFormFields;
 		}
 	);
 
+	// Getdata for judging schedule
 	const { data: scheduleData, error: scheduleError } = useSWR('/api/judging-sessions', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
@@ -161,6 +185,7 @@ export default function JudgeDash() {
 		return () => clearInterval(interval);
 	});
 
+	// Set teamID to updated teamID
 	const handleTeamChange: Dispatch<SetStateAction<string>> = e => {
 		setTeamID(e);
 		setTimeout(() => {
@@ -170,20 +195,33 @@ export default function JudgeDash() {
 
 	return (
 		<>
+			{/* Sign out button and sign in info */}
 			<div style={{ display: 'flex', paddingBottom: '20px' }}>
 				<Button size="small" type="default" onClick={() => signOut()}>
 					Sign out
 				</Button>
 				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
 			</div>
+
+			{/* Judging schedule */}
 			{scheduleData && (
 				<JudgeSchedule data={scheduleData} cutoffIndex={nextIndex} handleChange={handleTeamChange} />
 			)}
+
+			{/* Add spacing */}
 			<br />
 			<br />
+
+			{/* Select team to judge */}
 			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={handleTeamChange} />}
+
+			{/* Skeleton while waiting for judging schedule to load */}
 			{(!scheduleData || !teamsData) && <Skeleton />}
+
+			{/* Divider between Team Select and Judging Form */}
 			<Divider />
+
+			{/* Judging form */}
 			{formData && (
 				<JudgingForm
 					formData={formData}
@@ -191,6 +229,8 @@ export default function JudgeDash() {
 					onSubmit={formData => handleSubmit(formData, mutate, teamID, isNewForm, setIsNewForm)}
 				/>
 			)}
+
+			{/* Skeleton while waiting for judging form data to load */}
 			{!formData && teamID && <Skeleton />}
 		</>
 	);
