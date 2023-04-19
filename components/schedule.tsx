@@ -49,7 +49,7 @@ function TableCell(data: JudgingSessionData | null) {
 				</Collapse> */}
 						<div>
 							{/* <span>Judge: </span> */}
-							<Tag key={data.judge.name as string}>{data.judge.name}</Tag>
+							<Tag key={data.judge?.name as string}>{data.judge?.name}</Tag>
 						</div>
 					</Space>
 				),
@@ -99,7 +99,7 @@ export function generateTimes(start: Date, end: Date, interval: number) {
 export default function OrganizerSchedule(props: ScheduleProps) {
 	let { data, sessionTimeStart, sessionTimeEnd } = props;
 
-	const teams = useMemo(() => [...new Set(data.map(x => x.team.name))], [data]);
+	const teams = useMemo(() => [...new Set(data.map(x => x.team?.name))], [data]);
 
 	const columns = useMemo(
 		() => [
@@ -111,7 +111,8 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
 			...teams.map(teamName => {
-				let locationNum = data.find(x => x.team.name === teamName)?.team.locationNum;
+				let team = data.find(x => x.team?.name === teamName)?.team;
+				let locationNum = team ? team.locationNum : '';
 				return {
 					title: (teamName as string) + ' (Table ' + locationNum + ')',
 					dataIndex: teamName as string,
@@ -140,7 +141,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			if (!dataAsMap.has(time)) {
 				dataAsMap.set(time, Object.fromEntries(teams.map(team => [team, null])));
 			}
-			dataAsMap.get(time)[team.name as string] = session;
+			dataAsMap.get(time)[team?.name as string] = session;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],

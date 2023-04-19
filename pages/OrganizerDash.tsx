@@ -196,16 +196,28 @@ export default function OrganizerDash() {
 		} else handleSubmitFailure(await res.text());
 	};
 
+	const test = [
+		{
+			_id: 123456,
+			name: 'Zi',
+			email: 'zinean00@gmail.com',
+		},
+		{
+			_id: 11232,
+			name: 'Gabe',
+			email: 'gabrielhdong@gmail.com',
+		},
+	];
 
 	const sendJudgeScheduleEmailReminder = () => {
-		hackers?.forEach(hacker => {
-			// fetch('/api/judge-notice', {
-			// 	method: 'POST',
-			// 	headers: {
-			// 		'Content-Type': 'application/json',
-			// 	},
-			// 	body: JSON.stringify({ hacker }),
-			// });
+		test?.forEach(hacker => {
+			fetch('/api/judge-notice', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ hacker }),
+			});
 		});
 	};
 
@@ -255,6 +267,7 @@ export default function OrganizerDash() {
 										(testingSchedule ? (
 											<Button
 												onClick={() => {
+													console.log(hackers);
 													handleConfirmSchedule(sampleScheduleAData!);
 													handleConfirmSchedule(sampleScheduleBData!);
 													// make email function
