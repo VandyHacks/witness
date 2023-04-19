@@ -199,8 +199,8 @@ export default function OrganizerDash() {
 	const test = [
 		{
 			_id: 123456,
-			name: 'Zi',
-			email: 'zinean00@gmail.com',
+			name: 'Gabriel',
+			email: 'gabriel.h.dong@vanderbilt.edu',
 		},
 		{
 			_id: 11232,
@@ -209,8 +209,8 @@ export default function OrganizerDash() {
 		},
 	];
 
-	const sendJudgeScheduleEmailReminder = () => {
-		test?.forEach(hacker => {
+	const sendJudgeScheduleEmailReminder = (emailList: {}[]) => {
+		emailList?.forEach(hacker => {
 			fetch('/api/judge-notice', {
 				method: 'POST',
 				headers: {
@@ -219,6 +219,8 @@ export default function OrganizerDash() {
 				body: JSON.stringify({ hacker }),
 			});
 		});
+
+		handleSubmitSuccess(`Notification email successfully sent to ${emailList?.length} hackers.`);
 	};
 
 	useEffect(() => {
@@ -270,9 +272,16 @@ export default function OrganizerDash() {
 													console.log(hackers);
 													handleConfirmSchedule(sampleScheduleAData!);
 													handleConfirmSchedule(sampleScheduleBData!);
-													// make email function
-													sendJudgeScheduleEmailReminder();
 													setTestingSchedule(false);
+
+													if (
+														window.confirm(
+															`Are you sure you want to send a notification email to ${hackers?.length} hackers?`
+														)
+													) {
+														// change test to the real list of hackers
+														sendJudgeScheduleEmailReminder(test);
+													}
 												}}
 												style={{ marginBottom: '10px' }}>
 												Confirm Schedule
@@ -280,7 +289,6 @@ export default function OrganizerDash() {
 										) : (
 											<Button
 												onClick={() => {
-													//console.log(hackers);
 													if (
 														!window.confirm(
 															'Are you sure you want to create a new schedule?'
