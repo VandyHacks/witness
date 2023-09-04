@@ -219,42 +219,43 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			}}>
 			{!user && <Skeleton />}
 			{user && (
-				<div style={{ overflow: 'auto' }}>
-					<Form.Item className={styles.Title}> </Form.Item>
+				<div style={{ overflow: 'auto', height: '100vh' }}>
+					<Form.Item className={styles.TitleLogo}> </Form.Item>
+					<div className={styles.TitleContainer}>
+						<div className={styles.Title}>VandyHacks X Registration</div>
+					</div>
 
 					{user.applicationStatus === ApplicationStatus.CREATED && (
-						<Form layout={'vertical'} onFinish={onFinish} scrollToFirstError={true}>
+						<Form
+							layout={'horizontal'}
+							labelCol={{ span: 6 }}
+							labelAlign="left"
+							onFinish={onFinish}
+							scrollToFirstError={true}>
 							<div className={styles.Form}>
-								<div
-									style={{
-										width: '100%',
-										display: 'flex',
-										justifyContent: 'center',
-										alignItems: 'center',
-										marginBottom: '30px',
-									}}>
+								<div className={styles.SignedInStatus}>
 									<div style={{ paddingRight: '20px' }}>Signed in as {session?.user?.email}</div>
 									<Button size="small" type="default" onClick={() => signOut()}>
 										Sign out
 									</Button>
 								</div>
 								<Form.Item
-									label="First Name"
+									label={<p className={styles.Label}>First Name</p>}
 									name="firstName"
 									rules={[{ required: true, message: 'Please input your first name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label="Last Name"
+									label={<p className={styles.Label}>Last Name</p>}
 									name="lastName"
 									rules={[{ required: true, message: 'Please input your last name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-								<Form.Item label="Preferred Name" name="preferredName">
+								<Form.Item label={<p className={styles.Label}>Preferred Name</p>} name="preferredName">
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label="Gender"
+									label={<p className={styles.Label}>Gender</p>}
 									name="gender"
 									rules={[{ required: true, message: 'Please select an option!' }]}>
 									<Radio.Group>
@@ -266,7 +267,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									name="dateOfBirth"
-									label="Date of Birth"
+									label={<p className={styles.Label}>Date of Birth</p>}
 									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
 									<DatePicker
 										disabledDate={disabledDate}
@@ -276,25 +277,25 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									label="Phone Number"
+									label={<p className={styles.Label}>Phone Number</p>}
 									name="phoneNumber"
 									rules={[{ required: true, message: 'Please input your phone number!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label="School"
+									label={<p className={styles.Label}>School</p>}
 									name="school"
 									rules={[{ required: true, message: 'Please input your school!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label="Major"
+									label={<p className={styles.Label}>Major</p>}
 									name="major"
 									rules={[{ required: true, message: 'Please input your major!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label="Graduation Year"
+									label={<p className={styles.Label}>Graduation Year</p>}
 									name="graduationYear"
 									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
 									<Radio.Group>
@@ -306,26 +307,26 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									label="Address Line 1"
+									label={<p className={styles.Label}>Address Line 1</p>}
 									name="address1"
 									rules={[{ required: true, message: 'Please input your address!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-								<Form.Item label="Address Line 2" name="address2">
+								<Form.Item label={<p className={styles.Label}>Address Line 2</p>} name="address2">
 									<Input className={styles.Input} />
 								</Form.Item>
 								<div className={styles.InputAddress}>
-									<Col span={10} className={styles.Col}>
+									<Col span={8} className={styles.Col}>
 										<Form.Item
-											label="City"
+											label={<p className={styles.Label}>City</p>}
 											name={'city'}
 											rules={[{ required: true, message: 'Please input your city!' }]}>
 											<Input className={styles.Input + ' ' + styles.InputCity} />
 										</Form.Item>
 									</Col>
-									<Col span={4} className={styles.Col}>
+									<Col span={8} className={styles.Col}>
 										<Form.Item
-											label="State"
+											label={<p className={styles.Label}>State</p>}
 											name={'state'}
 											rules={[{ required: true, message: 'Please input your state!' }]}>
 											<Input className={styles.Input + ' ' + styles.InputState} />
@@ -333,7 +334,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Col>
 									<Col span={8} className={styles.Col}>
 										<Form.Item
-											label="ZIP Code"
+											label={<p className={styles.Label}>ZIP Code</p>}
 											name={'zip'}
 											rules={[
 												{
@@ -355,19 +356,23 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</div>
 								<Form.Item
 									name="race"
-									label="Race"
+									label={<p className={styles.Label}>Race</p>}
 									rules={[{ required: true, message: 'Please select at least one option!' }]}>
 									<Checkbox.Group options={race} />
 								</Form.Item>
-								<Form.Item name="dietaryRestrictions" label="Dietary Restrictions">
+								<Form.Item
+									name="dietaryRestrictions"
+									label={<p className={styles.Label}>Dietary Restrictions</p>}>
 									<Checkbox.Group options={dietaryRestrictions} />
 								</Form.Item>
-								<Form.Item name="accommodationNeeds" label="Do you have any accommodation needs?">
+								<Form.Item
+									name="accommodationNeeds"
+									label={<p className={styles.Label}>Do you have any accommodation needs?</p>}>
 									<Input placeholder="Enter your accommodation needs, if any" />
 								</Form.Item>
 								<Form.Item
 									name="firstTime"
-									label="Are you a first-time hacker?"
+									label={<p className={styles.Label}>Are you a first-time hacker?</p>}
 									rules={[{ required: true, message: 'Please select an option!' }]}
 									tooltip="Beginner hackers are warmly welcomed!">
 									<Radio.Group>
@@ -377,7 +382,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									name="whyAttend"
-									label="Why would you like to attend VandyHacks?"
+									label={<p className={styles.Label}>Why would you like to attend VandyHacks?</p>}
 									rules={[
 										{
 											required: true,
@@ -388,19 +393,25 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									name="techIndustry"
-									label="Which tech industry, if any, do you want to get into?"
+									label={
+										<p className={styles.Label}>
+											Which tech industry, if any, do you want to get into?
+										</p>
+									}
 									rules={[{ required: true, message: 'Please enter your response!' }]}>
 									<TextArea autoSize={{ minRows: 3 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="techStack"
-									label="Which tech stack, if any, are you familiar with?"
+									label={
+										<p className={styles.Label}>Which tech stack, if any, are you familiar with?</p>
+									}
 									rules={[{ required: true, message: 'Please enter your response!' }]}>
 									<TextArea autoSize={{ minRows: 3 }} placeholder="Enter your response" />
 								</Form.Item>
 								<Form.Item
 									name="passion"
-									label="What are you passionate about?"
+									label={<p className={styles.Label}>What are you passionate about?</p>}
 									rules={[
 										{ required: true, message: 'Please tell us what you are passionate about :)' },
 									]}>
@@ -408,12 +419,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									name="motivation"
-									label="What do you hope to gain from VandyHacks?"
+									label={<p className={styles.Label}>What do you hope to gain from VandyHacks?</p>}
 									rules={[{ required: true, message: 'Please select at least one option!' }]}>
 									<Checkbox.Group options={motivation} />
 								</Form.Item>
 								<Form.Item
-									label="Shirt Size"
+									label={<p className={styles.Label}>Shirt Size</p>}
 									name="shirtSize"
 									rules={[{ required: true, message: 'Please select your shirt size!' }]}>
 									<Radio.Group>
@@ -426,7 +437,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									label={'Résumé (will be shared with sponsors)'}
+									label={<p className={styles.Label}>Résumé (will be shared with sponsors)</p>}
 									rules={[
 										{
 											required: true,
@@ -473,7 +484,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item> */}
 								<Form.Item
 									name="overnight"
-									label="Will you be staying overnight in the venue and thus need access to shower?"
+									label={<p className={styles.Label}>Will you be staying overnight in the venue?</p>}
 									rules={[{ required: true, message: 'Please select an answer!' }]}>
 									<Radio.Group>
 										<Radio.Button value="yes">Yes</Radio.Button>
@@ -482,7 +493,13 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									name="prizeEligibility"
-									label="Are you a U.S. Citizen, Permanent Resident, or granted the status of Immigrant, Refugee, Asylee or Deferred Action for Childhood Arrival (DACA), by the Bureau of Citizenship and Immigration Services?"
+									label={
+										<p className={styles.Label}>
+											Are you a U.S. Citizen, Permanent Resident, or granted the status of
+											Immigrant, Refugee, Asylee or Deferred Action for Childhood Arrival (DACA),
+											by the Bureau of Citizenship and Immigration Services?
+										</p>
+									}
 									rules={[{ required: true, message: 'Please select an answer!' }]}>
 									<Radio.Group>
 										<Radio.Button value="yes">Yes</Radio.Button>
@@ -490,7 +507,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									label="Would you like to be contacted about volunteering at the event?"
+									label={
+										<p className={styles.Label}>
+											Would you like to be contacted about volunteering at the event?
+										</p>
+									}
 									name="volunteer"
 									rules={[{ required: true, message: 'Please select an answer!' }]}>
 									<Radio.Group>
@@ -510,7 +531,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 													: Promise.reject(new Error('Please read and agree to submit.')),
 										},
 									]}>
-									<Checkbox>
+									<Checkbox style={{ color: 'white' }}>
 										I have read and agree to the{' '}
 										<a
 											style={{ color: '#027cff' }}
@@ -533,7 +554,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 													: Promise.reject(new Error('Please read and agree to submit.')),
 										},
 									]}>
-									<Checkbox>
+									<Checkbox style={{ color: 'white' }}>
 										I authorize you to share my application/registration information for event
 										administration, ranking, MLH administration, pre- and post-event informational
 										emails, and occasional emails about hackathons in line with the MLH Privacy
@@ -553,7 +574,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Checkbox>
 								</Form.Item>
 								<Form.Item valuePropName="checked" name="mlhComms">
-									<Checkbox>
+									<Checkbox style={{ color: 'white' }}>
 										I authorize MLH to send me an email where I can further opt into the MLH Hacker,
 										Events, or Organizer Newsletters and other communications from MLH.
 									</Checkbox>
@@ -562,7 +583,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 
 								<Button
 									loading={loading}
-									style={{ marginBottom: '60px' }}
+									className={styles.SubmitButton}
 									type="primary"
 									htmlType="submit">
 									Submit
@@ -720,32 +741,30 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.DECLINED && (
-						<>
-							<div className={styles.SubmittedForm}>
-								<div className={styles.ThankYouMessage}>
-									<br />
-									We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake
-									and you&apos;d like to attend, please email us at{' '}
-									<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
-										info@vandyhacks.org
-									</a>
-									.
-									<br />
-									We hope to see you next year!
-									<br />
-									<div className={styles.SignInInfo}>
-										<div>Signed in as {session?.user?.email}</div>
-										<Button
-											style={{ marginTop: '8px' }}
-											size="small"
-											type="default"
-											onClick={() => signOut()}>
-											Sign out
-										</Button>
-									</div>
+						<div className={styles.SubmittedForm}>
+							<div className={styles.ThankYouMessage}>
+								<br />
+								We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake and
+								you&apos;d like to attend, please email us at{' '}
+								<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
+									info@vandyhacks.org
+								</a>
+								.
+								<br />
+								We hope to see you next year!
+								<br />
+								<div className={styles.SignInInfo}>
+									<div>Signed in as {session?.user?.email}</div>
+									<Button
+										style={{ marginTop: '8px' }}
+										size="small"
+										type="default"
+										onClick={() => signOut()}>
+										Sign out
+									</Button>
 								</div>
 							</div>
-						</>
+						</div>
 					)}
 				</div>
 			)}
