@@ -1,11 +1,13 @@
 .Form {
-	background-image: url('/input-background.png');
+	background-color: rgba(0, 0, 0, 0.5);
 	background-position: center;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
+	border-radius: 40px;
 	padding: 5em;
 	width: 70%;
 	margin: auto;
+	color: white;
 }
 
 .SubmittedForm {
