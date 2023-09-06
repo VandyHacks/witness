@@ -42,6 +42,14 @@
 	width: 300px;
 }
 
+.RadioButton {
+	background-color: rgba(117, 116, 116, 0.7);
+	color: white;
+	border: 1px solid white;
+	border-radius: 10px;
+	margin: 0 5px;
+}
+
 .SignedInStatus {
 	width: 100%;
 	display: flex;
@@ -55,10 +63,25 @@
 	font-weight: bold;
 	font-size: medium;
 	white-space: break-spaces;
+	height: max-content;
+	width: max-content;
+	width: 300px;
+	padding-bottom: 10px;
+	text-align: right;
+	padding-top: 10px;
+}
+
+.TextWhite * {
+	color: white;
+	padding: 1px 0px;
+}
+
+.RadioGroup {
+	padding: 1px 0px;
 }
 
 .Input {
-	background-color: rgba(117, 116, 116, 0.7);
+	background: rgba(117, 116, 116, 0.7) !important;
 	border-radius: 15px;
 	border: 0;
 	height: 40px;
@@ -66,20 +89,13 @@
 	color: white;
 }
 
-.InputAddress {
-	display: flex;
-}
-
-.InputCity {
-	width: 90%;
-}
-
-.InputState {
-	width: 80%;
-}
-
-.InputZip {
-	width: 80%;
+.FormInput {
+	background-color: rgba(117, 116, 116, 0.7);
+	color: white;
+	border: 0px;
+	border-radius: 10px;
+	height: 40px;
+	padding: 10px;
 }
 
 .ThankYouMessage {
@@ -109,10 +125,157 @@
 	border-color: gray;
 }
 
+.LabelOvernight {
+	color: white;
+	font-weight: bold;
+	font-size: medium;
+	white-space: break-spaces;
+	width: max-content;
+	text-align: right;
+	padding-top: 10px;
+	margin-bottom: 125px;
+}
+
+.LabelContact {
+	color: white;
+	font-weight: bold;
+	font-size: medium;
+	white-space: break-spaces;
+	width: max-content;
+	text-align: right;
+	padding-top: 10px;
+	margin-bottom: 125px;
+}
+
+.LabelCitizen {
+	color: white;
+	font-weight: bold;
+	font-size: medium;
+	white-space: break-spaces;
+	width: max-content;
+	text-align: right;
+	padding-top: 10px;
+	margin-bottom: 305px;
+}
+
+@media (max-width: 1550px) {
+	.Label {
+		width: 230px;
+	}
+
+	.LabelOvernight {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 125px;
+	}
+
+	.LabelContact {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 125px;
+	}
+
+	.LabelCitizen {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 305px;
+	}
+}
+
+@media (max-width: 1250px) {
+	.Label {
+		width: 180px;
+	}
+
+	.LabelOvernight {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 125px;
+	}
+
+	.LabelContact {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 125px;
+	}
+
+	.LabelCitizen {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 305px;
+	}
+}
+
 /* add media query for ipad screen */
 @media (max-width: 1024px) {
 	.Form {
 		padding: 2em;
+	}
+	.Label {
+		width: 150px;
+	}
+
+	.LabelOvernight {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 125px;
+	}
+
+	.LabelContact {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 125px;
+	}
+
+	.LabelCitizen {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: right;
+		padding-top: 10px;
+		margin-bottom: 325px;
 	}
 }
 
@@ -159,5 +322,79 @@
 	}
 	.SignInInfo {
 		font-size: 10px;
+	}
+	.Label {
+		width: 140px;
+	}
+	.LabelOvernight {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: left;
+		padding-top: 10px;
+		margin-bottom: 70px !important;
+	}
+
+	.LabelContact {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: left;
+		padding-top: 10px;
+		margin-bottom: 100px !important;
+	}
+
+	.LabelCitizen {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: left;
+		padding-top: 10px;
+		margin-bottom: 300px !important;
+	}
+}
+
+@media (max-width: 578px) {
+	.Label {
+		width: max-content;
+	}
+
+	.LabelOvernight {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: left;
+		padding-top: 10px;
+		margin-bottom: 10px !important;
+	}
+
+	.LabelContact {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: left;
+		padding-top: 10px;
+		margin-bottom: 20px !important;
+	}
+
+	.LabelCitizen {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		width: max-content;
+		text-align: left;
+		padding-top: 10px;
+		margin-bottom: 100px !important;
 	}
 }
