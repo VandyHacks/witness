@@ -265,18 +265,10 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									name="gender"
 									rules={[{ required: true, message: 'Please select an option!' }]}>
 									<Radio.Group>
-										<Radio className={styles.RadioButton} value="female">
-											Female
-										</Radio>
-										<Radio className={styles.RadioButton} value="male">
-											Male
-										</Radio>
-										<Radio className={styles.RadioButton} value="other">
-											Other
-										</Radio>
-										<Radio className={styles.RadioButton} value="preferNotToSay">
-											Prefer Not to Say
-										</Radio>
+										<Radio.Button value="female">Female</Radio.Button>
+										<Radio.Button value="male">Male</Radio.Button>
+										<Radio.Button value="other">Other</Radio.Button>
+										<Radio.Button value="preferNotToSay">Prefer Not to Say</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
