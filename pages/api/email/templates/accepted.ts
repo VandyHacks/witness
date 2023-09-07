@@ -265,7 +265,7 @@ export default (user: UserData): SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																				Congratulations! You’re invited to be a part of <b>VandyHacks IX: Ocean Edition</b>! We enjoyed reading your application and would love to see your ideas come to life during our event on <b>October 21st-23rd</b>!
+																				Congratulations! You’re invited to be a part of <b>VandyHacks X: Neon Edition</b>! We enjoyed reading your application and would love to see your ideas come to life during our event on <b>October 21st-23rd</b>!
 																				</div>
 																			</td>
 																		</tr>
@@ -601,7 +601,7 @@ export default (user: UserData): SendEmailRequest => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Hi ${escapeChars(user.name || user.name)},
-				Congratulations! You’re invited to be a part of VandyHacks IX: Ocean Edition! We enjoyed reading your application and would love to see your ideas come to life during our event on October 21st-23rd!
+				Congratulations! You’re invited to be a part of VandyHacks X: Neon Edition! We enjoyed reading your application and would love to see your ideas come to life during our event on October 21st-23rd!
 
 				Head over to the application portal here and confirm your attendance by October 20th, 12:00 PM CDT.
 

@@ -15,8 +15,8 @@ export default function Page() {
 	return (
 		<>
 			<Head>
-				<title>VandyHacks IX</title>
-				<meta property="og:title" content="VandyHacks IX" />
+				<title>VandyHacks X</title>
+				<meta property="og:title" content="VandyHacks X" />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://apply.vandyhacks.org" />
 				<meta property="og:image" content="/vh.png" />
@@ -24,10 +24,10 @@ export default function Page() {
 				<meta name="twitter:site" content="@vandyhacks" />
 				<meta name="twitter:creator" content="@vandyhacks" />
 				<meta name="author" content="VandyHacks" />
-				<meta name="description" content="Come join VH IX at Vanderbilt University on Oct 21-23, 2022. ✨" />
+				<meta name="description" content="Come join VH X at Vanderbilt University on Oct 27-29, 2023. ✨" />
 				<meta
 					property="og:description"
-					content="Come join VH IX at Vanderbilt University on Oct 21-23, 2022. ✨"
+					content="Come join VH X at Vanderbilt University on Oct 27-29, 2023. ✨"
 				/>
 			</Head>
 			<Layout

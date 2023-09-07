@@ -11,17 +11,17 @@
 .Card {
 	display: flex;
 	width: auto;
-	border-radius: 8px;
+	border-radius: 30px;
 	padding: 1.5rem;
 	justify-content: center;
 	align-items: center;
-	background-color: #e5c49b61;
+	background-color: #00000099;
 }
 
 .Logo {
-	width: 170px;
-	margin-top: 20px;
-	margin-bottom: -20px;
+	width: 300px;
+	margin-top: 10px;
+	margin-bottom: -60px;
 }
 
 .Title {
@@ -30,12 +30,23 @@
 	margin-bottom: 1rem;
 }
 
+.ButtonStyle {
+	border-radius: 10px;
+	background-color: rgba(100, 100, 100, 0.3);
+	border-color: gray;
+}
+
+.ButtonStyle:hover {
+	background-color: rgba(100, 100, 100, 0.5);
+	border-color: gray;
+}
+
 /* add media query for mobile screen */
 @media (max-width: 768px) {
 	.Logo {
 		margin-top: 30px;
 		margin-bottom: -30px;
-		width: 120px;
+		width: 250px;
 	}
 	.Title {
 		font-size: 1.5rem;
