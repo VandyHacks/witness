@@ -33,7 +33,7 @@ export default function OrganizerDash() {
 		return (await res.json()) as TeamData[];
 	});
 
-	// Get scores data from API
+	// Get scores data from the API
 	const { data: scoresData, error: scoresError } = useSWR('/api/scores', async url => {
 		const res = await fetch(url, { method: 'GET' });
 		if (!res.ok) {
