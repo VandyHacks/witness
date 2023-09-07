@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { SendEmailRequest } from '@aws-sdk/client-ses';
 import { UserData } from '../../../../types/database';
 import { escapeChars } from '../email';
@@ -264,7 +265,7 @@ export default (user: UserData): SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					We're so excited that you'll be joining us for <b>VandyHacks IX: Ocean Edition</b>!
+																					We're so excited that you'll be joining us for <b>VandyHacks X: Neon Edition</b>!
 																				</div>
 																			</td>
 																		</tr>
@@ -620,7 +621,7 @@ export default (user: UserData): SendEmailRequest => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Hey ${escapeChars(user.name)},
-				We're so excited that you'll be joining us for VandyHacks IX: Ocean Edition!
+				We're so excited that you'll be joining us for VandyHacks X: Neon Edition!
 
 				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 8:00 PM CDT Friday, October 21st, and wrap up by 3:00 PM CDT Sunday, October 23rd.
 

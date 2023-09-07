@@ -19,16 +19,16 @@ export default function SignIn() {
 					style={{
 						alignItems: 'center',
 					}}>
-					<Image className={styles.Logo} src="/vhlogo-brown.svg" alt="VandyHacks Logo" preview={false} />
+					<Image className={styles.Logo} src="/vh-logo.png" alt="VandyHacks Logo" preview={false} />
 					<br />
-					<div className={styles.Title} style={{ color: '#714a00' }}>
-						VandyHacks IX
+					<div className={styles.Title} style={{ color: 'white' }}>
+						VandyHacks X
 					</div>
 					<Button
 						size="large"
 						type="primary"
 						icon={<GoogleOutlined />}
-						style={{ borderRadius: '4px' }}
+						className={styles.ButtonStyle}
 						onClick={() => signIn('google')}>
 						Sign in with Google
 					</Button>
@@ -36,7 +36,7 @@ export default function SignIn() {
 						size="large"
 						type="primary"
 						icon={<GithubOutlined />}
-						style={{ borderRadius: '4px' }}
+						className={styles.ButtonStyle}
 						onClick={() => signIn('github')}>
 						Sign in with GitHub
 					</Button>
@@ -50,14 +50,14 @@ export default function SignIn() {
 							//   onFinishFailed={onFinishFailed}
 							autoComplete="off">
 							<Item
-								label={<label>Email</label>}
+								label={<label style={{ color: 'white' }}>Email</label>}
 								name="email"
 								rules={[{ required: true, message: 'Please input your email!' }]}>
 								<Input />
 							</Item>
 
 							<Item
-								label={<label>Password</label>}
+								label={<label style={{ color: 'white' }}>Password</label>}
 								name="password"
 								rules={[{ required: true, message: 'Please input your password!' }]}>
 								<Input.Password />
@@ -67,7 +67,7 @@ export default function SignIn() {
 								size="large"
 								type="primary"
 								icon={<MailOutlined />}
-								style={{ borderRadius: '4px' }}
+								className={styles.ButtonStyle}
 								htmlType="submit">
 								Sign in with Email
 							</Button>
