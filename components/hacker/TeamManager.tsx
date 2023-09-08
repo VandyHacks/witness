@@ -4,7 +4,7 @@ import { useSWRConfig } from 'swr';
 import { handleSubmitFailure } from '../../lib/helpers';
 import { TeamProfile } from '../../types/client';
 import LeaveButton from '../LeaveButton';
-import { ScopedMutator } from 'swr/_internal';
+import { ScopedMutator } from 'swr/dist/types';
 const { Panel } = Collapse;
 
 async function handleSubmit(formData: { teamName: string } | { devpost: string }, mutate: ScopedMutator) {

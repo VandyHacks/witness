@@ -1,4 +1,4 @@
-import { ScopedMutator } from 'swr/_internal';
+import { ScopedMutator } from 'swr/dist/types';
 import { ManageFormFields } from '../components/manageRoleForm';
 import { generateTimes } from '../components/schedule';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';

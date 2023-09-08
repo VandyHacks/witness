@@ -14,7 +14,7 @@ import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table
 import { useSWRConfig } from 'swr';
 import Highlighter from 'react-highlight-words';
 import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
-import { ScopedMutator } from 'swr/_internal';
+import { ScopedMutator } from 'swr/dist/types';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];

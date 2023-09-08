@@ -7,7 +7,7 @@ import TeamSelect from '../components/judges/TeamSelect';
 import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
 import { JudgingSessionData, ResponseError, TeamData } from '../types/database';
 import { signOut, useSession } from 'next-auth/react';
-import { ScopedMutator } from 'swr/_internal';
+import { ScopedMutator } from 'swr/dist/types';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
 const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
