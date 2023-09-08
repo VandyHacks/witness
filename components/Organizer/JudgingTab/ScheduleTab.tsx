@@ -53,23 +53,25 @@ const ScheduleTab = () => {
 	const isScheduleImpossible = () =>
 		teamsData && judgesData && (teamsData.length * TIMES_JUDGED) / 12 > judgesData.length;
 
-	// Confirm sample schedule
-	const handleConfirmSampleSchedule = (
-		sampleA: JudgingSessionData[] | undefined,
-		sampleB: JudgingSessionData[] | undefined
+	// Confirm potential schedule
+	const handleConfirmPotentialSchedules = (
+		potentialScheduleA: JudgingSessionData[] | undefined,
+		potentialScheduleB: JudgingSessionData[] | undefined
 	) => {
 		// Exit early if we don't have data yet
-		if (!sampleA || !sampleB) return;
+		if (!potentialScheduleA || !potentialScheduleB) return;
 
-		// Confirm schedule with sample data
-		handleConfirmSchedule(sampleA);
-		handleConfirmSchedule(sampleB);
+		// Send requests to confirm the schedule
+		handleConfirmSchedule(potentialScheduleA);
+		handleConfirmSchedule(potentialScheduleB);
 	};
 
-	// Set sample schedule
+	// Set potential schedule
 	const handleCreateNewPotentialSchedules = (teams: TeamData[], judges: UserData[]) => {
+		// Confirm with user
 		if (!window.confirm('Are you sure you want to create a new schedule?')) return;
 
+		// Set that potential schedules as newly generated schedules
 		setPotentialScheduleA(generateScheduleA(teams, judges));
 		setPotentialScheduleB(generateScheduleB(teams, judges));
 	};
@@ -80,18 +82,17 @@ const ScheduleTab = () => {
 
 		// Sort judging sessions by time
 		const time = new Date('2022-10-23T11:00:00').getTime();
-		const sampleScheduleA = judgingSessions.filter(
-			judgingSession => new Date(judgingSession.time as string).getTime() < time
-		);
-		const sampleScheduleB = judgingSessions.filter(
-			judgingSession => new Date(judgingSession.time as string).getTime() >= time
-		);
 
-		// Set the data
-		setPotentialScheduleA(sampleScheduleA);
-		setPotentialScheduleB(sampleScheduleB);
+		// Set the data after filtering it by time
+		setPotentialScheduleA(
+			judgingSessions.filter(judgingSession => new Date(judgingSession.time as string).getTime() < time)
+		);
+		setPotentialScheduleB(
+			judgingSessions.filter(judgingSession => new Date(judgingSession.time as string).getTime() >= time)
+		);
 	}, [judgingSessions]);
 
+	// Combine all the loading, null, and error states
 	const error = judgingSessionsError || judgesError || teamsError;
 	const dataNull = !judgingSessions || !judgesData || !teamsData;
 	const loading = isLoadingJudgingSessions || isLoadingJudges || isLoadingTeams;
@@ -111,7 +112,7 @@ const ScheduleTab = () => {
 					</Button>
 					{potentialScheduleA && potentialScheduleB && (
 						<Button
-							onClick={() => handleConfirmSampleSchedule(potentialScheduleA, potentialScheduleB)}
+							onClick={() => handleConfirmPotentialSchedules(potentialScheduleA, potentialScheduleB)}
 							style={{ marginBottom: '10px' }}>
 							Confirm Schedule
 						</Button>
