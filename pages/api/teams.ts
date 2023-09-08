@@ -20,12 +20,10 @@ export default async function handler(
 ): Promise<void> {
 	// only judges and organizers can access this endpoint
 	const session = await getSession({ req });
-	// @ts-ignore
 	if (!['JUDGE', 'ORGANIZER'].includes(session?.userType as string)) return res.status(403).send('Forbidden');
 
 	if (req.method === 'GET') {
 		const teams = await Team.find();
-		// @ts-ignore
 		switch (session!.userType) {
 			// send all team info to organizer
 			case 'ORGANIZER': {
@@ -35,7 +33,6 @@ export default async function handler(
 			// send pertinent team info to judge
 			case 'JUDGE': {
 				// get the judge
-				// @ts-ignore
 				const judgeID = session!.userID as ObjectId;
 
 				// get the teams assigned to the judge
