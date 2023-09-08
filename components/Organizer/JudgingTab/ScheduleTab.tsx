@@ -17,33 +17,21 @@ const ScheduleTab = () => {
 	const [potentialScheduleB, setPotentialScheduleB] = useState<JudgingSessionData[] | undefined>(undefined);
 
 	// Get judging sessions
-	const {
-		data: judgingSessions,
-		error: judgingSessionsError,
-		isLoading: isLoadingJudgingSessions,
-	} = useCustomSWR<JudgingSessionData>({
+	const { data: judgingSessions, error: judgingSessionsError } = useCustomSWR<JudgingSessionData>({
 		url: '/api/judging-sessions',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get judging sessions',
 	});
 
 	// Judge data
-	const {
-		data: judgesData,
-		error: judgesError,
-		isLoading: isLoadingJudges,
-	} = useCustomSWR<UserData>({
+	const { data: judgesData, error: judgesError } = useCustomSWR<UserData>({
 		url: '/api/users?usertype=JUDGE',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of judges.',
 	});
 
 	// Teams data
-	const {
-		data: teamsData,
-		error: teamsError,
-		isLoading: isLoadingTeams,
-	} = useCustomSWR<TeamData>({
+	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData>({
 		url: '/api/teams',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of teams.',
@@ -95,13 +83,12 @@ const ScheduleTab = () => {
 	// Combine all the loading, null, and error states
 	const error = judgingSessionsError || judgesError || teamsError;
 	const dataNull = !judgingSessions || !judgesData || !teamsData;
-	const loading = isLoadingJudgingSessions || isLoadingJudges || isLoadingTeams;
 
 	return (
 		<>
-			{loading ? (
+			{dataNull ? (
 				<div>Loading...</div>
-			) : error || dataNull ? (
+			) : error ? (
 				<div>{error ? (error as ResponseError).message : 'Failed to get data.'}</div>
 			) : (
 				<>
