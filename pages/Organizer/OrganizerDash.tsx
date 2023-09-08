@@ -1,151 +1,64 @@
-import { Button, Divider, Empty, Skeleton, Space, Tabs } from 'antd';
+import { Button, Empty, Skeleton, Space, Tabs } from 'antd';
 import useSWR, { useSWRConfig } from 'swr';
 import AllScores from '../../components/allScores';
-import ManageRoleForm from '../../components/manageRoleForm';
-import OrganizerSchedule from '../../components/schedule';
+import ManageRoleForm, { ManageFormFields } from '../../components/manageRoleForm';
 import PreAddForm from '../../components/preAddForm';
-import { ResponseError, ScoreData, TeamData, UserData, PreAddData, JudgingSessionData } from '../../types/database';
+import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../../types/database';
 import PreAddDisplay from '../../components/preAddDisplay';
 import ApplicantsDisplay from '../../components/applicantsDisplay';
 import Events from '../../components/events';
 import { signOut, useSession } from 'next-auth/react';
-import { SetStateAction, useEffect, useState } from 'react';
-import Title from 'antd/lib/typography/Title';
-import {
-	generateScheduleA,
-	generateScheduleB,
-	handleManageFormSubmit,
-	handlePreAddDelete,
-	TIMES_JUDGED,
-} from '../../utils/organizer-utils';
+import { handleManageFormSubmit, handlePreAddDelete } from '../../utils/organizer-utils';
+import ScheduleTab from '../../components/Organizer/JudgingTab/ScheduleTab';
+import { RequestType, useCustomSWR } from '../../utils/request-utils';
 
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
 
-	// Get teams data from API
-	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of teams.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as TeamData[];
+	// Teams data
+	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData>({
+		url: '/api/teams',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of teams.',
 	});
 
-	// Get scores data from the API
-	const { data: scoresData, error: scoresError } = useSWR('/api/scores', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of scores.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as ScoreData[];
+	// Scores data
+	const { data: scoresData, error: scoresError } = useCustomSWR<ScoreData>({
+		url: '/api/scores',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of scores.',
 	});
 
-	// Get judges data from API
-	const { data: judgeData, error: judgeError } = useSWR('/api/users?usertype=JUDGE', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of judges.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as UserData[];
+	// Judge data
+	const { data: judgeData, error: judgeError } = useCustomSWR<UserData>({
+		url: '/api/users?usertype=JUDGE',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of judges.',
 	});
 
-	// Get hackers data from API
-	const { data: hackers, error: hackersError } = useSWR('/api/users?usertype=HACKER', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of hackers.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as UserData[];
+	// Hacker data
+	const { data: hackers, error: hackersError } = useCustomSWR<UserData>({
+		url: '/api/users?usertype=HACKER',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of hackers.',
 	});
 
-	/*const { data: scheduleData, error: scheduleError } = useSWR('/api/schedule', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get schedule.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as ScheduleDisplay[];
-	});*/
-
-	// Get judging sessions data from API
-	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR(
-		'/api/judging-sessions',
-		async url => {
-			const res = await fetch(url, { method: 'GET' });
-			if (!res.ok) {
-				const error = new Error('Failed to get judging sessions') as ResponseError;
-				error.status = res.status;
-				throw error;
-			}
-			return (await res.json()) as JudgingSessionData[];
-		}
-	);
-
-	// Get preadd data from API
-	const { data: preAddData, error: Error } = useSWR('/api/preadd', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get schedule.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as PreAddData[];
+	// Preadd data
+	const { data: preAddData, error: preAddError } = useCustomSWR<PreAddData>({
+		url: '/api/preadd',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of preadded users.',
 	});
 
-	// Get all users roles from API
-	const { data: userData, error } = useSWR('/api/manage-role', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of all users.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-
-		return (await res.json()) as { _id: string; name: string; email: string; userType: string }[];
+	// User data
+	const { data: userData, error } = useCustomSWR<ManageFormFields>({
+		url: '/api/manage-role',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of all users.',
 	});
-
-	useEffect(() => {
-		// Exit early if we don't have data yet
-		if (!judgingSessionsData) return;
-
-		// Sort judging sessions by time
-		const time = new Date('2022-10-23T11:00:00').getTime();
-		const sampleScheduleA = judgingSessionsData.filter(
-			judgingSession => new Date(judgingSession.time as string).getTime() < time
-		);
-		const sampleScheduleB = judgingSessionsData.filter(
-			judgingSession => new Date(judgingSession.time as string).getTime() >= time
-		);
-
-		// Set the data
-		setSampleScheduleA(sampleScheduleA);
-		setSampleScheduleB(sampleScheduleB);
-	}, [judgingSessionsData]);
-
-	// Check if schedule is impossible
-	const isScheduleImpossible = () =>
-		teamsData && judgeData && (teamsData.length * TIMES_JUDGED) / 12 > judgeData.length;
 
 	// Get session data
 	const { data: session, status } = useSession();
-
-	// React state
-	const [testingSchedule, setTestingSchedule] = useState(false);
-	const [sampleScheduleAData, setSampleScheduleA] = useState<JudgingSessionData[] | undefined>(undefined);
-	const [sampleScheduleBData, setSampleScheduleB] = useState<JudgingSessionData[] | undefined>(undefined);
-
-	function handleConfirmSchedule(arg0: JudgingSessionData[]) {
-		throw new Error('Function not implemented.');
-	}
 
 	return (
 		<>
@@ -162,76 +75,7 @@ export default function OrganizerDash() {
 						{
 							label: `Schedule`,
 							key: '1',
-							children: (
-								<>
-									{teamsData &&
-										judgeData &&
-										(testingSchedule ? (
-											<Button
-												onClick={() => {
-													handleConfirmSchedule(sampleScheduleAData!);
-													handleConfirmSchedule(sampleScheduleBData!);
-													setTestingSchedule(false);
-												}}
-												style={{ marginBottom: '10px' }}>
-												Confirm Schedule
-											</Button>
-										) : (
-											<Button
-												onClick={() => {
-													if (
-														!window.confirm(
-															'Are you sure you want to create a new schedule?'
-														)
-													)
-														return;
-													setTestingSchedule(true);
-													setSampleScheduleA(generateScheduleA(teamsData, judgeData));
-													setSampleScheduleB(generateScheduleB(teamsData, judgeData));
-												}}
-												style={{ marginBottom: '10px' }}>
-												Create Sample Judging Schedule
-											</Button>
-										))}
-									{!judgingSessionsData && <Skeleton />}
-									<br />
-
-									<>
-										{isScheduleImpossible() ? (
-											<div>oops woopsy, something went fucky wucky</div>
-										) : (
-											<div>schedule is possible!!</div>
-										)}
-										<div>Count of Teams: {teamsData?.length}</div>
-										<div>Count of Judges: {judgeData?.length}</div>
-									</>
-
-									{<Title>Expo A</Title>}
-									{sampleScheduleAData && (
-										<OrganizerSchedule
-											data={sampleScheduleAData}
-											handleChange={function (value: SetStateAction<string>): void {
-												throw new Error('Function not implemented.');
-											}}
-											sessionTimeStart={new Date('2022-10-23T10:00:00')}
-											sessionTimeEnd={new Date('2022-10-23T11:00:00')}
-										/>
-									)}
-									<div style={{ height: '20px' }} />
-									{<Title>Expo B</Title>}
-									{sampleScheduleBData && (
-										<OrganizerSchedule
-											data={sampleScheduleBData}
-											handleChange={function (value: SetStateAction<string>): void {
-												throw new Error('Function not implemented.');
-											}}
-											sessionTimeStart={new Date('2022-10-23T11:30:00')}
-											sessionTimeEnd={new Date('2022-10-23T12:30:00')}
-										/>
-									)}
-									<Divider />
-								</>
-							),
+							children: <ScheduleTab />,
 						},
 						{
 							label: `Judging`,

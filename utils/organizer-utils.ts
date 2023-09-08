@@ -127,7 +127,7 @@ export const matchTeams = (teams: TeamData[], judges: UserData[], times: Date[])
  * @param {JudgingSessionData[]} judgingSessions - The array of judging session data objects to submit.
  * @returns {void}
  */
-const handleConfirmSchedule = async (judgingSessions: JudgingSessionData[]) => {
+export const handleConfirmSchedule = async (judgingSessions: JudgingSessionData[]) => {
 	const res = await fetch('/api/confirm-judging-sessions', {
 		method: 'POST',
 		headers: {
