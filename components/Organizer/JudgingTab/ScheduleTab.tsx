@@ -10,6 +10,7 @@ import OrganizerSchedule from '../../schedule';
 import useSWR, { useSWRConfig } from 'swr';
 import { ResponseError, JudgingSessionData, UserData, TeamData } from '../../../types/database';
 import Title from 'antd/lib/typography/Title';
+import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 
 const ScheduleTab = () => {
 	// React state
@@ -17,40 +18,25 @@ const ScheduleTab = () => {
 	const [sampleScheduleAData, setSampleScheduleA] = useState<JudgingSessionData[] | undefined>(undefined);
 	const [sampleScheduleBData, setSampleScheduleB] = useState<JudgingSessionData[] | undefined>(undefined);
 
-	// Get judging sessions data from API
-	const { data: judgingSessionsData, error: judgingSessionsDataError } = useSWR(
-		'/api/judging-sessions',
-		async url => {
-			const res = await fetch(url, { method: 'GET' });
-			if (!res.ok) {
-				const error = new Error('Failed to get judging sessions') as ResponseError;
-				error.status = res.status;
-				throw error;
-			}
-			return (await res.json()) as JudgingSessionData[];
-		}
-	);
-
-	// Get judges data from API
-	const { data: judgeData, error: judgeError } = useSWR('/api/users?usertype=JUDGE', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of judges.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as UserData[];
+	// Get judging sessions
+	const { data: judgingSessionsData, error: judgingSessionsDataError } = useCustomSWR<JudgingSessionData>({
+		url: '/api/judging-sessions',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get judging sessions',
 	});
 
-	// Get teams data from API
-	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) {
-			const error = new Error('Failed to get list of teams.') as ResponseError;
-			error.status = res.status;
-			throw error;
-		}
-		return (await res.json()) as TeamData[];
+	// Judge data
+	const { data: judgeData, error: judgeError } = useCustomSWR<UserData>({
+		url: '/api/users?usertype=JUDGE',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of judges.',
+	});
+
+	// Teams data
+	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData>({
+		url: '/api/teams',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of teams.',
 	});
 
 	// Check if schedule is impossible

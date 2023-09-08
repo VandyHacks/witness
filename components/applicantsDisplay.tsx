@@ -12,9 +12,9 @@ import {
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
 import { useSWRConfig } from 'swr';
-import { ScopedMutator } from 'swr/dist/types';
 import Highlighter from 'react-highlight-words';
 import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
+import { ScopedMutator } from 'swr/_internal';
 
 export interface ApplicantsDisplayProps {
 	hackers: UserData[];

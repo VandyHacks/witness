@@ -21,8 +21,13 @@ import { useEffect, useState } from 'react';
 export const useCustomSWR = <T>(params: CustomerSWRParams) => {
 	const [data, setData] = useState<T[] | null>(null);
 	const [error, setError] = useState<ResponseError | null>(null);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const { data: requestData, error: requestError } = useSWR(params.url, async url => {
+	const {
+		data: requestData,
+		error: requestError,
+		isLoading: requestLoading,
+	} = useSWR(params.url, async url => {
 		const res = await fetch(url, { method: params.method });
 		if (!res.ok) {
 			const error = new Error(
@@ -41,9 +46,12 @@ export const useCustomSWR = <T>(params: CustomerSWRParams) => {
 		if (requestError) {
 			setError(requestError);
 		}
-	}, [requestData, requestError]);
+		if (requestLoading) {
+			setIsLoading(requestLoading);
+		}
+	}, [requestData, requestError, requestLoading]);
 
-	return { data, error };
+	return { data, error, isLoading };
 };
 
 /**

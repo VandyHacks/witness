@@ -1,13 +1,13 @@
 import { Button, Divider, notification, Skeleton } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import { ScopedMutator } from 'swr/dist/types';
 import JudgingForm from '../components/judges/JudgingForm';
 import { JudgeSchedule } from '../components/schedule';
 import TeamSelect from '../components/judges/TeamSelect';
 import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
 import { JudgingSessionData, ResponseError, TeamData } from '../types/database';
 import { signOut, useSession } from 'next-auth/react';
+import { ScopedMutator } from 'swr/_internal';
 
 const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
 const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
@@ -35,7 +35,7 @@ function handleSubmitFailure(errorDescription: string) {
 
 async function handleSubmit(
 	formData: JudgingFormFields,
-	mutate: ScopedMutator<any>,
+	mutate: ScopedMutator,
 	teamId: string,
 	isNewForm: boolean,
 	setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>
@@ -81,7 +81,7 @@ export default function JudgeDash() {
 	// Get data for form component, formData will be false if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
-		async (url, id) => {
+		async (url: any, id: any) => {
 			const res = await fetch(`${url}?id=${id}`, { method: 'GET' });
 			if (!res.ok) {
 				if (res.status === 404) {

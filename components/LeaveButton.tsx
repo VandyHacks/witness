@@ -1,8 +1,8 @@
 import { Button, Popconfirm } from 'antd';
 import { useSWRConfig } from 'swr';
-import { ScopedMutator } from 'swr/dist/types';
+import { ScopedMutator } from 'swr/_internal';
 
-export default function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator<any>) => Promise<void> }) {
+export default function LeaveButton({ onLeave }: { onLeave: (mutate: ScopedMutator) => Promise<void> }) {
 	const { mutate } = useSWRConfig();
 	return (
 		<Popconfirm
