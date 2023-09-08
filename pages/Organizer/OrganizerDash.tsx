@@ -1,9 +1,9 @@
 import { Button, Empty, Skeleton, Space, Tabs } from 'antd';
-import useSWR, { useSWRConfig } from 'swr';
+import { useSWRConfig } from 'swr';
 import AllScores from '../../components/allScores';
 import ManageRoleForm, { ManageFormFields } from '../../components/manageRoleForm';
 import PreAddForm from '../../components/preAddForm';
-import { ResponseError, ScoreData, TeamData, UserData, PreAddData } from '../../types/database';
+import { ScoreData, TeamData, UserData, PreAddData } from '../../types/database';
 import PreAddDisplay from '../../components/preAddDisplay';
 import ApplicantsDisplay from '../../components/applicantsDisplay';
 import Events from '../../components/events';

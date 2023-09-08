@@ -3,7 +3,7 @@ import { ResponseError } from '../types/database';
 import { useEffect, useState } from 'react';
 
 /**
- * A custom hook that fetches data from the specified URL and returns the data and error.
+ * A custom hook that fetches data from the specified URL and returns the data, loading status, and error.
  * Requires template type T to be specified.
  *
  * @param url - The URL to fetch data from.
@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
  * @param errorMessage - Optional error message to display if the request fails.
  * @example
  * ```tsx
- * const { data, error } = useCustomSWR<TeamData[]>({
+ * const { data, error, isLoading } = useCustomSWR<TeamData[]>({
  *         url: '/api/teams',
  *         method: RequestType.GET,
  *         errorMessage: 'Failed to fetch teams.'
@@ -47,7 +47,9 @@ export const useCustomSWR = <T>(params: CustomerSWRParams) => {
 			setError(requestError);
 		}
 		if (requestLoading) {
-			setIsLoading(requestLoading);
+			setIsLoading(true);
+		} else {
+			setIsLoading(false);
 		}
 	}, [requestData, requestError, requestLoading]);
 
