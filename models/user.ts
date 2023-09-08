@@ -41,6 +41,8 @@ export const UserSchema = new Schema(
 		nfcId: {
 			type: String,
 			unique: true,
+			// https://stackoverflow.com/questions/7955040/mongodb-mongoose-unique-if-not-null
+			sparse: true,
 		},
 		eventsAttended: {
 			type: [Schema.Types.ObjectId],
