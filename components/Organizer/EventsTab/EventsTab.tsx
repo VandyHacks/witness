@@ -1,4 +1,4 @@
-import { Button, Input, InputRef, Modal, notification, Table } from 'antd';
+import { Button, Input, InputRef, Modal, notification, Table, InputNumber } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useEffect, useRef, useState } from 'react';
 import { EventCountData, EventData } from '../../../types/database';
@@ -55,7 +55,16 @@ const columns: ColumnsType<EventDisplay> = [
 		title: 'Name',
 		dataIndex: 'name',
 		key: 'name',
-		width: '40%',
+		width: '30%',
+	},
+	{
+		title: 'NFC Points',
+		dataIndex: 'nfcPoints',
+		key: 'nfcPoints',
+		width: '10%',
+		render: (point: number) => {
+			return <InputNumber defaultValue={point ? point : 0} />;
+		},
 	},
 	{
 		title: 'Count',
