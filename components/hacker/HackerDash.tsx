@@ -710,7 +710,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<Button size="small" type="default" onClick={() => signOut()}>
 									Sign out
 								</Button>
-								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+								<div style={{ paddingLeft: '10px', color: 'white' }}>
+									Signed in as {session?.user?.email}
+								</div>
 							</div>
 							{!teamData && <TeamSetup />}
 							{teamData && (
