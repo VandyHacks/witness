@@ -1,6 +1,9 @@
 import { input, select } from '@inquirer/prompts';
+import dbConnect from '../middleware/database';
 import * as dotenv from 'dotenv';
 import application from '../models/application';
+import { handleModifyHacker } from './cli-util/modify-hacker';
+import { handleGetHacker } from './cli-util/get-hacker';
 dotenv.config();
 
 /**
@@ -18,19 +21,70 @@ const executeCLI = async () => {
 		],
 	});
 
+	// TODO:
+	// list actions we as devs will need to do and can be simplified with this CLI tool
+	// [ ] populate collections with dummy data
+	// [ ] clear collection (danger)
+	// [G] get a document from a colleciton (i.e., hacker document using email)
+	// 			[ ] hacker document using email
+	// 			[ ] team document using team or hacker email or team invite code
+	// [Z] automatically allow a hacker to check in to an event (via nfc)
+
 	// Select action
 	const action = await select({
 		message: 'Select action to perform',
 		choices: [
 			{
+				name: "Get a hacker's document",
+				value: 'get-hacker',
+				// sub-action:
+				// 1. see their events
+				// 2. see their team info
+				// 3. see their application
+				// 4. get entire JSON of their document
+			},
+			{
+				name: 'Get a team document',
+				value: 'get-team',
+				// sub-action:
+				// 1. see their schedule
+				// 2. see their members
+				// 3. get entire JSON of their document
+			},
+			{
 				name: "Modify a hacker's document",
 				value: 'modify-hacker',
+				// sub-action:
+				// 1. change application status
+				// 2. delete application
+				// 3. join/leave team
+				// 4. check in
+			},
+			{
+				name: 'Modify a team',
+				value: 'modify-team',
+				// sub-action:
+				// 1. change team name
+				// 2. change team members?
+				// 3. change team invite code?
+				// 4. change devpost link?
+			},
+			{
+				name: 'Clear a collection (dangerous)',
+				value: 'clear-collection',
+			},
+			{
+				name: 'Populate a collection',
+				value: 'populate-collection',
 			},
 		],
 	});
 
 	// Perform action
 	switch (action) {
+		case 'get-hacker':
+			await handleGetHacker();
+			break;
 		case 'modify-hacker':
 			await handleModifyHacker();
 			break;
@@ -39,62 +93,9 @@ const executeCLI = async () => {
 	}
 };
 
-/**
- * Quickly change the application status of hacker.
- * A hacker has multiple application statuses.
- */
-const handleModifyHacker = async () => {
-	const hackerEmail = await input({
-		message: 'Enter hacker email',
-	});
-
-	const subAction1 = await select({
-		message: 'Select sub-action to perform',
-		choices: [
-			{
-				name: 'Change application status to CREATED',
-				value: 'created',
-			},
-			{
-				name: 'Change application status to DECLINED',
-				value: 'declined',
-			},
-			{
-				name: 'Change application status to SUBMITTED',
-				value: 'submitted',
-			},
-			{
-				name: 'Change application status to ACCEPTED',
-				value: 'accepted',
-			},
-			{
-				name: 'Change application status to CONFIRMED',
-				value: 'confirmed',
-			},
-			{
-				name: 'Change application status to REJECTED',
-				value: 'rejected',
-			},
-			{
-				name: 'Change application status to CHECKED_IN',
-				value: 'checked-in',
-			},
-		],
-	});
-
-	const subAction2 = await select({
-		message: "Do you want to delete the hacker's application?",
-		choices: [
-			{
-				name: 'Yes',
-				value: 'yes',
-			},
-			{
-				name: 'No',
-				value: 'no',
-			},
-		],
-	});
+// handle api error(a function that's called when API calls return 404)
+const handleError = () => {
+	console.log('Error: You need to have the witness running');
 };
 
 // Execute the CLI tool
