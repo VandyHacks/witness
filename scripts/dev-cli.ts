@@ -21,6 +21,17 @@ const executeCLI = async () => {
 		],
 	});
 
+	// connect to db
+	await dbConnect(process.env.DATABASE_URL);
+
+	// prompt action
+	await promptAction();
+
+	// exit
+	process.exit(0);
+};
+
+export const promptAction = async () => {
 	// TODO:
 	// list actions we as devs will need to do and can be simplified with this CLI tool
 	// [ ] populate collections with dummy data

@@ -1,5 +1,7 @@
 import { input, select } from '@inquirer/prompts';
-import dbConnect from '../../middleware/database';
+import User from '../../models/user';
+import { promptAction } from '../dev-cli';
+import { ApplicationStatus, UserData } from '../../types/database';
 
 // TODO: zi
 /**
@@ -12,8 +14,17 @@ export const handleModifyHacker = async () => {
 		message: 'Enter hacker email',
 	});
 
+	// query for hacker document
+	const hacker: UserData | null = await User.findOne({ email: hackerEmail });
+
+	// if hacker not found, re-prompt
+	if (!hacker) {
+		console.log('Oops, Hacker not found! Please try again.');
+		return promptAction();
+	}
+
 	// get sub-action
-	const subAction1 = await select({
+	const subAction = await select({
 		message: 'Select sub-action to perform',
 		choices: [
 			{
@@ -39,9 +50,10 @@ export const handleModifyHacker = async () => {
 		],
 	});
 
-	// perf
-	switch (subAction1) {
+	// perform sub-action
+	switch (subAction) {
 		case 'change-status':
+			await changeStatus(hacker);
 			break;
 		case 'delete-application':
 			break;
@@ -54,7 +66,11 @@ export const handleModifyHacker = async () => {
 	}
 };
 
-const changeStatus = async () => {
+const changeStatus = async (hacker: UserData) => {
+	const oldStatus: ApplicationStatus = hacker.applicationStatus;
+
+	// console.log(`Current status: ${Object.values(ApplicationStatus)[oldStatus]}`);
+
 	const newStatus = await select({
 		message: 'Select new status',
 		choices: [
@@ -89,8 +105,7 @@ const changeStatus = async () => {
 		],
 	});
 
-	//
-	await dbConnect();
+	// TODO:
 };
 
 const deleteApplication = async () => {};
