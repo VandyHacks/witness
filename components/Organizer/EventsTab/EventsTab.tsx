@@ -9,88 +9,89 @@ interface EventDisplay extends EventData {
 	setCurEvent: (open: EventDisplay) => void;
 }
 
-const columns: ColumnsType<EventDisplay> = [
-	{
-		title: 'Day',
-		dataIndex: 'startTime',
-		key: 'day',
-		render: (startTime: string) => {
-			let date = new Date(startTime).toDateString();
-			// TODO use a date format string instead for clarity
-			date = date.substring(0, date.length - 5);
-			return date;
-		},
-		width: '15%',
-	},
-	{
-		title: 'Time',
-		dataIndex: 'startTime',
-		key: 'time',
-		render: (startTime: string, record: EventDisplay) => {
-			// TODO use a date format string instead for clarity
-			const start = new Date(startTime);
-			const end = new Date(record.endTime.toString());
-			const startHours = start.getHours() % 12 || 12;
-			const startMinutes = start.getMinutes();
-			const endHours = end.getHours() % 12 || 12;
-			const endMinutes = end.getMinutes();
-			const startAmPm = start.getHours() >= 12 ? 'PM' : 'AM';
-			const endAmPm = end.getHours() >= 12 ? 'PM' : 'AM';
-			return (
-				<span>
-					{startHours}:{startMinutes < 10 ? `0${startMinutes}` : startMinutes} {startAmPm} - {endHours}:
-					{endMinutes < 10 ? `0${endMinutes}` : endMinutes} {endAmPm}
-				</span>
-			);
-		},
-		sorter: (a: EventDisplay, b: EventDisplay) => {
-			const aStart = new Date(a.startTime.toString());
-			const bStart = new Date(b.startTime.toString());
-			return aStart.getTime() - bStart.getTime();
-		},
-		sortOrder: 'ascend',
-		width: '15%',
-	},
-	{
-		title: 'Name',
-		dataIndex: 'name',
-		key: 'name',
-		width: '30%',
-	},
-	{
-		title: 'NFC Points',
-		dataIndex: 'nfcPoints',
-		key: 'nfcPoints',
-		width: '10%',
-		render: (point: number) => {
-			return <InputNumber defaultValue={point ? point : 0} />;
-		},
-	},
-	{
-		title: 'Count',
-		dataIndex: 'count',
-		key: 'count',
-		width: '10%',
-		render: (count: number) => {
-			return <span>{count ? count : 0}</span>;
-		},
-	},
-	{
-		title: 'Check In',
-		dataIndex: 'checkIn',
-		key: 'checkIn',
-		render: (_: any, record: EventDisplay) => {
-			return <Button onClick={() => record.setCurEvent(record)}>Check In</Button>;
-		},
-		width: '20%',
-	},
-];
-
-const EventsTab = () => {
+export default function Events() {
 	const [curEvent, setCurEvent] = useState<EventDisplay | null>(null);
 	const [events, setEvents] = useState<EventDisplay[]>([]);
 	const [nfcId, setNfcId] = useState<string>('');
 	const [loading, setLoading] = useState(false);
+	const [showSaveButton, setShowSaveButton] = useState(false);
+
+	const columns: ColumnsType<EventDisplay> = [
+		{
+			title: 'Day',
+			dataIndex: 'startTime',
+			key: 'day',
+			render: (startTime: string) => {
+				let date = new Date(startTime).toDateString();
+				// TODO use a date format string instead for clarity
+				date = date.substring(0, date.length - 5);
+				return date;
+			},
+			width: '15%',
+		},
+		{
+			title: 'Time',
+			dataIndex: 'startTime',
+			key: 'time',
+			render: (startTime: string, record: EventDisplay) => {
+				// TODO use a date format string instead for clarity
+				const start = new Date(startTime);
+				const end = new Date(record.endTime.toString());
+				const startHours = start.getHours() % 12 || 12;
+				const startMinutes = start.getMinutes();
+				const endHours = end.getHours() % 12 || 12;
+				const endMinutes = end.getMinutes();
+				const startAmPm = start.getHours() >= 12 ? 'PM' : 'AM';
+				const endAmPm = end.getHours() >= 12 ? 'PM' : 'AM';
+				return (
+					<span>
+						{startHours}:{startMinutes < 10 ? `0${startMinutes}` : startMinutes} {startAmPm} - {endHours}:
+						{endMinutes < 10 ? `0${endMinutes}` : endMinutes} {endAmPm}
+					</span>
+				);
+			},
+			sorter: (a: EventDisplay, b: EventDisplay) => {
+				const aStart = new Date(a.startTime.toString());
+				const bStart = new Date(b.startTime.toString());
+				return aStart.getTime() - bStart.getTime();
+			},
+			sortOrder: 'ascend',
+			width: '15%',
+		},
+		{
+			title: 'Name',
+			dataIndex: 'name',
+			key: 'name',
+			width: '30%',
+		},
+		{
+			title: 'NFC Points',
+			dataIndex: 'nfcPoints',
+			key: 'nfcPoints',
+			width: '10%',
+			render: (point: number) => {
+				return <InputNumber defaultValue={point ? point : 0} onChange={() => setShowSaveButton(true)} />;
+			},
+		},
+		{
+			title: 'Count',
+			dataIndex: 'count',
+			key: 'count',
+			width: '10%',
+			render: (count: number) => {
+				return <span>{count ? count : 0}</span>;
+			},
+		},
+		{
+			title: 'Check In',
+			dataIndex: 'checkIn',
+			key: 'checkIn',
+			render: (_: any, record: EventDisplay) => {
+				return <Button onClick={() => record.setCurEvent(record)}>Check In</Button>;
+			},
+			width: '20%',
+		},
+	];
 
 	const input = useRef<InputRef>(null);
 
@@ -188,9 +189,11 @@ const EventsTab = () => {
 				<Button loading={loading} onClick={syncCalendar}>
 					Sync Calendar Events
 				</Button>
-				<Button loading={loading} onClick={syncCalendar}>
-					Save Changes
-				</Button>
+				{showSaveButton && (
+					<Button loading={loading} onClick={syncCalendar}>
+						Save Changes
+					</Button>
+				)}
 			</div>
 
 			<br />
@@ -216,6 +219,4 @@ const EventsTab = () => {
 			</Modal>
 		</>
 	);
-};
-
-export default EventsTab;
+}
