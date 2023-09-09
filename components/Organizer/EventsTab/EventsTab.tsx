@@ -178,11 +178,21 @@ const EventsTab = () => {
 		refreshData();
 	};
 
+	const ButtonBoxStyle = {
+		display: 'flex',
+		justifyContent: 'space-between',
+	};
 	return (
 		<>
-			<Button loading={loading} onClick={syncCalendar}>
-				Sync Calendar Events
-			</Button>
+			<div style={ButtonBoxStyle}>
+				<Button loading={loading} onClick={syncCalendar}>
+					Sync Calendar Events
+				</Button>
+				<Button loading={loading} onClick={syncCalendar}>
+					Save Changes
+				</Button>
+			</div>
+
 			<br />
 			<br />
 			<Table sticky bordered dataSource={events} columns={columns} />
