@@ -9,32 +9,12 @@ import ApplicantsDisplay from '../../components/applicantsDisplay';
 import Events from '../../components/events';
 import { signOut, useSession } from 'next-auth/react';
 import { handleManageFormSubmit, handlePreAddDelete } from '../../utils/organizer-utils';
-import ScheduleTab from '../../components/Organizer/JudgingTab/ScheduleTab';
+import ScheduleTab from '../../components/Organizer/ScheduleTab/ScheduleTab';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
+import JudgingTab from '../../components/Organizer/JudgingTab/JudgingTab';
 
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
-
-	// Teams data
-	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData>({
-		url: '/api/teams',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get list of teams.',
-	});
-
-	// Scores data
-	const { data: scoresData, error: scoresError } = useCustomSWR<ScoreData>({
-		url: '/api/scores',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get list of scores.',
-	});
-
-	// Judge data
-	const { data: judgeData, error: judgeError } = useCustomSWR<UserData>({
-		url: '/api/users?usertype=JUDGE',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get list of judges.',
-	});
 
 	// Hacker data
 	const { data: hackers, error: hackersError } = useCustomSWR<UserData>({
@@ -80,23 +60,7 @@ export default function OrganizerDash() {
 						{
 							label: `Judging`,
 							key: '2',
-							children: (
-								<>
-									{!teamsData && <Skeleton />}
-									{teamsData && (
-										<>
-											{/* Add dropdown here w/ functionality */}
-											{judgeData && scoresData && (
-												<AllScores
-													teamData={teamsData}
-													scoreData={scoresData}
-													userData={judgeData}
-												/>
-											)}
-										</>
-									)}
-								</>
-							),
+							children: <JudgingTab />,
 						},
 						{
 							label: `Manage Users`,
