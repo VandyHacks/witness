@@ -1,17 +1,17 @@
 import { Button, Empty, Skeleton, Space, Tabs } from 'antd';
 import { useSWRConfig } from 'swr';
 import AllScores from '../../components/allScores';
-import ManageRoleForm, { ManageFormFields } from '../../components/manageRoleForm';
 import PreAddForm from '../../components/preAddForm';
 import { ScoreData, TeamData, UserData, PreAddData } from '../../types/database';
 import PreAddDisplay from '../../components/preAddDisplay';
 import ApplicantsDisplay from '../../components/applicantsDisplay';
 import Events from '../../components/events';
 import { signOut, useSession } from 'next-auth/react';
-import { handleManageFormSubmit, handlePreAddDelete } from '../../utils/organizer-utils';
+import { handlePreAddDelete } from '../../utils/organizer-utils';
 import ScheduleTab from '../../components/Organizer/ScheduleTab/ScheduleTab';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
 import JudgingTab from '../../components/Organizer/JudgingTab/JudgingTab';
+import ManageUsersTab from '../../components/Organizer/ManageUsersTab/ManageUsersTab';
 
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
@@ -28,13 +28,6 @@ export default function OrganizerDash() {
 		url: '/api/preadd',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of preadded users.',
-	});
-
-	// User data
-	const { data: userData, error } = useCustomSWR<ManageFormFields>({
-		url: '/api/manage-role',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get list of all users.',
 	});
 
 	// Get session data
@@ -65,23 +58,7 @@ export default function OrganizerDash() {
 						{
 							label: `Manage Users`,
 							key: '3',
-							children: (
-								<>
-									{!userData && <Skeleton />}
-									{userData && userData.length == 0 && (
-										<Empty
-											image={Empty.PRESENTED_IMAGE_SIMPLE}
-											description={<span>No users lmao</span>}
-										/>
-									)}
-									{userData && userData.length > 0 && (
-										<ManageRoleForm
-											formData={userData}
-											onSubmit={formData => handleManageFormSubmit(formData, mutate)}
-										/>
-									)}
-								</>
-							),
+							children: <ManageUsersTab />
 						},
 						{
 							label: `Pre-Add Users`,
