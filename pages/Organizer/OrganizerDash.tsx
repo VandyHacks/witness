@@ -58,7 +58,7 @@ export default function OrganizerDash() {
 						{
 							label: `Manage Users`,
 							key: '3',
-							children: <ManageUsersTab />
+							children: <ManageUsersTab />,
 						},
 						{
 							label: `Pre-Add Users`,
