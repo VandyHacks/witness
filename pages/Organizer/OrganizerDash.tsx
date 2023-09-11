@@ -1,17 +1,15 @@
 import { Button, Empty, Skeleton, Space, Tabs } from 'antd';
 import { useSWRConfig } from 'swr';
 import AllScores from '../../components/allScores';
-import PreAddForm from '../../components/preAddForm';
-import { ScoreData, TeamData, UserData, PreAddData } from '../../types/database';
-import PreAddDisplay from '../../components/preAddDisplay';
+import { ScoreData, TeamData, UserData } from '../../types/database';
 import ApplicantsDisplay from '../../components/applicantsDisplay';
 import Events from '../../components/events';
 import { signOut, useSession } from 'next-auth/react';
-import { handlePreAddDelete } from '../../utils/organizer-utils';
 import ScheduleTab from '../../components/Organizer/ScheduleTab/ScheduleTab';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
 import JudgingTab from '../../components/Organizer/JudgingTab/JudgingTab';
 import ManageUsersTab from '../../components/Organizer/ManageUsersTab/ManageUsersTab';
+import PreAddUsersTab from '../../components/Organizer/PreAddUsersTab/PreAddUsersTab';
 
 export default function OrganizerDash() {
 	const { mutate } = useSWRConfig();
@@ -21,13 +19,6 @@ export default function OrganizerDash() {
 		url: '/api/users?usertype=HACKER',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of hackers.',
-	});
-
-	// Preadd data
-	const { data: preAddData, error: preAddError } = useCustomSWR<PreAddData>({
-		url: '/api/preadd',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get list of preadded users.',
 	});
 
 	// Get session data
@@ -63,23 +54,7 @@ export default function OrganizerDash() {
 						{
 							label: `Pre-Add Users`,
 							key: '4',
-							children: (
-								<>
-									{preAddData && preAddData.length == 0 && (
-										<Empty
-											image={Empty.PRESENTED_IMAGE_SIMPLE}
-											description={<span>No preadded users lmao</span>}
-										/>
-									)}
-									{preAddData && preAddData.length > 0 && (
-										<PreAddDisplay
-											data={preAddData!}
-											onDelete={user => handlePreAddDelete(user, mutate)}
-										/>
-									)}
-									<PreAddForm />
-								</>
-							),
+							children: <PreAddUsersTab />
 						},
 						{
 							label: `Manage Applications`,
