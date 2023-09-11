@@ -1,7 +1,7 @@
 import { Button, Input, InputRef, Modal, notification, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useEffect, useRef, useState } from 'react';
-import { EventData } from '../types/database';
+import { EventData } from '../../../types/database';
 
 interface EventDisplay extends EventData {
 	setCurEvent: (open: EventDisplay) => void;
@@ -75,7 +75,7 @@ const columns: ColumnsType<EventDisplay> = [
 	},
 ];
 
-export default function Events() {
+const EventsTab = () => {
 	const [curEvent, setCurEvent] = useState<EventDisplay | null>(null);
 	const [events, setEvents] = useState<EventDisplay[]>([]);
 	const [nfcId, setNfcId] = useState<string>('');
@@ -187,4 +187,6 @@ export default function Events() {
 			</Modal>
 		</>
 	);
-}
+};
+
+export default EventsTab;

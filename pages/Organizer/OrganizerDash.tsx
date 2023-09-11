@@ -1,26 +1,13 @@
-import { Button, Empty, Skeleton, Space, Tabs } from 'antd';
-import { useSWRConfig } from 'swr';
-import AllScores from '../../components/allScores';
-import { ScoreData, TeamData, UserData } from '../../types/database';
-import ApplicantsDisplay from '../../components/applicantsDisplay';
-import Events from '../../components/events';
+import { Button, Space, Tabs } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
 import ScheduleTab from '../../components/Organizer/ScheduleTab/ScheduleTab';
-import { RequestType, useCustomSWR } from '../../utils/request-utils';
 import JudgingTab from '../../components/Organizer/JudgingTab/JudgingTab';
 import ManageUsersTab from '../../components/Organizer/ManageUsersTab/ManageUsersTab';
 import PreAddUsersTab from '../../components/Organizer/PreAddUsersTab/PreAddUsersTab';
+import ApplicantsTab from '../../components/Organizer/ApplicantsTab/ApplicantsTab';
+import EventsTab from '../../components/Organizer/EventsTab/EventsTab';
 
 export default function OrganizerDash() {
-	const { mutate } = useSWRConfig();
-
-	// Hacker data
-	const { data: hackers, error: hackersError } = useCustomSWR<UserData>({
-		url: '/api/users?usertype=HACKER',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get list of hackers.',
-	});
-
 	// Get session data
 	const { data: session, status } = useSession();
 
@@ -59,12 +46,12 @@ export default function OrganizerDash() {
 						{
 							label: `Manage Applications`,
 							key: '5',
-							children: <>{hackers && <ApplicantsDisplay hackers={hackers} />}</>,
+							children: <ApplicantsTab />,
 						},
 						{
 							label: `Events`,
 							key: '6',
-							children: <Events />,
+							children: <EventsTab />,
 						},
 					]}
 				/>
