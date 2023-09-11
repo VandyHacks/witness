@@ -1,7 +1,9 @@
 import { Button, Input, InputRef, Modal, notification, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useEffect, useRef, useState } from 'react';
-import { EventData } from '../../../types/database';
+import { EventCountData, EventData } from '../../../types/database';
+import { RequestType, useCustomSWR } from '../../../utils/request-utils';
+import { mutate } from 'swr';
 
 interface EventDisplay extends EventData {
 	setCurEvent: (open: EventDisplay) => void;
@@ -83,6 +85,38 @@ const EventsTab = () => {
 
 	const input = useRef<InputRef>(null);
 
+	// get events count
+	const { data: eventsCountData, error: eventsCountError } = useCustomSWR<EventCountData>({
+		url: '/api/events-count',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get count of events.',
+	});
+
+	// get events data
+	const { data: eventsData, error: eventsError } = useCustomSWR<EventData>({
+		url: '/api/events',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of events.',
+	});
+
+	useEffect(() => {
+		if (eventsCountData && eventsCountData.length > 0 && eventsData && eventsData.length > 0) {
+			console.log(eventsCountData);
+			setEvents(
+				eventsData.map((event: EventData) => {
+					// TODO convert startTime and endTime here so we don't have to do it in the render function
+					const count = eventsCountData.find((e: any) => e._id === event._id);
+					return {
+						key: event._id,
+						...event,
+						setCurEvent,
+						count: count ? count.count : 0,
+					};
+				})
+			);
+		}
+	}, [eventsData, eventsCountData]);
+
 	useEffect(() => {
 		// wait for modal to open then focus input
 		if (curEvent) {
@@ -90,30 +124,11 @@ const EventsTab = () => {
 		}
 	}, [curEvent]);
 
-	const getData = () => {
-		// TODO: rethink this function: is it better to combine /events-count and /events api?
-		const result = fetch('/api/events-count')
-			.then(res => res.json())
-			.then(eventCount => {
-				return fetch('/api/events')
-					.then(res => res.json())
-					.then(events => {
-						setEvents(
-							events.map((event: EventData) => {
-								// TODO convert startTime and endTime here so we don't have to do it in the render function
-								const count = eventCount.find((e: any) => e._id === event._id);
-								return {
-									key: event._id,
-									...event,
-									setCurEvent,
-									count: count ? count.count : 0,
-								};
-							})
-						);
-					});
-			});
-
-		return result;
+	const refreshData = async () => {
+		setLoading(true);
+		mutate('/api/events-count', true)
+			.then(() => mutate('/api/events', true))
+			.finally(() => setLoading(false));
 	};
 
 	const handleCheckIn = async () => {
@@ -140,8 +155,7 @@ const EventsTab = () => {
 			});
 		}
 		setNfcId('');
-		// TODO: use useSWR and mutate to update data for good practice
-		getData();
+		refreshData();
 	};
 
 	const handleCancel = () => {
@@ -152,12 +166,8 @@ const EventsTab = () => {
 	const syncCalendar = async () => {
 		setLoading(true);
 		await fetch('/api/sync-calendar');
-		getData().then(() => setLoading(false));
+		refreshData();
 	};
-
-	useEffect(() => {
-		getData();
-	}, []);
 
 	return (
 		<>
