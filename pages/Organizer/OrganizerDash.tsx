@@ -54,7 +54,7 @@ export default function OrganizerDash() {
 						{
 							label: `Pre-Add Users`,
 							key: '4',
-							children: <PreAddUsersTab />
+							children: <PreAddUsersTab />,
 						},
 						{
 							label: `Manage Applications`,
