@@ -31,10 +31,10 @@ const JudgingTab = () => {
 
 	return (
 		<>
-			{dataNull ? (
-				<div>Loading...</div>
-			) : error ? (
+			{error ? (
 				<div>Failed to load data.</div>
+			) : dataNull ? (
+				<div>Loading...</div>
 			) : (
 				<AllScores teamData={teamsData} scoreData={scoresData} userData={judgeData} />
 			)}

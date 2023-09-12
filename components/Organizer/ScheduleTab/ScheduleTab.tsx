@@ -86,10 +86,10 @@ const ScheduleTab = () => {
 
 	return (
 		<>
-			{dataNull ? (
-				<div>Loading...</div>
-			) : error ? (
+			{error ? (
 				<div>{error ? (error as ResponseError).message : 'Failed to get data.'}</div>
+			) : dataNull ? (
+				<div>Loading...</div>
 			) : (
 				<>
 					<Button
