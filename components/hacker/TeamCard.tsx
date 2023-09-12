@@ -1,5 +1,5 @@
 import { Button, Card, Form, Input } from 'antd';
-import { NewTeamFields } from '../types/client';
+import { NewTeamFields } from '../../types/client';
 
 interface Props {
 	title: string;

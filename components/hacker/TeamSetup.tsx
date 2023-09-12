@@ -3,7 +3,7 @@ import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
 import { handleSubmitFailure } from '../../lib/helpers';
 import { NewTeamFields } from '../../types/client';
-import TeamCard from '../TeamCard';
+import TeamCard from './TeamCard';
 import { ScopedMutator } from 'swr/dist/types';
 
 async function handleSubmit(formData: NewTeamFields | { joinCode: string }, mutate: ScopedMutator) {

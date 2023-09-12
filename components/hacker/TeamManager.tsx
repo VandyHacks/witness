@@ -3,7 +3,7 @@ import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
 import { handleSubmitFailure } from '../../lib/helpers';
 import { TeamProfile } from '../../types/client';
-import LeaveButton from '../LeaveButton';
+import LeaveButton from './LeaveButton';
 import { ScopedMutator } from 'swr/dist/types';
 const { Panel } = Collapse;
 

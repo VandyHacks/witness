@@ -3,8 +3,8 @@ import { useSWRConfig } from 'swr';
 import { useCustomSWR, RequestType } from '../../../utils/request-utils';
 import { handlePreAddDelete } from '../../../utils/organizer-utils';
 import { PreAddData } from '../../../types/database';
-import PreAddForm from '../../../components/preAddForm';
-import PreAddDisplay from '../../../components/preAddDisplay';
+import PreAddForm from './preAddForm';
+import PreAddDisplay from './preAddDisplay';
 
 const PreAddUsersTab = () => {
 	const { mutate } = useSWRConfig();

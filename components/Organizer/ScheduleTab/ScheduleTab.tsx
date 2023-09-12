@@ -6,7 +6,7 @@ import {
 	generateScheduleB,
 	handleConfirmSchedule,
 } from '../../../utils/organizer-utils';
-import OrganizerSchedule from '../../schedule';
+import OrganizerSchedule from '../../judges/schedule';
 import { ResponseError, JudgingSessionData, UserData, TeamData } from '../../../types/database';
 import Title from 'antd/lib/typography/Title';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';

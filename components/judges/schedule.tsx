@@ -2,9 +2,9 @@ import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
-import { OrganizerScheduleDisplay, ScheduleDisplay } from '../types/client';
+import { OrganizerScheduleDisplay, ScheduleDisplay } from '../../types/client';
 import { UploadOutlined } from '@ant-design/icons';
-import { JudgingSessionData } from '../types/database';
+import { JudgingSessionData } from '../../types/database';
 import { User } from 'next-auth';
 import Title from 'antd/lib/skeleton/Title';
 

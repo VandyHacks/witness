@@ -1,7 +1,7 @@
 import { Skeleton } from 'antd';
 import { TeamData, ScoreData, UserData } from '../../../types/database';
 import { useCustomSWR, RequestType } from '../../../utils/request-utils';
-import AllScores from '../../allScores';
+import AllScores from './allScores';
 
 const JudgingTab = () => {
 	// Teams data

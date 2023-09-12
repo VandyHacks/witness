@@ -1,6 +1,6 @@
 import { ScopedMutator } from 'swr/dist/types';
-import { ManageFormFields } from '../components/manageRoleForm';
-import { generateTimes } from '../components/schedule';
+import { ManageFormFields } from '../components/Organizer/ManageUsersTab/manageRoleForm';
+import { generateTimes } from '../components/judges/schedule';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 import { JudgingSessionData, PreAddData, TeamData, UserData } from '../types/database';
 

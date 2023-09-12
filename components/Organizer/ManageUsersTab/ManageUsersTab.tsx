@@ -1,7 +1,7 @@
 import { Empty, Skeleton } from 'antd';
 import { useSWRConfig } from 'swr';
 import { useCustomSWR, RequestType } from '../../../utils/request-utils';
-import ManageRoleForm, { ManageFormFields } from '../../../components/manageRoleForm';
+import ManageRoleForm, { ManageFormFields } from './manageRoleForm';
 import { handleManageFormSubmit } from '../../../utils/organizer-utils';
 
 const ManageUsersTab = () => {
