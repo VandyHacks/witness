@@ -1,11 +1,11 @@
 import { Button, Space, Tabs } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
-import ScheduleTab from '../../components/Organizer/ScheduleTab/ScheduleTab';
-import JudgingTab from '../../components/Organizer/JudgingTab/JudgingTab';
-import ManageUsersTab from '../../components/Organizer/ManageUsersTab/ManageUsersTab';
-import PreAddUsersTab from '../../components/Organizer/PreAddUsersTab/PreAddUsersTab';
-import ApplicantsTab from '../../components/Organizer/ApplicantsTab/ApplicantsTab';
-import EventsTab from '../../components/Organizer/EventsTab/EventsTab';
+import ScheduleTab from '../components/Organizer/ScheduleTab/ScheduleTab';
+import JudgingTab from '../components/Organizer/JudgingTab/JudgingTab';
+import ManageUsersTab from '../components/Organizer/ManageUsersTab/ManageUsersTab';
+import PreAddUsersTab from '../components/Organizer/PreAddUsersTab/PreAddUsersTab';
+import ApplicantsTab from '../components/Organizer/ApplicantsTab/ApplicantsTab';
+import EventsTab from '../components/Organizer/EventsTab/EventsTab';
 
 export default function OrganizerDash() {
 	// Get session data
