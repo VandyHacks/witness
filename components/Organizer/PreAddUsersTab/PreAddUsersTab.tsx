@@ -18,12 +18,12 @@ const PreAddUsersTab = () => {
 
 	return (
 		<>
-			{preAddData && preAddData.length === 0 && (
-				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />
-			)}
-			{preAddData && preAddData.length > 0 && (
-				<PreAddDisplay data={preAddData!} onDelete={user => handlePreAddDelete(user, mutate)} />
-			)}
+			{preAddData &&
+				(preAddData.length === 0 ? (
+					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />
+				) : (
+					<PreAddDisplay data={preAddData!} onDelete={user => handlePreAddDelete(user, mutate)} />
+				))}
 			<PreAddForm />
 		</>
 	);
