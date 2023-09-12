@@ -517,15 +517,20 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								{/* <Form.Item
-									label="Would you like to apply for travel reimbursements? "
+								<Form.Item
+									className={styles.FormItem}
+									label={
+										<p className={styles.Label}>
+											Would you like to apply for travel reimbursements?
+										</p>
+									}
 									name="applyTravelReimbursement"
 									rules={[{ required: true, message: 'Please select an answer!' }]}>
 									<Radio.Group>
 										<Radio.Button value="yes">Yes</Radio.Button>
 										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
-								</Form.Item> */}
+								</Form.Item>
 								<Form.Item
 									className={styles.FormItem}
 									name="overnight"
