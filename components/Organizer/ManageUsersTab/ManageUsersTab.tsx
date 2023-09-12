@@ -17,7 +17,7 @@ const ManageUsersTab = () => {
 	return (
 		<>
 			{!userData && <Skeleton />}
-			{userData && userData.length == 0 && (
+			{userData && userData.length === 0 && (
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No users lmao</span>} />
 			)}
 			{userData && userData.length > 0 && (

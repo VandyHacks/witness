@@ -323,7 +323,7 @@ export const ApplicantsTab = () => {
 				{ text: 'Checked In', value: ApplicationStatus.CHECKED_IN },
 			],
 			filteredValue: filteredInfo.applicationStatus || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.applicationStatus == value,
+			onFilter: (value: string | number | boolean, record: any): boolean => record.applicationStatus === value,
 			render: (applicationStatus: ApplicationStatus, record: any) => {
 				const statusName = APPLICATION_STATUSES[applicationStatus as number];
 				if (statusName === 'Submitted') {

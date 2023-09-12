@@ -18,7 +18,7 @@ const PreAddUsersTab = () => {
 
 	return (
 		<>
-			{preAddData && preAddData.length == 0 && (
+			{preAddData && preAddData.length === 0 && (
 				<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No preadded users lmao</span>} />
 			)}
 			{preAddData && preAddData.length > 0 && (
