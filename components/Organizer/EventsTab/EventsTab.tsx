@@ -70,7 +70,12 @@ export default function Events() {
 			key: 'nfcPoints',
 			width: '10%',
 			render: (point: number) => {
-				return <InputNumber defaultValue={point ? point : 0} onChange={() => setShowSaveButton(true)} />;
+				return (
+					<InputNumber
+						defaultValue={point ? point : 0}
+						// onChange={e => handleNfcPointsChange(e, )}
+					/>
+				);
 			},
 		},
 		{
@@ -141,6 +146,8 @@ export default function Events() {
 			.finally(() => setLoading(false));
 	};
 
+	// const handleNfcPointsChange = (e, eventId : ) => {};
+
 	const handleCheckIn = async () => {
 		const response = await fetch('/api/event-checkin', {
 			method: 'POST',
@@ -168,6 +175,17 @@ export default function Events() {
 		refreshData();
 	};
 
+	const handleSaveChanges = async () => {
+		console.log(events);
+		const response = await fetch('/api/event-save-changes', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(events),
+		});
+	};
+
 	const handleCancel = () => {
 		setCurEvent(null);
 		setNfcId('');
@@ -190,7 +208,7 @@ export default function Events() {
 					Sync Calendar Events
 				</Button>
 				{showSaveButton && (
-					<Button loading={loading} onClick={syncCalendar}>
+					<Button loading={loading} onClick={handleSaveChanges}>
 						Save Changes
 					</Button>
 				)}
