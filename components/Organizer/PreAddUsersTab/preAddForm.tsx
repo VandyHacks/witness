@@ -1,7 +1,7 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Select, Space } from 'antd';
 import { useSWRConfig } from 'swr';
-import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
+import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
 
 const { Option } = Select;
 const { TextArea } = Input;

@@ -1,7 +1,7 @@
 import { Table, Tag, Button, Checkbox, Modal, Input, Popover, Space } from 'antd';
 import type { InputRef } from 'antd';
 import React, { useState, useRef, useEffect } from 'react';
-import { ApplicationStatus, UserData } from '../types/database';
+import { ApplicationStatus, UserData } from '../../../types/database';
 import {
 	CheckCircleOutlined,
 	EyeOutlined,
@@ -12,13 +12,10 @@ import {
 import { DateTime } from 'luxon';
 import type { ColumnsType, FilterValue, FilterConfirmProps } from 'antd/es/table/interface';
 import { useSWRConfig } from 'swr';
-import { ScopedMutator } from 'swr/dist/types';
 import Highlighter from 'react-highlight-words';
-import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
-
-export interface ApplicantsDisplayProps {
-	hackers: UserData[];
-}
+import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
+import { ScopedMutator } from 'swr/dist/types';
+import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 
 const APPLICATION_STATUSES = [
 	'Created',
@@ -74,7 +71,7 @@ const APPLICATION_KEY_MAP = {
 	mlhComms: 'MLH Communications',
 };
 
-const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: ScopedMutator, hackers: any) => {
+const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: ScopedMutator, hackers: UserData[]) => {
 	fetch('/api/accept-reject', {
 		method: 'POST',
 		headers: {
@@ -86,7 +83,7 @@ const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: 
 		}),
 	}).then(() => {
 		const newHackers: UserData[] = JSON.parse(JSON.stringify(hackers)); // Deep copies the object
-		const idx = newHackers.findIndex((x: any) => x._id === id);
+		const idx = newHackers.findIndex((x: UserData) => x._id.toString() === id);
 		newHackers[idx].applicationStatus = applicationStatus;
 		mutate(
 			'/api/users?usertype=HACKER',
@@ -98,7 +95,7 @@ const acceptReject = (id: string, applicationStatus: ApplicationStatus, mutate: 
 	});
 };
 
-const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
+const createPopover = (record: any, mutate: ScopedMutator, hackers: UserData[]) => {
 	return (
 		<div>
 			<Button type="dashed" onClick={() => acceptReject(record._id, ApplicationStatus.REJECTED, mutate, hackers)}>
@@ -116,8 +113,15 @@ const createPopover = (record: any, mutate: ScopedMutator, hackers: any) => {
 	);
 };
 
-export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
-	const hackers = props.hackers.map(x => ({ ...x, key: x._id }));
+export const ApplicantsTab = () => {
+	// Hacker data
+	const { data: hackersData, error: hackersError } = useCustomSWR<UserData>({
+		url: '/api/users?usertype=HACKER',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of hackers.',
+	});
+
+	const hackers = hackersData?.map(x => ({ ...x, key: x._id })) || ([] as UserData[]);
 
 	const [isAppModalOpen, setIsAppModalOpen] = useState(false);
 	const [isCheckinModalOpen, setIsCheckinModalOpen] = useState(false);
@@ -319,12 +323,12 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 				{ text: 'Checked In', value: ApplicationStatus.CHECKED_IN },
 			],
 			filteredValue: filteredInfo.applicationStatus || null,
-			onFilter: (value: string | number | boolean, record: any): boolean => record.applicationStatus == value,
+			onFilter: (value: string | number | boolean, record: any): boolean => record.applicationStatus === value,
 			render: (applicationStatus: ApplicationStatus, record: any) => {
 				const statusName = APPLICATION_STATUSES[applicationStatus as number];
 				if (statusName === 'Submitted') {
 					return (
-						<Popover placement="left" content={createPopover(record, mutate, props.hackers)}>
+						<Popover placement="left" content={createPopover(record, mutate, hackers)}>
 							<Tag color={(STATUS_COLORS as any)[statusName]}>{statusName}</Tag>
 						</Popover>
 					);
@@ -432,4 +436,6 @@ export default function ApplicantsDisplay(props: ApplicantsDisplayProps) {
 			)}
 		</>
 	);
-}
+};
+
+export default ApplicantsTab;

@@ -103,6 +103,11 @@ export interface EventData {
 	location: String;
 }
 
+export interface EventCountData {
+	_id: mongoose.Schema.Types.ObjectId;
+	count: number;
+}
+
 export interface JudgingSessionData {
 	_id?: mongoose.Schema.Types.ObjectId;
 	team: TeamData;

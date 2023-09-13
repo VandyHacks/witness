@@ -1,6 +1,6 @@
 import { ScopedMutator } from 'swr/dist/types';
-import { ManageFormFields } from '../components/manageRoleForm';
-import { generateTimes } from '../components/schedule';
+import { ManageFormFields } from '../components/Organizer/ManageUsersTab/manageRoleForm';
+import { generateTimes } from '../components/judges/schedule';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 import { JudgingSessionData, PreAddData, TeamData, UserData } from '../types/database';
 
@@ -47,7 +47,7 @@ export const generateScheduleB = (teams: TeamData[], judges: UserData[]) => {
  * @param {ManageFormFields} roleData - The form data for the role being managed.
  * @param {ScopedMutator} mutate - The scoped mutator function to update the query cache.
  */
-export const handleManageFormSubmit = async (roleData: ManageFormFields, mutate: ScopedMutator<any>) => {
+export const handleManageFormSubmit = async (roleData: ManageFormFields, mutate: ScopedMutator) => {
 	const res = await fetch(`/api/manage-role`, {
 		method: 'PATCH',
 		headers: {
@@ -69,7 +69,7 @@ export const handleManageFormSubmit = async (roleData: ManageFormFields, mutate:
  * @returns {void}
  * @throws {Error} If the deletion fails with an error response.
  */
-export const handlePreAddDelete = async (user: PreAddData, mutate: ScopedMutator<any>) => {
+export const handlePreAddDelete = async (user: PreAddData, mutate: ScopedMutator) => {
 	console.log('logging user obj', user);
 	const res = await fetch('/api/preadd', {
 		method: 'DELETE',
@@ -127,7 +127,7 @@ export const matchTeams = (teams: TeamData[], judges: UserData[], times: Date[])
  * @param {JudgingSessionData[]} judgingSessions - The array of judging session data objects to submit.
  * @returns {void}
  */
-const handleConfirmSchedule = async (judgingSessions: JudgingSessionData[]) => {
+export const handleConfirmSchedule = async (judgingSessions: JudgingSessionData[]) => {
 	const res = await fetch('/api/confirm-judging-sessions', {
 		method: 'POST',
 		headers: {

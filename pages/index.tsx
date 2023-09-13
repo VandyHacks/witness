@@ -5,7 +5,7 @@ import SignIn from '../components/signIn';
 import { ApplicationStatus } from '../types/database';
 import HackerDash from './HackerDash';
 import JudgeDash from './JudgeDash';
-import OrganizerDash from './Organizer/OrganizerDash';
+import OrganizerDash from './OrganizerDash';
 import Head from 'next/head';
 
 export default function Page() {
