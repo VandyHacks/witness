@@ -1,13 +1,13 @@
 import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
-import { ScopedMutator } from 'swr/dist/types';
 import { handleSubmitFailure } from '../../lib/helpers';
 import { TeamProfile } from '../../types/client';
-import LeaveButton from '../LeaveButton';
+import LeaveButton from './LeaveButton';
+import { ScopedMutator } from 'swr/dist/types';
 const { Panel } = Collapse;
 
-async function handleSubmit(formData: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) {
+async function handleSubmit(formData: { teamName: string } | { devpost: string }, mutate: ScopedMutator) {
 	const res = await fetch('/api/team-management', {
 		method: 'PATCH',
 		headers: {
@@ -24,7 +24,7 @@ async function handleSubmit(formData: { teamName: string } | { devpost: string }
 	return false;
 }
 
-async function handleLeaveTeam(mutate: ScopedMutator<any>) {
+async function handleLeaveTeam(mutate: ScopedMutator) {
 	const res = await fetch('/api/team-management', {
 		method: 'DELETE',
 		headers: {
@@ -41,7 +41,7 @@ async function handleLeaveTeam(mutate: ScopedMutator<any>) {
 export default function TeamManager({ profile }: { profile: TeamProfile }) {
 	// TODO: STYLE THIS!
 	const { name, joinCode, devpost, members } = profile;
-	const onFormFinish = async (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator<any>) => {
+	const onFormFinish = async (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator) => {
 		const success = await handleSubmit(data, mutate);
 		if (success) {
 			notification['success']({

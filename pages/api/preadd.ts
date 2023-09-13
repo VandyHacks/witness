@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import PreAdd from '../../models/preadd';
-import { PreAddFormFields } from '../../components/preAddForm';
+import { PreAddFormFields } from '../../components/Organizer/PreAddUsersTab/preAddForm';
 import { MongoBulkWriteError, WriteError } from 'mongodb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {

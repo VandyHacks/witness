@@ -1,6 +1,6 @@
 import { Card, Space, Tooltip } from 'antd';
 import { DeleteOutlined, QuestionCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
-import { PreAddData } from '../types/database';
+import { PreAddData } from '../../../types/database';
 
 export interface PreAddDisplayProps {
 	data: PreAddData[];
