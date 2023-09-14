@@ -13,10 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'POST':
 			const events: EventData[] = req.body as EventData[];
+			console.log(events);
 
 			events.forEach(async event => {
 				const { _id, nfcPoints } = event;
-				console.log(nfcPoints);
 				await Event.findByIdAndUpdate(_id, { nfcPoints });
 			});
 

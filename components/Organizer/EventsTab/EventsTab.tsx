@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { EventCountData, EventData } from '../../../types/database';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 import { mutate } from 'swr';
+import { ObjectId } from 'mongoose';
 
 interface EventDisplay extends EventData {
 	setCurEvent: (open: EventDisplay) => void;
@@ -69,12 +70,18 @@ export default function Events() {
 			dataIndex: 'nfcPoints',
 			key: 'nfcPoints',
 			width: '10%',
-			render: (point: number) => {
+			render: (nfcPoints: number, record: EventDisplay, index: number) => {
 				return (
-					<InputNumber
-						defaultValue={point ? point : 0}
-						// onChange={e => handleNfcPointsChange(e, )}
-					/>
+					<>
+						<InputNumber
+							defaultValue={nfcPoints ? nfcPoints : 0}
+							onChange={(newNfcPoints: number | null) =>
+								handleNFCPointChanges(record._id, newNfcPoints || 0)
+							}
+						/>
+						<p>Index: {index}</p>
+						<p>Old value: {record.nfcPoints}</p>
+					</>
 				);
 			},
 		},
@@ -146,7 +153,18 @@ export default function Events() {
 			.finally(() => setLoading(false));
 	};
 
-	// const handleNfcPointsChange = (e, eventId : ) => {};
+	const handleNFCPointChanges = (eventId: ObjectId, nfcPoints: number) => {
+		// Deep copy and update array
+		const newEvents = JSON.parse(JSON.stringify(events));
+		newEvents.map((event: EventDisplay) => {
+			if (event._id === eventId) event.nfcPoints = nfcPoints;
+			return event;
+		});
+		setEvents(newEvents);
+
+		// Show the save button
+		setShowSaveButton(true);
+	};
 
 	const handleCheckIn = async () => {
 		const response = await fetch('/api/event-checkin', {
@@ -176,7 +194,6 @@ export default function Events() {
 	};
 
 	const handleSaveChanges = async () => {
-		console.log(events);
 		const response = await fetch('/api/event-save-changes', {
 			method: 'POST',
 			headers: {
