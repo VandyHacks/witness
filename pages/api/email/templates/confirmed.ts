@@ -272,7 +272,7 @@ export default (user: UserData): SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 8:00 PM CDT Friday, October 21st, and wrap up by 3:00 PM CDT Sunday, October 23rd.
+																					This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 12:00 PM CDT Saturday, October 28th, and wrap up by 5:30 PM CDT Sunday, October 29th.
 																				</div>
 																			</td>
 																		</tr>
@@ -623,7 +623,7 @@ export default (user: UserData): SendEmailRequest => ({
 				Data: `Hey ${escapeChars(user.name)},
 				We're so excited that you'll be joining us for VandyHacks X: Neon Edition!
 
-				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 8:00 PM CDT Friday, October 21st, and wrap up by 3:00 PM CDT Sunday, October 23rd.
+				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 12:00 PM CDT Saturday, October 28th, and wrap up by 5:30 PM CDT Sunday, October 29th.
 
 				In the meantime, be sure to complete the following:
 
