@@ -7,6 +7,17 @@ dotenv.config();
 
 /**
  * NOTE: To use this CLI tool, run `ts-node scripts/dev-cli.ts` in your terminal.
+ *
+ * executeCLI calls promptAction.
+ *
+ * promptAction calls one of the following functions:
+ * 	- handleGetHacker
+ * 	- handleGetTeam
+ * 	- handleModifyHacker
+ * 	- handleModifyTeam
+ * 	- handleClearCollection
+ * 	- handlePopulateCollection
+ * 	- process.exit(0)
  */
 const executeCLI = async () => {
 	// Select database
