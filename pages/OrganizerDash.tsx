@@ -1,4 +1,4 @@
-import { Button, Space, Tabs } from 'antd';
+import { Space, Tabs } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
 import ScheduleTab from '../components/Organizer/ScheduleTab/ScheduleTab';
 import JudgingTab from '../components/Organizer/JudgingTab/JudgingTab';
@@ -6,18 +6,27 @@ import ManageUsersTab from '../components/Organizer/ManageUsersTab/ManageUsersTa
 import PreAddUsersTab from '../components/Organizer/PreAddUsersTab/PreAddUsersTab';
 import ApplicantsTab from '../components/Organizer/ApplicantsTab/ApplicantsTab';
 import EventsTab from '../components/Organizer/EventsTab/EventsTab';
+import styles from '../styles/Organizer.module.css';
+import { useTheme } from '../theme/themeProvider';
 
 export default function OrganizerDash() {
 	// Get session data
 	const { data: session, status } = useSession();
 
+	console.log(useTheme('organizerHeaderEmailText'));
+
 	return (
-		<>
-			<div style={{ display: 'flex' }}>
-				<Button size="small" type="default" onClick={() => signOut()}>
-					Sign out
-				</Button>
-				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+		<div className={styles[useTheme('organizerMain')]}>
+			<div className={styles[useTheme('organizerHeader')]}>
+				<h1 className={styles[useTheme('organizerTitle')]}>Organizer Dashboard</h1>
+				<div className={styles[useTheme('organizerHeaderEmail')]}>
+					<div className={styles[useTheme('organizerHeaderEmailText')]}>{session?.user?.email}</div>
+					<div>
+						<button className={styles[useTheme('organizerButton')]} onClick={() => signOut()}>
+							Sign out
+						</button>
+					</div>
+				</div>
 			</div>
 			<Space direction="vertical">
 				<Tabs
@@ -56,6 +65,6 @@ export default function OrganizerDash() {
 					]}
 				/>
 			</Space>
-		</>
+		</div>
 	);
 }

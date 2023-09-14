@@ -1,15 +1,17 @@
 import { Layout, Skeleton } from 'antd';
-import { signIn, useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { useContext, useState } from 'react';
 import SignIn from '../components/signIn';
-import { ApplicationStatus } from '../types/database';
 import HackerDash from './HackerDash';
 import JudgeDash from './JudgeDash';
 import OrganizerDash from './OrganizerDash';
 import Head from 'next/head';
+import { Theme, ThemeContext } from '../theme/themeProvider';
+import { themeConstants } from '../theme/theme';
 
 export default function Page() {
 	const { data: session, status } = useSession();
+	const { baseTheme } = useContext(ThemeContext);
 	const [userApplicationStatus, setUserApplicationStatus] = useState<number>(0);
 
 	return (
@@ -35,7 +37,12 @@ export default function Page() {
 					padding: session?.userType === undefined || session?.userType === 'HACKER' ? '0px' : '30px',
 					height: `100%`,
 					width: `100vw`,
-					backgroundColor: 'white',
+					backgroundColor:
+						session?.userType === undefined || session?.userType === 'HACKER'
+							? 'white'
+							: baseTheme === Theme.LIGHT
+							? themeConstants.light.backgroundColor
+							: themeConstants.dark.backgroundColor,
 				}}>
 				{!session && status === 'unauthenticated' && <SignIn />}
 				{!session && status === 'loading' && <Skeleton />}

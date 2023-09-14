@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { ThemeProvider } from '../theme/themeProvider';
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
@@ -11,7 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<title>{pageProps.title}</title>
 			</Head>
 			<SessionProvider session={pageProps.session}>
-				<Component {...pageProps} />
+				<ThemeProvider>
+					<Component {...pageProps} />
+				</ThemeProvider>
 			</SessionProvider>
 		</>
 	);

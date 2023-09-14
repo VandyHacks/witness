@@ -1,0 +1,80 @@
+.organizerHeader-light {
+	display: flex;
+	justify-content: space-between;
+}
+
+.organizerHeader-dark {
+	display: flex;
+	justify-content: space-between;
+}
+
+.organizerHeaderEmail-light {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.organizerHeaderEmail-dark {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.organizerTitle-light {
+	font-size: 40px;
+	font-weight: 800;
+	margin: 0;
+}
+
+.organizerTitle-dark {
+	font-size: 40px;
+	font-weight: 800;
+	margin: 0;
+	color: #fff;
+}
+
+.organizerHeaderEmailText-light {
+	padding-left: 10px;
+	font-size: 14px;
+	font-weight: 800;
+	color: #000;
+}
+
+.organizerHeaderEmailText-dark {
+	padding-left: 10px;
+	font-size: 14px;
+	font-weight: 800;
+	color: #fff;
+}
+
+.organizerButton-light {
+	border-radius: 10px;
+	background-color: rgb(208, 208, 208);
+	border: none;
+	font-weight: 600;
+	margin-left: 20px;
+	padding: 4px 10px;
+	transition: 0.2s;
+}
+
+.organizerButton-dark {
+	border-radius: 10px;
+	background-color: rgb(208, 208, 208);
+	border: none;
+	font-weight: 600;
+	margin-left: 20px;
+	padding: 4px 10px;
+	transition: 0.2s;
+}
+
+.organizerButton-light:hover {
+	background-color: rgb(183, 183, 183);
+	cursor: pointer;
+}
+
+.organizerButton-dark:hover {
+	background-color: rgb(183, 183, 183);
+	cursor: pointer;
+}
