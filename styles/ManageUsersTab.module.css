@@ -18,6 +18,10 @@
 	transition: 0.2s;
 }
 
+.manageUserSubmitButton:hover {
+	cursor: pointer;
+}
+
 .manageUserClearButton {
 	border-radius: 10px;
 	background-color: rgb(208, 208, 208);
@@ -25,4 +29,8 @@
 	font-weight: 600;
 	padding: 4px 10px;
 	transition: 0.2s;
+}
+
+.manageUserClearButton {
+	cursor: pointer;
 }
