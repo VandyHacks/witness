@@ -265,14 +265,14 @@ export default (user: UserData): SendEmailRequest => ({
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																				Congratulations! You’re invited to be a part of <b>VandyHacks X: Neon Edition</b>! We enjoyed reading your application and would love to see your ideas come to life during our event on <b>October 21st-23rd</b>!
+																				Congratulations! You’re invited to be a part of <b>VandyHacks X: Neon Edition</b>! We enjoyed reading your application and would love to see your ideas come to life during our event on <b>October 28th-29th</b>!
 																				</div>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
 																				<div style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:16px;font-weight:400;line-height:24px;text-align:left;color:#637381;">
-																					Head over to the application portal <a href="https://apply.vandyhacks.org">here</a> and confirm your attendance by October 20th, 12:00 PM CDT.
+																					Head over to the application portal <a href="https://apply.vandyhacks.org">here</a> and confirm your attendance by October 26th, 12:00 PM CDT.
 																				</div>
 																			</td>
 																		</tr>
@@ -601,9 +601,9 @@ export default (user: UserData): SendEmailRequest => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Hi ${escapeChars(user.name || user.name)},
-				Congratulations! You’re invited to be a part of VandyHacks X: Neon Edition! We enjoyed reading your application and would love to see your ideas come to life during our event on October 21st-23rd!
+				Congratulations! You’re invited to be a part of VandyHacks X: Neon Edition! We enjoyed reading your application and would love to see your ideas come to life during our event on October 28th-29th!
 
-				Head over to the application portal here and confirm your attendance by October 20th, 12:00 PM CDT.
+				Head over to the application portal here and confirm your attendance by October 26th, 12:00 PM CDT.
 
 				If you have any questions or concerns, check out our FAQ or reach out to us at info@vandyhacks.org. In the meantime join our discord server to stay up to date on the latest VH news!
 
