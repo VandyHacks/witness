@@ -1,7 +1,6 @@
-import { input, select } from '@inquirer/prompts';
+import { select } from '@inquirer/prompts';
 import dbConnect from '../middleware/database';
 import * as dotenv from 'dotenv';
-import application from '../models/application';
 import { handleModifyHacker } from './cli-util/modify-hacker';
 import { handleGetHacker } from './cli-util/get-hacker';
 dotenv.config();
@@ -96,24 +95,29 @@ export const promptAction = async () => {
 	});
 
 	// Perform action
-	switch (action) {
-		case 'get-hacker':
-			await handleGetHacker();
-			break;
-		case 'modify-hacker':
-			await handleModifyHacker();
-			break;
-		case 'quit':
-			process.exit(0);
-			break;
-		default:
-			console.log('Invalid action');
+	try {
+		switch (action) {
+			case 'get-hacker':
+				await handleGetHacker();
+				break;
+			case 'modify-hacker':
+				await handleModifyHacker();
+				break;
+			case 'quit':
+				process.exit(0);
+				break;
+			default:
+				console.log('Invalid action');
+		}
+	} catch (err) {
+		handleError(err as Error);
 	}
 };
 
-// handle api error(a function that's called when API calls return 404)
-const handleError = () => {
-	console.log('Error: You need to have the witness running');
+// handle error
+const handleError = (err: Error) => {
+	console.log('An error has occurred! You are a dev, right? Fix it: ');
+	console.log(err);
 };
 
 // Execute the CLI tool
