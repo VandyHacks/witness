@@ -79,8 +79,6 @@ export default function Events() {
 								handleNFCPointChanges(record._id, newNfcPoints || 0)
 							}
 						/>
-						<p>Index: {index}</p>
-						<p>Old value: {record.nfcPoints}</p>
 					</>
 				);
 			},
