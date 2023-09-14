@@ -2,6 +2,7 @@ import { input, select } from '@inquirer/prompts';
 import User from '../../models/user';
 import { promptAction } from '../dev-cli';
 import { ApplicationStatus, UserData } from '../../types/database';
+import Application from '../../models/application';
 
 // TODO: zi
 /**
@@ -56,6 +57,7 @@ export const handleModifyHacker = async () => {
 			await changeStatus(hacker);
 			break;
 		case 'delete-application':
+			await deleteApplication(hacker);
 			break;
 		case 'join-team':
 			break;
@@ -67,11 +69,12 @@ export const handleModifyHacker = async () => {
 };
 
 const changeStatus = async (hacker: UserData) => {
+	// get old status
 	const oldStatus: ApplicationStatus = hacker.applicationStatus;
 	const oldStatusString = getApplicationStatusString(oldStatus);
-
 	console.log(`Current status: ${oldStatus} (${oldStatusString})`);
 
+	// query for new status
 	const newStatus: ApplicationStatus = await select({
 		message: 'Select new status',
 		choices: [
@@ -110,12 +113,48 @@ const changeStatus = async (hacker: UserData) => {
 		],
 	});
 
+	// update hacker document and log
 	await User.updateOne({ email: hacker.email }, { applicationStatus: newStatus });
-
 	console.log(`Changed application status from ${oldStatus} to ${newStatus}`);
+
+	return promptAction();
 };
 
-const deleteApplication = async () => {};
+const deleteApplication = async (hacker: UserData) => {
+	// check if hacker has an application
+	if (!hacker.application) {
+		console.log('Hacker does not have an application');
+		return;
+	}
+
+	// confirm deletion
+	const confirm = await select({
+		message: `Application Found! Are you sure you want to delete it (${hacker.application})?`,
+		choices: [
+			{
+				name: 'Yes',
+				value: true,
+			},
+			{
+				name: 'No',
+				value: false,
+			},
+		],
+	});
+
+	// cancel if not confirmed
+	if (!confirm) {
+		console.log('Cancelled');
+		return promptAction();
+	}
+
+	// perform deletion and log
+	await Application.deleteOne({ _id: hacker.application });
+	await User.updateOne({ email: hacker.email }, { application: null });
+	console.log('Deleted application successfully');
+
+	return promptAction();
+};
 
 const joinTeam = async () => {};
 
