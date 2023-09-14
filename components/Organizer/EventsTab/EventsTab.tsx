@@ -194,6 +194,7 @@ export default function Events() {
 	};
 
 	const handleSaveChanges = async () => {
+		// Send POST request
 		const response = await fetch('/api/event-save-changes', {
 			method: 'POST',
 			headers: {
@@ -201,6 +202,20 @@ export default function Events() {
 			},
 			body: JSON.stringify(events),
 		});
+
+		// Display the success/failure messages
+		if (response.ok) {
+			notification['success']({
+				message: `Successfully Saved Changes!`,
+				placement: 'bottomRight',
+			});
+		} else {
+			notification['error']({
+				message: 'Failed to save changes',
+				description: await response.text(),
+				placement: 'bottomRight',
+			});
+		}
 	};
 
 	const handleCancel = () => {
