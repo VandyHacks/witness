@@ -1,8 +1,9 @@
 import { input, select } from '@inquirer/prompts';
+import Application from '../../models/application';
+import Team from '../../models/team';
 import User from '../../models/user';
 import { promptAction } from '../dev-cli';
-import { ApplicationStatus, UserData } from '../../types/database';
-import Application from '../../models/application';
+import { ApplicationStatus, TeamData, UserData } from '../../types/database';
 
 // TODO: zi
 /**
@@ -60,10 +61,13 @@ export const handleModifyHacker = async () => {
 			await deleteApplication(hacker);
 			break;
 		case 'join-team':
+			await joinTeam(hacker);
 			break;
 		case 'leave-team':
+			await leaveTeam(hacker);
 			break;
 		case 'nfc-check-in':
+			await nfcCheckIn(hacker);
 			break;
 	}
 };
@@ -156,11 +160,113 @@ const deleteApplication = async (hacker: UserData) => {
 	return promptAction();
 };
 
-const joinTeam = async () => {};
+const joinTeam = async (hacker: UserData) => {
+	const teamId = hacker.team;
 
-const leaveTeam = async () => {};
+	// check if hacker has a team
+	if (teamId) {
+		console.log('Hacker already has a team');
+		return promptAction();
+	}
 
-const nfcCheckIn = async () => {};
+	// get team invite code
+	const inviteCode = await input({
+		message: 'Enter team invite code',
+	});
+
+	// query for team document
+	const team = await Team.findOne({ joinCode: inviteCode });
+
+	// check if team exists
+	if (!team) {
+		console.log('Team does not exist');
+		return promptAction();
+	}
+
+	// confirm joining team
+	const confirm = await select({
+		message: `Team Found! Are you sure you want to join it (${team._id})?`,
+		choices: [
+			{
+				name: 'Yes',
+				value: true,
+			},
+			{
+				name: 'No',
+				value: false,
+			},
+		],
+	});
+
+	// cancel if not confirmed
+	if (!confirm) {
+		console.log('Cancelled');
+		return promptAction();
+	}
+
+	// perform joining team and log
+	await Team.updateOne({ _id: team._id }, { $push: { members: hacker._id } });
+	await User.updateOne({ email: hacker.email }, { team: team._id });
+	console.log('Joined team successfully');
+};
+
+const leaveTeam = async (hacker: UserData) => {
+	const teamId = hacker.team;
+
+	// check if hacker has a team
+	if (!teamId) {
+		console.log('Hacker does not have a team');
+		return promptAction();
+	}
+
+	const teamDoc: TeamData | null = await Team.findById(teamId);
+
+	// check if team exists
+	if (!teamDoc) {
+		console.log('Team does not exist. Clearing hacker team field');
+		await User.updateOne({ email: hacker.email }, { team: null });
+		return promptAction();
+	}
+
+	// confirm deletion
+	const confirm = await select({
+		message: `Team Found! Are you sure you want to leave it (${teamDoc._id})?`,
+		choices: [
+			{
+				name: 'Yes',
+				value: true,
+			},
+			{
+				name: 'No',
+				value: false,
+			},
+		],
+	});
+
+	// cancel if not confirmed
+	if (!confirm) {
+		console.log('Cancelled');
+		return promptAction();
+	}
+
+	// perform deletion and log
+	await Team.updateOne({ _id: teamId }, { $pull: { members: hacker._id } });
+	await User.updateOne({ email: hacker.email }, { team: null });
+	console.log('Left team successfully');
+};
+
+const nfcCheckIn = async (hacker: UserData) => {
+	// get nfc id
+	const nfcId = await input({
+		message: 'Enter nfc id',
+	});
+
+	// update hacker document and log
+	await User.updateOne({ email: hacker.email }, { nfcId, applicationStatus: ApplicationStatus.CHECKED_IN });
+	console.log(`Updated hacker document with nfc id ${nfcId} and application status ${ApplicationStatus.CHECKED_IN}`);
+
+	return promptAction();
+};
 
 const getApplicationStatusString = (status: ApplicationStatus): string => {
 	switch (status) {
