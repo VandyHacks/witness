@@ -310,10 +310,10 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									name="graduationYear"
 									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
 									<Radio.Group>
-										<Radio.Button value="2023">2023</Radio.Button>
 										<Radio.Button value="2024">2024</Radio.Button>
 										<Radio.Button value="2025">2025</Radio.Button>
 										<Radio.Button value="2026">2026</Radio.Button>
+										<Radio.Button value="2027">2027</Radio.Button>
 										<Radio.Button value="other">Other</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
