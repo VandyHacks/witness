@@ -1,0 +1,28 @@
+.manageUserPrimaryLabel-light {
+	height: 50px;
+	color: black;
+	font-weight: 600;
+}
+
+.manageUserPrimaryLabel-dark {
+	height: 50px;
+	color: white;
+	font-weight: 600;
+}
+
+.manageUserSubmitButton {
+	border-radius: 10px;
+	border: none;
+	font-weight: 600;
+	padding: 4px 10px;
+	transition: 0.2s;
+}
+
+.manageUserClearButton {
+	border-radius: 10px;
+	background-color: rgb(208, 208, 208);
+	border: none;
+	font-weight: 600;
+	padding: 4px 10px;
+	transition: 0.2s;
+}

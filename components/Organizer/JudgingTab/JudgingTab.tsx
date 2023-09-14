@@ -2,6 +2,7 @@ import { Skeleton } from 'antd';
 import { TeamData, ScoreData, UserData } from '../../../types/database';
 import { useCustomSWR, RequestType } from '../../../utils/request-utils';
 import AllScores from './allScores';
+import styles from '../../../styles/Organizer.module.css';
 
 const JudgingTab = () => {
 	// Teams data
@@ -30,7 +31,7 @@ const JudgingTab = () => {
 	const dataNull = !teamsData || !scoresData || !judgeData;
 
 	return (
-		<>
+		<div className={styles.tab}>
 			{error ? (
 				<div>Failed to load data.</div>
 			) : dataNull ? (
@@ -38,7 +39,7 @@ const JudgingTab = () => {
 			) : (
 				<AllScores teamData={teamsData} scoreData={scoresData} userData={judgeData} />
 			)}
-		</>
+		</div>
 	);
 };
 

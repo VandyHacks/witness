@@ -1,3 +1,8 @@
+.tab {
+	height: 100%;
+	width: 100%;
+}
+
 .organizerHeader-light {
 	display: flex;
 	justify-content: space-between;

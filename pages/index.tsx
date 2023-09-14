@@ -35,8 +35,9 @@ export default function Page() {
 			<Layout
 				style={{
 					padding: session?.userType === undefined || session?.userType === 'HACKER' ? '0px' : '30px',
-					height: `100%`,
+					height: `100vh`,
 					width: `100vw`,
+					overflow: 'auto',
 					backgroundColor:
 						session?.userType === undefined || session?.userType === 'HACKER'
 							? 'white'

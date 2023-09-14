@@ -1,6 +1,8 @@
 import { Form, Button, Select, Row, Col, message } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { ThemeContext, getAccentColor, getThemedClass } from '../../../theme/themeProvider';
+import styles from '../../../styles/ManageUsersTab.module.css';
 
 const { Option } = Select;
 
@@ -16,12 +18,13 @@ export interface ManageFormProps {
 	onSubmit: (value: ManageFormFields) => Promise<void>;
 }
 
-export default function ManageRoleForm(props: ManageFormProps) {
-	const { onSubmit } = props;
+export default function ManageRoleForm({ onSubmit, formData }: ManageFormProps) {
 	const layout = {
 		labelCol: { span: 16 },
 		labelAlign: 'left',
 	};
+
+	const { accentColor, baseTheme } = useContext(ThemeContext);
 
 	const [modified, setModified] = useState<string[]>([]);
 
@@ -30,27 +33,29 @@ export default function ManageRoleForm(props: ManageFormProps) {
 
 	return (
 		<Form {...layout} labelAlign="left" form={form} onFinish={onSubmit}>
-			{props.formData.map(config => (
+			{formData.map(config => (
 				<Form.Item
 					name={config._id}
 					// display name and email
 					label={
-						<Text style={{ height: '50px' }}>
-							{config.name}
-							<br />
-							<Text type="secondary">{config.email}</Text>
-						</Text>
+						<div>
+							<span className={styles[getThemedClass('manageUserPrimaryLabel', baseTheme)]}>
+								{config.name}
+							</span>
+							<div style={{ color: getAccentColor(accentColor), fontWeight: 200, paddingBottom: '5px' }}>
+								{config.email}
+							</div>
+						</div>
 					}
 					colon={false}
 					key={config._id}
 					initialValue={config.userType}>
 					<Select
 						placeholder="Select Role"
-						status={modified.includes(config._id) ? 'warning' : ''}
-						// not really a warning just good visually
 						// make box glow if role has been changed
+						status={modified.includes(config._id) ? 'warning' : ''}
 						onSelect={(role: string) => {
-							if (role !== props.formData.find(user => user._id === config._id)?.userType) {
+							if (role !== formData.find(user => user._id === config._id)?.userType) {
 								setModified([...modified, config._id]);
 							} else {
 								setModified([...modified.filter(user => user !== config._id)]);
@@ -64,20 +69,24 @@ export default function ManageRoleForm(props: ManageFormProps) {
 			))}
 			<Row gutter={16}>
 				<Col offset={10}>
-					<Button type="primary" htmlType="submit">
+					<button
+						type="submit"
+						className={styles['manageUserSubmitButton']}
+						style={{ backgroundColor: getAccentColor(accentColor) }}>
 						Submit
-					</Button>
+					</button>
 				</Col>
 				<Col>
-					<Button
-						htmlType="reset"
+					<button
+						type="reset"
+						className={styles['manageUserClearButton']}
 						onClick={() => {
 							form.resetFields();
 							message.success('Successfuly reset form!');
 							setModified([]);
 						}}>
 						Clear
-					</Button>
+					</button>
 				</Col>
 			</Row>
 		</Form>

@@ -7,22 +7,28 @@ import PreAddUsersTab from '../components/Organizer/PreAddUsersTab/PreAddUsersTa
 import ApplicantsTab from '../components/Organizer/ApplicantsTab/ApplicantsTab';
 import EventsTab from '../components/Organizer/EventsTab/EventsTab';
 import styles from '../styles/Organizer.module.css';
-import { useTheme } from '../theme/themeProvider';
+import { ThemeContext, getAccentColor, getThemedClass } from '../theme/themeProvider';
+import { useContext } from 'react';
 
 export default function OrganizerDash() {
 	// Get session data
 	const { data: session, status } = useSession();
+	const { accentColor, baseTheme } = useContext(ThemeContext);
 
-	console.log(useTheme('organizerHeaderEmailText'));
+	console.log(getThemedClass('organizerHeaderEmailText', baseTheme));
 
 	return (
-		<div className={styles[useTheme('organizerMain')]}>
-			<div className={styles[useTheme('organizerHeader')]}>
-				<h1 className={styles[useTheme('organizerTitle')]}>Organizer Dashboard</h1>
-				<div className={styles[useTheme('organizerHeaderEmail')]}>
-					<div className={styles[useTheme('organizerHeaderEmailText')]}>{session?.user?.email}</div>
+		<div className={styles[getThemedClass('organizerMain', baseTheme)]}>
+			<div className={styles[getThemedClass('organizerHeader', baseTheme)]}>
+				<h1 className={styles[getThemedClass('organizerTitle', baseTheme)]}>Organizer Dashboard</h1>
+				<div className={styles[getThemedClass('organizerHeaderEmail', baseTheme)]}>
+					<div className={styles[getThemedClass('organizerHeaderEmailText', baseTheme)]}>
+						{session?.user?.email}
+					</div>
 					<div>
-						<button className={styles[useTheme('organizerButton')]} onClick={() => signOut()}>
+						<button
+							className={styles[getThemedClass('organizerButton', baseTheme)]}
+							onClick={() => signOut()}>
 							Sign out
 						</button>
 					</div>
@@ -31,6 +37,10 @@ export default function OrganizerDash() {
 			<Space direction="vertical">
 				<Tabs
 					defaultActiveKey="1"
+					style={{
+						color: getAccentColor(accentColor),
+						width: '90vw',
+					}}
 					items={[
 						{
 							label: `Schedule`,
