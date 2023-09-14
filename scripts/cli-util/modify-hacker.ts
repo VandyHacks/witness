@@ -124,7 +124,7 @@ const deleteApplication = async (hacker: UserData) => {
 	// check if hacker has an application
 	if (!hacker.application) {
 		console.log('Hacker does not have an application');
-		return;
+		return promptAction();
 	}
 
 	// confirm deletion

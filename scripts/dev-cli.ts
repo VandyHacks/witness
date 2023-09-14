@@ -88,6 +88,10 @@ export const promptAction = async () => {
 				name: 'Populate a collection',
 				value: 'populate-collection',
 			},
+			{
+				name: 'Quit',
+				value: 'quit',
+			},
 		],
 	});
 
@@ -98,6 +102,9 @@ export const promptAction = async () => {
 			break;
 		case 'modify-hacker':
 			await handleModifyHacker();
+			break;
+		case 'quit':
+			process.exit(0);
 			break;
 		default:
 			console.log('Invalid action');
