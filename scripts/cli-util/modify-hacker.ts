@@ -255,17 +255,9 @@ const leaveTeam = async (hacker: UserData) => {
 	console.log('Left team successfully');
 };
 
+// TODO: this is not working
 const nfcCheckIn = async (hacker: UserData) => {
-	// get nfc id
-	const nfcId = await input({
-		message: 'Enter nfc id',
-	});
-
-	// update hacker document and log
-	await User.updateOne({ email: hacker.email }, { nfcId, applicationStatus: ApplicationStatus.CHECKED_IN });
-	console.log(`Updated hacker document with nfc id ${nfcId} and application status ${ApplicationStatus.CHECKED_IN}`);
-
-	return promptAction();
+	// TODO: zi
 };
 
 const getApplicationStatusString = (status: ApplicationStatus): string => {
