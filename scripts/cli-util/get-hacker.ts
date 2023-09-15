@@ -4,7 +4,7 @@ import User from '../../models/user';
 import Event from '../../models/event';
 import team from '../../models/team';
 import { promptAction } from '../dev-cli';
-import { UserData, TeamData, EventData } from '../../types/database';
+import { UserData, EventData } from '../../types/database';
 
 export const handleGetHacker = async () => {
 	const hackerEmail = await input({

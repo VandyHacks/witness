@@ -3,6 +3,7 @@ import dbConnect from '../middleware/database';
 import * as dotenv from 'dotenv';
 import { handleModifyHacker } from './cli-util/modify-hacker';
 import { handleGetHacker } from './cli-util/get-hacker';
+import { handleGetTeam } from './cli-util/get-team';
 dotenv.config();
 
 /**
@@ -110,6 +111,9 @@ export const promptAction = async () => {
 		switch (action) {
 			case 'get-hacker':
 				await handleGetHacker();
+				break;
+			case 'get-team':
+				await handleGetTeam();
 				break;
 			case 'modify-hacker':
 				await handleModifyHacker();
