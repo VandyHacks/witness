@@ -3,9 +3,9 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ApplicationStatus } from '../../types/database';
-import sendEmail from './email/email';
-import rejected from './email/templates/rejected';
-import accepted from './email/templates/accepted';
+import sendEmail from '../../email/email';
+import rejected from '../../email/templates/rejected';
+import accepted from '../../email/templates/accepted';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -30,9 +30,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			user.applicationStatus = status;
 			await user.save();
 			if (status === ApplicationStatus.ACCEPTED) {
-				await sendEmail(accepted(user));
+				await sendEmail(await accepted(user));
 			} else if (status === ApplicationStatus.REJECTED) {
-				await sendEmail(rejected(user));
+				await sendEmail(await rejected(user));
 			}
 
 			return res.status(200).send('');

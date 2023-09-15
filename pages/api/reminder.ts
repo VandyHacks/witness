@@ -3,7 +3,7 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ApplicationStatus } from '../../types/database';
-import sendEmail from './email/email';
+import sendEmail from '../../email/email';
 // import reminderToSubmit from './email/templates/reminderToSubmit';
 // import reminderToConfirm from './email/templates/reminderToConfirm';
 // import preEventInfo from './email/templates/preEventInfo';
