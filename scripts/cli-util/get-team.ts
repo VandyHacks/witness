@@ -10,7 +10,7 @@ export const handleGetTeam = async () => {
 		message: 'Enter team name',
 	});
 
-	const team: TeamData | null = JSON.parse(JSON.stringify(await Team.findOne({ name: teamName })));
+	const team: TeamData | null = await Team.findOne({ name: teamName });
 	if (!team) {
 		console.log('team not found');
 		return promptAction();
@@ -63,13 +63,17 @@ const getMembers = async (team: TeamData) => {
 
 	let count = 1;
 	for (const memberId of memberIds) {
-		const member: UserData = JSON.parse(JSON.stringify(await User.findOne({ _id: memberId })));
-		console.log(`Member ${count++}:`);
-		console.log(`Name: ${member.name}`);
-		console.log(`Email: ${member.email}`);
+		const member: UserData | null = await User.findOne({ _id: memberId });
+		if (!member) {
+			console.log(`Member ${count++}:`);
+			console.log('Member not found');
+		} else {
+			console.log(`Member ${count++}:`);
+			console.log(`Name: ${member.name}`);
+			console.log(`Email: ${member.email}`);
+		}
 	}
 
-	console.log('');
 	return promptAction();
 };
 

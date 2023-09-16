@@ -2,16 +2,16 @@ import { input, select } from '@inquirer/prompts';
 import dbConnect from '../../middleware/database';
 import User from '../../models/user';
 import Event from '../../models/event';
-import team from '../../models/team';
+import Team from '../../models/team';
 import { promptAction } from '../dev-cli';
-import { UserData, EventData } from '../../types/database';
+import { UserData, EventData, TeamData } from '../../types/database';
 
 export const handleGetHacker = async () => {
 	const hackerEmail = await input({
 		message: 'Enter hacker email',
 	});
 
-	const user: UserData | null = JSON.parse(JSON.stringify(await User.findOne({ email: hackerEmail })));
+	const user: UserData | null = await User.findOne({ email: hackerEmail });
 	if (!user) {
 		console.log('Hacker not found');
 		return promptAction();
@@ -67,8 +67,13 @@ const getEvents = async (user: UserData) => {
 	if (size === 0) console.log('No events attended yet! :(');
 
 	for (const eventId of events) {
-		const event: EventData = JSON.parse(JSON.stringify(await Event.findOne({ _id: eventId })));
-		console.log(event.name);
+		const event: EventData | null = await Event.findOne({ _id: eventId });
+		if (!event) {
+			console.log('Event not found');
+			return promptAction();
+		} else {
+			console.log(`Event name: ${event.name}`);
+		}
 	}
 
 	console.log('');
@@ -77,9 +82,13 @@ const getEvents = async (user: UserData) => {
 
 const getTeam = async (user: UserData) => {
 	const teamId = user.team;
-	const hackerTeam = JSON.parse(JSON.stringify(await team.findOne({ _id: teamId })));
-	console.log('Team Document');
-	console.log(hackerTeam);
+	const hackerTeam: TeamData | null = await Team.findOne({ _id: teamId });
+	if (!hackerTeam) {
+		console.log('Team not found');
+		return promptAction();
+	} else {
+		console.log(`Team name: ${hackerTeam.name}`);
+	}
 
 	console.log('');
 	return promptAction();
