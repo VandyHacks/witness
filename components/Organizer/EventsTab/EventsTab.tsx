@@ -173,6 +173,7 @@ export default function Events() {
 			body: JSON.stringify({
 				nfcId,
 				eventId: curEvent?._id,
+				nfcPoints: curEvent?.nfcPoints,
 			}),
 		});
 		if (response.ok) {
