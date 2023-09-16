@@ -74,7 +74,7 @@ export const promptAction = async () => {
 				// 3. get entire JSON of their document
 			},
 			{
-				name: "Modify a hacker's document",
+				name: "🏗️ Modify a hacker's document",
 				value: 'modify-hacker',
 				// sub-action:
 				// 1. change application status
@@ -83,7 +83,7 @@ export const promptAction = async () => {
 				// 4. check in
 			},
 			{
-				name: 'Modify a team',
+				name: '🏗️ Modify a team',
 				value: 'modify-team',
 				// sub-action:
 				// 1. change team name
@@ -92,11 +92,11 @@ export const promptAction = async () => {
 				// 4. change devpost link?
 			},
 			{
-				name: 'Clear a collection (dangerous)',
+				name: '🏗️ Clear a collection (dangerous)',
 				value: 'clear-collection',
 			},
 			{
-				name: 'Populate a collection',
+				name: '🏗️ Populate a collection',
 				value: 'populate-collection',
 			},
 			{
