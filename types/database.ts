@@ -47,6 +47,7 @@ export interface UserData {
 	application?: mongoose.Schema.Types.ObjectId;
 	applicationStatus: ApplicationStatus;
 	eventsAttended: mongoose.Schema.Types.ObjectId[];
+	nfcPoints: number;
 }
 
 export interface PreAddData {
