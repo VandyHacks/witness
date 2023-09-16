@@ -32,6 +32,7 @@ type HackerProps = {
 };
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
+	const [hackthonStarted, setHackathonStarted] = useState(false);
 	const { data: session, status } = useSession();
 	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
 		const res = await fetch(url, { method: 'GET' });
@@ -182,6 +183,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			.then(data => {
 				setJudgingSessionData(data);
 			});
+	};
+
+	const hasHackthonStarted = (): boolean => {
+		const startDate = new Date(process.env.NEXT_PUBLIC_START_DATE || '');
+		const curDate = new Date();
+		return curDate >= startDate;
 	};
 
 	useEffect(() => {
@@ -702,69 +709,76 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
-						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
-						<>
-							{/* Hacking start code */}
-							<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-								<Button size="small" type="default" onClick={() => signOut()}>
-									Sign out
-								</Button>
-								<div style={{ paddingLeft: '10px', color: 'white' }}>
-									Signed in as {session?.user?.email}
-								</div>
-							</div>
-							{!teamData && <TeamSetup />}
-							{teamData && (
-								<div style={{ width: '60vw', margin: 'auto' }}>
-									<Content style={{ width: '60vw', margin: 'auto' }}>
-										<Table
-											locale={{
-												emptyText: (
-													<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-														<h3>Stay tuned! You will see your schedule soon!</h3>
-													</div>
-												),
-											}}
-											columns={judgingSessionColumns}
-											dataSource={judgingSessionData}
-										/>
-										<Divider />
-									</Content>
-									<TeamManager profile={teamData} />
-								</div>
-							)}
-							{/* Pre-hacking code */}
-							{/*
-							<div className={styles.SubmittedForm}>
-								<div className={styles.ThankYouMessage}>
-									Congratulations!
-									<br />
-									You have been accepted to VandyHacks!
-									<div style={{ width: '100%', height: '16px' }}></div>
-									<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
-										<Button size="large" type="link">
-											Click here to join our Discord
-										</Button>
-									</a>
-									<br />
-									<br />
-									More information will appear here as we get closer to the hackathon!
-									<div className={styles.SignInInfo}>
-										<div>Signed in as {session?.user?.email}</div>
-										<Button
-											style={{ marginTop: '8px' }}
-											size="small"
-											type="default"
-											onClick={() => signOut()}>
+					{hackthonStarted &&
+						(user.applicationStatus === ApplicationStatus.CONFIRMED ||
+							user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
+							<>
+								<>
+									{/* Hacking start code */}
+									<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
 										</Button>
+										<div style={{ paddingLeft: '10px', color: 'white' }}>
+											Signed in as {session?.user?.email}
+										</div>
+									</div>
+									{!teamData && <TeamSetup />}
+									{teamData && (
+										<div style={{ width: '60vw', margin: 'auto' }}>
+											<Content style={{ width: '60vw', margin: 'auto' }}>
+												<Table
+													locale={{
+														emptyText: (
+															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+																<h3>Stay tuned! You will see your schedule soon!</h3>
+															</div>
+														),
+													}}
+													columns={judgingSessionColumns}
+													dataSource={judgingSessionData}
+												/>
+												<Divider />
+											</Content>
+											<TeamManager profile={teamData} />
+										</div>
+									)}
+								</>
+							</>
+						)}
+					{!hackthonStarted &&
+						(user.applicationStatus === ApplicationStatus.CONFIRMED ||
+							user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
+							<>
+								{/* Pre-hacking code */}
+								<div className={styles.SubmittedForm}>
+									<div className={styles.ThankYouMessage}>
+										Congratulations!
+										<br />
+										You have been accepted to VandyHacks!
+										<div style={{ width: '100%', height: '16px' }}></div>
+										<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+											<Button size="large" type="link">
+												Click here to join our Discord
+											</Button>
+										</a>
+										<br />
+										<br />
+										More information will appear here as we get closer to the hackathon!
+										<div className={styles.SignInInfo}>
+											<div>Signed in as {session?.user?.email}</div>
+											<Button
+												style={{ marginTop: '8px' }}
+												size="small"
+												type="default"
+												onClick={() => signOut()}>
+												Sign out
+											</Button>
+										</div>
 									</div>
 								</div>
-							</div>
-							*/}
-						</>
-					)}
+							</>
+						)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
 						<>
 							<div className={styles.SubmittedForm}>
