@@ -721,6 +721,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<div style={{ paddingLeft: '10px', color: 'white' }}>
 										Signed in as {session?.user?.email}
 									</div>
+									<div style={{ paddingLeft: '20px', color: 'white' }}>
+										Current NFC Points: {user.nfcPoints}
+									</div>
 								</div>
 								{!teamData && <TeamSetup />}
 								{teamData && (

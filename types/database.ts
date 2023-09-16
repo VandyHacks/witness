@@ -52,6 +52,7 @@ export interface UserData {
 		baseTheme?: string;
 		accentColor?: string;
 	};
+	nfcPoints: number;
 }
 
 export interface PreAddData {
