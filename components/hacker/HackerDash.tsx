@@ -16,11 +16,11 @@ import {
 	UploadFile,
 } from 'antd';
 import useSWR from 'swr';
-import TeamManager from '../components/hacker/TeamManager';
-import TeamSetup from '../components/hacker/TeamSetup';
-import { TeamProfile } from '../types/client';
-import { ApplicationStatus, UserData, JudgingSessionData } from '../types/database';
-import styles from '../styles/Form.module.css';
+import TeamManager from './TeamManager';
+import TeamSetup from './TeamSetup';
+import { TeamProfile } from '../../types/client';
+import { ApplicationStatus, UserData, JudgingSessionData } from '../../types/database';
+import styles from '../../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';

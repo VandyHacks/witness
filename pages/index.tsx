@@ -3,9 +3,9 @@ import { signIn, useSession } from 'next-auth/react';
 import { useState } from 'react';
 import SignIn from '../components/signIn';
 import { ApplicationStatus } from '../types/database';
-import HackerDash from './HackerDash';
-import JudgeDash from './JudgeDash';
-import OrganizerDash from './OrganizerDash';
+import HackerDash from '../components/hacker/HackerDash';
+import JudgeDash from '../components/judges/JudgeDash';
+import OrganizerDash from '../components/Organizer/OrganizerDash';
 import Head from 'next/head';
 
 export default function Page() {
