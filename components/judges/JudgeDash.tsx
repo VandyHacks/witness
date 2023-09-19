@@ -1,11 +1,11 @@
 import { Button, Divider, notification, Skeleton } from 'antd';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
-import JudgingForm from '../components/judges/JudgingForm';
-import { JudgeSchedule } from '../components/judges/schedule';
-import TeamSelect from '../components/judges/TeamSelect';
-import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../types/client';
-import { JudgingSessionData, ResponseError, TeamData } from '../types/database';
+import JudgingForm from './JudgingForm';
+import { JudgeSchedule } from './schedule';
+import TeamSelect from './TeamSelect';
+import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../../types/client';
+import { JudgingSessionData, ResponseError, TeamData } from '../../types/database';
 import { signOut, useSession } from 'next-auth/react';
 import { ScopedMutator } from 'swr/dist/types';
 

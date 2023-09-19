@@ -3,8 +3,8 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import { ApplicationStatus } from '../../types/database';
-import sendEmail from './email/email';
-import confirmed from './email/templates/confirmed';
+import sendEmail from '../../email/email';
+import confirmed from '../../email/templates/confirmed';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	console.log('HERE');
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			user.applicationStatus = status;
 			await user.save();
 			if (status === ApplicationStatus.CONFIRMED) {
-				await sendEmail(confirmed(user));
+				await sendEmail(await confirmed(user));
 			}
 
 			return res.status(200).send('');
