@@ -1,13 +1,13 @@
 import { Space, Tabs } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
-import ScheduleTab from '../components/Organizer/ScheduleTab/ScheduleTab';
-import JudgingTab from '../components/Organizer/JudgingTab/JudgingTab';
-import ManageUsersTab from '../components/Organizer/ManageUsersTab/ManageUsersTab';
-import PreAddUsersTab from '../components/Organizer/PreAddUsersTab/PreAddUsersTab';
-import ApplicantsTab from '../components/Organizer/ApplicantsTab/ApplicantsTab';
-import EventsTab from '../components/Organizer/EventsTab/EventsTab';
+import ScheduleTab from './ScheduleTab/ScheduleTab';
+import JudgingTab from './JudgingTab/JudgingTab';
+import ManageUsersTab from './ManageUsersTab/ManageUsersTab';
+import PreAddUsersTab from './PreAddUsersTab/PreAddUsersTab';
+import ApplicantsTab from './ApplicantsTab/ApplicantsTab';
+import EventsTab from './EventsTab/EventsTab';
 import styles from '../styles/Organizer.module.css';
-import { ThemeContext, getAccentColor, getThemedClass } from '../theme/themeProvider';
+import { ThemeContext, getAccentColor, getThemedClass } from '../../theme/themeProvider';
 import { useContext } from 'react';
 
 export default function OrganizerDash() {
