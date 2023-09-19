@@ -1,7 +1,7 @@
 import { SendEmailRequest, SES } from '@aws-sdk/client-ses';
 
 export const escapeChars = (str: string) => {
-	return str.replaceAll(/[&<>"`=\/]/g, '');
+	return str.replace(/[&<>"`=\/]/g, '');
 };
 
 const ses = new SES({

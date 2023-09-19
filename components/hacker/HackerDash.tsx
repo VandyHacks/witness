@@ -656,6 +656,10 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									You will hear back from us soon :&#41;
 									<br />
 									<br />
+									If you do not receive any emails from us, please check your spam and&#47;or
+									Microsoft 365 Quarantine.
+									<br />
+									<br />
 									In the meantime, follow us on{' '}
 									<a
 										href="https://www.instagram.com/vandyhacks"
