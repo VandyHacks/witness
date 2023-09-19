@@ -6,7 +6,7 @@ import ManageUsersTab from './ManageUsersTab/ManageUsersTab';
 import PreAddUsersTab from './PreAddUsersTab/PreAddUsersTab';
 import ApplicantsTab from './ApplicantsTab/ApplicantsTab';
 import EventsTab from './EventsTab/EventsTab';
-import styles from '../styles/Organizer.module.css';
+import styles from '../../styles/Organizer.module.css';
 import { ThemeContext, getAccentColor, getThemedClass } from '../../theme/themeProvider';
 import { useContext } from 'react';
 
