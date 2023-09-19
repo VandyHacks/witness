@@ -1,9 +1,10 @@
-import { input, select } from '@inquirer/prompts';
+import { input, select, checkbox } from '@inquirer/prompts';
 import Application from '../../models/application';
 import Team from '../../models/team';
 import User from '../../models/user';
+import Event from '../../models/event';
 import { promptAction } from '../dev-cli';
-import { ApplicationStatus, TeamData, UserData } from '../../types/database';
+import { ApplicationStatus, EventData, TeamData, UserData } from '../../types/database';
 
 // TODO: zi
 /**
@@ -255,9 +256,62 @@ const leaveTeam = async (hacker: UserData) => {
 	console.log('Left team successfully');
 };
 
-// TODO: this is not working
 const nfcCheckIn = async (hacker: UserData) => {
-	// TODO: zi
+	let nfcId = hacker.nfcId;
+
+	// check if hacker has nfcID
+	if (!nfcId) {
+		const generateNfcId = await select({
+			message: 'User does not have an nfcID. Auto-generate?',
+			choices: [
+				{
+					name: 'Yes',
+					value: true,
+				},
+				{
+					name: 'No',
+					value: false,
+				},
+			],
+		});
+
+		if (!generateNfcId) {
+			console.log('Cancelled');
+			return promptAction();
+		}
+
+		// generate nfcID (8 random digits)
+		nfcId = Math.floor(10000000 + Math.random() * 90000000).toString();
+		await User.updateOne({ email: hacker.email }, { nfcId });
+	}
+
+	// user now has nfcID. check in user to events
+	console.log("User's nfcID: ", nfcId);
+
+	// list all events
+	const events: EventData[] | null = await Event.find({});
+
+	// ask which events to check in
+	const eventsToCheckIn = await checkbox({
+		message: 'Select events to check in',
+		choices: events.map(event => ({
+			name:
+				event.name.toString() in hacker.eventsAttended
+					? `(Already Attended) ${event.name}`
+					: event.name.toString(),
+			value: event._id,
+			disabled: event.name.toString() in hacker.eventsAttended,
+		})),
+	});
+
+	console.log('You have chosen: ', eventsToCheckIn);
+
+	// make a request to check in user to each of the selected events
+	await User.updateOne({ nfcId }, { $addToSet: { eventsAttended: { $each: eventsToCheckIn } } });
+
+	console.log(`Checked in successfully to ${eventsToCheckIn.length} events!`);
+
+	return promptAction();
 };
 
 const getApplicationStatusString = (status: ApplicationStatus): string => {

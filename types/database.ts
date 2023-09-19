@@ -46,6 +46,7 @@ export interface UserData {
 	team?: mongoose.Schema.Types.ObjectId;
 	application?: mongoose.Schema.Types.ObjectId;
 	applicationStatus: ApplicationStatus;
+	nfcId?: string;
 	eventsAttended: mongoose.Schema.Types.ObjectId[];
 }
 
