@@ -9,6 +9,7 @@ import EventsTab from './EventsTab/EventsTab';
 import styles from '../../styles/Organizer.module.css';
 import { ThemeContext, getAccentColor, getThemedClass } from '../../theme/themeProvider';
 import { useContext } from 'react';
+import SettingsTab from './SettingsTab/SettingsTab';
 
 export default function OrganizerDash() {
 	// Get session data
@@ -39,12 +40,14 @@ export default function OrganizerDash() {
 					defaultActiveKey="1"
 					style={{
 						color: getAccentColor(accentColor),
+
 						width: '90vw',
 					}}
 					items={[
 						{
 							label: `Schedule`,
 							key: '1',
+
 							children: <ScheduleTab />,
 						},
 						{
@@ -71,6 +74,11 @@ export default function OrganizerDash() {
 							label: `Events`,
 							key: '6',
 							children: <EventsTab />,
+						},
+						{
+							label: `Settings`,
+							key: '7',
+							children: <SettingsTab />,
 						},
 					]}
 				/>
