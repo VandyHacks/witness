@@ -101,11 +101,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ label: 'Other', value: 'other' },
 	];
 
-	function disabledDate(current: moment.Moment): boolean {
-		// disable all dates from 18 years ago onwards
-		return current && current > moment().subtract(18, 'years');
-	}
-
 	const [resumeFile, setResumeFile] = useState<UploadFile[]>([]);
 	const [resumeToUpload, setResumeToUpload] = useState<string | Blob>('');
 
@@ -277,7 +272,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									label={<p className={styles.Label}>Date of Birth</p>}
 									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
 									<DatePicker
-										disabledDate={disabledDate}
 										placeholder="MM-DD-YYYY"
 										format="MM-DD-YYYY"
 										defaultPickerValue={moment().subtract(18, 'years')}
