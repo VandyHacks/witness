@@ -29,6 +29,7 @@ export default function OrganizerDash() {
 					<div>
 						<button
 							className={styles[getThemedClass('organizerButton', baseTheme)]}
+							style={{ backgroundColor: getAccentColor(accentColor) }}
 							onClick={() => signOut()}>
 							Sign out
 						</button>

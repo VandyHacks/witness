@@ -23,6 +23,13 @@
 	transition: 0.4s;
 }
 
+.slider:hover {
+	cursor: pointer;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4) !important;
+	transition: 0.2s;
+	transform: translateY(-1px);
+}
+
 .slider:before {
 	position: absolute;
 	content: '';
@@ -72,14 +79,25 @@ input:checked + .slider:before {
 	border-radius: 10px;
 	border: 2px solid #afafaf;
 	margin: 5px;
+	cursor: pointer;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4);
+	transition: 0.2s;
+	transform: translateY(-1px);
 }
 
 .accentColorSelected {
 	width: 32px;
 	height: 32px;
 	border-radius: 10px;
-	border: 2px solid #ffffff;
+	border: 2px solid #909090;
 	margin: 5px;
+}
+
+.accentColorSelected:hover {
+	cursor: pointer;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4);
+	transition: 0.2s;
+	transform: translateY(-1px);
 }
 
 .accentColorContainer {

@@ -20,6 +20,9 @@
 
 .manageUserSubmitButton:hover {
 	cursor: pointer;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4);
+	transition: 0.2s;
+	transform: translateY(-2px);
 }
 
 .manageUserClearButton {
@@ -31,6 +34,9 @@
 	transition: 0.2s;
 }
 
-.manageUserClearButton {
+.manageUserClearButton:hover {
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4);
+	transition: 0.2s;
+	transform: translateY(-2px);
 	cursor: pointer;
 }
