@@ -1,0 +1,43 @@
+.HeaderBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  background-color: white;
+  width: 100%;
+  height: 300px;
+}
+
+.HeaderTopBox {
+  display: flex;
+  justify-content: space-between;
+  background-color: pink;
+  height: 100px;
+}
+
+.Logo {
+  background-color: purple;
+  width: 50px;
+}
+
+.SignOut {
+  background-color: blue;
+  width: 50px;
+}
+
+.HeaderMiddleBox {
+  display: flex;
+  justify-content: space-between;
+  height: 100px;
+  background-color: lightyellow;
+}
+
+.UserName {
+  background-color: lightblue;
+  width: 50%;
+}
+
+.CurEvent {
+  background-color: lightgreen;
+  width: 50%;
+}
