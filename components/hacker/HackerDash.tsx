@@ -26,6 +26,8 @@ import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
 import { ColumnsType } from 'antd/es/table';
+import Header from './hacking-start/Header';
+import RegistrationLogo from './RegistrationLogo';
 
 type HackerProps = {
 	userApplicationStatus?: number;
@@ -223,435 +225,443 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			{!user && <Skeleton />}
 			{user && (
 				<div style={{ overflow: 'auto', height: '100vh' }}>
-					<Form.Item className={styles.TitleLogo}> </Form.Item>
-					<div className={styles.TitleContainer}>
-						<div className={styles.Title}>VandyHacks X Registration</div>
-					</div>
-
 					{user.applicationStatus === ApplicationStatus.CREATED && (
-						<Form
-							layout={'horizontal'}
-							labelCol={{ span: 8 }}
-							labelAlign="left"
-							onFinish={onFinish}
-							requiredMark={false}
-							scrollToFirstError={true}>
-							<div className={styles.Form}>
-								<div className={styles.SignedInStatus}>
-									<div style={{ paddingRight: '20px' }}>Signed in as {session?.user?.email}</div>
-									<Button size="small" type="default" onClick={() => signOut()}>
-										Sign out
-									</Button>
-								</div>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>First Name</p>}
-									name="firstName"
-									rules={[{ required: true, message: 'Please input your first name!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Last Name</p>}
-									name="lastName"
-									rules={[{ required: true, message: 'Please input your last name!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Preferred Name</p>}
-									name="preferredName">
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Gender</p>}
-									name="gender"
-									rules={[{ required: true, message: 'Please select an option!' }]}>
-									<Radio.Group>
-										<Radio.Button value="female">Female</Radio.Button>
-										<Radio.Button value="male">Male</Radio.Button>
-										<Radio.Button value="other">Other</Radio.Button>
-										<Radio.Button value="preferNotToSay">Prefer Not to Say</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="dateOfBirth"
-									label={<p className={styles.Label}>Date of Birth</p>}
-									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
-									<DatePicker
-										placeholder="MM-DD-YYYY"
-										format="MM-DD-YYYY"
-										defaultPickerValue={moment().subtract(18, 'years')}
-									/>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Phone Number</p>}
-									name="phoneNumber"
-									rules={[{ required: true, message: 'Please input your phone number!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>School</p>}
-									name="school"
-									rules={[{ required: true, message: 'Please input your school!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Major</p>}
-									name="major"
-									rules={[{ required: true, message: 'Please input your major!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Graduation Year</p>}
-									name="graduationYear"
-									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
-									<Radio.Group>
-										<Radio.Button value="2024">2024</Radio.Button>
-										<Radio.Button value="2025">2025</Radio.Button>
-										<Radio.Button value="2026">2026</Radio.Button>
-										<Radio.Button value="2027">2027</Radio.Button>
-										<Radio.Button value="other">Other</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Address Line 1</p>}
-									name="address1"
-									rules={[{ required: true, message: 'Please input your address!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Address Line 2</p>}
-									name="address2">
-									<Input className={styles.Input} />
-								</Form.Item>
+						<>
+							<RegistrationLogo />
+							<Form
+								layout={'horizontal'}
+								labelCol={{ span: 8 }}
+								labelAlign="left"
+								onFinish={onFinish}
+								requiredMark={false}
+								scrollToFirstError={true}>
+								<div className={styles.Form}>
+									<div className={styles.SignedInStatus}>
+										<div style={{ paddingRight: '20px' }}>Signed in as {session?.user?.email}</div>
+										<Button size="small" type="default" onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>First Name</p>}
+										name="firstName"
+										rules={[{ required: true, message: 'Please input your first name!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Last Name</p>}
+										name="lastName"
+										rules={[{ required: true, message: 'Please input your last name!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Preferred Name</p>}
+										name="preferredName">
+										<Input className={styles.Input} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Gender</p>}
+										name="gender"
+										rules={[{ required: true, message: 'Please select an option!' }]}>
+										<Radio.Group>
+											<Radio.Button value="female">Female</Radio.Button>
+											<Radio.Button value="male">Male</Radio.Button>
+											<Radio.Button value="other">Other</Radio.Button>
+											<Radio.Button value="preferNotToSay">Prefer Not to Say</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="dateOfBirth"
+										label={<p className={styles.Label}>Date of Birth</p>}
+										rules={[{ required: true, message: 'Please select your date of birth!' }]}>
+										<DatePicker
+											placeholder="MM-DD-YYYY"
+											format="MM-DD-YYYY"
+											defaultPickerValue={moment().subtract(18, 'years')}
+										/>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Phone Number</p>}
+										name="phoneNumber"
+										rules={[{ required: true, message: 'Please input your phone number!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>School</p>}
+										name="school"
+										rules={[{ required: true, message: 'Please input your school!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Major</p>}
+										name="major"
+										rules={[{ required: true, message: 'Please input your major!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Graduation Year</p>}
+										name="graduationYear"
+										rules={[{ required: true, message: 'Please select your graduation year!' }]}>
+										<Radio.Group>
+											<Radio.Button value="2024">2024</Radio.Button>
+											<Radio.Button value="2025">2025</Radio.Button>
+											<Radio.Button value="2026">2026</Radio.Button>
+											<Radio.Button value="2027">2027</Radio.Button>
+											<Radio.Button value="other">Other</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Address Line 1</p>}
+										name="address1"
+										rules={[{ required: true, message: 'Please input your address!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Address Line 2</p>}
+										name="address2">
+										<Input className={styles.Input} />
+									</Form.Item>
 
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>City</p>}
-									name={'city'}
-									rules={[{ required: true, message: 'Please input your city!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>City</p>}
+										name={'city'}
+										rules={[{ required: true, message: 'Please input your city!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
 
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>State</p>}
-									name={'state'}
-									rules={[{ required: true, message: 'Please input your state!' }]}>
-									<Input className={styles.Input} />
-								</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>State</p>}
+										name={'state'}
+										rules={[{ required: true, message: 'Please input your state!' }]}>
+										<Input className={styles.Input} />
+									</Form.Item>
 
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>ZIP Code</p>}
-									name={'zip'}
-									rules={[
-										{
-											validator: (_, value) => {
-												return new Promise((res, rej) => {
-													const val = parseInt(value);
-													if (isNaN(val)) rej();
-													else if (val < 501 || val > 99999) rej();
-													else if (value.length !== 5) rej();
-													else res(null);
-												});
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>ZIP Code</p>}
+										name={'zip'}
+										rules={[
+											{
+												validator: (_, value) => {
+													return new Promise((res, rej) => {
+														const val = parseInt(value);
+														if (isNaN(val)) rej();
+														else if (val < 501 || val > 99999) rej();
+														else if (value.length !== 5) rej();
+														else res(null);
+													});
+												},
+												message: 'Please input a valid 5 digit zip code!',
 											},
-											message: 'Please input a valid 5 digit zip code!',
-										},
-									]}>
-									<Input className={styles.Input} />
-								</Form.Item>
+										]}>
+										<Input className={styles.Input} />
+									</Form.Item>
 
-								<Form.Item
-									className={styles.FormItem}
-									name="race"
-									label={<p className={styles.Label}>Race</p>}
-									rules={[{ required: true, message: 'Please select at least one option!' }]}>
-									<Checkbox.Group className={styles.TextWhite} options={race} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="dietaryRestrictions"
-									label={<p className={styles.Label}>Dietary Restrictions</p>}>
-									<Checkbox.Group className={styles.TextWhite} options={dietaryRestrictions} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="accommodationNeeds"
-									label={<p className={styles.Label}>Accommodation needs</p>}>
-									<Input
-										className={styles.FormInput}
-										placeholder="Enter your accommodation needs, if any"
-									/>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="firstTime"
-									label={<p className={styles.Label}>First-time hacker?</p>}
-									rules={[{ required: true, message: 'Please select an option!' }]}
-									tooltip="Beginner hackers are warmly welcomed!">
-									<Radio.Group>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="whyAttend"
-									label={<p className={styles.Label}>Why would you like to attend VandyHacks?</p>}
-									rules={[
-										{
-											required: true,
-											message: 'Please tell us why you want to attend VandyHacks!',
-										},
-									]}>
-									<TextArea
-										className={styles.FormInput}
-										autoSize={{ minRows: 3 }}
-										placeholder="Enter your response"
-									/>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="techIndustry"
-									label={
-										<p className={styles.Label}>
-											Which tech industry, if any, do you want to get into?
-										</p>
-									}
-									rules={[{ required: true, message: 'Please enter your response!' }]}>
-									<TextArea
-										className={styles.FormInput}
-										autoSize={{ minRows: 3 }}
-										placeholder="Enter your response"
-									/>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="techStack"
-									label={
-										<p className={styles.Label}>Which tech stack, if any, are you familiar with?</p>
-									}
-									rules={[{ required: true, message: 'Please enter your response!' }]}>
-									<TextArea
-										className={styles.FormInput}
-										autoSize={{ minRows: 3 }}
-										placeholder="Enter your response"
-									/>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="passion"
-									label={<p className={styles.Label}>What are you passionate about?</p>}
-									rules={[
-										{ required: true, message: 'Please tell us what you are passionate about :)' },
-									]}>
-									<TextArea
-										className={styles.FormInput}
-										autoSize={{ minRows: 3 }}
-										placeholder="Enter your response"
-									/>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="motivation"
-									label={<p className={styles.Label}>What do you hope to gain from VandyHacks?</p>}
-									rules={[{ required: true, message: 'Please select at least one option!' }]}>
-									<Checkbox.Group className={styles.TextWhite} options={motivation} />
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Shirt Size</p>}
-									name="shirtSize"
-									rules={[{ required: true, message: 'Please select your shirt size!' }]}>
-									<Radio.Group className={styles.RadioGroup}>
-										<Radio.Button value="XS">XS</Radio.Button>
-										<Radio.Button value="S">S</Radio.Button>
-										<Radio.Button value="M">M</Radio.Button>
-										<Radio.Button value="L">L</Radio.Button>
-										<Radio.Button value="XL">XL</Radio.Button>
-										<Radio.Button value="XXL">XXL</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Résumé</p>}
-									rules={[
-										{
-											required: true,
-											validator(rule, value, callback) {
-												if (value && value.fileList.length > 0) {
-													const file = value.fileList[0].originFileObj;
-													if (!file) {
-														callback('Please upload your résumé!');
-													} else if (file.size > 1000000) {
-														callback('File must be smaller than 1MB!');
-													} else if (!file.type.includes('pdf')) {
-														callback('File must be a PDF!');
+									<Form.Item
+										className={styles.FormItem}
+										name="race"
+										label={<p className={styles.Label}>Race</p>}
+										rules={[{ required: true, message: 'Please select at least one option!' }]}>
+										<Checkbox.Group className={styles.TextWhite} options={race} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="dietaryRestrictions"
+										label={<p className={styles.Label}>Dietary Restrictions</p>}>
+										<Checkbox.Group className={styles.TextWhite} options={dietaryRestrictions} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="accommodationNeeds"
+										label={<p className={styles.Label}>Accommodation needs</p>}>
+										<Input
+											className={styles.FormInput}
+											placeholder="Enter your accommodation needs, if any"
+										/>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="firstTime"
+										label={<p className={styles.Label}>First-time hacker?</p>}
+										rules={[{ required: true, message: 'Please select an option!' }]}
+										tooltip="Beginner hackers are warmly welcomed!">
+										<Radio.Group>
+											<Radio.Button value="yes">Yes</Radio.Button>
+											<Radio.Button value="no">No</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="whyAttend"
+										label={<p className={styles.Label}>Why would you like to attend VandyHacks?</p>}
+										rules={[
+											{
+												required: true,
+												message: 'Please tell us why you want to attend VandyHacks!',
+											},
+										]}>
+										<TextArea
+											className={styles.FormInput}
+											autoSize={{ minRows: 3 }}
+											placeholder="Enter your response"
+										/>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="techIndustry"
+										label={
+											<p className={styles.Label}>
+												Which tech industry, if any, do you want to get into?
+											</p>
+										}
+										rules={[{ required: true, message: 'Please enter your response!' }]}>
+										<TextArea
+											className={styles.FormInput}
+											autoSize={{ minRows: 3 }}
+											placeholder="Enter your response"
+										/>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="techStack"
+										label={
+											<p className={styles.Label}>
+												Which tech stack, if any, are you familiar with?
+											</p>
+										}
+										rules={[{ required: true, message: 'Please enter your response!' }]}>
+										<TextArea
+											className={styles.FormInput}
+											autoSize={{ minRows: 3 }}
+											placeholder="Enter your response"
+										/>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="passion"
+										label={<p className={styles.Label}>What are you passionate about?</p>}
+										rules={[
+											{
+												required: true,
+												message: 'Please tell us what you are passionate about :)',
+											},
+										]}>
+										<TextArea
+											className={styles.FormInput}
+											autoSize={{ minRows: 3 }}
+											placeholder="Enter your response"
+										/>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="motivation"
+										label={
+											<p className={styles.Label}>What do you hope to gain from VandyHacks?</p>
+										}
+										rules={[{ required: true, message: 'Please select at least one option!' }]}>
+										<Checkbox.Group className={styles.TextWhite} options={motivation} />
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Shirt Size</p>}
+										name="shirtSize"
+										rules={[{ required: true, message: 'Please select your shirt size!' }]}>
+										<Radio.Group className={styles.RadioGroup}>
+											<Radio.Button value="XS">XS</Radio.Button>
+											<Radio.Button value="S">S</Radio.Button>
+											<Radio.Button value="M">M</Radio.Button>
+											<Radio.Button value="L">L</Radio.Button>
+											<Radio.Button value="XL">XL</Radio.Button>
+											<Radio.Button value="XXL">XXL</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={<p className={styles.Label}>Résumé</p>}
+										rules={[
+											{
+												required: true,
+												validator(rule, value, callback) {
+													if (value && value.fileList.length > 0) {
+														const file = value.fileList[0].originFileObj;
+														if (!file) {
+															callback('Please upload your résumé!');
+														} else if (file.size > 1000000) {
+															callback('File must be smaller than 1MB!');
+														} else if (!file.type.includes('pdf')) {
+															callback('File must be a PDF!');
+														} else {
+															callback();
+														}
 													} else {
-														callback();
+														callback('Please upload your résumé!');
 													}
-												} else {
-													callback('Please upload your résumé!');
-												}
+												},
 											},
-										},
-									]}
-									name="resume"
-									valuePropName="resume">
-									<Upload
+										]}
 										name="resume"
-										customRequest={dummyRequest}
-										listType="picture"
-										accept=".pdf"
-										maxCount={1}
-										fileList={resumeFile}
-										onChange={onUploadChange}
-										onRemove={onUploadRemove}>
-										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
-									</Upload>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={
-										<p className={styles.Label}>
-											Would you like to apply for travel reimbursements?
-										</p>
-									}
-									name="applyTravelReimbursement"
-									rules={[{ required: true, message: 'Please select an answer!' }]}>
-									<Radio.Group>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="overnight"
-									label={
-										<p className={styles.LabelOvernight}>Are you staying overnight in the venue?</p>
-									}
-									rules={[{ required: true, message: 'Please select an answer!' }]}>
-									<Radio.Group className={styles.RadioGroup}>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									name="prizeEligibility"
-									label={
-										<p className={styles.LabelCitizen}>
-											Are you a U.S. Citizen, Permanent Resident, or granted the status of
-											Immigrant, Refugee, Asylee or Deferred Action for Childhood Arrival (DACA),
-											by the Bureau of Citizenship and Immigration Services?
-										</p>
-									}
-									rules={[{ required: true, message: 'Please select an answer!' }]}>
-									<Radio.Group className={styles.RadioGroup}>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={
-										<p className={styles.LabelContact}>
-											Would you like to be contacted about volunteering at the event?
-										</p>
-									}
-									name="volunteer"
-									rules={[{ required: true, message: 'Please select an answer!' }]}>
-									<Radio.Group className={styles.RadioGroup}>
-										<Radio.Button value="yes">Yes</Radio.Button>
-										<Radio.Button value="no">No</Radio.Button>
-									</Radio.Group>
-								</Form.Item>
-								<br />
-								<Form.Item
-									className={styles.FormItem}
-									valuePropName="checked"
-									name="agreement1"
-									rules={[
-										{
-											validator: (_, value) =>
-												value
-													? Promise.resolve()
-													: Promise.reject(new Error('Please read and agree to submit.')),
-										},
-									]}>
-									<Checkbox style={{ color: 'white' }}>
-										I have read and agree to the{' '}
-										<a
-											style={{ color: '#027cff' }}
-											target="_blank"
-											rel="noopener noreferrer"
-											href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">
-											MLH Code of Conduct
-										</a>
-										.
-									</Checkbox>
-								</Form.Item>
-								<Form.Item
-									valuePropName="checked"
-									name="agreement2"
-									rules={[
-										{
-											validator: (_, value) =>
-												value
-													? Promise.resolve()
-													: Promise.reject(new Error('Please read and agree to submit.')),
-										},
-									]}>
-									<Checkbox style={{ color: 'white' }}>
-										I authorize you to share my application/registration information for event
-										administration, ranking, MLH administration, pre- and post-event informational
-										emails, and occasional emails about hackathons in line with the MLH Privacy
-										Policy. I further agree to the terms of both the{' '}
-										<a
-											style={{ color: '#027cff' }}
-											target="_blank"
-											rel="noopener noreferrer"
-											href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions">
-											MLH Contest Terms and Conditions
-										</a>{' '}
-										and the{' '}
-										<a target="_blank" rel="noopener noreferrer" href="https://mlh.io/privacy">
-											MLH Privacy Policy
-										</a>
-										.
-									</Checkbox>
-								</Form.Item>
-								<Form.Item valuePropName="checked" name="mlhComms">
-									<Checkbox style={{ color: 'white' }}>
-										I authorize MLH to send me an email where I can further opt into the MLH Hacker,
-										Events, or Organizer Newsletters and other communications from MLH.
-									</Checkbox>
-								</Form.Item>
-								<br />
+										valuePropName="resume">
+										<Upload
+											name="resume"
+											customRequest={dummyRequest}
+											listType="picture"
+											accept=".pdf"
+											maxCount={1}
+											fileList={resumeFile}
+											onChange={onUploadChange}
+											onRemove={onUploadRemove}>
+											<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
+										</Upload>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={
+											<p className={styles.Label}>
+												Would you like to apply for travel reimbursements?
+											</p>
+										}
+										name="applyTravelReimbursement"
+										rules={[{ required: true, message: 'Please select an answer!' }]}>
+										<Radio.Group>
+											<Radio.Button value="yes">Yes</Radio.Button>
+											<Radio.Button value="no">No</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="overnight"
+										label={
+											<p className={styles.LabelOvernight}>
+												Are you staying overnight in the venue?
+											</p>
+										}
+										rules={[{ required: true, message: 'Please select an answer!' }]}>
+										<Radio.Group className={styles.RadioGroup}>
+											<Radio.Button value="yes">Yes</Radio.Button>
+											<Radio.Button value="no">No</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										name="prizeEligibility"
+										label={
+											<p className={styles.LabelCitizen}>
+												Are you a U.S. Citizen, Permanent Resident, or granted the status of
+												Immigrant, Refugee, Asylee or Deferred Action for Childhood Arrival
+												(DACA), by the Bureau of Citizenship and Immigration Services?
+											</p>
+										}
+										rules={[{ required: true, message: 'Please select an answer!' }]}>
+										<Radio.Group className={styles.RadioGroup}>
+											<Radio.Button value="yes">Yes</Radio.Button>
+											<Radio.Button value="no">No</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<Form.Item
+										className={styles.FormItem}
+										label={
+											<p className={styles.LabelContact}>
+												Would you like to be contacted about volunteering at the event?
+											</p>
+										}
+										name="volunteer"
+										rules={[{ required: true, message: 'Please select an answer!' }]}>
+										<Radio.Group className={styles.RadioGroup}>
+											<Radio.Button value="yes">Yes</Radio.Button>
+											<Radio.Button value="no">No</Radio.Button>
+										</Radio.Group>
+									</Form.Item>
+									<br />
+									<Form.Item
+										className={styles.FormItem}
+										valuePropName="checked"
+										name="agreement1"
+										rules={[
+											{
+												validator: (_, value) =>
+													value
+														? Promise.resolve()
+														: Promise.reject(new Error('Please read and agree to submit.')),
+											},
+										]}>
+										<Checkbox style={{ color: 'white' }}>
+											I have read and agree to the{' '}
+											<a
+												style={{ color: '#027cff' }}
+												target="_blank"
+												rel="noopener noreferrer"
+												href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf">
+												MLH Code of Conduct
+											</a>
+											.
+										</Checkbox>
+									</Form.Item>
+									<Form.Item
+										valuePropName="checked"
+										name="agreement2"
+										rules={[
+											{
+												validator: (_, value) =>
+													value
+														? Promise.resolve()
+														: Promise.reject(new Error('Please read and agree to submit.')),
+											},
+										]}>
+										<Checkbox style={{ color: 'white' }}>
+											I authorize you to share my application/registration information for event
+											administration, ranking, MLH administration, pre- and post-event
+											informational emails, and occasional emails about hackathons in line with
+											the MLH Privacy Policy. I further agree to the terms of both the{' '}
+											<a
+												style={{ color: '#027cff' }}
+												target="_blank"
+												rel="noopener noreferrer"
+												href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions">
+												MLH Contest Terms and Conditions
+											</a>{' '}
+											and the{' '}
+											<a target="_blank" rel="noopener noreferrer" href="https://mlh.io/privacy">
+												MLH Privacy Policy
+											</a>
+											.
+										</Checkbox>
+									</Form.Item>
+									<Form.Item valuePropName="checked" name="mlhComms">
+										<Checkbox style={{ color: 'white' }}>
+											I authorize MLH to send me an email where I can further opt into the MLH
+											Hacker, Events, or Organizer Newsletters and other communications from MLH.
+										</Checkbox>
+									</Form.Item>
+									<br />
 
-								<Button
-									loading={loading}
-									className={styles.SubmitButton}
-									type="primary"
-									htmlType="submit">
-									Submit
-								</Button>
-								<br />
-							</div>
-						</Form>
+									<Button
+										loading={loading}
+										className={styles.SubmitButton}
+										type="primary"
+										htmlType="submit">
+										Submit
+									</Button>
+									<br />
+								</div>
+							</Form>
+						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.SUBMITTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Thank you for applying to VandyHacks!
@@ -688,6 +698,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)}
 					{user.applicationStatus === ApplicationStatus.ACCEPTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Congratulations!
@@ -723,6 +734,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 							user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 							<>
+								<Header />
 								{/* Hacking start code */}
 								<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
 									<Button size="small" type="default" onClick={() => signOut()}>
@@ -792,6 +804,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									<br />
@@ -813,30 +826,33 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.DECLINED && (
-						<div className={styles.SubmittedForm}>
-							<div className={styles.ThankYouMessage}>
-								<br />
-								We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake and
-								you&apos;d like to attend, please email us at{' '}
-								<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
-									info@vandyhacks.org
-								</a>
-								.
-								<br />
-								We hope to see you next year!
-								<br />
-								<div className={styles.SignInInfo}>
-									<div>Signed in as {session?.user?.email}</div>
-									<Button
-										style={{ marginTop: '8px' }}
-										size="small"
-										type="default"
-										onClick={() => signOut()}>
-										Sign out
-									</Button>
+						<>
+							<RegistrationLogo />
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									<br />
+									We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake
+									and you&apos;d like to attend, please email us at{' '}
+									<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
+										info@vandyhacks.org
+									</a>
+									.
+									<br />
+									We hope to see you next year!
+									<br />
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
 								</div>
 							</div>
-						</div>
+						</>
 					)}
 				</div>
 			)}
