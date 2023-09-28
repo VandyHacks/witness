@@ -6,17 +6,22 @@ import { promptAction } from '../dev-cli';
 import { UserData, TeamData } from '../../types/database';
 
 export const handleGetTeam = async () => {
-	const teamName = await input({
-		message: 'Enter team name',
-	});
+	const teams: TeamData[] | null = await Team.find();
 
-	const team: TeamData | null = await Team.findOne({ name: teamName });
-	if (!team) {
+	if (!teams) {
 		console.log('team not found');
 		return promptAction();
 	}
 
-	const subAction1 = await select({
+	const team = await select({
+		message: 'Select team',
+		choices: teams.map(team => ({
+			name: team.name,
+			value: team,
+		})),
+	});
+
+	const subAction2 = await select({
 		message: 'Select an action to perform',
 		choices: [
 			{
@@ -37,7 +42,7 @@ export const handleGetTeam = async () => {
 	// connect to db
 	await dbConnect();
 
-	switch (subAction1) {
+	switch (subAction2) {
 		case 'get-schedule':
 			await getSchedule(team);
 			break;
