@@ -4,7 +4,8 @@ import * as dotenv from 'dotenv';
 import { handleModifyHacker } from './cli-util/modify-hacker';
 import { handleGetHacker } from './cli-util/get-hacker';
 import { handleGetTeam } from './cli-util/get-team';
-import { handleAssignTeams } from './cli-util/assign-teams';
+import { handlePopulateTeams } from './cli-util/populate-teams';
+import { handleDeleteCollection } from './cli-util/delete-collection';
 dotenv.config();
 
 /**
@@ -93,12 +94,9 @@ export const promptAction = async () => {
 				// 4. change devpost link?
 			},
 			{
-				name: '🏗️ Assign members to teams',
-				value: 'assign-teams',
-			},
-			{
-				name: '🏗️ Clear a collection (DANGER!)',
+				name: 'Clear collections (DANGER!)',
 				value: 'clear-collection',
+				// clears Users (Hackers), Teams, Scores, Schedule, Judging Sessions
 			},
 			{
 				name: '🏗️ Populate a collection',
@@ -124,7 +122,10 @@ export const promptAction = async () => {
 				await handleModifyHacker();
 				break;
 			case 'modify-team':
-				await handleAssignTeams();
+				await handlePopulateTeams();
+				break;
+			case 'clear-collection':
+				await handleDeleteCollection();
 				break;
 			case 'quit':
 				process.exit(0);

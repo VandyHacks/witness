@@ -7,7 +7,7 @@ import { UserData, TeamData } from '../../types/database';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-export const handleAssignTeams = async () => {
+export const handlePopulateTeams = async () => {
 	const numTeams = await input({
 		message: 'Enter number of teams to create',
 	});
