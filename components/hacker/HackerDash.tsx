@@ -728,39 +728,41 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 							user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 							<>
-								<Header user={session?.user} signOut={signOut} />
-								{/* Hacking start code */}
-								<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-									<Button size="small" type="default" onClick={() => signOut()}>
-										Sign out
-									</Button>
-									<div style={{ paddingLeft: '10px', color: 'white' }}>
-										Signed in as {session?.user?.email}
+								<div style={{ padding: '20px 20px 20px 20px' }}>
+									<Header user={session?.user} signOut={signOut} />
+									{/* Hacking start code */}
+									<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+										<Button size="small" type="default" onClick={() => signOut()}>
+											Sign out
+										</Button>
+										<div style={{ paddingLeft: '10px', color: 'white' }}>
+											Signed in as {session?.user?.email}
+										</div>
+										<div style={{ paddingLeft: '20px', color: 'white' }}>
+											Current NFC Points: {user.nfcPoints}
+										</div>
 									</div>
-									<div style={{ paddingLeft: '20px', color: 'white' }}>
-										Current NFC Points: {user.nfcPoints}
-									</div>
+									{!teamData && <TeamSetup />}
+									{teamData && (
+										<div style={{ width: '60vw', margin: 'auto' }}>
+											<Content style={{ width: '60vw', margin: 'auto' }}>
+												<Table
+													locale={{
+														emptyText: (
+															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+																<h3>Stay tuned! You will see your schedule soon!</h3>
+															</div>
+														),
+													}}
+													columns={judgingSessionColumns}
+													dataSource={judgingSessionData}
+												/>
+												<Divider />
+											</Content>
+											<TeamManager profile={teamData} />
+										</div>
+									)}
 								</div>
-								{!teamData && <TeamSetup />}
-								{teamData && (
-									<div style={{ width: '60vw', margin: 'auto' }}>
-										<Content style={{ width: '60vw', margin: 'auto' }}>
-											<Table
-												locale={{
-													emptyText: (
-														<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-															<h3>Stay tuned! You will see your schedule soon!</h3>
-														</div>
-													),
-												}}
-												columns={judgingSessionColumns}
-												dataSource={judgingSessionData}
-											/>
-											<Divider />
-										</Content>
-										<TeamManager profile={teamData} />
-									</div>
-								)}
 							</>
 						)}
 					{!hackthonStarted &&
