@@ -12,12 +12,12 @@
   display: flex;
   justify-content: space-between;
   background-color: pink;
-  height: 100px;
+  height: 175px;
 }
 
 .Logo {
   background-color: purple;
-  width: 50px;
+  width: 175px;
 }
 
 .SignOut {
