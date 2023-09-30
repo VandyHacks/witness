@@ -19,7 +19,7 @@
   /* background-color: blue; */
   /* width: 150px; */
   /* height: 50%; */
-  margin: 25px 25px 0 0;
+  margin: 10px 10px 0 0;
 }
 
 .Email {
@@ -35,8 +35,8 @@
 .SignOutButton {
   border-radius: 5px;
   background-color: #676767;
-  width: 111px;
-  height: 40px;
+  width: 100px;
+  height: 35px;
   margin: 0 0 0 20px;
   
   color: #FFF;
@@ -46,6 +46,10 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+}
+
+.SignOutButton:hover {
+  cursor: pointer;
 }
 
 .HeaderMiddleBox {
