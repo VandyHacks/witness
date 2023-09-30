@@ -6,6 +6,7 @@ import { handleGetHacker } from './cli-util/get-hacker';
 import { handleGetTeam } from './cli-util/get-team';
 import { handlePopulateTeams } from './cli-util/populate-teams';
 import { handleDeleteCollection } from './cli-util/delete-collection';
+import { handleModifyTeam } from './cli-util/modify-team';
 dotenv.config();
 
 /**
@@ -122,7 +123,7 @@ export const promptAction = async () => {
 				await handleModifyHacker();
 				break;
 			case 'modify-team':
-				await handlePopulateTeams();
+				await handleModifyTeam();
 				break;
 			case 'clear-collection':
 				await handleDeleteCollection();
