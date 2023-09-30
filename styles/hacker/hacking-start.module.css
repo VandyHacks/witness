@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: stretch;
-  background-color: white;
+  /* background-color: white; */
   width: 100%;
   height: 300px;
 }
@@ -11,18 +11,41 @@
 .HeaderTopBox {
   display: flex;
   justify-content: space-between;
-  background-color: pink;
-  height: 175px;
-}
-
-.Logo {
-  background-color: purple;
-  width: 175px;
+  /* background-color: pink; */
+  height: 150px;
 }
 
 .SignOut {
-  background-color: blue;
-  width: 50px;
+  /* background-color: blue; */
+  /* width: 150px; */
+  /* height: 50%; */
+  margin: 25px 25px 0 0;
+}
+
+.Email {
+  /* display: inline-block; */
+  color: #FFF;
+  text-align: right;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;}
+
+.SignOutButton {
+  border-radius: 5px;
+  background-color: #676767;
+  width: 111px;
+  height: 40px;
+  margin: 0 0 0 20px;
+  
+  color: #FFF;
+  text-align: center;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
 }
 
 .HeaderMiddleBox {

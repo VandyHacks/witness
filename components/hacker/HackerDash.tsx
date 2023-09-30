@@ -274,7 +274,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										label={<p className={styles.Label}>Date of Birth</p>}
 										rules={[{ required: true, message: 'Please select your date of birth!' }]}>
 										<DatePicker
-											disabledDate={disabledDate}
 											placeholder="MM-DD-YYYY"
 											format="MM-DD-YYYY"
 											defaultPickerValue={moment().subtract(18, 'years')}
@@ -729,7 +728,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 							user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 							<>
-								<Header />
+								<Header user={session?.user} signOut={signOut} />
 								{/* Hacking start code */}
 								<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
 									<Button size="small" type="default" onClick={() => signOut()}>
