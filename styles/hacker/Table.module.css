@@ -1,0 +1,55 @@
+.Container {
+    background-color: #000000BF;
+    border-radius: 50px;
+    padding: 45px 42px;
+    font-family: 'Inter';
+    font-weight: bold;
+    font-size: 70px;
+    color: #FFFFFF;
+}
+
+.Table {
+    font-size: 40px;
+}
+
+.Table:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.Column {
+    float: left;
+    width: 33.33%;
+}
+
+.Entries {
+    overflow-y: auto;
+    height: 700px;
+}
+
+.Entry {
+    color: #C9A76B;
+}
+
+/* attempt 2 */
+.TableContainer {
+    overflow: auto;
+    height: 700px;
+}
+
+.TableContainer table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.TableContainer th {
+    position: sticky;
+    top: 0;
+    text-align: left;
+    background: #000000;
+}
+/* 
+.TableContainer tbody {
+    background: blue;
+} */

@@ -21,6 +21,7 @@ import TeamSetup from './TeamSetup';
 import { TeamProfile } from '../../types/client';
 import { ApplicationStatus, UserData, JudgingSessionData } from '../../types/database';
 import styles from '../../styles/Form.module.css';
+import TableStyles from '../../styles/hacker/Table.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
@@ -192,6 +193,90 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	useEffect(() => {
 		getJudgingSessionData();
 	}, []);
+
+	// LEADERBOARD DUMMY DATA
+	const leaderboard = [
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+		{
+			name: 'First Last',
+			team: 'FooTeam',
+			points: 1729,
+		},
+	];
 
 	return (
 		<Content
@@ -740,6 +825,61 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<TeamManager profile={teamData} />
 								</div>
 							)}
+							{/* Leaderboard */}
+							<div className={TableStyles.Container}>
+								Leaderboard
+								{/* <div className={TableStyles.TableContainer}>
+									<table>
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Team</th>
+												<th>Points</th>
+											</tr>
+										</thead>
+										<tbody>
+											{leaderboard.map(entry => (
+												<tr key={entry.name}>
+													<td>{entry.name}</td>
+													<td>{entry.team}</td>
+													<td>{entry.points}</td>
+												</tr>
+											))}
+										</tbody>
+									</table>
+								</div> */}
+								<div className={TableStyles.Table}>
+									<div className={TableStyles.Column}>Name</div>
+									<div className={TableStyles.Column}>Team</div>
+									<div className={TableStyles.Column}>Points</div>
+								</div>
+								<div className={TableStyles.Entries}>
+									<div className={TableStyles.Table}>
+										<div className={TableStyles.Column}>
+											{leaderboard.map(entry => (
+												<div key={entry.name} className={TableStyles.Entry}>
+													{entry.name}
+												</div>
+											))}
+										</div>
+										<div className={TableStyles.Column}>
+											{leaderboard.map(entry => (
+												<div key={entry.team} className={TableStyles.Entry}>
+													{entry.team}
+												</div>
+											))}
+										</div>
+										<div className={TableStyles.Column}>
+											{leaderboard.map(entry => (
+												<div key={entry.points} className={TableStyles.Entry}>
+													{entry.points}
+												</div>
+											))}
+										</div>
+									</div>
+								</div>
+							</div>
+							{/* Judging Schedule */}
 							{/* Pre-hacking code */}
 							{/*
 							<div className={styles.SubmittedForm}>
