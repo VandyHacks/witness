@@ -1,86 +1,83 @@
 .HeaderBox {
-  /* Root vertical flex box for MiddleBox and TopBox*/
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: stretch;
-  width: 100%;
-  height: 600px;
+	/* Root vertical flex box for MiddleBox and TopBox*/
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+	width: 100%;
+	height: 600px;
 
-  /* background-color: white; */
+	/* background-color: white; */
 }
 
 .HeaderTopBox {
-  /* Horizontal flex box for Logo and SignOut box */
-  display: flex;
-  justify-content: space-between;
-  height: 150px;
+	/* Horizontal flex box for Logo and SignOut box */
+	display: flex;
+	justify-content: space-between;
+	height: 150px;
 
-  /* background-color: pink; */
+	/* background-color: pink; */
 }
 
 .SignOut {
-  /* Horizontal flex box for SignOutButton and Email */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 20%;
-  /* background-color: blue; */
-
+	/* Horizontal flex box for SignOutButton and Email */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 20%;
+	/* background-color: blue; */
 }
 
 .Email {
-  color: #FFF;
-  text-align: right;
-  font-family: Inter;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+	color: #fff;
+	text-align: right;
+	font-family: Inter;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
 }
 
 .SignOutButton {
-  border-radius: 5px;
-  background-color: #676767;
-  width: 90px;
-  height: 30px;
-  margin: 0 0 0 20px;
-  
-  color: #FFF;
-  text-align: center;
-  font-family: Inter;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
+	border-radius: 5px;
+	background-color: #676767;
+	width: 90px;
+	height: 30px;
+	margin: 0 0 0 20px;
+
+	color: #fff;
+	text-align: center;
+	font-family: Inter;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
 }
 
 .SignOutButton:hover {
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .HeaderMiddleBox {
-  /* Horizontal flexbox for UserName and Current Event Box */
-  display: flex;
-  justify-content: space-between;
-  height: 600px;
-  background-color: lightyellow;
+	/* Horizontal flexbox for UserName and Current Event Box */
+	display: flex;
+	justify-content: space-between;
+	height: 600px;
+	background-color: lightyellow;
 }
 
 .UserName {
-  background-color: lightblue;
-  width: 50%;
+	background-color: lightblue;
+	width: 50%;
 }
 
 .Greeting {
-
 }
 
 .NFCPoint {
-
 }
 
 .CurEvent {
-  background-color: lightgreen;
-  width: 50%;
+	background-color: lightgreen;
+	width: 50%;
 }
