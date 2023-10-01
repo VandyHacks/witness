@@ -4,14 +4,14 @@
 }
 
 @media (min-width: 601px) {
-	.organizerTitle-light {
+	.judgeTitle-light {
 		font-size: 40px;
 		font-weight: 800;
 		margin: 0;
 		text-align: left;
 	}
 
-	.organizerTitle-dark {
+	.judgeTitle-dark {
 		font-size: 40px;
 		font-weight: 800;
 		margin: 0;
@@ -19,33 +19,33 @@
 		text-align: left;
 	}
 
-	.organizerHeader-light {
+	.judgeHeader-light {
 		display: flex;
 		justify-content: space-between;
 		flex-direction: row;
 	}
 
-	.organizerHeader-dark {
+	.judgeHeader-dark {
 		display: flex;
 		justify-content: space-between;
 		flex-direction: row;
 	}
 
-	.organizerHeaderEmail-light {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.organizerHeaderEmail-dark {
+	.judgeHeaderEmail-light {
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
 	}
 
-	.organizerButton-light {
+	.judgeHeaderEmail-dark {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.judgeButton-light {
 		border-radius: 10px;
 		border: none;
 		font-weight: 600;
@@ -55,7 +55,7 @@
 		color: #ffffff;
 	}
 
-	.organizerButton-dark {
+	.judgeButton-dark {
 		border-radius: 10px;
 		border: none;
 		font-weight: 600;
@@ -67,7 +67,7 @@
 }
 
 @media (max-width: 600px) {
-	.organizerTitle-light {
+	.judgeTitle-light {
 		font-size: 30px;
 		font-weight: 800;
 		margin: 0;
@@ -75,7 +75,7 @@
 		padding-bottom: 5px;
 	}
 
-	.organizerTitle-dark {
+	.judgeTitle-dark {
 		font-size: 30px;
 		font-weight: 800;
 		margin: 0;
@@ -84,37 +84,37 @@
 		padding-bottom: 5px;
 	}
 
-	.organizerHeader-light {
+	.judgeHeader-light {
 		display: flex;
 		justify-content: space-between;
 		flex-direction: column;
-		padding-bottom: 20px;
+		padding-bottom: 30px;
 		padding-top: 20px;
 	}
 
-	.organizerHeader-dark {
+	.judgeHeader-dark {
 		display: flex;
 		justify-content: space-between;
 		flex-direction: column;
-		padding-bottom: 20px;
+		padding-bottom: 30px;
 		padding-top: 20px;
 	}
 
-	.organizerHeaderEmail-light {
+	.judgeHeaderEmail-light {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
 
-	.organizerHeaderEmail-dark {
+	.judgeHeaderEmail-dark {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
 
-	.organizerButton-light {
+	.judgeButton-light {
 		border-radius: 5px;
 		border: none;
 		font-weight: 600;
@@ -124,7 +124,7 @@
 		margin-top: 10px;
 	}
 
-	.organizerButton-dark {
+	.judgeButton-dark {
 		border-radius: 5px;
 		border: none;
 		font-weight: 600;
@@ -135,30 +135,34 @@
 	}
 }
 
-.organizerHeaderEmailText-light {
+.judgeHeaderEmailText-light {
 	padding-left: 10px;
 	font-size: 14px;
 	font-weight: 800;
 	color: #000;
 }
 
-.organizerHeaderEmailText-dark {
+.judgeHeaderEmailText-dark {
 	padding-left: 10px;
 	font-size: 14px;
 	font-weight: 800;
 	color: #fff;
 }
 
-.organizerButton-light:hover {
+.judgeButton-light:hover {
 	cursor: pointer;
 	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4);
 	transition: 0.2s;
 	transform: translateY(-2px);
 }
 
-.organizerButton-dark:hover {
+.judgeButton-dark:hover {
 	cursor: pointer;
 	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4);
 	transition: 0.2s;
 	transform: translateY(-2px);
+}
+
+.theme-control-container {
+	padding-top: 40px;
 }

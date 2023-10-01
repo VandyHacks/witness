@@ -42,7 +42,12 @@ export default function ManageRoleForm({ onSubmit, formData }: ManageFormProps) 
 							<span className={styles[getThemedClass('manageUserPrimaryLabel', baseTheme)]}>
 								{config.name}
 							</span>
-							<div style={{ color: getAccentColor(accentColor), fontWeight: 200, paddingBottom: '5px' }}>
+							<div
+								style={{
+									color: getAccentColor(accentColor, baseTheme),
+									fontWeight: 200,
+									paddingBottom: '5px',
+								}}>
 								{config.email}
 							</div>
 						</div>
@@ -72,7 +77,7 @@ export default function ManageRoleForm({ onSubmit, formData }: ManageFormProps) 
 					<button
 						type="submit"
 						className={styles['manageUserSubmitButton']}
-						style={{ backgroundColor: getAccentColor(accentColor) }}>
+						style={{ backgroundColor: getAccentColor(accentColor, baseTheme) }}>
 						Submit
 					</button>
 				</Col>

@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import styles from '../../../styles/ThemeControl.module.css';
 import { themeConstants } from '../../../theme/theme';
-import { AccentColor, Theme, ThemeContext } from '../../../theme/themeProvider';
+import { AccentColor, Theme, ThemeContext, getBaseColor } from '../../../theme/themeProvider';
 import { set } from 'mongoose';
 
 const ThemeControl = () => {
@@ -31,10 +31,14 @@ const ThemeControl = () => {
 			name: AccentColor.YELLOW,
 			color: themeConstants.accent.yellow,
 		},
+		{
+			name: AccentColor.MONOCHROME,
+			color: baseTheme === Theme.DARK ? themeConstants.accent.white : themeConstants.accent.darkGrey,
+		},
 	];
 	return (
 		<div>
-			<div>Theme</div>
+			<div style={{ color: getBaseColor(baseTheme) }}>Theme</div>
 			<label className={styles['switch']}>
 				<input
 					type={'checkbox'}
@@ -51,7 +55,7 @@ const ThemeControl = () => {
 				/>
 				<span className={styles['slider'] + ' ' + styles['round']}></span>
 			</label>
-			<div>Accent Color</div>
+			<div style={{ color: getBaseColor(baseTheme) }}>Accent Color</div>
 			<div className={styles['accentColorContainer']}>
 				{accentColors.map((accentColor, index) => {
 					return (

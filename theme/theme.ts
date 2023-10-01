@@ -1,15 +1,18 @@
 export const themeConstants = {
 	light: {
 		backgroundColor: '#ffffff',
+		textColor: '#000000',
 	},
 	dark: {
 		backgroundColor: '#1D1743',
+		textColor: '#ffffff',
 	},
 	accent: {
-		grey: '#333333',
-		darkGrey: '#000000',
+		grey: '#444444',
+		darkGrey: '#222222',
+		lightGrey: '#BBBBBB',
 		white: '#ffffff',
-		darkWhite: '#dddddd',
+		darkWhite: '#CCCCCC',
 		blue: '#2F80ED',
 		darkBlue: '#215294',
 		green: '#49DF60',

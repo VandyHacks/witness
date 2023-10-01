@@ -29,7 +29,7 @@ export default function OrganizerDash() {
 					<div>
 						<button
 							className={styles[getThemedClass('organizerButton', baseTheme)]}
-							style={{ backgroundColor: getAccentColor(accentColor) }}
+							style={{ backgroundColor: getAccentColor(accentColor, baseTheme) }}
 							onClick={() => signOut()}>
 							Sign out
 						</button>
@@ -40,7 +40,7 @@ export default function OrganizerDash() {
 				<Tabs
 					defaultActiveKey="1"
 					style={{
-						color: getAccentColor(accentColor),
+						color: getAccentColor(accentColor, baseTheme),
 
 						width: '90vw',
 					}}

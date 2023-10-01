@@ -1,5 +1,5 @@
 import { Button, Skeleton, Divider } from 'antd';
-import { SetStateAction, useEffect, useState } from 'react';
+import { SetStateAction, useContext, useEffect, useState } from 'react';
 import {
 	TIMES_JUDGED,
 	generateScheduleA,
@@ -10,11 +10,14 @@ import OrganizerSchedule from '../../judges/schedule';
 import { ResponseError, JudgingSessionData, UserData, TeamData } from '../../../types/database';
 import Title from 'antd/lib/typography/Title';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
+import { ThemeContext, getBaseColor } from '../../../theme/themeProvider';
 
 const ScheduleTab = () => {
 	// React state
 	const [potentialScheduleA, setPotentialScheduleA] = useState<JudgingSessionData[] | undefined>(undefined);
 	const [potentialScheduleB, setPotentialScheduleB] = useState<JudgingSessionData[] | undefined>(undefined);
+
+	const { baseTheme } = useContext(ThemeContext);
 
 	// Get judging sessions
 	const { data: judgingSessions, error: judgingSessionsError } = useCustomSWR<JudgingSessionData>({
@@ -113,7 +116,12 @@ const ScheduleTab = () => {
 					)}
 					<div>Count of Teams: {teamsData?.length}</div>
 					<div>Count of Judges: {judgesData?.length}</div>
-					<Title>Expo A</Title>
+					<Title
+						style={{
+							color: getBaseColor(baseTheme),
+						}}>
+						Expo A
+					</Title>
 					{potentialScheduleA && (
 						<OrganizerSchedule
 							data={potentialScheduleA}
@@ -125,7 +133,12 @@ const ScheduleTab = () => {
 						/>
 					)}
 					<div style={{ height: '20px' }} />
-					<Title>Expo B</Title>
+					<Title
+						style={{
+							color: getBaseColor(baseTheme),
+						}}>
+						Expo B
+					</Title>
 					{potentialScheduleB && (
 						<OrganizerSchedule
 							data={potentialScheduleB}

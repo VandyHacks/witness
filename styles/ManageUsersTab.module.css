@@ -14,8 +14,10 @@
 	border-radius: 10px;
 	border: none;
 	font-weight: 600;
-	padding: 4px 10px;
+	padding: 6px 10px;
 	transition: 0.2s;
+	color: #ffffff;
+	font-size: 14px;
 }
 
 .manageUserSubmitButton:hover {
@@ -27,11 +29,13 @@
 
 .manageUserClearButton {
 	border-radius: 10px;
-	background-color: rgb(208, 208, 208);
+	background-color: rgb(157, 157, 157);
 	border: none;
 	font-weight: 600;
-	padding: 4px 10px;
+	padding: 6px 10px;
 	transition: 0.2s;
+	color: #ffffff;
+	font-size: 14px;
 }
 
 .manageUserClearButton:hover {

@@ -14,6 +14,7 @@ export enum AccentColor {
 	PINK = 'r',
 	YELLOW = 'y',
 	ORANGE = 'o',
+	MONOCHROME = 'm',
 }
 
 // Theme context types
@@ -69,7 +70,7 @@ export const getThemedClass = (className: string, baseTheme: Theme) => {
  * 	<div style={{ color: useAccentColor(AccentColor.BLUE) }}>Hello World</div>
  * ```
  */
-export const getAccentColor = (accentColor: AccentColor) => {
+export const getAccentColor = (accentColor: AccentColor, baseTheme: Theme) => {
 	switch (accentColor) {
 		case AccentColor.BLUE:
 			return themeConstants.accent.blue;
@@ -81,7 +82,27 @@ export const getAccentColor = (accentColor: AccentColor) => {
 			return themeConstants.accent.yellow;
 		case AccentColor.ORANGE:
 			return themeConstants.accent.orange;
+		case AccentColor.MONOCHROME:
+			if (baseTheme === Theme.LIGHT) {
+				return themeConstants.accent.darkGrey;
+			} else {
+				return themeConstants.accent.lightGrey;
+			}
 		default:
 			return themeConstants.accent.blue;
 	}
+};
+
+/**
+ * Returns the base color hex code for a given base theme enum value
+ *
+ * @param baseTheme - the base theme enum value
+ *
+ * @example
+ * ```tsx
+ * 	<div style={{ backgroundColor: useBaseColor(Theme.LIGHT) }}>Hello World</div>
+ * ```
+ */
+export const getBaseColor = (baseTheme: Theme) => {
+	return baseTheme === Theme.LIGHT ? themeConstants.light.textColor : themeConstants.dark.textColor;
 };
