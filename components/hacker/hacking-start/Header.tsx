@@ -4,7 +4,7 @@ import Image from 'next/image';
 import VHLogo from '../../../public/vh-logo.png';
 import { UserData } from '../../../types/database';
 
-const Header = ({ user, signOut }: { user: UserData | any; signOut: () => void }) => {
+const Header = ({ user, signOut }: { user: UserData; signOut: () => void }) => {
 	return (
 		<>
 			<div className={styles.HeaderBox}>
@@ -18,7 +18,10 @@ const Header = ({ user, signOut }: { user: UserData | any; signOut: () => void }
 					</span>
 				</div>
 				<div className={styles.HeaderMiddleBox}>
-					<span className={styles.UserName}></span>
+					<span className={styles.UserName}>
+						<div className={styles.Greeting}>{'Hello, ' + user.name}</div>
+						<div className={styles.NFCPoint}>{user.nfcPoints + ' points to spend'}</div>
+					</span>
 					<span className={styles.CurEvent}></span>
 				</div>
 			</div>
