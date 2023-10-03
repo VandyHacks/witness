@@ -59,25 +59,57 @@
 }
 
 .HeaderMiddleBox {
-	/* Horizontal flexbox for UserName and Current Event Box */
-	display: flex;
-	justify-content: space-between;
-	height: 600px;
-	background-color: lightyellow;
+  /* Horizontal flexbox for UserName and Current Event Box */
+  display: flex;
+  justify-content: space-between;
+  height: 400px;
+  /* background-color: lightyellow; */
 }
 
 .UserName {
-	background-color: lightblue;
-	width: 50%;
+  width: 65%;
+  /* background-color: lightblue; */
 }
 
 .Greeting {
+  color: #FFF;
+  text-shadow: 0px 0px 15px #FFF;
+  font-family: Inter;
+  font-size: 100px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
 }
 
 .NFCPoint {
+  color: #FFF;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 200;
+  line-height: normal;
 }
 
 .CurEvent {
-	background-color: lightgreen;
-	width: 50%;
+  /* background-color: lightgreen; */
+  width: 35%;
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.CurEventText{
+  color: #FFF;
+  text-align: center;
+  font-family: Inter;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.CurEventImage{
+  width: 100%;
+  height: 50%;
 }

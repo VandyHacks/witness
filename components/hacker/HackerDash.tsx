@@ -731,7 +731,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<div style={{ padding: '20px 20px 20px 20px' }}>
 									<Header user={user} signOut={signOut} />
 									{/* Hacking start code */}
-									<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+									{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
 										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
 										</Button>
@@ -741,8 +741,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<div style={{ paddingLeft: '20px', color: 'white' }}>
 											Current NFC Points: {user.nfcPoints}
 										</div>
-									</div>
-									{!teamData && <TeamSetup />}
+									</div> */}
+									{/* {!teamData && <TeamSetup />}
 									{teamData && (
 										<div style={{ width: '60vw', margin: 'auto' }}>
 											<Content style={{ width: '60vw', margin: 'auto' }}>
@@ -761,7 +761,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											</Content>
 											<TeamManager profile={teamData} />
 										</div>
-									)}
+									)} */}
 								</div>
 							</>
 						)}
