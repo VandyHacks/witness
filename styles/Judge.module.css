@@ -22,12 +22,14 @@
 	.judgeHeader-light {
 		display: flex;
 		justify-content: space-between;
+		margin-bottom: 20px;
 		flex-direction: row;
 	}
 
 	.judgeHeader-dark {
 		display: flex;
 		justify-content: space-between;
+		margin-bottom: 20px;
 		flex-direction: row;
 	}
 
