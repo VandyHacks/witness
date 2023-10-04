@@ -26,10 +26,10 @@ export default function Page() {
 				<meta name="twitter:site" content="@vandyhacks" />
 				<meta name="twitter:creator" content="@vandyhacks" />
 				<meta name="author" content="VandyHacks" />
-				<meta name="description" content="Come join VH X at Vanderbilt University on Oct 27-29, 2023. ✨" />
+				<meta name="description" content="Come join VH X at Vanderbilt University on Oct 28-29, 2023. ✨" />
 				<meta
 					property="og:description"
-					content="Come join VH X at Vanderbilt University on Oct 27-29, 2023. ✨"
+					content="Come join VH X at Vanderbilt University on Oct 28-29, 2023. ✨"
 				/>
 			</Head>
 			<Layout
