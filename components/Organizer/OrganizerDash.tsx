@@ -1,4 +1,4 @@
-import { Button, Space, Tabs } from 'antd';
+import { Skeleton, Space, Tabs } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
 import ScheduleTab from './ScheduleTab/ScheduleTab';
 import JudgingTab from './JudgingTab/JudgingTab';
@@ -6,26 +6,71 @@ import ManageUsersTab from './ManageUsersTab/ManageUsersTab';
 import PreAddUsersTab from './PreAddUsersTab/PreAddUsersTab';
 import ApplicantsTab from './ApplicantsTab/ApplicantsTab';
 import EventsTab from './EventsTab/EventsTab';
+import styles from '../../styles/Organizer.module.css';
+import { AccentColor, Theme, ThemeContext, getAccentColor, getThemedClass } from '../../theme/themeProvider';
+import { useContext, useEffect } from 'react';
+import SettingsTab from './SettingsTab/SettingsTab';
+import { RequestType, useCustomSWR } from '../../utils/request-utils';
+import { UserData } from '../../types/database';
 
 export default function OrganizerDash() {
 	// Get session data
 	const { data: session, status } = useSession();
+	const { accentColor, baseTheme, setAccentColor, setBaseTheme } = useContext(ThemeContext);
+
+	// User data
+	const { data: userData, error: hackersError } = useCustomSWR<UserData>({
+		url: '/api/user-data',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get user object.',
+	});
+
+	useEffect(() => {
+		console.log(userData);
+		if (userData && userData.settings && userData.settings.accentColor && userData.settings.baseTheme) {
+			setAccentColor(userData.settings.accentColor as AccentColor);
+			setBaseTheme(userData.settings.baseTheme as Theme);
+		}
+
+		if (hackersError) {
+			setAccentColor(AccentColor.MONOCHROME);
+			setBaseTheme(Theme.DARK);
+		}
+	}, [userData, setAccentColor, setBaseTheme, hackersError]);
+
+	if (!userData) return <Skeleton />;
 
 	return (
-		<>
-			<div style={{ display: 'flex' }}>
-				<Button size="small" type="default" onClick={() => signOut()}>
-					Sign out
-				</Button>
-				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+		<div className={styles[getThemedClass('organizerMain', baseTheme)]}>
+			<div className={styles[getThemedClass('organizerHeader', baseTheme)]}>
+				<h1 className={styles[getThemedClass('organizerTitle', baseTheme)]}>Organizer Dashboard</h1>
+				<div className={styles[getThemedClass('organizerHeaderEmail', baseTheme)]}>
+					<div className={styles[getThemedClass('organizerHeaderEmailText', baseTheme)]}>
+						{session?.user?.email}
+					</div>
+					<div>
+						<button
+							className={styles[getThemedClass('organizerButton', baseTheme)]}
+							style={{ backgroundColor: getAccentColor(accentColor, baseTheme) }}
+							onClick={() => signOut()}>
+							Sign out
+						</button>
+					</div>
+				</div>
 			</div>
 			<Space direction="vertical">
 				<Tabs
 					defaultActiveKey="1"
+					style={{
+						color: getAccentColor(accentColor, baseTheme),
+
+						width: '90vw',
+					}}
 					items={[
 						{
 							label: `Schedule`,
 							key: '1',
+
 							children: <ScheduleTab />,
 						},
 						{
@@ -53,9 +98,14 @@ export default function OrganizerDash() {
 							key: '6',
 							children: <EventsTab />,
 						},
+						{
+							label: `Settings`,
+							key: '7',
+							children: <SettingsTab />,
+						},
 					]}
 				/>
 			</Space>
-		</>
+		</div>
 	);
 }

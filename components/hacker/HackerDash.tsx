@@ -22,14 +22,13 @@ import { TeamProfile } from '../../types/client';
 import { ApplicationStatus, UserData, JudgingSessionData } from '../../types/database';
 import styles from '../../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
-import moment from 'moment';
 import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
 import { ColumnsType } from 'antd/es/table';
 
 type HackerProps = {
-	userApplicationStatus?: number;
-	setUserApplicationStatus?: (newType: number) => void;
+	userApplicationStatus: number;
+	setUserApplicationStatus: (newType: number) => void;
 };
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
@@ -50,10 +49,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
-
-	if (user?.applicationStatus) {
-		setUserApplicationStatus?.(user.applicationStatus);
-	}
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
@@ -190,8 +185,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	};
 
 	useEffect(() => {
+		if (user?.applicationStatus) setUserApplicationStatus(user.applicationStatus);
 		getJudgingSessionData();
-	}, []);
+	}, [setUserApplicationStatus, user?.applicationStatus]);
 
 	return (
 		<Content
@@ -271,11 +267,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									name="dateOfBirth"
 									label={<p className={styles.Label}>Date of Birth</p>}
 									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
-									<DatePicker
-										placeholder="MM-DD-YYYY"
-										format="MM-DD-YYYY"
-										defaultPickerValue={moment().subtract(18, 'years')}
-									/>
+									<DatePicker placeholder="MM-DD-YYYY" format="MM-DD-YYYY" />
 								</Form.Item>
 								<Form.Item
 									className={styles.FormItem}

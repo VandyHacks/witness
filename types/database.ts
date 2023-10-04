@@ -47,6 +47,10 @@ export interface UserData {
 	application?: mongoose.Schema.Types.ObjectId;
 	applicationStatus: ApplicationStatus;
 	eventsAttended: mongoose.Schema.Types.ObjectId[];
+	settings?: {
+		baseTheme?: string;
+		accentColor?: string;
+	};
 }
 
 export interface PreAddData {

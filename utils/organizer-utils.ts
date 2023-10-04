@@ -43,26 +43,6 @@ export const generateScheduleB = (teams: TeamData[], judges: UserData[]) => {
 };
 
 /**
- * Handles submission of the Manage Form with the specified role data.
- * @param {ManageFormFields} roleData - The form data for the role being managed.
- * @param {ScopedMutator} mutate - The scoped mutator function to update the query cache.
- */
-export const handleManageFormSubmit = async (roleData: ManageFormFields, mutate: ScopedMutator) => {
-	const res = await fetch(`/api/manage-role`, {
-		method: 'PATCH',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ formData: roleData }),
-	});
-
-	if (res.ok) {
-		mutate('/api/manage-role');
-		handleSubmitSuccess();
-	} else handleSubmitFailure(await res.text());
-};
-
-/**
  * Handles pre-add user deletion with the specified user data.
  * @param {PreAddData} user - The user data object to be deleted from pre-add.
  * @param {ScopedMutator} mutate - The scoped mutator function to update the query cache.
