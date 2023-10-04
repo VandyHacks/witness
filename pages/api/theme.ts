@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
 				return res.status(200).send(newUser);
 			} catch (err) {
-				return res.status(500).send(err);
+				return res.status(500).send("Couldn't update user settings");
 			}
 		default:
 			return res.status(405).send('Method not supported brother');
