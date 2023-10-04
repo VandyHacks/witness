@@ -119,3 +119,11 @@ export interface JudgingSessionData {
 	judge: UserData;
 	time: String;
 }
+
+export interface HackathonSettingsData {
+	_id: mongoose.Schema.Types.ObjectId;
+	HACKATHON_START: Date;
+	HACKATHON_END: Date;
+	JUDGING_START: Date;
+	JUDGING_END: Date;
+}
