@@ -78,7 +78,7 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 			</Descriptions>
 			{/* TODO: validation of team name on server side */}
 			<Divider />
-			<Collapse accordion>
+			<Collapse accordion style={{ background: '#FFFFFF' }}>
 				<Panel header="Change Team Name" key="1">
 					<Form {...layout} labelAlign="left" onFinish={formData => onFormFinish(formData, mutate)}>
 						<Form.Item
