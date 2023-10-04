@@ -231,27 +231,21 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Button>
 								</div>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>First Name</p>}
 									name="firstName"
 									rules={[{ required: true, message: 'Please input your first name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Last Name</p>}
 									name="lastName"
 									rules={[{ required: true, message: 'Please input your last name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Preferred Name</p>}
-									name="preferredName">
+								<Form.Item label={<p className={styles.Label}>Preferred Name</p>} name="preferredName">
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Gender</p>}
 									name="gender"
 									rules={[{ required: true, message: 'Please select an option!' }]}>
@@ -263,35 +257,30 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="dateOfBirth"
 									label={<p className={styles.Label}>Date of Birth</p>}
 									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
 									<DatePicker placeholder="MM-DD-YYYY" format="MM-DD-YYYY" />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Phone Number</p>}
 									name="phoneNumber"
 									rules={[{ required: true, message: 'Please input your phone number!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>School</p>}
 									name="school"
 									rules={[{ required: true, message: 'Please input your school!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Major</p>}
 									name="major"
 									rules={[{ required: true, message: 'Please input your major!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Graduation Year</p>}
 									name="graduationYear"
 									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
@@ -304,21 +293,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Address Line 1</p>}
 									name="address1"
 									rules={[{ required: true, message: 'Please input your address!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Address Line 2</p>}
-									name="address2">
+								<Form.Item label={<p className={styles.Label}>Address Line 2</p>} name="address2">
 									<Input className={styles.Input} />
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>City</p>}
 									name={'city'}
 									rules={[{ required: true, message: 'Please input your city!' }]}>
@@ -326,7 +310,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>State</p>}
 									name={'state'}
 									rules={[{ required: true, message: 'Please input your state!' }]}>
@@ -334,7 +317,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>ZIP Code</p>}
 									name={'zip'}
 									rules={[
@@ -355,20 +337,17 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									name="race"
 									label={<p className={styles.Label}>Race</p>}
 									rules={[{ required: true, message: 'Please select at least one option!' }]}>
 									<Checkbox.Group className={styles.TextWhite} options={race} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="dietaryRestrictions"
 									label={<p className={styles.Label}>Dietary Restrictions</p>}>
 									<Checkbox.Group className={styles.TextWhite} options={dietaryRestrictions} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="accommodationNeeds"
 									label={<p className={styles.Label}>Accommodation needs</p>}>
 									<Input
@@ -377,7 +356,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="firstTime"
 									label={<p className={styles.Label}>First-time hacker?</p>}
 									rules={[{ required: true, message: 'Please select an option!' }]}
@@ -388,7 +366,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="whyAttend"
 									label={<p className={styles.Label}>Why would you like to attend VandyHacks?</p>}
 									rules={[
@@ -404,7 +381,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="techIndustry"
 									label={
 										<p className={styles.Label}>
@@ -419,7 +395,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="techStack"
 									label={
 										<p className={styles.Label}>Which tech stack, if any, are you familiar with?</p>
@@ -432,7 +407,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="passion"
 									label={<p className={styles.Label}>What are you passionate about?</p>}
 									rules={[
@@ -445,14 +419,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="motivation"
 									label={<p className={styles.Label}>What do you hope to gain from VandyHacks?</p>}
 									rules={[{ required: true, message: 'Please select at least one option!' }]}>
 									<Checkbox.Group className={styles.TextWhite} options={motivation} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Shirt Size</p>}
 									name="shirtSize"
 									rules={[{ required: true, message: 'Please select your shirt size!' }]}>
@@ -466,7 +438,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Résumé</p>}
 									rules={[
 										{
@@ -504,7 +475,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Upload>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={
 										<p className={styles.Label}>
 											Would you like to apply for travel reimbursements?
@@ -518,7 +488,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="overnight"
 									label={
 										<p className={styles.LabelOvernight}>Are you staying overnight in the venue?</p>
@@ -530,7 +499,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="prizeEligibility"
 									label={
 										<p className={styles.LabelCitizen}>
@@ -546,7 +514,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={
 										<p className={styles.LabelContact}>
 											Would you like to be contacted about volunteering at the event?
@@ -561,7 +528,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<br />
 								<Form.Item
-									className={styles.FormItem}
 									valuePropName="checked"
 									name="agreement1"
 									rules={[
