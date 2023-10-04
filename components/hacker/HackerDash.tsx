@@ -34,7 +34,6 @@ type HackerProps = {
 };
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
-	const [hackthonStarted, setHackathonStarted] = useState(false);
 	const { data: session, status } = useSession();
 	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
 		const res = await fetch(url, { method: 'GET' });
@@ -724,14 +723,13 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							</div>
 						</>
 					)}
-					{hackthonStarted &&
-						(user.applicationStatus === ApplicationStatus.CONFIRMED ||
-							user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
-							<>
-								<div style={{ padding: '20px 20px 20px 20px' }}>
-									<Header user={user} signOut={signOut} />
-									{/* Hacking start code */}
-									{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
+						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
+						<>
+							<div style={{ padding: '20px 20px 20px 20px' }}>
+								<Header user={user} signOut={signOut} />
+								{/* Hacking start code */}
+								{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
 										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
 										</Button>
@@ -742,7 +740,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											Current NFC Points: {user.nfcPoints}
 										</div>
 									</div> */}
-									{/* {!teamData && <TeamSetup />}
+								{/* {!teamData && <TeamSetup />}
 									{teamData && (
 										<div style={{ width: '60vw', margin: 'auto' }}>
 											<Content style={{ width: '60vw', margin: 'auto' }}>
@@ -762,15 +760,10 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											<TeamManager profile={teamData} />
 										</div>
 									)} */}
-								</div>
-							</>
-						)}
-					{!hackthonStarted &&
-						(user.applicationStatus === ApplicationStatus.CONFIRMED ||
-							user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
-							<>
-								{/* Pre-hacking code */}
-								<div className={styles.SubmittedForm}>
+							</div>
+
+							{/* Pre-hacking code */}
+							{/* <div className={styles.SubmittedForm}>
 									<div className={styles.ThankYouMessage}>
 										Congratulations!
 										<br />
@@ -795,9 +788,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											</Button>
 										</div>
 									</div>
-								</div>
-							</>
-						)}
+								</div> */}
+						</>
+					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
 						<>
 							<RegistrationLogo />
