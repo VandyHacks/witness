@@ -20,21 +20,21 @@ const ScheduleTab = () => {
 	const { baseTheme } = useContext(ThemeContext);
 
 	// Get judging sessions
-	const { data: judgingSessions, error: judgingSessionsError } = useCustomSWR<JudgingSessionData>({
+	const { data: judgingSessions, error: judgingSessionsError } = useCustomSWR<JudgingSessionData[]>({
 		url: '/api/judging-sessions',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get judging sessions',
 	});
 
 	// Judge data
-	const { data: judgesData, error: judgesError } = useCustomSWR<UserData>({
+	const { data: judgesData, error: judgesError } = useCustomSWR<UserData[]>({
 		url: '/api/users?usertype=JUDGE',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of judges.',
 	});
 
 	// Teams data
-	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData>({
+	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData[]>({
 		url: '/api/teams',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of teams.',

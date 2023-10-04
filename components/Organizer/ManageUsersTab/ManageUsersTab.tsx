@@ -29,7 +29,7 @@ const ManageUsersTab = () => {
 	};
 
 	// User data
-	const { data: userData, error } = useCustomSWR<ManageFormFields>({
+	const { data: userData, error } = useCustomSWR<ManageFormFields[]>({
 		url: '/api/manage-role',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of all users.',

@@ -59,13 +59,13 @@ export default function Page() {
 							<ConfigProvider
 								theme={{
 									algorithm: [
-										baseTheme == Theme.LIGHT ? theme.defaultAlgorithm : theme.darkAlgorithm,
+										baseTheme === Theme.LIGHT ? theme.defaultAlgorithm : theme.darkAlgorithm,
 										theme.compactAlgorithm,
 									],
 									token: {
 										colorPrimary: getAccentColor(accentColor, baseTheme), // buttons, tab selected, on hover
 										colorBgBase:
-											baseTheme == Theme.LIGHT
+											baseTheme === Theme.LIGHT
 												? themeConstants.light.backgroundColor
 												: themeConstants.dark.backgroundColor, // backgrounds
 									},
@@ -77,13 +77,13 @@ export default function Page() {
 							<ConfigProvider
 								theme={{
 									algorithm: [
-										baseTheme == Theme.LIGHT ? theme.defaultAlgorithm : theme.darkAlgorithm,
+										baseTheme === Theme.LIGHT ? theme.defaultAlgorithm : theme.darkAlgorithm,
 										theme.compactAlgorithm,
 									],
 									token: {
 										colorPrimary: getAccentColor(accentColor, baseTheme), // buttons, tab selected, on hover
 										colorBgBase:
-											baseTheme == Theme.LIGHT
+											baseTheme === Theme.LIGHT
 												? themeConstants.light.backgroundColor
 												: themeConstants.dark.backgroundColor, // backgrounds
 									},

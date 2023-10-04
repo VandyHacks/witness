@@ -2,13 +2,78 @@ import { useContext, useState } from 'react';
 import styles from '../../../styles/ThemeControl.module.css';
 import { themeConstants } from '../../../theme/theme';
 import { AccentColor, Theme, ThemeContext, getBaseColor } from '../../../theme/themeProvider';
-import { set } from 'mongoose';
+import { useSWRConfig } from 'swr';
 
 const ThemeControl = () => {
 	const { baseTheme, setBaseTheme, accentColor, setAccentColor } = useContext(ThemeContext);
+	const [changeThemeLoading, setChangeThemeLoading] = useState(false);
+
+	const { mutate } = useSWRConfig();
 
 	const [accentColorSelection, setAccentColorSelection] = useState<AccentColor>(accentColor);
+	const [previousAccentColor, setPreviousAccentColor] = useState<AccentColor>(accentColor);
 	const [_, setBaseThemeSelection] = useState<Theme>(baseTheme);
+
+	const handleSetBaseTheme = async (baseTheme: Theme) => {
+		// Prevent multiple requests
+		if (changeThemeLoading) return;
+
+		// Set the new base theme
+		setBaseTheme(baseTheme);
+		setBaseThemeSelection(baseTheme);
+		setChangeThemeLoading(true);
+
+		// Send the request to the server to update the theme
+		const res = await fetch(`/api/theme`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ baseTheme, accentColor: accentColor }),
+		});
+
+		// Handle the response
+		setChangeThemeLoading(false);
+		if (res.ok) {
+			// Update the theme
+			mutate('/api/theme');
+		} else {
+			// Revert the theme if the request failed
+			setBaseTheme(baseTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK);
+			setBaseThemeSelection(baseTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK);
+		}
+	};
+
+	const handleSetAccentColor = async (accentColor: AccentColor) => {
+		// Prevent multiple requests
+		if (changeThemeLoading) return;
+
+		// Set the new accent color and save the previous one
+		setPreviousAccentColor(accentColorSelection);
+		setChangeThemeLoading(true);
+		setAccentColor(accentColor);
+		setAccentColorSelection(accentColor);
+
+		// Send the request to the server to update the theme
+		const res = await fetch(`/api/theme`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ baseTheme: baseTheme, accentColor }),
+		});
+
+		// Handle the response
+		setChangeThemeLoading(false);
+		if (res.ok) {
+			// Update the theme
+			mutate('/api/theme');
+		} else {
+			// Revert the theme if the request failed
+			setAccentColor(previousAccentColor);
+			setAccentColorSelection(previousAccentColor);
+		}
+	};
 
 	const accentColors = [
 		{
@@ -41,17 +106,10 @@ const ThemeControl = () => {
 			<div style={{ color: getBaseColor(baseTheme) }}>Theme</div>
 			<label className={styles['switch']}>
 				<input
+					disabled={changeThemeLoading}
 					type={'checkbox'}
 					defaultChecked={baseTheme === Theme.DARK}
-					onChange={() => {
-						if (baseTheme === Theme.DARK) {
-							setBaseTheme(Theme.LIGHT);
-							setBaseThemeSelection(Theme.LIGHT);
-						} else {
-							setBaseTheme(Theme.DARK);
-							setBaseThemeSelection(Theme.DARK);
-						}
-					}}
+					onChange={() => handleSetBaseTheme(baseTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK)}
 				/>
 				<span className={styles['slider'] + ' ' + styles['round']}></span>
 			</label>
@@ -67,14 +125,19 @@ const ThemeControl = () => {
 									? styles['accentColorSelected']
 									: styles['accentColor']
 							}
-							onClick={() => {
-								setAccentColor(accentColor.name);
-								setAccentColorSelection(accentColor.name);
-							}}
+							onClick={() => handleSetAccentColor(accentColor.name)}
 						/>
 					);
 				})}
 			</div>
+			{changeThemeLoading && (
+				<div
+					style={{
+						color: getBaseColor(baseTheme),
+					}}>
+					Changing theme...
+				</div>
+			)}
 		</div>
 	);
 };

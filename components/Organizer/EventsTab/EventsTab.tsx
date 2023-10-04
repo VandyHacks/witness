@@ -86,14 +86,14 @@ const EventsTab = () => {
 	const input = useRef<InputRef>(null);
 
 	// get events count
-	const { data: eventsCountData, error: eventsCountError } = useCustomSWR<EventCountData>({
+	const { data: eventsCountData, error: eventsCountError } = useCustomSWR<EventCountData[]>({
 		url: '/api/events-count',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get count of events.',
 	});
 
 	// get events data
-	const { data: eventsData, error: eventsError } = useCustomSWR<EventData>({
+	const { data: eventsData, error: eventsError } = useCustomSWR<EventData[]>({
 		url: '/api/events',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of events.',

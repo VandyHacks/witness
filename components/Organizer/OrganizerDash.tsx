@@ -1,4 +1,4 @@
-import { Space, Tabs } from 'antd';
+import { Skeleton, Space, Tabs } from 'antd';
 import { signOut, useSession } from 'next-auth/react';
 import ScheduleTab from './ScheduleTab/ScheduleTab';
 import JudgingTab from './JudgingTab/JudgingTab';
@@ -7,16 +7,38 @@ import PreAddUsersTab from './PreAddUsersTab/PreAddUsersTab';
 import ApplicantsTab from './ApplicantsTab/ApplicantsTab';
 import EventsTab from './EventsTab/EventsTab';
 import styles from '../../styles/Organizer.module.css';
-import { ThemeContext, getAccentColor, getThemedClass } from '../../theme/themeProvider';
-import { useContext } from 'react';
+import { AccentColor, Theme, ThemeContext, getAccentColor, getThemedClass } from '../../theme/themeProvider';
+import { useContext, useEffect } from 'react';
 import SettingsTab from './SettingsTab/SettingsTab';
+import { RequestType, useCustomSWR } from '../../utils/request-utils';
+import { UserData } from '../../types/database';
 
 export default function OrganizerDash() {
 	// Get session data
 	const { data: session, status } = useSession();
-	const { accentColor, baseTheme } = useContext(ThemeContext);
+	const { accentColor, baseTheme, setAccentColor, setBaseTheme } = useContext(ThemeContext);
 
-	console.log(getThemedClass('organizerHeaderEmailText', baseTheme));
+	// User data
+	const { data: userData, error: hackersError } = useCustomSWR<UserData>({
+		url: '/api/user-data',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get user object.',
+	});
+
+	useEffect(() => {
+		console.log(userData);
+		if (userData && userData.settings && userData.settings.accentColor && userData.settings.baseTheme) {
+			setAccentColor(userData.settings.accentColor as AccentColor);
+			setBaseTheme(userData.settings.baseTheme as Theme);
+		}
+
+		if (hackersError) {
+			setAccentColor(AccentColor.MONOCHROME);
+			setBaseTheme(Theme.DARK);
+		}
+	}, [userData, setAccentColor, setBaseTheme, hackersError]);
+
+	if (!userData) return <Skeleton />;
 
 	return (
 		<div className={styles[getThemedClass('organizerMain', baseTheme)]}>

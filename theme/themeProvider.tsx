@@ -3,18 +3,18 @@ import { themeConstants } from './theme';
 
 // Base theme options
 export enum Theme {
-	LIGHT = 'l',
-	DARK = 'd',
+	LIGHT = 'light',
+	DARK = 'dark',
 }
 
 // Accent color options
 export enum AccentColor {
-	BLUE = 'b',
-	GREEN = 'g',
-	PINK = 'r',
-	YELLOW = 'y',
-	ORANGE = 'o',
-	MONOCHROME = 'm',
+	BLUE = 'blue',
+	GREEN = 'green',
+	PINK = 'pink',
+	YELLOW = 'yellow',
+	ORANGE = 'orange',
+	MONOCHROME = 'monochrome',
 }
 
 // Theme context types

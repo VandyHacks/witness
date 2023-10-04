@@ -6,21 +6,21 @@ import styles from '../../../styles/Organizer.module.css';
 
 const JudgingTab = () => {
 	// Teams data
-	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData>({
+	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData[]>({
 		url: '/api/teams',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of teams.',
 	});
 
 	// Scores data
-	const { data: scoresData, error: scoresError } = useCustomSWR<ScoreData>({
+	const { data: scoresData, error: scoresError } = useCustomSWR<ScoreData[]>({
 		url: '/api/scores',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of scores.',
 	});
 
 	// Judge data
-	const { data: judgeData, error: judgeError } = useCustomSWR<UserData>({
+	const { data: judgeData, error: judgeError } = useCustomSWR<UserData[]>({
 		url: '/api/users?usertype=JUDGE',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of judges.',

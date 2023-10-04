@@ -115,7 +115,7 @@ const createPopover = (record: any, mutate: ScopedMutator, hackers: UserData[]) 
 
 export const ApplicantsTab = () => {
 	// Hacker data
-	const { data: hackersData, error: hackersError } = useCustomSWR<UserData>({
+	const { data: hackersData, error: hackersError } = useCustomSWR<UserData[]>({
 		url: '/api/users?usertype=HACKER',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of hackers.',

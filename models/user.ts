@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { ApplicationStatus } from '../types/database';
+import { themeConstants } from '../theme/theme';
+import { AccentColor, Theme } from '../theme/themeProvider';
 
 const Schema = mongoose.Schema;
 export const USER_TYPES = ['HACKER', 'JUDGE', 'ORGANIZER'];
@@ -47,6 +49,16 @@ export const UserSchema = new Schema(
 		eventsAttended: {
 			type: [Schema.Types.ObjectId],
 			ref: 'Event',
+		},
+		settings: {
+			baseTheme: {
+				type: String,
+				default: Theme.DARK,
+			},
+			accentColor: {
+				type: String,
+				default: AccentColor.MONOCHROME,
+			},
 		},
 	},
 	{
