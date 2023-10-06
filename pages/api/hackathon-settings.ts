@@ -24,24 +24,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				const { HACKATHON_START, HACKATHON_END, JUDGING_START, JUDGING_END } = req.body;
 
 				// check if hackathon settings valid (must be correct format of date)
-				const isHackathonSettingsValid = parseHackathonSettings(
-					HACKATHON_START,
-					HACKATHON_END,
-					JUDGING_START,
-					JUDGING_END
-				);
+				const isValid =
+					isSettingsValid(HACKATHON_START) &&
+					isSettingsValid(HACKATHON_END) &&
+					isSettingsValid(JUDGING_START) &&
+					isSettingsValid(JUDGING_END);
 
 				// if not valid, return 400
-				if (!isHackathonSettingsValid) return res.status(400).send('Invalid hackathon settings');
+				if (!isValid) return res.status(400).send('Invalid hackathon settings');
 
 				// find the hackathon settings
 				const updatedHackathonSettings = await hackathon.findOneAndUpdate(
 					{},
 					{
-						HACKATHON_START,
-						HACKATHON_END,
-						JUDGING_START,
-						JUDGING_END,
+						$set: {
+							HACKATHON_START,
+							HACKATHON_END,
+							JUDGING_START,
+							JUDGING_END,
+						},
 					},
 					{
 						new: true,
@@ -58,16 +59,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	}
 }
 
-const parseHackathonSettings = (
-	HACKATHON_START: string,
-	HACKATHON_END: string,
-	JUDGING_START: string,
-	JUDGING_END: string
-) => {
-	const hackathonStart = Date.parse(HACKATHON_START);
-	const hackathonEnd = Date.parse(HACKATHON_END);
-	const judgingStart = Date.parse(JUDGING_START);
-	const judgingEnd = Date.parse(JUDGING_END);
-
-	return !isNaN(hackathonStart) && !isNaN(hackathonEnd) && !isNaN(judgingStart) && !isNaN(judgingEnd);
+const isSettingsValid = (date: string) => {
+	return new Date(date).toString() !== 'Invalid Date';
 };
