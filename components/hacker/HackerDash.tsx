@@ -726,8 +726,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 						<>
-							<div style={{ padding: '20px 20px 20px 20px' }}>
+							<div style={{ padding: '20px' }}>
 								<Header user={user} signOut={signOut} />
+								{/* TODO: conditionally render hacking start and end code based on time stored in db */}
 								{/* Hacking start code */}
 								{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
 										<Button size="small" type="default" onClick={() => signOut()}>
