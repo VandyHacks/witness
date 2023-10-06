@@ -186,12 +186,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			});
 	};
 
-	const hasHackthonStarted = (): boolean => {
-		const startDate = new Date(process.env.NEXT_PUBLIC_START_DATE || '');
-		const curDate = new Date();
-		return curDate >= startDate;
-	};
-
 	useEffect(() => {
 		if (user?.applicationStatus) setUserApplicationStatus(user.applicationStatus);
 		getJudgingSessionData();
