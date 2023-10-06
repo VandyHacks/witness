@@ -19,6 +19,7 @@
 		"@types/formidable": "^2.0.5",
 		"antd": "^5.9.4",
 		"csv-writer": "^1.6.0",
+		"dayjs": "^1.11.10",
 		"dotenv": "^16.0.2",
 		"escape-html": "^1.0.3",
 		"export-to-csv": "^0.2.1",
