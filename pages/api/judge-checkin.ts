@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			if (judgeId === undefined) return res.status(400).send('judgeId (string) is required');
 			if (isJudgeCheckedIn === undefined) return res.status(400).send('isJudgeCheckedIn (boolean) is required');
 
-			const judge = await User.findOne({ _id: judgeId, userType: 'JUDGE' });
+			const judge = await User.findOne({ _id: { $eq: judgeId }, userType: 'JUDGE' });
 			if (!judge) return res.status(404).send('Judge not found');
 
 			judge.isJudgeCheckedIn = isJudgeCheckedIn;
