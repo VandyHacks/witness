@@ -1,26 +1,9 @@
+import { Button, DatePicker, Space } from 'antd';
+import dayjs from 'dayjs';
 import React, { useContext, useEffect, useState } from 'react';
+import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
 import { getBaseColor, ThemeContext } from '../../../theme/themeProvider';
 import { HackathonSettingsData } from '../../../types/database';
-
-/**
- * Parse a date from Date object to "yyyy-mm-ddThh:mm" format
- * so that it can be used in <input type="datetime-local" />
- * @param date  Date object to parse
- * @returns     String in "yyyy-mm-ddThh:mm" format
- */
-const parseDateToLocaleString = (date: Date | undefined) => {
-	if (!date) return '';
-
-	const dateObj = new Date(date);
-
-	const year = dateObj.getFullYear();
-	const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-	const day = dateObj.getDate().toString().padStart(2, '0');
-	const hour = dateObj.getHours().toString().padStart(2, '0');
-	const minute = dateObj.getMinutes().toString().padStart(2, '0');
-
-	return `${year}-${month}-${day}T${hour}:${minute}`;
-};
 
 const HackathonSettings = () => {
 	const { baseTheme } = useContext(ThemeContext);
@@ -60,41 +43,41 @@ const HackathonSettings = () => {
 				const settings = await res.json();
 				setHackathonSetting(settings as HackathonSettingsData);
 				setStatusMessage('Successfully saved to database!');
+				handleSubmitSuccess('Successfully saved to database!');
+			} else {
+				setStatusMessage('Failed to save to database!');
+				handleSubmitFailure('Failed to save to database!');
 			}
 		}
 	};
 
-	const handleHackathonStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newDate = new Date(e.target.value);
+	const handleHackathonChange = (_: any, dateStrings: [string, string]) => {
+		const newHackathonStart = dayjs(dateStrings[0], 'MM-DD-YYYY hh:mm A').format('MM/DD/YYYY hh:mm A');
+		const newHackathonEnd = dayjs(dateStrings[1], { utc: true }).format('MM/DD/YYYY hh:mm A');
+		console.log('Changing Hackathon: ', newHackathonStart);
+		console.log('Changing Hackathon: ', newHackathonEnd);
 		setHackathonSetting(prev => {
-			if (prev) return { ...prev, HACKATHON_START: newDate };
+			if (prev)
+				return {
+					...prev,
+					HACKATHON_START: newHackathonStart,
+					HACKATHON_END: newHackathonEnd,
+				};
 			return undefined;
 		});
 		setStatusMessage('Changes not saved yet.');
 	};
 
-	const handleHackathonEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newDate = new Date(e.target.value);
+	const handleJudgingChange = (_: any, dateStrings: [string, string]) => {
+		const newJudgingStart = dayjs(dateStrings[0], { utc: true }).format('MM/DD/YYYY hh:mm A');
+		const newJudgingEnd = dayjs(dateStrings[1], { utc: true }).format('MM/DD/YYYY hh:mm A');
 		setHackathonSetting(prev => {
-			if (prev) return { ...prev, HACKATHON_END: newDate };
-			return undefined;
-		});
-		setStatusMessage('Changes not saved yet.');
-	};
-
-	const handleJudgingStartChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newDate = new Date(e.target.value);
-		setHackathonSetting(prev => {
-			if (prev) return { ...prev, JUDGING_START: newDate };
-			return undefined;
-		});
-		setStatusMessage('Changes not saved yet.');
-	};
-
-	const handleJudgingEndChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const newDate = new Date(e.target.value);
-		setHackathonSetting(prev => {
-			if (prev) return { ...prev, JUDGING_END: newDate };
+			if (prev)
+				return {
+					...prev,
+					JUDGING_START: newJudgingStart,
+					JUDGING_END: newJudgingEnd,
+				};
 			return undefined;
 		});
 		setStatusMessage('Changes not saved yet.');
@@ -105,40 +88,28 @@ const HackathonSettings = () => {
 	return (
 		<div style={{ color: getBaseColor(baseTheme) }}>
 			<div>Hackathon Start & End</div>
-			<div>
-				<input
-					type="datetime-local"
-					defaultValue={parseDateToLocaleString(hackathonSetting?.HACKATHON_START)}
-					onChange={handleHackathonStartChange}
-				/>
-				<span> To </span>
-				<input
-					type="datetime-local"
-					defaultValue={parseDateToLocaleString(hackathonSetting?.HACKATHON_END)}
-					onChange={handleHackathonEndChange}
-				/>
-			</div>
+			<DatePicker.RangePicker
+				format="MM/DD/YYYY hh:mm A"
+				showTime={{ format: 'hh:mm A' }}
+				onChange={handleHackathonChange}
+				defaultValue={[dayjs(hackathonSetting?.HACKATHON_START), dayjs(hackathonSetting?.HACKATHON_END)]}
+			/>
 
 			<br />
 
 			<div>Judging Start & End</div>
-			<div>
-				<input
-					type="datetime-local"
-					defaultValue={parseDateToLocaleString(hackathonSetting?.JUDGING_START)}
-					onChange={handleJudgingStartChange}
-				/>
-				<span> To </span>
-				<input
-					type="datetime-local"
-					defaultValue={parseDateToLocaleString(hackathonSetting?.JUDGING_END)}
-					onChange={handleJudgingEndChange}
-				/>
-			</div>
+			<DatePicker.RangePicker
+				format="MM/DD/YYYY hh:mm A"
+				showTime={{ format: 'hh:mm A' }}
+				onChange={handleJudgingChange}
+				defaultValue={[dayjs(hackathonSetting?.JUDGING_START), dayjs(hackathonSetting?.JUDGING_END)]}
+			/>
 
 			<br />
+			<br />
 
-			<button onClick={handleSave}>Save dates to database</button>
+			<Button onClick={handleSave}>Save dates to database</Button>
+
 			{statusMessage && <div>{statusMessage}</div>}
 		</div>
 	);

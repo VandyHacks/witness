@@ -1,10 +1,10 @@
 import mongoose, { Schema } from 'mongoose';
 
 const HackathonSchema = new Schema({
-	HACKATHON_START: { type: Date, required: true, default: Date.now },
-	HACKATHON_END: { type: Date, required: true, default: Date.now },
-	JUDGING_START: { type: Date, required: true, default: Date.now },
-	JUDGING_END: { type: Date, required: true, default: Date.now },
+	HACKATHON_START: { type: String, required: true }, // MM/DD/YYYY hh:mm A
+	HACKATHON_END: { type: String, required: true }, // MM/DD/YYYY hh:mm A
+	JUDGING_START: { type: String, required: true }, // MM/DD/YYYY hh:mm A
+	JUDGING_END: { type: String, required: true }, // MM/DD/YYYY hh:mm A
 });
 
 // prevent recompilation of model if it already exists
