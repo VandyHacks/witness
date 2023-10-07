@@ -174,7 +174,7 @@ export default function JudgeDash() {
 	};
 
 	return (
-		<div className={styles[getThemedClass('judgeMain', baseTheme)]}>
+		<div>
 			<div className={styles[getThemedClass('judgeHeader', baseTheme)]}>
 				<h1 className={styles[getThemedClass('judgeTitle', baseTheme)]}>Judging Dashboard</h1>
 				<div className={styles[getThemedClass('judgeHeaderEmail', baseTheme)]}>
