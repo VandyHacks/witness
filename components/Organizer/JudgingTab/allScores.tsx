@@ -218,7 +218,13 @@ export default function AllScores(props: AllScoresProps) {
 
 	return (
 		<>
-			<Space style={{ marginBottom: 16, float: 'right' }}>
+			<Space
+				style={{
+					marginBottom: 16,
+					width: '100%',
+					justifyContent: 'space-between',
+				}}>
+				<h2>Judges Comments ({work.length ?? 0})</h2>
 				<Button type="primary" onClick={clearFilters}>
 					Clear filters
 				</Button>
