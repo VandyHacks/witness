@@ -58,8 +58,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			const res = await fetch(url, { method: 'GET' });
 
 			const hackathongSetting = (await res.json()) as HackathonSettingsData;
-			// const hackathonStartDate = parse(hackathongSetting.HACKATHON_START, 'MM/dd/yyyy HH:mm a', new Date());
+			const hackathonStartDate = Date.parse(hackathongSetting.HACKATHON_START);
 			const curDate = new Date();
+			console.log(curDate);
+			console.log(hackathonStartDate);
+			return hackathongSetting;
 			// setHackathonStarted(curDate < hackathongSetting.HACKATHON_START);
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
