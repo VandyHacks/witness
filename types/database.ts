@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import mongoose from 'mongoose';
 
 export const enum ApplicationStatus {
@@ -119,4 +120,12 @@ export interface JudgingSessionData {
 	team: TeamData;
 	judge: UserData;
 	time: String;
+}
+
+export interface HackathonSettingsData {
+	_id: mongoose.Schema.Types.ObjectId;
+	HACKATHON_START: string; // MM/DD/YYYY HH:mm A
+	HACKATHON_END: string; // MM/DD/YYYY hh:mm A
+	JUDGING_START: string; // MM/DD/YYYY hh:mm A
+	JUDGING_END: string; // MM/DD/YYYY hh:mm A
 }
