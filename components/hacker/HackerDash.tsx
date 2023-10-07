@@ -19,7 +19,7 @@ import useSWR from 'swr';
 import TeamManager from './TeamManager';
 import TeamSetup from './TeamSetup';
 import { TeamProfile } from '../../types/client';
-import { ApplicationStatus, UserData, JudgingSessionData } from '../../types/database';
+import { ApplicationStatus, UserData, JudgingSessionData, HackathonSettingsData } from '../../types/database';
 import styles from '../../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import TextArea from 'antd/lib/input/TextArea';
@@ -48,6 +48,15 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		async url => {
 			const res = await fetch(url, { method: 'GET' });
 			return (await res.json()) as UserData;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
+
+	const { data: setting } = useSWR(
+		'/api/hackathon-settings',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+			return (await res.json()) as HackathonSettingsData;
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
@@ -690,6 +699,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						<>
 							<div style={{ padding: '20px' }}>
 								<Header user={user} signOut={signOut} />
+								<p style={{ color: 'white' }}>{setting?.HACKATHON_START}</p>
 								{/* TODO: conditionally render hacking start and end code based on time stored in db */}
 								{/* Hacking start code */}
 								{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
