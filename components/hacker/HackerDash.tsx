@@ -56,10 +56,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		'/api/hackathon-settings',
 		async url => {
 			const res = await fetch(url, { method: 'GET' });
-			return (await res.json()) as HackathonSettingsData;
+
+			const hackathongSetting = (await res.json()) as HackathonSettingsData;
+			// const hackathonStartDate = parse(hackathongSetting.HACKATHON_START, 'MM/dd/yyyy HH:mm a', new Date());
+			const curDate = new Date();
+			// setHackathonStarted(curDate < hackathongSetting.HACKATHON_START);
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
+
+	const [hackathonStarted, setHackathonStarted] = useState(false);
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
@@ -699,40 +705,40 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						<>
 							<div style={{ padding: '20px' }}>
 								<Header user={user} signOut={signOut} />
-								<p style={{ color: 'white' }}>{setting?.HACKATHON_START}</p>
+								{/* <p style={{ color: 'white' }}>{setting?.HACKATHON_START}</p> */}
 								{/* TODO: conditionally render hacking start and end code based on time stored in db */}
 								{/* Hacking start code */}
-								{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-										<Button size="small" type="default" onClick={() => signOut()}>
-											Sign out
-										</Button>
-										<div style={{ paddingLeft: '10px', color: 'white' }}>
-											Signed in as {session?.user?.email}
-										</div>
-										<div style={{ paddingLeft: '20px', color: 'white' }}>
-											Current NFC Points: {user.nfcPoints}
-										</div>
-									</div> */}
-								{/* {!teamData && <TeamSetup />}
-									{teamData && (
-										<div style={{ width: '60vw', margin: 'auto' }}>
-											<Content style={{ width: '60vw', margin: 'auto' }}>
-												<Table
-													locale={{
-														emptyText: (
-															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-																<h3>Stay tuned! You will see your schedule soon!</h3>
-															</div>
-														),
-													}}
-													columns={judgingSessionColumns}
-													dataSource={judgingSessionData}
-												/>
-												<Divider />
-											</Content>
-											<TeamManager profile={teamData} />
-										</div>
-									)} */}
+								<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+									<Button size="small" type="default" onClick={() => signOut()}>
+										Sign out
+									</Button>
+									<div style={{ paddingLeft: '10px', color: 'white' }}>
+										Signed in as {session?.user?.email}
+									</div>
+									<div style={{ paddingLeft: '20px', color: 'white' }}>
+										Current NFC Points: {user.nfcPoints}
+									</div>
+								</div>
+								{!teamData && <TeamSetup />}
+								{teamData && (
+									<div style={{ width: '60vw', margin: 'auto' }}>
+										<Content style={{ width: '60vw', margin: 'auto' }}>
+											<Table
+												locale={{
+													emptyText: (
+														<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+															<h3>Stay tuned! You will see your schedule soon!</h3>
+														</div>
+													),
+												}}
+												columns={judgingSessionColumns}
+												dataSource={judgingSessionData}
+											/>
+											<Divider />
+										</Content>
+										<TeamManager profile={teamData} />
+									</div>
+								)}
 							</div>
 
 							{/* Pre-hacking code */}
