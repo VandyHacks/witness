@@ -18,6 +18,11 @@
     clear: both;
 }
 
+.ColumnHeader {
+    float: left;
+    width: 33%;
+}
+
 .Column {
     float: left;
     width: 33.33%;
@@ -32,24 +37,7 @@
     color: #C9A76B;
 }
 
-/* attempt 2 */
-.TableContainer {
-    overflow: auto;
-    height: 700px;
+.Placeholder {
+    font-size: 90px;
+    color: #FFFFFF80;
 }
-
-.TableContainer table {
-    table-layout: fixed;
-    width: 100%;
-}
-
-.TableContainer th {
-    position: sticky;
-    top: 0;
-    text-align: left;
-    background: #000000;
-}
-/* 
-.TableContainer tbody {
-    background: blue;
-} */

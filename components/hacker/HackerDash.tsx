@@ -194,7 +194,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		getJudgingSessionData();
 	}, []);
 
-	// LEADERBOARD DUMMY DATA
+	// LEADERBOARD AND JUDGING SCHEDULE DUMMY DATA
 	const leaderboard = [
 		{
 			name: 'First Last',
@@ -277,6 +277,219 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			points: 1729,
 		},
 	];
+
+	const judgingSchedule = [
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+		{
+			name: 'Test User',
+			time: 'December 17, 1995 11:40:00',
+			loc: {
+				locationNum: 11,
+			},
+			judge: {
+				name: 'Loren Quigley Sr.',
+			},
+		},
+	];
+
+	const renderJudgingTime = (time: string) => {
+		let startTime = new Date(time);
+		// add 10 minutes
+		let endTime = new Date(startTime.getTime() + 10 * 60000);
+		// return <>{startTime.getHours()}:{startTime.getMinutes()} - {endTime.getHours()}:{endTime.getMinutes()}</>
+		return (
+			<>
+				{startTime.toLocaleTimeString('default', {
+					hour: '2-digit',
+					minute: '2-digit',
+				})}{' '}
+				-{' '}
+				{endTime.toLocaleTimeString('default', {
+					hour: '2-digit',
+					minute: '2-digit',
+				})}
+			</>
+		);
+	};
 
 	return (
 		<Content
@@ -806,7 +1019,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
 							</div>
 							{!teamData && <TeamSetup />}
-							{teamData && (
+							{
 								<div style={{ width: '60vw', margin: 'auto' }}>
 									<Content style={{ width: '60vw', margin: 'auto' }}>
 										<Table
@@ -822,36 +1035,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										/>
 										<Divider />
 									</Content>
-									<TeamManager profile={teamData} />
+									{/* <TeamManager profile={teamData} /> */}
 								</div>
-							)}
+							}
 							{/* Leaderboard */}
 							<div className={TableStyles.Container}>
 								Leaderboard
-								{/* <div className={TableStyles.TableContainer}>
-									<table>
-										<thead>
-											<tr>
-												<th>Name</th>
-												<th>Team</th>
-												<th>Points</th>
-											</tr>
-										</thead>
-										<tbody>
-											{leaderboard.map(entry => (
-												<tr key={entry.name}>
-													<td>{entry.name}</td>
-													<td>{entry.team}</td>
-													<td>{entry.points}</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								</div> */}
 								<div className={TableStyles.Table}>
-									<div className={TableStyles.Column}>Name</div>
-									<div className={TableStyles.Column}>Team</div>
-									<div className={TableStyles.Column}>Points</div>
+									<div className={TableStyles.ColumnHeader}>Name</div>
+									<div className={TableStyles.ColumnHeader}>Team</div>
+									<div className={TableStyles.ColumnHeader}>Points</div>
 								</div>
 								<div className={TableStyles.Entries}>
 									<div className={TableStyles.Table}>
@@ -880,6 +1073,49 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</div>
 							</div>
 							{/* Judging Schedule */}
+							<div className={TableStyles.Container}>
+								Judging Schedule
+								{judgingSessionData?.length === 0 && (
+									<div className={TableStyles.Placeholder}>
+										Schedule will show up here when hacking ends!
+									</div>
+								)}
+								{/* Update this to be conditional on when judgingSessionData?.length > 0 */}
+								{judgingSchedule.length > 0 && (
+									<>
+										<div className={TableStyles.Table}>
+											<div className={TableStyles.ColumnHeader}>Time</div>
+											<div className={TableStyles.ColumnHeader}>Table</div>
+											<div className={TableStyles.ColumnHeader}>Judge</div>
+										</div>
+										<div className={TableStyles.Entries}>
+											<div className={TableStyles.Table}>
+												<div className={TableStyles.Column}>
+													{judgingSchedule.map(entry => (
+														<div key={entry.name} className={TableStyles.Entry}>
+															{renderJudgingTime(entry.time)}
+														</div>
+													))}
+												</div>
+												<div className={TableStyles.Column}>
+													{judgingSchedule.map(entry => (
+														<div key={entry.name} className={TableStyles.Entry}>
+															{entry.loc.locationNum}
+														</div>
+													))}
+												</div>
+												<div className={TableStyles.Column}>
+													{judgingSchedule.map(entry => (
+														<div key={entry.name} className={TableStyles.Entry}>
+															{entry.judge.name}
+														</div>
+													))}
+												</div>
+											</div>
+										</div>
+									</>
+								)}
+							</div>
 							{/* Pre-hacking code */}
 							{/*
 							<div className={styles.SubmittedForm}>
