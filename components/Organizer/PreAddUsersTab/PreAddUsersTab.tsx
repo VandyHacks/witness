@@ -10,7 +10,7 @@ const PreAddUsersTab = () => {
 	const { mutate } = useSWRConfig();
 
 	// Preadd data
-	const { data: preAddData, error: preAddError } = useCustomSWR<PreAddData>({
+	const { data: preAddData, error: preAddError } = useCustomSWR<PreAddData[]>({
 		url: '/api/preadd',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of preadded users.',

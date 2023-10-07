@@ -19,7 +19,7 @@ import { useEffect, useState } from 'react';
  * ```
  */
 export const useCustomSWR = <T>(params: CustomerSWRParams) => {
-	const [data, setData] = useState<T[] | null>(null);
+	const [data, setData] = useState<T | null>(null);
 	const [error, setError] = useState<ResponseError | null>(null);
 
 	const { data: requestData, error: requestError } = useSWR(params.url, async url => {
@@ -31,7 +31,7 @@ export const useCustomSWR = <T>(params: CustomerSWRParams) => {
 			error.status = res.status;
 			throw error;
 		}
-		return (await res.json()) as T[];
+		return (await res.json()) as T;
 	});
 
 	useEffect(() => {

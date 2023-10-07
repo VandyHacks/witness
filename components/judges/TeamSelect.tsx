@@ -1,8 +1,9 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Row, Select, Space } from 'antd';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useContext } from 'react';
 import { TeamSelectData } from '../../types/client';
 import { useSession } from 'next-auth/react';
+import { ThemeContext, getBaseColor } from '../../theme/themeProvider';
 const { Option, OptGroup } = Select;
 
 interface TeamSelectProps {
@@ -22,10 +23,16 @@ function withCheckMark(value: string) {
 export default function TeamSelect(props: TeamSelectProps) {
 	const { teamsData, currentTeamID, handleChange } = props;
 	const { data: session } = useSession();
+	const { baseTheme } = useContext(ThemeContext);
 
 	return (
 		<Space direction="horizontal" align="center" wrap>
-			<strong>Team:</strong>
+			<strong
+				style={{
+					color: getBaseColor(baseTheme),
+				}}>
+				Team:
+			</strong>
 			<Select
 				value={currentTeamID ? currentTeamID : 'Select a team'}
 				style={{ width: 300, maxWidth: '60vw' }}
