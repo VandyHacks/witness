@@ -266,11 +266,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										name="dateOfBirth"
 										label={<p className={styles.Label}>Date of Birth</p>}
 										rules={[{ required: true, message: 'Please select your date of birth!' }]}>
-										<DatePicker
-											placeholder="MM-DD-YYYY"
-											format="MM-DD-YYYY"
-											defaultPickerValue={moment().subtract(18, 'years')}
-										/>
+										<DatePicker placeholder="MM-DD-YYYY" format="MM-DD-YYYY" />
 									</Form.Item>
 									<Form.Item
 										className={styles.FormItem}
