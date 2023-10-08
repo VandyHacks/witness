@@ -46,6 +46,10 @@ export const UserSchema = new Schema(
 			// https://stackoverflow.com/questions/7955040/mongodb-mongoose-unique-if-not-null
 			sparse: true,
 		},
+		nfcPoints: {
+			type: Number,
+			default: 0,
+		},
 		eventsAttended: {
 			type: [Schema.Types.ObjectId],
 			ref: 'Event',
