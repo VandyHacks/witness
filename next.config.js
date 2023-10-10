@@ -14,4 +14,5 @@ module.exports = {
 
 		return config;
 	},
+	experimental: { nftTracing: true },
 };
