@@ -10,8 +10,8 @@ import { ApplicationStatus, UserData } from '../types/database';
  */
 const getHtmlTemplate = (template: string) => {
 	// assume directory is currently in /pages/api/, need to go to /email/html/...
-	// console.log('directory: ', path.join(__dirname, `../../email/html/${template}.html`));
-	return readFile(path.join(__dirname, `../../email/html/${template}.html`), 'utf8');
+	// console.log('directory: ', path.join(process.cwd(), `/email/html/${template}.html`));
+	return readFile(path.join(process.cwd(), `/email/html/${template}.html`), 'utf8');
 };
 
 /**
