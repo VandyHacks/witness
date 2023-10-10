@@ -474,7 +474,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								<Form.Item
+								{/* TODO: uncomment when application starts */}
+								{/* <Form.Item
 									label={
 										<p className={styles.Label}>
 											Would you like to apply for travel reimbursements?
@@ -486,7 +487,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Radio.Button value="yes">Yes</Radio.Button>
 										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
-								</Form.Item>
+								</Form.Item> */}
 								<Form.Item
 									name="overnight"
 									label={
