@@ -1,36 +1,23 @@
-import { Button, Divider, notification, Skeleton } from 'antd';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Divider, notification, Skeleton } from 'antd';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import JudgingForm from './JudgingForm';
 import { JudgeSchedule } from './schedule';
 import TeamSelect from './TeamSelect';
-import { JudgingFormFields, ScheduleDisplay, TeamSelectData } from '../../types/client';
-import { JudgingSessionData, ResponseError, TeamData } from '../../types/database';
+import { JudgingFormFields, TeamSelectData } from '../../types/client';
+import { JudgingSessionData, ResponseError } from '../../types/database';
 import { signOut, useSession } from 'next-auth/react';
 import { ScopedMutator } from 'swr/dist/types';
+import ThemeControl from '../Organizer/SettingsTab/ThemeControl';
+import { getAccentColor, getBaseColor, getThemedClass, ThemeContext } from '../../theme/themeProvider';
+import styles from '../../styles/Judge.module.css';
+import { handleSubmitSuccess } from '../../lib/helpers';
 
-const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
-const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
 // let { JUDGING_LENGTH } = process.env;
 const JUDGING_LENGTH = '600000';
 
-function handleSubmitSuccess(isNew: boolean, setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>) {
-	notification['success']({
-		message: `Successfully ${isNew ? 'submitted' : 'updated'}!`,
-		placement: 'bottomRight',
-	});
-	setIsNewForm(false);
-}
-
 function handleSubmitFailure(errorDescription: string) {
-	if (errorDescription === '') {
-		errorDescription = GENERIC_ERROR_DESCRIPTION;
-	}
-	notification['error']({
-		message: GENERIC_ERROR_MESSAGE,
-		description: errorDescription,
-		placement: 'bottomRight',
-	});
+	handleSubmitFailure('Ooops, something went wrong!');
 }
 
 async function handleSubmit(
@@ -51,7 +38,8 @@ async function handleSubmit(
 	if (res.ok) {
 		mutate('/api/teams');
 		mutate('/api/judging-form');
-		handleSubmitSuccess(isNewForm, setIsNewForm);
+		handleSubmitSuccess(`Successfully ${isNewForm ? 'submitted' : 'updated'}!`);
+		setIsNewForm(false);
 	} else {
 		handleSubmitFailure(await res.text());
 	}
@@ -65,6 +53,8 @@ export default function JudgeDash() {
 	const [nextIndex, setNextIndex] = useState(-1);
 	const { mutate } = useSWRConfig();
 	const judgingLength = parseInt(JUDGING_LENGTH || '0');
+
+	const { baseTheme, accentColor } = useContext(ThemeContext);
 
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
@@ -169,12 +159,24 @@ export default function JudgeDash() {
 	};
 
 	return (
-		<>
-			<div style={{ display: 'flex', paddingBottom: '20px' }}>
-				<Button size="small" type="default" onClick={() => signOut()}>
-					Sign out
-				</Button>
-				<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
+		<div>
+			<div className={styles[getThemedClass('judgeHeader', baseTheme)]}>
+				<h1 className={styles[getThemedClass('judgeTitle', baseTheme)]}>Judging Dashboard</h1>
+				<div className={styles[getThemedClass('judgeHeaderEmail', baseTheme)]}>
+					<div className={styles[getThemedClass('judgeHeaderEmailText', baseTheme)]}>
+						{session?.user?.email}
+					</div>
+					<div>
+						<button
+							className={styles[getThemedClass('judgeButton', baseTheme)]}
+							style={{
+								backgroundColor: getAccentColor(accentColor, baseTheme),
+							}}
+							onClick={() => signOut()}>
+							Sign out
+						</button>
+					</div>
+				</div>
 			</div>
 			{scheduleData && (
 				<JudgeSchedule data={scheduleData} cutoffIndex={nextIndex} handleChange={handleTeamChange} />
@@ -192,6 +194,9 @@ export default function JudgeDash() {
 				/>
 			)}
 			{!formData && teamID && <Skeleton />}
-		</>
+			<div className={styles['theme-control-container']}>
+				<ThemeControl />
+			</div>
+		</div>
 	);
 }

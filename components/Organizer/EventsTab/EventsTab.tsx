@@ -5,6 +5,7 @@ import { EventCountData, EventData } from '../../../types/database';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 import { mutate } from 'swr';
 import { ObjectId } from 'mongoose';
+import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
 
 interface EventDisplay extends EventData {
 	setCurEvent: (open: EventDisplay) => void;
@@ -106,14 +107,14 @@ export default function Events() {
 	const input = useRef<InputRef>(null);
 
 	// get events count
-	const { data: eventsCountData, error: eventsCountError } = useCustomSWR<EventCountData>({
+	const { data: eventsCountData, error: eventsCountError } = useCustomSWR<EventCountData[]>({
 		url: '/api/events-count',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get count of events.',
 	});
 
 	// get events data
-	const { data: eventsData, error: eventsError } = useCustomSWR<EventData>({
+	const { data: eventsData, error: eventsError } = useCustomSWR<EventData[]>({
 		url: '/api/events',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of events.',
@@ -177,16 +178,9 @@ export default function Events() {
 			}),
 		});
 		if (response.ok) {
-			notification['success']({
-				message: `Successfully checked in!`,
-				placement: 'bottomRight',
-			});
+			handleSubmitSuccess('Successfully checked in!');
 		} else {
-			notification['error']({
-				message: 'Failed to check-in hacker',
-				description: await response.text(),
-				placement: 'bottomRight',
-			});
+			handleSubmitFailure('Failed to check in user!');
 		}
 		setNfcId('');
 		refreshData();
@@ -204,16 +198,9 @@ export default function Events() {
 
 		// Display the success/failure messages
 		if (response.ok) {
-			notification['success']({
-				message: `Successfully Saved Changes!`,
-				placement: 'bottomRight',
-			});
+			handleSubmitSuccess('Successfully saved changes!');
 		} else {
-			notification['error']({
-				message: 'Failed to save changes',
-				description: await response.text(),
-				placement: 'bottomRight',
-			});
+			handleSubmitFailure('Failed to save changes!');
 		}
 	};
 

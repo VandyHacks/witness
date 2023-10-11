@@ -1,14 +1,9 @@
 import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin } from 'antd';
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
-import { OrganizerScheduleDisplay, ScheduleDisplay } from '../../types/client';
-import { UploadOutlined } from '@ant-design/icons';
 import { JudgingSessionData } from '../../types/database';
 import { User } from 'next-auth';
-import Title from 'antd/lib/skeleton/Title';
-
-const { Panel } = Collapse;
 
 interface ScheduleProps {
 	data: JudgingSessionData[];
@@ -22,9 +17,6 @@ interface ScheduleProps {
 function TableCell(data: JudgingSessionData | null) {
 	return data
 		? {
-				props: {
-					style: { background: '#fafafa' },
-				},
 				children: (
 					<Space direction="vertical">
 						{/* <Collapse ghost>
@@ -63,28 +55,6 @@ enum EditingStates {
 	Reject = 'REJECT',
 }
 
-function handleSuccess() {
-	notification['success']({
-		message: (
-			<span>
-				Successfully set schedule!
-				<br />
-				Please refresh the page.
-			</span>
-		),
-		placement: 'bottomRight',
-	});
-}
-
-function handleFailure(message: string) {
-	notification['error']({
-		message: 'Oops, something went wrong!',
-		description: message,
-		placement: 'bottomRight',
-		duration: null,
-	});
-}
-
 export function generateTimes(start: Date, end: Date, interval: number) {
 	const times = [];
 	let current = start;
@@ -98,7 +68,10 @@ export function generateTimes(start: Date, end: Date, interval: number) {
 export default function OrganizerSchedule(props: ScheduleProps) {
 	let { data, sessionTimeStart, sessionTimeEnd } = props;
 
-	const teams = useMemo(() => [...new Set(data.map(x => x.team.name))], [data]);
+	const teams = useMemo(
+		() => [...new Set(data.filter(x => x.team !== null && x.team.name !== null).map(x => x.team.name))],
+		[data]
+	);
 
 	const columns = useMemo(
 		() => [
@@ -110,7 +83,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
 			...teams.map(teamName => {
-				let locationNum = data.find(x => x.team.name === teamName)?.team.locationNum;
+				let locationNum = data
+					.filter(x => x.team !== null && x.team.name !== null)
+					.find(x => x.team.name === teamName)?.team.locationNum;
 				return {
 					title: (teamName as string) + ' (Table ' + locationNum + ')',
 					dataIndex: teamName as string,
@@ -139,7 +114,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 			if (!dataAsMap.has(time)) {
 				dataAsMap.set(time, Object.fromEntries(teams.map(team => [team, null])));
 			}
-			dataAsMap.get(time)[team.name as string] = session;
+
+			// this is bad bad
+			dataAsMap.get(time)[(team?.name as string) || ''] = session;
 		});
 		return [...dataAsMap.entries()].map(pair => ({
 			time: pair[0],

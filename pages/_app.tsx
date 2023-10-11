@@ -2,8 +2,20 @@ import '../styles/globals.css';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { AccentColor, Theme, ThemeContext } from '../theme/themeProvider';
+import { useState } from 'react';
 
 function MyApp({ Component, pageProps }: AppProps) {
+	// Theme stuffs
+	const [baseTheme, setBaseTheme] = useState<Theme>(Theme.DARK);
+	const [accentColor, setAccentColor] = useState<AccentColor>(AccentColor.ORANGE);
+	const themeValues = {
+		baseTheme,
+		setBaseTheme,
+		accentColor,
+		setAccentColor,
+	};
+
 	return (
 		<>
 			<Head>
@@ -11,7 +23,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 				<title>{pageProps.title}</title>
 			</Head>
 			<SessionProvider session={pageProps.session}>
-				<Component {...pageProps} />
+				<ThemeContext.Provider value={themeValues}>
+					<Component {...pageProps} />
+				</ThemeContext.Provider>
 			</SessionProvider>
 		</>
 	);
