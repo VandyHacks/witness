@@ -173,7 +173,8 @@ const changeDevpostLink = async (team: TeamData) => {
 
 	// link has to have host devpost.com
 	const check = new URL(newDevpostLink);
-	if (!check.host.includes('devpost.com')) {
+	const allowedHosts = ['devpost.com', 'www.devpost.com'];
+	if (!allowedHosts.includes(check.host)) {
 		console.log('Invalid devpost link');
 		return promptAction();
 	}
