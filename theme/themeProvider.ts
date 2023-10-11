@@ -7,6 +7,8 @@ export enum Theme {
 	DARK = 'dark',
 }
 
+export type ThemedClass<ClassName extends string> = `${ClassName}-${Theme}`;
+
 // Accent color options
 export enum AccentColor {
 	BLUE = 'blue',
@@ -33,21 +35,6 @@ export const ThemeContext = createContext<ThemeContextType>({
 	setAccentColor: (_: AccentColor) => {},
 });
 
-// Create the wrapper for the theme context
-export const ThemeProvider = ({ children }: { children: any }) => {
-	const [baseTheme, setBaseTheme] = useState<Theme>(Theme.DARK);
-	const [accentColor, setAccentColor] = useState<AccentColor>(AccentColor.ORANGE);
-
-	const value = {
-		baseTheme,
-		setBaseTheme,
-		accentColor,
-		setAccentColor,
-	};
-
-	return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
-};
-
 /**
  * Appends the theme to a css class name
  * @param className - the css class name
@@ -56,7 +43,10 @@ export const ThemeProvider = ({ children }: { children: any }) => {
  * 	<div className={styles[useTheme('organizerMain')]}>
  * ```
  */
-export const getThemedClass = (className: string, baseTheme: Theme) => {
+export const getThemedClass = <ClassName extends string>(
+	className: ClassName,
+	baseTheme: Theme
+): ThemedClass<ClassName> => {
 	return `${className}-${baseTheme === Theme.LIGHT ? 'light' : 'dark'}`;
 };
 

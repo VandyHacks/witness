@@ -11,29 +11,13 @@ import { ScopedMutator } from 'swr/dist/types';
 import ThemeControl from '../Organizer/SettingsTab/ThemeControl';
 import { getAccentColor, getBaseColor, getThemedClass, ThemeContext } from '../../theme/themeProvider';
 import styles from '../../styles/Judge.module.css';
+import { handleSubmitSuccess } from '../../lib/helpers';
 
-const GENERIC_ERROR_MESSAGE = 'Oops, something went wrong!';
-const GENERIC_ERROR_DESCRIPTION = 'Please try again or contact an organizer if the problem persists.';
 // let { JUDGING_LENGTH } = process.env;
 const JUDGING_LENGTH = '600000';
 
-function handleSubmitSuccess(isNew: boolean, setIsNewForm: React.Dispatch<React.SetStateAction<boolean>>) {
-	notification['success']({
-		message: `Successfully ${isNew ? 'submitted' : 'updated'}!`,
-		placement: 'bottomRight',
-	});
-	setIsNewForm(false);
-}
-
 function handleSubmitFailure(errorDescription: string) {
-	if (errorDescription === '') {
-		errorDescription = GENERIC_ERROR_DESCRIPTION;
-	}
-	notification['error']({
-		message: GENERIC_ERROR_MESSAGE,
-		description: errorDescription,
-		placement: 'bottomRight',
-	});
+	handleSubmitFailure('Ooops, something went wrong!');
 }
 
 async function handleSubmit(
@@ -54,7 +38,8 @@ async function handleSubmit(
 	if (res.ok) {
 		mutate('/api/teams');
 		mutate('/api/judging-form');
-		handleSubmitSuccess(isNewForm, setIsNewForm);
+		handleSubmitSuccess(`Successfully ${isNewForm ? 'submitted' : 'updated'}!`);
+		setIsNewForm(false);
 	} else {
 		handleSubmitFailure(await res.text());
 	}
@@ -174,7 +159,7 @@ export default function JudgeDash() {
 	};
 
 	return (
-		<div className={styles[getThemedClass('judgeMain', baseTheme)]}>
+		<div>
 			<div className={styles[getThemedClass('judgeHeader', baseTheme)]}>
 				<h1 className={styles[getThemedClass('judgeTitle', baseTheme)]}>Judging Dashboard</h1>
 				<div className={styles[getThemedClass('judgeHeaderEmail', baseTheme)]}>

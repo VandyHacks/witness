@@ -41,7 +41,7 @@ export default function OrganizerDash() {
 	if (!userData) return <Skeleton />;
 
 	return (
-		<div className={styles[getThemedClass('organizerMain', baseTheme)]}>
+		<div>
 			<div className={styles[getThemedClass('organizerHeader', baseTheme)]}>
 				<h1 className={styles[getThemedClass('organizerTitle', baseTheme)]}>Organizer Dashboard</h1>
 				<div className={styles[getThemedClass('organizerHeaderEmail', baseTheme)]}>

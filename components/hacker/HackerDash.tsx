@@ -19,12 +19,17 @@ import useSWR from 'swr';
 import TeamManager from './TeamManager';
 import TeamSetup from './TeamSetup';
 import { TeamProfile } from '../../types/client';
-import { ApplicationStatus, UserData, JudgingSessionData } from '../../types/database';
+import { ApplicationStatus, UserData, JudgingSessionData, HackathonSettingsData } from '../../types/database';
 import styles from '../../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
 import { ColumnsType } from 'antd/es/table';
+import Header from './hacking-start/Header';
+import RegistrationLogo from './RegistrationLogo';
+
+const DEV_DEPLOY =
+	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
 
 type HackerProps = {
 	userApplicationStatus: number;
@@ -49,6 +54,30 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
+
+	const { data: setting } = useSWR(
+		'/api/hackathon-settings',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+
+			const hackathongSetting = (await res.json()) as HackathonSettingsData;
+			const hackathonStartDate = new Date(Date.parse(hackathongSetting.HACKATHON_START));
+			const hackathonEndDate = new Date(Date.parse(hackathongSetting.HACKATHON_END));
+			const curDate = new Date();
+
+			// DEV_DEPLOY is true if we are in development or preview mode
+			if (DEV_DEPLOY) {
+				setHackathonStarted(true);
+			} else {
+				setHackathonStarted(curDate >= hackathonStartDate && curDate <= hackathonEndDate);
+			}
+
+			return hackathongSetting;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
+
+	const [hackathonStarted, setHackathonStarted] = useState(false);
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
@@ -210,11 +239,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			{!user && <Skeleton />}
 			{user && (
 				<div style={{ overflow: 'auto', height: '100vh' }}>
-					<Form.Item className={styles.TitleLogo}> </Form.Item>
-					<div className={styles.TitleContainer}>
-						<div className={styles.Title}>VandyHacks X Registration</div>
-					</div>
-
 					{user.applicationStatus === ApplicationStatus.CREATED && (
 						<Form
 							layout={'horizontal'}
@@ -231,27 +255,21 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Button>
 								</div>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>First Name</p>}
 									name="firstName"
 									rules={[{ required: true, message: 'Please input your first name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Last Name</p>}
 									name="lastName"
 									rules={[{ required: true, message: 'Please input your last name!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Preferred Name</p>}
-									name="preferredName">
+								<Form.Item label={<p className={styles.Label}>Preferred Name</p>} name="preferredName">
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Gender</p>}
 									name="gender"
 									rules={[{ required: true, message: 'Please select an option!' }]}>
@@ -263,35 +281,30 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="dateOfBirth"
 									label={<p className={styles.Label}>Date of Birth</p>}
 									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
 									<DatePicker placeholder="MM-DD-YYYY" format="MM-DD-YYYY" />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Phone Number</p>}
 									name="phoneNumber"
 									rules={[{ required: true, message: 'Please input your phone number!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>School</p>}
 									name="school"
 									rules={[{ required: true, message: 'Please input your school!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Major</p>}
 									name="major"
 									rules={[{ required: true, message: 'Please input your major!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Graduation Year</p>}
 									name="graduationYear"
 									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
@@ -304,21 +317,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Address Line 1</p>}
 									name="address1"
 									rules={[{ required: true, message: 'Please input your address!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
-									label={<p className={styles.Label}>Address Line 2</p>}
-									name="address2">
+								<Form.Item label={<p className={styles.Label}>Address Line 2</p>} name="address2">
 									<Input className={styles.Input} />
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>City</p>}
 									name={'city'}
 									rules={[{ required: true, message: 'Please input your city!' }]}>
@@ -326,7 +334,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>State</p>}
 									name={'state'}
 									rules={[{ required: true, message: 'Please input your state!' }]}>
@@ -334,7 +341,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>ZIP Code</p>}
 									name={'zip'}
 									rules={[
@@ -355,20 +361,17 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 
 								<Form.Item
-									className={styles.FormItem}
 									name="race"
 									label={<p className={styles.Label}>Race</p>}
 									rules={[{ required: true, message: 'Please select at least one option!' }]}>
 									<Checkbox.Group className={styles.TextWhite} options={race} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="dietaryRestrictions"
 									label={<p className={styles.Label}>Dietary Restrictions</p>}>
 									<Checkbox.Group className={styles.TextWhite} options={dietaryRestrictions} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="accommodationNeeds"
 									label={<p className={styles.Label}>Accommodation needs</p>}>
 									<Input
@@ -377,7 +380,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="firstTime"
 									label={<p className={styles.Label}>First-time hacker?</p>}
 									rules={[{ required: true, message: 'Please select an option!' }]}
@@ -388,7 +390,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="whyAttend"
 									label={<p className={styles.Label}>Why would you like to attend VandyHacks?</p>}
 									rules={[
@@ -404,7 +405,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="techIndustry"
 									label={
 										<p className={styles.Label}>
@@ -419,7 +419,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="techStack"
 									label={
 										<p className={styles.Label}>Which tech stack, if any, are you familiar with?</p>
@@ -432,7 +431,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="passion"
 									label={<p className={styles.Label}>What are you passionate about?</p>}
 									rules={[
@@ -445,14 +443,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									/>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="motivation"
 									label={<p className={styles.Label}>What do you hope to gain from VandyHacks?</p>}
 									rules={[{ required: true, message: 'Please select at least one option!' }]}>
 									<Checkbox.Group className={styles.TextWhite} options={motivation} />
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Shirt Size</p>}
 									name="shirtSize"
 									rules={[{ required: true, message: 'Please select your shirt size!' }]}>
@@ -466,7 +462,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={<p className={styles.Label}>Résumé</p>}
 									rules={[
 										{
@@ -503,8 +498,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								<Form.Item
-									className={styles.FormItem}
+								{/* TODO: uncomment when application starts */}
+								{/* <Form.Item
 									label={
 										<p className={styles.Label}>
 											Would you like to apply for travel reimbursements?
@@ -516,9 +511,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Radio.Button value="yes">Yes</Radio.Button>
 										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
-								</Form.Item>
+								</Form.Item> */}
 								<Form.Item
-									className={styles.FormItem}
 									name="overnight"
 									label={
 										<p className={styles.LabelOvernight}>Are you staying overnight in the venue?</p>
@@ -530,7 +524,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									name="prizeEligibility"
 									label={
 										<p className={styles.LabelCitizen}>
@@ -546,7 +539,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									className={styles.FormItem}
 									label={
 										<p className={styles.LabelContact}>
 											Would you like to be contacted about volunteering at the event?
@@ -561,7 +553,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<br />
 								<Form.Item
-									className={styles.FormItem}
 									valuePropName="checked"
 									name="agreement1"
 									rules={[
@@ -635,6 +626,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)}
 					{user.applicationStatus === ApplicationStatus.SUBMITTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Thank you for applying to VandyHacks!
@@ -671,6 +663,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)}
 					{user.applicationStatus === ApplicationStatus.ACCEPTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Congratulations!
@@ -705,66 +698,94 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 						<>
-							{/* Hacking start code */}
-							<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-								<Button size="small" type="default" onClick={() => signOut()}>
-									Sign out
-								</Button>
-								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
-							</div>
-							{!teamData && <TeamSetup />}
-							{teamData && (
-								<div style={{ width: '60vw', margin: 'auto' }}>
-									<Content style={{ width: '60vw', margin: 'auto' }}>
-										<Table
-											locale={{
-												emptyText: (
-													<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-														<h3>Stay tuned! You will see your schedule soon!</h3>
-													</div>
-												),
-											}}
-											columns={judgingSessionColumns}
-											dataSource={judgingSessionData}
-										/>
-										<Divider />
-									</Content>
-									<TeamManager profile={teamData} />
-								</div>
-							)}
-							{/* Pre-hacking code */}
-							{/*
-							<div className={styles.SubmittedForm}>
-								<div className={styles.ThankYouMessage}>
-									Congratulations!
-									<br />
-									You have been accepted to VandyHacks!
-									<div style={{ width: '100%', height: '16px' }}></div>
-									<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
-										<Button size="large" type="link">
-											Click here to join our Discord
-										</Button>
-									</a>
-									<br />
-									<br />
-									More information will appear here as we get closer to the hackathon!
-									<div className={styles.SignInInfo}>
-										<div>Signed in as {session?.user?.email}</div>
-										<Button
-											style={{ marginTop: '8px' }}
-											size="small"
-											type="default"
-											onClick={() => signOut()}>
+							{/* Hacking Code */}
+							{hackathonStarted && (
+								<div style={{ padding: '20px' }}>
+									<Header user={user} signOut={signOut} />
+
+									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
+
+									{/* TODO: remove once ready. placeholder */}
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center',
+											textAlign: 'center',
+											color: 'white',
+										}}>
+										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
+									</div>
+
+									{/* TODO: these are being refactored. should remove this after complete */}
+									{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
 										</Button>
+										<div style={{ paddingLeft: '10px', color: 'white' }}>
+											Signed in as {session?.user?.email}
+										</div>
+										<div style={{ paddingLeft: '20px', color: 'white' }}>
+											Current NFC Points: {user.nfcPoints}
+										</div>
+									</div>
+									{!teamData && <TeamSetup />}
+									{teamData && (
+										<div style={{ width: '60vw', margin: 'auto' }}>
+											<Content style={{ width: '60vw', margin: 'auto' }}>
+												<Table
+													locale={{
+														emptyText: (
+															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+																<h3>Stay tuned! You will see your schedule soon!</h3>
+															</div>
+														),
+													}}
+													columns={judgingSessionColumns}
+													dataSource={judgingSessionData}
+												/>
+												<Divider />
+											</Content>
+											<TeamManager profile={teamData} />
+										</div>
+									)} */}
+								</div>
+							)}
+
+							{/* Pre-hacking code */}
+							{!hackathonStarted && (
+								<div className={styles.SubmittedForm}>
+									<div className={styles.ThankYouMessage}>
+										Congratulations!
+										<br />
+										You have been accepted to VandyHacks!
+										<div style={{ width: '100%', height: '16px' }}></div>
+										<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+											<Button size="large" type="link">
+												Click here to join our Discord
+											</Button>
+										</a>
+										<br />
+										<br />
+										More information will appear here as we get closer to the hackathon!
+										<div className={styles.SignInInfo}>
+											<div>Signed in as {session?.user?.email}</div>
+											<Button
+												style={{ marginTop: '8px' }}
+												size="small"
+												type="default"
+												onClick={() => signOut()}>
+												Sign out
+											</Button>
+										</div>
 									</div>
 								</div>
-							</div>
-							*/}
+							)}
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									<br />
@@ -786,30 +807,33 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.DECLINED && (
-						<div className={styles.SubmittedForm}>
-							<div className={styles.ThankYouMessage}>
-								<br />
-								We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake and
-								you&apos;d like to attend, please email us at{' '}
-								<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
-									info@vandyhacks.org
-								</a>
-								.
-								<br />
-								We hope to see you next year!
-								<br />
-								<div className={styles.SignInInfo}>
-									<div>Signed in as {session?.user?.email}</div>
-									<Button
-										style={{ marginTop: '8px' }}
-										size="small"
-										type="default"
-										onClick={() => signOut()}>
-										Sign out
-									</Button>
+						<>
+							<RegistrationLogo />
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									<br />
+									We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake
+									and you&apos;d like to attend, please email us at{' '}
+									<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
+										info@vandyhacks.org
+									</a>
+									.
+									<br />
+									We hope to see you next year!
+									<br />
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
 								</div>
 							</div>
-						</div>
+						</>
 					)}
 				</div>
 			)}

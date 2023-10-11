@@ -1,3 +1,4 @@
+import { Dayjs } from 'dayjs';
 import mongoose from 'mongoose';
 
 export const enum ApplicationStatus {
@@ -47,10 +48,12 @@ export interface UserData {
 	application?: mongoose.Schema.Types.ObjectId;
 	applicationStatus: ApplicationStatus;
 	eventsAttended: mongoose.Schema.Types.ObjectId[];
+	isJudgeCheckedIn?: boolean;
 	settings?: {
 		baseTheme?: string;
 		accentColor?: string;
 	};
+	nfcPoints: number;
 }
 
 export interface PreAddData {
@@ -106,6 +109,7 @@ export interface EventData {
 	startTime: String;
 	endTime: String;
 	location: String;
+	nfcPoints: Number;
 }
 
 export interface EventCountData {
@@ -118,4 +122,12 @@ export interface JudgingSessionData {
 	team: TeamData;
 	judge: UserData;
 	time: String;
+}
+
+export interface HackathonSettingsData {
+	_id: mongoose.Schema.Types.ObjectId;
+	HACKATHON_START: string; // MM/DD/YYYY HH:mm A
+	HACKATHON_END: string; // MM/DD/YYYY hh:mm A
+	JUDGING_START: string; // MM/DD/YYYY hh:mm A
+	JUDGING_END: string; // MM/DD/YYYY hh:mm A
 }
