@@ -1,4 +1,4 @@
-import { input, select } from '@inquirer/prompts';
+import { select } from '@inquirer/prompts';
 import dbConnect from '../../middleware/database';
 import User from '../../models/user';
 import Team from '../../models/team';
@@ -38,9 +38,6 @@ export const handleGetTeam = async () => {
 			},
 		],
 	});
-
-	// connect to db
-	await dbConnect();
 
 	switch (subAction2) {
 		case 'get-schedule':
