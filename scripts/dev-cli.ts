@@ -86,13 +86,13 @@ export const promptAction = async () => {
 				// 4. check in
 			},
 			{
-				name: '🏗️ Modify a team',
+				name: 'Modify a team',
 				value: 'modify-team',
 				// sub-action:
 				// 1. change team name
-				// 2. change team members?
-				// 3. change team invite code?
-				// 4. change devpost link?
+				// 2. change team members
+				// 3. change team invite code
+				// 4. change devpost link
 			},
 			{
 				name: 'Clear collections (DANGER!)',
