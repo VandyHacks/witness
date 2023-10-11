@@ -1,0 +1,106 @@
+.HeaderBox {
+	/* Root vertical flex box for MiddleBox and TopBox*/
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	width: 100%;
+	height: 600px;
+
+	/* background-color: white; */
+}
+
+.HeaderTopBox {
+	/* Horizontal flex box for Logo and SignOut box */
+	display: flex;
+	justify-content: space-between;
+	height: 150px;
+
+	/* background-color: pink; */
+}
+
+.SignOut {
+	/* Horizontal flex box for SignOutButton and Email */
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 20%;
+	/* background-color: blue; */
+}
+
+.Email {
+	color: #fff;
+	text-align: right;
+	font-family: Inter;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+
+.SignOutButton {
+	border-radius: 5px;
+	background-color: #676767;
+	width: 90px;
+	height: 30px;
+	margin: 0 0 0 20px;
+
+	color: #fff;
+	text-align: center;
+	font-family: Inter;
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: normal;
+}
+
+.SignOutButton:hover {
+	cursor: pointer;
+}
+
+.HeaderMiddleBox {
+	/* Horizontal flexbox for UserName and Current Event Box */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 300px;
+	/* background-color: black; */
+}
+
+.UserName {
+	width: 65%;
+	/* background-color: lightblue; */
+}
+
+.Greeting {
+	color: #fff;
+	text-shadow: 0px 0px 15px #fff;
+	font-family: Inter;
+	font-size: 100px;
+	font-style: normal;
+	font-weight: 900;
+	line-height: normal;
+}
+
+.NFCPoint {
+	color: #fff;
+	font-family: Inter;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: 200;
+	line-height: normal;
+}
+
+.CurEvent {
+	/* background-color: lightgreen; */
+	width: 25%;
+	display: flex;
+	flex-direction: column;
+}
+
+.CurEventText {
+	color: #fff;
+	text-align: center;
+	font-family: Inter;
+	font-size: 20px;
+	font-weight: 700;
+}
