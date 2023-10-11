@@ -58,12 +58,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			const res = await fetch(url, { method: 'GET' });
 
 			const hackathongSetting = (await res.json()) as HackathonSettingsData;
-			const hackathonStartDate = Date.parse(hackathongSetting.HACKATHON_START);
+			const hackathonStartDate = new Date(Date.parse(hackathongSetting.HACKATHON_START));
+			const hackathonEndDate = new Date(Date.parse(hackathongSetting.HACKATHON_END));
 			const curDate = new Date();
-			console.log(curDate);
-			console.log(hackathonStartDate);
+			setHackathonStarted(curDate >= hackathonStartDate && curDate <= hackathonEndDate);
 			return hackathongSetting;
-			// setHackathonStarted(curDate < hackathongSetting.HACKATHON_START);
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
@@ -706,46 +705,49 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 						<>
-							<div style={{ padding: '20px' }}>
-								<Header user={user} signOut={signOut} />
-								{/* <p style={{ color: 'white' }}>{setting?.HACKATHON_START}</p> */}
-								{/* TODO: conditionally render hacking start and end code based on time stored in db */}
-								{/* Hacking start code */}
-								<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-									<Button size="small" type="default" onClick={() => signOut()}>
-										Sign out
-									</Button>
-									<div style={{ paddingLeft: '10px', color: 'white' }}>
-										Signed in as {session?.user?.email}
+							{hackathonStarted && (
+								<div style={{ padding: '20px' }}>
+									<Header user={user} signOut={signOut} />
+									<p style={{ color: 'white' }}>{setting?.HACKATHON_START}</p>
+									{/* TODO: conditionally render hacking start and end code based on time stored in db */}
+									{/* Hacking start code */}
+									<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+										<Button size="small" type="default" onClick={() => signOut()}>
+											Sign out
+										</Button>
+										<div style={{ paddingLeft: '10px', color: 'white' }}>
+											Signed in as {session?.user?.email}
+										</div>
+										<div style={{ paddingLeft: '20px', color: 'white' }}>
+											Current NFC Points: {user.nfcPoints}
+										</div>
 									</div>
-									<div style={{ paddingLeft: '20px', color: 'white' }}>
-										Current NFC Points: {user.nfcPoints}
-									</div>
+									{!teamData && <TeamSetup />}
+									{teamData && (
+										<div style={{ width: '60vw', margin: 'auto' }}>
+											<Content style={{ width: '60vw', margin: 'auto' }}>
+												<Table
+													locale={{
+														emptyText: (
+															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+																<h3>Stay tuned! You will see your schedule soon!</h3>
+															</div>
+														),
+													}}
+													columns={judgingSessionColumns}
+													dataSource={judgingSessionData}
+												/>
+												<Divider />
+											</Content>
+											<TeamManager profile={teamData} />
+										</div>
+									)}
 								</div>
-								{!teamData && <TeamSetup />}
-								{teamData && (
-									<div style={{ width: '60vw', margin: 'auto' }}>
-										<Content style={{ width: '60vw', margin: 'auto' }}>
-											<Table
-												locale={{
-													emptyText: (
-														<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-															<h3>Stay tuned! You will see your schedule soon!</h3>
-														</div>
-													),
-												}}
-												columns={judgingSessionColumns}
-												dataSource={judgingSessionData}
-											/>
-											<Divider />
-										</Content>
-										<TeamManager profile={teamData} />
-									</div>
-								)}
-							</div>
+							)}
 
 							{/* Pre-hacking code */}
-							{/* <div className={styles.SubmittedForm}>
+							{!hackathonStarted && (
+								<div className={styles.SubmittedForm}>
 									<div className={styles.ThankYouMessage}>
 										Congratulations!
 										<br />
@@ -770,7 +772,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											</Button>
 										</div>
 									</div>
-								</div> */}
+								</div>
+							)}
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
