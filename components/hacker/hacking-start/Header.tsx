@@ -10,7 +10,7 @@ const Header = ({ user, signOut }: { user: UserData; signOut: () => void }) => {
 		<>
 			<div className={styles.HeaderBox}>
 				<div className={styles.HeaderTopBox}>
-					<Image alt="" width={150} height={150} src={VHLogo} className={styles.Logo} />
+					<Image alt="" width={150} height={150} src={VHLogo} />
 					<span className={styles.SignOut}>
 						<span className={styles.Email}>{user.email}</span>
 						<button className={styles.SignOutButton} onClick={() => signOut()}>
