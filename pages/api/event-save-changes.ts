@@ -13,12 +13,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	switch (req.method) {
 		case 'POST':
 			const events: EventData[] = req.body as EventData[];
-			console.log(events);
 
-			events.forEach(async event => {
-				const { _id, nfcPoints } = event;
-				await Event.findByIdAndUpdate(_id, { nfcPoints });
-			});
+			// Create an array of update operations
+			const updateOperations = events.map(event => ({
+				updateOne: {
+					filter: { _id: event._id },
+					update: { nfcPoints: event.nfcPoints },
+				},
+			}));
+
+			// Use Mongoose's updateMany to perform batch updates
+			await Event.bulkWrite(updateOperations);
 
 			return res.status(201).json({ message: 'Event Saved' });
 		default:
