@@ -14,14 +14,24 @@ export const handleModifyTeam = async () => {
 
 	const team = await select({
 		message: 'Select team',
-		choices: teams.map(team => ({
-			name: team.name,
-			value: team,
-		})),
+		choices: [
+			{
+				name: '⏪ Back',
+				value: null,
+			},
+			...teams.map((team, index) => ({
+				name: `${index + 1}) ${team.name}`,
+				value: team,
+			})),
+		],
 	});
 
+	if (!team) {
+		return promptAction();
+	}
+
 	const subAction2 = await select({
-		message: 'Select an action to perform',
+		message: `Select an action to perform for team ${team.name}`,
 		choices: [
 			{
 				name: 'Change Team Name',
@@ -40,8 +50,12 @@ export const handleModifyTeam = async () => {
 				value: 'change-invite-code',
 			},
 			{
-				name: 'Change-devpost-link',
+				name: 'Change devpost link',
 				value: 'change-devpost-link',
+			},
+			{
+				name: '⏪ Back',
+				value: null,
 			},
 		],
 	});
@@ -63,13 +77,13 @@ export const handleModifyTeam = async () => {
 			await changeDevpostLink(team);
 			break;
 		default:
-			console.log('Invalid action');
+			await promptAction();
 	}
 };
 
 const changeName = async (team: TeamData) => {
 	const newName = await input({
-		message: 'Enter new name',
+		message: `Enter new team name for ${team.name}`,
 	});
 
 	await Team.updateOne({ _id: team._id }, { name: newName });
@@ -89,16 +103,26 @@ const removeMember = async (team: TeamData) => {
 	const members: UserData[] = await User.find({ _id: { $in: memberIds } });
 
 	const member = await select({
-		message: 'Select member to remove',
-		choices: members.map(mem => ({
-			name: mem.name,
-			value: mem._id,
-		})),
+		message: `Select member to remove from ${team.name}`,
+		choices: [
+			{
+				name: '⏪ Back',
+				value: null,
+			},
+			...members.map((mem, index) => ({
+				name: `${index + 1}) ${mem.name}`,
+				value: mem._id,
+			})),
+		],
 	});
+
+	if (!member) {
+		return promptAction();
+	}
 
 	await Team.updateOne({ _id: team._id }, { $pull: { members: member } });
 
-	console.log('Member removed');
+	console.log(`Member [${member}] removed from team [${team.name}]`);
 	return promptAction();
 };
 
@@ -108,22 +132,32 @@ const addMember = async (team: TeamData) => {
 	const members: UserData[] = await User.find({ _id: { $nin: memberIds }, team: null });
 
 	const member = await select({
-		message: 'Select member to add',
-		choices: members.map(mem => ({
-			name: mem.name,
-			value: mem._id,
-		})),
+		message: `Select member to add to ${team.name}`,
+		choices: [
+			{
+				name: '⏪ Back',
+				value: null,
+			},
+			...members.map((mem, index) => ({
+				name: `${index}) ${mem.name}`,
+				value: mem._id,
+			})),
+		],
 	});
+
+	if (!member) {
+		return promptAction();
+	}
 
 	await Team.updateOne({ _id: team._id }, { $push: { members: member } });
 
-	console.log('Member added');
+	console.log(`Member [${member}] added to team [${team.name}]`);
 	return promptAction();
 };
 
 const changeInviteCode = async (team: TeamData) => {
 	const newInviteCode = await input({
-		message: 'Enter new invite code',
+		message: `Enter new invite code for ${team.name}`,
 	});
 
 	await Team.updateOne({ _id: team._id }, { joinCode: newInviteCode });
@@ -134,8 +168,14 @@ const changeInviteCode = async (team: TeamData) => {
 
 const changeDevpostLink = async (team: TeamData) => {
 	const newDevpostLink = await input({
-		message: 'Enter new devpost link',
+		message: `Enter new devpost link for ${team.name}`,
 	});
+
+	// link has to start with https://devpost.com/
+	if (!newDevpostLink.startsWith('https://devpost.com')) {
+		console.log('Invalid devpost link');
+		return promptAction();
+	}
 
 	await Team.updateOne({ _id: team._id }, { devpost: newDevpostLink });
 

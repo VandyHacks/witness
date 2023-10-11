@@ -15,11 +15,21 @@ export const handleGetTeam = async () => {
 
 	const team = await select({
 		message: 'Select team',
-		choices: teams.map(team => ({
-			name: team.name,
-			value: team,
-		})),
+		choices: [
+			{
+				name: '⏪ Back',
+				value: null,
+			},
+			...teams.map((team, index) => ({
+				name: `${index + 1}) ${team.name}`,
+				value: team,
+			})),
+		],
 	});
+
+	if (!team) {
+		return promptAction();
+	}
 
 	const subAction2 = await select({
 		message: 'Select an action to perform',

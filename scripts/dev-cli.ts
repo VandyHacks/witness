@@ -60,7 +60,7 @@ export const promptAction = async () => {
 		message: 'Select action to perform',
 		choices: [
 			{
-				name: "Get a hacker's document",
+				name: 'GET a hacker',
 				value: 'get-hacker',
 				// sub-action:
 				// 1. see their events
@@ -69,7 +69,7 @@ export const promptAction = async () => {
 				// 4. get entire JSON of their document
 			},
 			{
-				name: 'Get a team document',
+				name: 'GET a team',
 				value: 'get-team',
 				// sub-action:
 				// 1. see their schedule
@@ -77,7 +77,7 @@ export const promptAction = async () => {
 				// 3. get entire JSON of their document
 			},
 			{
-				name: "🏗️ Modify a hacker's document",
+				name: 'MODIFY a hacker',
 				value: 'modify-hacker',
 				// sub-action:
 				// 1. change application status
@@ -86,7 +86,7 @@ export const promptAction = async () => {
 				// 4. check in
 			},
 			{
-				name: 'Modify a team',
+				name: 'MODIFY a team',
 				value: 'modify-team',
 				// sub-action:
 				// 1. change team name
@@ -95,12 +95,12 @@ export const promptAction = async () => {
 				// 4. change devpost link
 			},
 			{
-				name: 'Clear collections (DANGER!)',
+				name: 'CLEAR all collections ⛔️',
 				value: 'clear-collection',
 				// clears Users (Hackers), Teams, Scores, Schedule, Judging Sessions
 			},
 			{
-				name: '🏗️ Populate a collection',
+				name: 'POPULATE a collection 🏗️',
 				value: 'populate-collection',
 			},
 			{
