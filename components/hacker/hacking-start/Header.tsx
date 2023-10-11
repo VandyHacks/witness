@@ -22,17 +22,11 @@ const Header = ({ user, signOut }: { user: UserData; signOut: () => void }) => {
 					<span className={styles.UserName}>
 						<div className={styles.Greeting}>Hello,</div>
 						<div className={styles.Greeting}>{user.name}</div>
-						<div className={styles.NFCPoint}>{user.nfcPoints + ' points to spend'}</div>
+						<div className={styles.NFCPoint}>Your currently have {user.nfcPoints} points</div>
 					</span>
 					<span className={styles.CurEvent}>
 						<div className={styles.CurEventText}>Current Event</div>
-						<Image
-							className={styles.CurEventImage}
-							src={HackingBeginSoon}
-							width={300}
-							height={300}
-							alt=""
-						/>
+						<Image src={HackingBeginSoon} width={300} height={300} alt="Hacking Begin Soon" />
 						<div className={styles.CurEventText}>Hacking Begins Soon</div>
 					</span>
 				</div>

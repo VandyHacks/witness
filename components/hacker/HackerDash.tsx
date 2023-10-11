@@ -28,6 +28,9 @@ import { ColumnsType } from 'antd/es/table';
 import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
 
+const DEV_DEPLOY =
+	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
+
 type HackerProps = {
 	userApplicationStatus: number;
 	setUserApplicationStatus: (newType: number) => void;
@@ -61,7 +64,14 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			const hackathonStartDate = new Date(Date.parse(hackathongSetting.HACKATHON_START));
 			const hackathonEndDate = new Date(Date.parse(hackathongSetting.HACKATHON_END));
 			const curDate = new Date();
-			setHackathonStarted(curDate >= hackathonStartDate && curDate <= hackathonEndDate);
+
+			// DEV_DEPLOY is true if we are in development or preview mode
+			if (DEV_DEPLOY) {
+				setHackathonStarted(true);
+			} else {
+				setHackathonStarted(curDate >= hackathonStartDate && curDate <= hackathonEndDate);
+			}
+
 			return hackathongSetting;
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
@@ -488,7 +498,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								<Form.Item
+								{/* TODO: uncomment when application starts */}
+								{/* <Form.Item
 									label={
 										<p className={styles.Label}>
 											Would you like to apply for travel reimbursements?
@@ -500,7 +511,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Radio.Button value="yes">Yes</Radio.Button>
 										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
-								</Form.Item>
+								</Form.Item> */}
 								<Form.Item
 									name="overnight"
 									label={
@@ -687,13 +698,27 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 						<>
+							{/* Hacking Code */}
 							{hackathonStarted && (
 								<div style={{ padding: '20px' }}>
 									<Header user={user} signOut={signOut} />
-									<p style={{ color: 'white' }}>{setting?.HACKATHON_START}</p>
-									{/* TODO: conditionally render hacking start and end code based on time stored in db */}
-									{/* Hacking start code */}
-									<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+
+									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
+
+									{/* TODO: remove once ready. placeholder */}
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center',
+											textAlign: 'center',
+											color: 'white',
+										}}>
+										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
+									</div>
+
+									{/* TODO: these are being refactored. should remove this after complete */}
+									{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
 										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
 										</Button>
@@ -723,7 +748,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											</Content>
 											<TeamManager profile={teamData} />
 										</div>
-									)}
+									)} */}
 								</div>
 							)}
 

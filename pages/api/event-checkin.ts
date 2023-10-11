@@ -3,6 +3,7 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import User from '../../models/user';
 import Event from '../../models/event';
+import { isValidObjectId } from 'mongoose';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -14,6 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const { nfcId, eventId, nfcPoints } = req.body;
 			console.log('NFC Point: ', nfcPoints);
 			if (!nfcId || !eventId) return res.status(400).send('An NFC id and event id are needed');
+			if (!isValidObjectId(eventId)) return res.status(400).send('Invalid event id');
 
 			try {
 				// ensure that user exists
