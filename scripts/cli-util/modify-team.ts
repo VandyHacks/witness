@@ -171,8 +171,9 @@ const changeDevpostLink = async (team: TeamData) => {
 		message: `Enter new devpost link for ${team.name}`,
 	});
 
-	// link has to start with https://devpost.com/
-	if (!newDevpostLink.startsWith('https://devpost.com')) {
+	// link has to have host devpost.com
+	const check = new URL(newDevpostLink);
+	if (!check.host.includes('devpost.com')) {
 		console.log('Invalid devpost link');
 		return promptAction();
 	}
