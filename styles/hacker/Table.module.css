@@ -1,0 +1,100 @@
+.Container {
+	background-color: #000000bf;
+	border-radius: 50px;
+	padding: 45px 42px;
+	font-weight: bold;
+	font-size: xx-large;
+	color: #ffffff;
+	margin: 3%;
+}
+
+.Table {
+	font-size: 40px;
+}
+
+.Table:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.Column {
+	float: left;
+	width: 33.33%;
+}
+
+.Entries {
+	overflow-y: auto;
+	height: 700px;
+}
+
+.Entry {
+	color: #c9a76b;
+}
+
+/* attempt 2 */
+.TableContainer {
+	overflow: auto;
+	height: 700px;
+}
+
+.TableContainer table {
+	table-layout: fixed;
+	width: 100%;
+}
+
+.TableContainer th {
+	position: sticky;
+	top: 0;
+	text-align: left;
+	background: #000000;
+}
+/* 
+.TableContainer tbody {
+    background: blue;
+} */
+
+.Button {
+	background-color: #2d2d31 !important;
+	width: 200px;
+	height: 30px;
+	margin: 5px;
+	font-size: small;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.Button:hover {
+	background-color: #3d3d41;
+	cursor: pointer;
+}
+
+.FlexColumn {
+	display: flex;
+	flex-direction: column;
+}
+
+.FlexRow {
+	display: flex;
+	flex-direction: row;
+}
+
+.OptionText {
+	font-size: small;
+	color: #c9a76b;
+}
+
+.JoinCodeInput {
+	background-color: #2d2d31 !important;
+	border: none;
+	margin: 5px;
+	font-size: small;
+	padding: 5px;
+	width: 400px;
+	color: white;
+}
+
+.JoinCodeInput:focus {
+	outline: none;
+}

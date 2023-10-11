@@ -27,6 +27,7 @@ import { Content } from 'antd/lib/layout/layout';
 import { ColumnsType } from 'antd/es/table';
 import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
+import TeamManagement from './hacking-start/TeamManagement';
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
@@ -498,7 +499,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								{/* TODO: uncomment when application starts */}
+								{/* TODO: create a new time in hackathon-settings db collection for applyTravelReimbursement end date */}
 								{/* <Form.Item
 									label={
 										<p className={styles.Label}>
@@ -704,6 +705,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Header user={user} signOut={signOut} />
 
 									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
+									{teamData && <TeamManagement teamData={teamData} />}
 
 									{/* TODO: remove once ready. placeholder */}
 									<div
