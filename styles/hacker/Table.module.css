@@ -8,36 +8,46 @@
     color: #FFFFFF;
 }
 
-.Table {
+.TableContainer {
+    margin-top: 20px;
+    overflow-y: auto;
+    max-height: 700px;
     font-size: 40px;
 }
 
-.Table:after {
-    content: "";
-    display: table;
-    clear: both;
+.TableContainer table {
+    table-layout: fixed;
+    width: 100%;
 }
 
-.ColumnHeader {
-    float: left;
-    width: 33%;
+.TableContainer th {
+    position: sticky;
+    top: 0;
+    text-align: left;
+    background: #000000;
 }
 
-.Column {
-    float: left;
-    width: 33.33%;
-}
-
-.Entries {
-    overflow-y: auto;
-    height: 700px;
-}
-
-.Entry {
+.TableContainer td {
     color: #C9A76B;
+    padding-bottom: 15px;
 }
 
 .Placeholder {
     font-size: 90px;
     color: #FFFFFF80;
+}
+
+/* add media query for mobile screen */
+@media (max-width: 768px) {
+    .Container {
+        font-size: 30px;
+    }
+
+    .TableContainer {
+        font-size: 20px;
+    }
+
+    .Placeholder {
+        font-size: 40px;
+    }
 }
