@@ -55,6 +55,9 @@ export interface Report {
 	description: string;
 	date: string;
 	status: ReportStatus;
+	ghIssueNumber: number;
+	ghAssignee: string;
+	ghUrl: string;
 }
 
 export enum ReportStatus {
@@ -66,4 +69,5 @@ export enum ReportStatus {
 export enum ReportRole {
 	HACKER = 'HACKER',
 	JUDGE = 'JUDGE',
+	ORGANIZER = 'ORGANIZER',
 }

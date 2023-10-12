@@ -26,6 +26,17 @@ export const ReportSchema = new Schema({
 	status: {
 		type: String,
 	},
+	ghIssueNumber: {
+		type: Number,
+		required: true,
+	},
+	ghAssignee: {
+		type: String,
+	},
+	ghUrl: {
+		type: String,
+		required: true,
+	},
 });
 
 // prevent recompilation of model if it already exists

@@ -2,17 +2,20 @@ import { Button, Input, InputRef, Skeleton, Space, Table, Tag } from 'antd';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 import { Report } from '../../../types/client';
 import { ColumnsType } from 'antd/lib/table';
-import { SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { useRef, useState } from 'react';
 import { FilterValue } from 'antd/lib/table/interface';
+import styles from '../../../styles/Report.module.css';
 
 const BugReportsTab = () => {
 	const searchInput = useRef<InputRef>(null);
 	const [searchText, setSearchText] = useState('');
 	const [searchedColumn, setSearchedColumn] = useState('');
-	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
+	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({
+		status: ['OPEN', 'IN_PROGRESS'],
+	});
 
 	const { data: bugReports, error: bugReportsError } = useCustomSWR<Report[]>({
 		url: '/api/report',
@@ -25,6 +28,26 @@ const BugReportsTab = () => {
 	if (!bugReports) return <Skeleton />;
 
 	const bugReportsForTable = bugReports?.map(x => ({ ...x, key: x._id })) || ([] as Report[]);
+
+	const handleDeleteIssue = async (id: string | undefined) => {
+		if (!id) return;
+
+		if (confirm('Are you sure you want to delete this issue?\nThis will NOT delete the issue in GitHub!')) {
+			// delete the issue
+			const res = await fetch('/api/report', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ id }),
+			});
+			if (res.status === 200) {
+				window.location.reload();
+			} else {
+				alert('Failed to delete issue!');
+			}
+		}
+	};
 
 	const handleSearch = (
 		selectedKeys: string[],
@@ -85,7 +108,7 @@ const BugReportsTab = () => {
 			return recordValue.toString().toLowerCase().includes(value.toString().toLowerCase());
 		},
 		filteredValue:
-			(dataIndex in filteredInfo ? filteredInfo[dataIndex] : filteredInfo['application.' + dataIndex]) || null,
+			(dataIndex in filteredInfo ? filteredInfo[dataIndex] : filteredInfo['report.' + dataIndex]) || null,
 		onFilterDropdownOpenChange: (open: boolean) => {
 			if (open) {
 				setTimeout(() => searchInput.current?.select(), 100);
@@ -118,7 +141,7 @@ const BugReportsTab = () => {
 			title: 'Name',
 			dataIndex: 'name',
 			key: 'name',
-			width: '15%',
+			width: '10%',
 			...getColumnSearchProps('name'),
 		},
 		{
@@ -132,7 +155,7 @@ const BugReportsTab = () => {
 			title: 'Description',
 			dataIndex: 'description',
 			key: 'description',
-			width: '40%',
+			width: '25%',
 			...getColumnSearchProps('description'),
 		},
 		{
@@ -142,7 +165,7 @@ const BugReportsTab = () => {
 			render: (date: string) => {
 				return <div>{new Date(date).toLocaleString()}</div>;
 			},
-			width: '20%',
+			width: '10%',
 			sorter: (a: Report, b: Report) => {
 				const aStart = new Date(a.date.toString());
 				const bStart = new Date(b.date.toString());
@@ -161,8 +184,71 @@ const BugReportsTab = () => {
 			filteredValue: filteredInfo['role'] || null,
 			onFilter: (value: string | number | boolean, record: any): boolean => record.role === value,
 			render: (role?: string) => {
-				return role !== undefined ? <Tag color="blue">{role === 'HACKER' ? 'Hacker' : 'Judge'}</Tag> : '';
+				return role !== undefined ? (
+					<Tag color="blue">{role === 'HACKER' ? 'Hacker' : role === 'JUDGE' ? 'Judge' : 'Organizer'}</Tag>
+				) : (
+					''
+				);
 			},
+		},
+		{
+			title: 'Status',
+			dataIndex: 'status',
+			key: 'status',
+			width: '10%',
+			defaultSortOrder: 'ascend',
+			filters: [
+				{ text: 'Open', value: 'OPEN' },
+				{ text: 'Closed', value: 'CLOSED' },
+				{ text: 'In Progress', value: 'IN_PROGRESS' },
+			],
+			filteredValue: filteredInfo['status'] || null,
+			onFilter: (value: string | number | boolean, record: any): boolean => record.status === value,
+			render: (status?: string) => {
+				return status !== undefined ? (
+					<Tag color={status === 'OPEN' ? 'red' : status === 'CLOSED' ? 'green' : 'yellow'}>
+						{status === 'OPEN' ? 'Open' : status === 'CLOSED' ? 'Closed' : 'In Progress'}
+					</Tag>
+				) : (
+					''
+				);
+			},
+		},
+		{
+			title: 'Issue #',
+			dataIndex: 'ghIssueNumber',
+			key: 'issueNumber',
+			width: '5%',
+			render: (issueNumber: number) => {
+				return issueNumber;
+			},
+		},
+		{
+			// github link
+			title: 'GitHub',
+			key: 'github',
+			width: '10%',
+			render: (text: string, record: Report) =>
+				record.ghUrl && (
+					<a
+						href={record.ghUrl}
+						target="_blank"
+						rel="noreferrer"
+						style={{ color: 'inherit', textDecoration: 'none' }}>
+						<Button className={styles.githubButton}>View on GitHub</Button>
+					</a>
+				),
+		},
+		{
+			// delete button
+			title: 'Actions',
+			key: 'action',
+			width: '5%',
+			render: (text: string, record: Report) => (
+				<Button className={styles.deleteButton} onClick={() => handleDeleteIssue(record._id)}>
+					<DeleteOutlined className={styles.deleteButtonIcon} />
+				</Button>
+			),
 		},
 	];
 
