@@ -1,54 +1,54 @@
 .Container {
-    background-color: #000000BF;
-    border-radius: 50px;
-    padding: 45px 42px;
-    font-family: 'Inter';
-    font-weight: bold;
-    font-size: 70px;
-    color: #FFFFFF;
+	background-color: #000000bf;
+	border-radius: 50px;
+	padding: 45px 42px;
+	font-family: 'Inter';
+	font-weight: bold;
+	font-size: 70px;
+	color: #ffffff;
 }
 
 .TableContainer {
-    margin-top: 20px;
-    overflow-y: auto;
-    max-height: 700px;
-    font-size: 40px;
+	margin-top: 20px;
+	overflow-y: auto;
+	max-height: 700px;
+	font-size: 40px;
 }
 
 .TableContainer table {
-    table-layout: fixed;
-    width: 100%;
+	table-layout: fixed;
+	width: 100%;
 }
 
 .TableContainer th {
-    position: sticky;
-    top: 0;
-    text-align: left;
-    background: #000000;
-    padding-bottom: 15px;
+	position: sticky;
+	top: 0;
+	text-align: left;
+	background: #000000;
+	padding-bottom: 15px;
 }
 
 .TableContainer td {
-    color: #C9A76B;
-    padding-bottom: 15px;
+	color: #c9a76b;
+	padding-bottom: 15px;
 }
 
 .Placeholder {
-    font-size: 90px;
-    color: #FFFFFF80;
+	font-size: 90px;
+	color: #ffffff80;
 }
 
 /* add media query for mobile screen */
 @media (max-width: 768px) {
-    .Container {
-        font-size: 30px;
-    }
+	.Container {
+		font-size: 30px;
+	}
 
-    .TableContainer {
-        font-size: 20px;
-    }
+	.TableContainer {
+		font-size: 20px;
+	}
 
-    .Placeholder {
-        font-size: 40px;
-    }
+	.Placeholder {
+		font-size: 40px;
+	}
 }
