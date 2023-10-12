@@ -37,6 +37,7 @@ type HackerProps = {
 	userApplicationStatus: number;
 	setUserApplicationStatus: (newType: number) => void;
 };
+
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
 	const { data: session, status } = useSession();
@@ -163,48 +164,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		window.location.reload();
 	};
 
-	const judgingSessionColumns: ColumnsType<JudgingSessionData> = [
-		{
-			title: 'Time',
-			dataIndex: 'time',
-			key: 'name',
-			width: '25vw',
-			render: time => {
-				let startTime = new Date(time);
-				// add 10 minutes
-				let endTime = new Date(startTime.getTime() + 10 * 60000);
-				// return <>{startTime.getHours()}:{startTime.getMinutes()} - {endTime.getHours()}:{endTime.getMinutes()}</>
-				return (
-					<>
-						{startTime.toLocaleTimeString('default', {
-							hour: '2-digit',
-							minute: '2-digit',
-						})}{' '}
-						-{' '}
-						{endTime.toLocaleTimeString('default', {
-							hour: '2-digit',
-							minute: '2-digit',
-						})}
-					</>
-				);
-			},
-		},
-		{
-			title: 'Table',
-			dataIndex: 'team',
-			key: 'team',
-			width: '25vw',
-			render: loc => <>{loc.locationNum}</>,
-		},
-		{
-			title: 'Judge',
-			dataIndex: 'judge',
-			key: 'judge',
-			width: '50vw',
-			render: judge => <>{judge.name}</>,
-		},
-	];
-
 	const [judgingSessionData, setJudgingSessionData] = useState<JudgingSessionData[]>();
 
 	const getJudgingSessionData = () => {
@@ -219,26 +178,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		if (user?.applicationStatus) setUserApplicationStatus(user.applicationStatus);
 		getJudgingSessionData();
 	}, [setUserApplicationStatus, user?.applicationStatus]);
-
-	const renderJudgingTime = (time: string) => {
-		let startTime = new Date(time);
-		// add 10 minutes
-		let endTime = new Date(startTime.getTime() + 10 * 60000);
-		// return <>{startTime.getHours()}:{startTime.getMinutes()} - {endTime.getHours()}:{endTime.getMinutes()}</>
-		return (
-			<>
-				{startTime.toLocaleTimeString('default', {
-					hour: '2-digit',
-					minute: '2-digit',
-				})}{' '}
-				-{' '}
-				{endTime.toLocaleTimeString('default', {
-					hour: '2-digit',
-					minute: '2-digit',
-				})}
-			</>
-		);
-	};
 
 	return (
 		<Content
@@ -726,6 +665,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Header user={user} signOut={signOut} />
 
 									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
+									<Leaderboard />
+									<JudgingSchedule judgingSessionData={judgingSessionData} />
 
 									{/* TODO: remove once ready. placeholder */}
 									<div
