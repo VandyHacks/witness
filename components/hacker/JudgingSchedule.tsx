@@ -5,180 +5,11 @@ interface JudgingScheduleProps {
 	judgingSessionData: JudgingSessionData[] | undefined;
 }
 
-const judgingSchedule = [
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-	{
-		time: 'December 17, 1995 11:40:00',
-		team: {
-			locationNum: 11,
-		},
-		judge: {
-			name: 'Loren Quigley Sr.',
-		},
-	},
-];
-
+/**
+ * Convert the given time into a 10 minute time range
+ * @param time Start time
+ * @returns Formatted 10 minute time range starting from the given time
+ */
 const renderJudgingTime = (time: string) => {
 	let startTime = new Date(time);
 	// add 10 minutes
@@ -216,7 +47,7 @@ const JudgingSchedule = ({ judgingSessionData }: JudgingScheduleProps) => {
 							</tr>
 						</thead>
 						<tbody>
-							{judgingSchedule?.map(entry => (
+							{judgingSessionData?.map(entry => (
 								<tr key={entry.time.toString()}>
 									<td>{renderJudgingTime(entry.time.toString())}</td>
 									<td>{entry.team.locationNum}</td>
