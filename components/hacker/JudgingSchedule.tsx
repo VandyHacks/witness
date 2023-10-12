@@ -1,4 +1,3 @@
-import React from 'react';
 import { JudgingSessionData } from '../../types/database';
 import styles from '../../styles/hacker/Table.module.css';
 
@@ -8,7 +7,6 @@ interface JudgingScheduleProps {
 
 const judgingSchedule = [
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -18,7 +16,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -28,7 +25,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -38,7 +34,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -48,7 +43,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -58,7 +52,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -68,7 +61,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -78,7 +70,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -88,7 +79,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -98,7 +88,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -108,7 +97,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -118,7 +106,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -128,7 +115,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -138,7 +124,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -148,7 +133,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -158,7 +142,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -168,7 +151,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -178,7 +160,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -188,7 +169,6 @@ const judgingSchedule = [
 		},
 	},
 	{
-		name: 'Test User',
 		time: 'December 17, 1995 11:40:00',
 		team: {
 			locationNum: 11,
@@ -223,7 +203,7 @@ const JudgingSchedule = ({ judgingSessionData }: JudgingScheduleProps) => {
 	return (
 		<div className={styles.Container}>
 			Judging Schedule
-			{judgingSessionData?.length !== 0 ? (
+			{judgingSessionData?.length === 0 ? (
 				<div className={styles.Placeholder}>Schedule will show up here when hacking ends!</div>
 			) : (
 				<div className={styles.TableContainer}>
