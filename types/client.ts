@@ -46,3 +46,24 @@ export interface TeamProfile {
 	devpost: URL;
 	members: string[];
 }
+
+export interface Report {
+	_id?: string;
+	email: string;
+	name: string;
+	role: ReportRole;
+	description: string;
+	date: string;
+	status: ReportStatus;
+}
+
+export enum ReportStatus {
+	OPEN = 'OPEN',
+	IN_PROGRESS = 'IN_PROGRESS',
+	CLOSED = 'CLOSED',
+}
+
+export enum ReportRole {
+	HACKER = 'HACKER',
+	JUDGE = 'JUDGE',
+}
