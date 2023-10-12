@@ -49,6 +49,10 @@ export const handleModifyHacker = async () => {
 				name: 'NFC check-in',
 				value: 'nfc-check-in',
 			},
+			{
+				name: 'Cancel',
+				value: 'cancel',
+			},
 		],
 	});
 
@@ -69,6 +73,9 @@ export const handleModifyHacker = async () => {
 		case 'nfc-check-in':
 			await nfcCheckIn(hacker);
 			break;
+		case 'cancel':
+			console.log('Cancelled');
+			return promptAction();
 	}
 };
 
