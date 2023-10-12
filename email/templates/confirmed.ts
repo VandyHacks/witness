@@ -47,5 +47,5 @@ export default async (user: UserData): Promise<SendEmailRequest> => ({
 			Data: 'See you soon!',
 		},
 	},
-	Source: 'VandyHacks <noreply@vandyhacks.org>',
+	Source: 'VandyHacks <updates@vandyhacks.org>',
 });

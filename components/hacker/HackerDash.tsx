@@ -21,12 +21,17 @@ import Leaderboard from './Leaderboard';
 import JudgingSchedule from './JudgingSchedule';
 import TeamSetup from './TeamSetup';
 import { TeamProfile } from '../../types/client';
-import { ApplicationStatus, UserData, JudgingSessionData } from '../../types/database';
+import { ApplicationStatus, UserData, JudgingSessionData, HackathonSettingsData } from '../../types/database';
 import styles from '../../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
 import { ColumnsType } from 'antd/es/table';
+import Header from './hacking-start/Header';
+import RegistrationLogo from './RegistrationLogo';
+
+const DEV_DEPLOY =
+	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
 
 type HackerProps = {
 	userApplicationStatus: number;
@@ -51,6 +56,30 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
+
+	const { data: setting } = useSWR(
+		'/api/hackathon-settings',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+
+			const hackathongSetting = (await res.json()) as HackathonSettingsData;
+			const hackathonStartDate = new Date(Date.parse(hackathongSetting.HACKATHON_START));
+			const hackathonEndDate = new Date(Date.parse(hackathongSetting.HACKATHON_END));
+			const curDate = new Date();
+
+			// DEV_DEPLOY is true if we are in development or preview mode
+			if (DEV_DEPLOY) {
+				setHackathonStarted(true);
+			} else {
+				setHackathonStarted(curDate >= hackathonStartDate && curDate <= hackathonEndDate);
+			}
+
+			return hackathongSetting;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
+
+	const [hackathonStarted, setHackathonStarted] = useState(false);
 
 	const onFinish = async (values: any) => {
 		setLoading(true);
@@ -232,11 +261,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			{!user && <Skeleton />}
 			{user && (
 				<div style={{ overflow: 'auto', height: '100vh' }}>
-					<Form.Item className={styles.TitleLogo}> </Form.Item>
-					<div className={styles.TitleContainer}>
-						<div className={styles.Title}>VandyHacks X Registration</div>
-					</div>
-
 					{user.applicationStatus === ApplicationStatus.CREATED && (
 						<Form
 							layout={'horizontal'}
@@ -496,7 +520,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								<Form.Item
+								{/* TODO: uncomment when application starts */}
+								{/* <Form.Item
 									label={
 										<p className={styles.Label}>
 											Would you like to apply for travel reimbursements?
@@ -508,7 +533,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Radio.Button value="yes">Yes</Radio.Button>
 										<Radio.Button value="no">No</Radio.Button>
 									</Radio.Group>
-								</Form.Item>
+								</Form.Item> */}
 								<Form.Item
 									name="overnight"
 									label={
@@ -623,6 +648,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)}
 					{user.applicationStatus === ApplicationStatus.SUBMITTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Thank you for applying to VandyHacks!
@@ -659,6 +685,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					)}
 					{user.applicationStatus === ApplicationStatus.ACCEPTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									Congratulations!
@@ -693,70 +720,94 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 					{(user.applicationStatus === ApplicationStatus.CONFIRMED ||
 						user.applicationStatus === ApplicationStatus.CHECKED_IN) && (
 						<>
-							{/* Hacking start code */}
-							<div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-								<Button size="small" type="default" onClick={() => signOut()}>
-									Sign out
-								</Button>
-								<div style={{ paddingLeft: '10px' }}>Signed in as {session?.user?.email}</div>
-							</div>
-							{!teamData && <TeamSetup />}
-							{
-								<div style={{ width: '60vw', margin: 'auto' }}>
-									<Content style={{ width: '60vw', margin: 'auto' }}>
-										<Table
-											locale={{
-												emptyText: (
-													<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-														<h3>Stay tuned! You will see your schedule soon!</h3>
-													</div>
-												),
-											}}
-											columns={judgingSessionColumns}
-											dataSource={judgingSessionData}
-										/>
-										<Divider />
-									</Content>
-									{/* <TeamManager profile={teamData} /> */}
-								</div>
-							}
-							<Leaderboard />
+							{/* Hacking Code */}
+							{hackathonStarted && (
+								<div style={{ padding: '20px' }}>
+									<Header user={user} signOut={signOut} />
 
-							<JudgingSchedule judgingSessionData={judgingSessionData} />
+									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
 
-							{/* Pre-hacking code */}
-							{/*
-							<div className={styles.SubmittedForm}>
-								<div className={styles.ThankYouMessage}>
-									Congratulations!
-									<br />
-									You have been accepted to VandyHacks!
-									<div style={{ width: '100%', height: '16px' }}></div>
-									<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
-										<Button size="large" type="link">
-											Click here to join our Discord
-										</Button>
-									</a>
-									<br />
-									<br />
-									More information will appear here as we get closer to the hackathon!
-									<div className={styles.SignInInfo}>
-										<div>Signed in as {session?.user?.email}</div>
-										<Button
-											style={{ marginTop: '8px' }}
-											size="small"
-											type="default"
-											onClick={() => signOut()}>
+									{/* TODO: remove once ready. placeholder */}
+									<div
+										style={{
+											display: 'flex',
+											flexDirection: 'column',
+											alignItems: 'center',
+											textAlign: 'center',
+											color: 'white',
+										}}>
+										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
+									</div>
+
+									{/* TODO: these are being refactored. should remove this after complete */}
+									{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
+										<Button size="small" type="default" onClick={() => signOut()}>
 											Sign out
 										</Button>
+										<div style={{ paddingLeft: '10px', color: 'white' }}>
+											Signed in as {session?.user?.email}
+										</div>
+										<div style={{ paddingLeft: '20px', color: 'white' }}>
+											Current NFC Points: {user.nfcPoints}
+										</div>
+									</div>
+									{!teamData && <TeamSetup />}
+									{teamData && (
+										<div style={{ width: '60vw', margin: 'auto' }}>
+											<Content style={{ width: '60vw', margin: 'auto' }}>
+												<Table
+													locale={{
+														emptyText: (
+															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
+																<h3>Stay tuned! You will see your schedule soon!</h3>
+															</div>
+														),
+													}}
+													columns={judgingSessionColumns}
+													dataSource={judgingSessionData}
+												/>
+												<Divider />
+											</Content>
+											<TeamManager profile={teamData} />
+										</div>
+									)} */}
+								</div>
+							)}
+
+							{/* Pre-hacking code */}
+							{!hackathonStarted && (
+								<div className={styles.SubmittedForm}>
+									<div className={styles.ThankYouMessage}>
+										Congratulations!
+										<br />
+										You have been accepted to VandyHacks!
+										<div style={{ width: '100%', height: '16px' }}></div>
+										<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+											<Button size="large" type="link">
+												Click here to join our Discord
+											</Button>
+										</a>
+										<br />
+										<br />
+										More information will appear here as we get closer to the hackathon!
+										<div className={styles.SignInInfo}>
+											<div>Signed in as {session?.user?.email}</div>
+											<Button
+												style={{ marginTop: '8px' }}
+												size="small"
+												type="default"
+												onClick={() => signOut()}>
+												Sign out
+											</Button>
+										</div>
 									</div>
 								</div>
-							</div>
-							*/}
+							)}
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.REJECTED && (
 						<>
+							<RegistrationLogo />
 							<div className={styles.SubmittedForm}>
 								<div className={styles.ThankYouMessage}>
 									<br />
@@ -778,30 +829,33 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 						</>
 					)}
 					{user.applicationStatus === ApplicationStatus.DECLINED && (
-						<div className={styles.SubmittedForm}>
-							<div className={styles.ThankYouMessage}>
-								<br />
-								We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake and
-								you&apos;d like to attend, please email us at{' '}
-								<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
-									info@vandyhacks.org
-								</a>
-								.
-								<br />
-								We hope to see you next year!
-								<br />
-								<div className={styles.SignInInfo}>
-									<div>Signed in as {session?.user?.email}</div>
-									<Button
-										style={{ marginTop: '8px' }}
-										size="small"
-										type="default"
-										onClick={() => signOut()}>
-										Sign out
-									</Button>
+						<>
+							<RegistrationLogo />
+							<div className={styles.SubmittedForm}>
+								<div className={styles.ThankYouMessage}>
+									<br />
+									We&apos;re sorry to see you declined your spot at VandyHacks. If this was a mistake
+									and you&apos;d like to attend, please email us at{' '}
+									<a style={{ color: 'blue' }} href="mailto:info@vandyhacks.org">
+										info@vandyhacks.org
+									</a>
+									.
+									<br />
+									We hope to see you next year!
+									<br />
+									<div className={styles.SignInInfo}>
+										<div>Signed in as {session?.user?.email}</div>
+										<Button
+											style={{ marginTop: '8px' }}
+											size="small"
+											type="default"
+											onClick={() => signOut()}>
+											Sign out
+										</Button>
+									</div>
 								</div>
 							</div>
-						</div>
+						</>
 					)}
 				</div>
 			)}

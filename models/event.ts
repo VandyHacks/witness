@@ -29,6 +29,11 @@ export const EventSchema = new Schema({
 		type: String,
 		required: true,
 	},
+	nfcPoints: {
+		// Each event should contain a certain amount of points a user can get when attending it
+		type: Number,
+		default: 0,
+	},
 });
 
 // prevent recompilation of model if it already exists
