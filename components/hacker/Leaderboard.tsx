@@ -1,94 +1,10 @@
-import styles from '../../styles/hacker/Table.module.css';
 import { UserData, TeamData } from '../../types/database';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
+import styles from '../../styles/hacker/Table.module.css';
 
 interface LeaderboardData extends Omit<UserData, 'team'> {
 	team: TeamData;
 }
-
-// LEADERBOARD AND JUDGING SCHEDULE DUMMY DATA
-const leaderboard = [
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-	{
-		name: 'First Last',
-		team: 'FooTeam',
-		points: 1729,
-	},
-];
 
 const Leaderboard = () => {
 	// Leaderboard data
