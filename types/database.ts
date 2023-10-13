@@ -129,4 +129,5 @@ export interface HackathonSettingsData {
 	HACKATHON_END: string; // MM/DD/YYYY hh:mm A
 	JUDGING_START: string; // MM/DD/YYYY hh:mm A
 	JUDGING_END: string; // MM/DD/YYYY hh:mm A
+	ON_CALL_DEV: string;
 }

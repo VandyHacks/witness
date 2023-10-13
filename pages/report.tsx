@@ -1,22 +1,17 @@
-import { Button, Form, Layout } from 'antd';
+import { Button, ConfigProvider, Form, Layout, Table, Tag, theme } from 'antd';
 import styles from '../styles/Report.module.css';
 import Head from 'next/head';
 import { useSession } from 'next-auth/react';
-import {
-	ArrowLeftOutlined,
-	BackwardFilled,
-	BugOutlined,
-	CheckCircleFilled,
-	CloseCircleFilled,
-	SendOutlined,
-	UndoOutlined,
-} from '@ant-design/icons';
+import { ArrowLeftOutlined, BugOutlined, CheckCircleFilled, CloseCircleFilled, SendOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import TextArea from 'antd/lib/input/TextArea';
 import Link from 'next/link';
+import { RequestType, useCustomSWR } from '../utils/request-utils';
+import { Report } from '../types/client';
+import { ColumnsType } from 'antd/lib/table';
 
 const ReportBug = () => {
-	const { data: session, status } = useSession();
+	const { data: session } = useSession();
 
 	const [success, setSuccess] = useState<boolean | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
@@ -49,6 +44,63 @@ const ReportBug = () => {
 		setLoading(false);
 	};
 
+	const { data: bugReports, error: bugReportsError } = useCustomSWR<Report[]>({
+		url: '/api/report',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get bug reports.',
+	});
+
+	const newCols: ColumnsType<Report> = [
+		{
+			title: 'Description',
+			dataIndex: 'description',
+			key: 'description',
+			width: '40%',
+		},
+		{
+			title: 'Date',
+			dataIndex: 'date',
+			key: 'date',
+			width: '20%',
+			render: (date: string) => {
+				return <div>{new Date(date).toLocaleString()}</div>;
+			},
+		},
+		{
+			title: 'Status',
+			dataIndex: 'status',
+			key: 'status',
+			width: '20%',
+			render: (status?: string) => {
+				return status !== undefined ? (
+					<Tag color={status === 'OPEN' ? 'red' : status === 'CLOSED' ? 'green' : 'yellow'}>
+						{status === 'OPEN' ? 'Open' : status === 'CLOSED' ? 'Closed' : 'In Progress'}
+					</Tag>
+				) : (
+					''
+				);
+			},
+		},
+		{
+			title: 'GitHub',
+			key: 'github',
+			width: '20%',
+			render: (text: string, record: Report) =>
+				record.ghUrl && (
+					<a
+						href={record.ghUrl}
+						target="_blank"
+						rel="noreferrer"
+						style={{ color: 'inherit', textDecoration: 'none' }}>
+						<Button className={styles.githubButton}>View on GitHub</Button>
+					</a>
+				),
+		},
+	];
+
+	const bugReportsForTable = // [] as Report[] | undefined;
+		bugReports?.map(x => ({ ...x, key: x._id })) || ([] as Report[]).filter(x => x.email === session?.user?.email);
+
 	return (
 		<>
 			<Head>
@@ -67,7 +119,6 @@ const ReportBug = () => {
 			<Layout
 				style={{
 					width: '100vw',
-					height: '100vh',
 					backgroundImage: 'url(background-1.png)',
 					backgroundRepeat: 'no-repeat',
 					backgroundPosition: `center`,
@@ -76,65 +127,105 @@ const ReportBug = () => {
 					display: 'flex',
 					justifyContent: 'center',
 					alignItems: 'center',
+					overflow: 'scroll',
+					height: '100vh',
 				}}>
-				<div className={styles.reportContainer}>
-					{success == null ? (
-						<>
-							<h1 className={styles.reportTitle}>
-								Report a bug! <BugOutlined />
-							</h1>
-							<div className={styles.reportSubtitleContainer}>
-								<h3 className={styles.reportSubtitle}>Oh no! You&apos;ve found a bug.</h3>
-								<h3 className={styles.reportSubtitle}>&nbsp;Help us squash it!</h3>
-							</div>
+				<div className={styles.reportOuterContainer}>
+					<div className={styles.reportContainer}>
+						{success == null ? (
+							<>
+								<h1 className={styles.reportTitle}>
+									Report a bug! <BugOutlined />
+								</h1>
+								<div className={styles.reportSubtitleContainer}>
+									<h3 className={styles.reportSubtitle}>Oh no! You&apos;ve found a bug.</h3>
+									<h3 className={styles.reportSubtitle}>&nbsp;Help us squash it!</h3>
+								</div>
 
-							<Form
-								layout={'vertical'}
-								labelCol={{ span: 8 }}
-								labelAlign="left"
-								onFinish={handleSubmitBug}
-								requiredMark={false}
-								scrollToFirstError={true}>
-								<Form.Item
-									name="description"
-									rules={[{ required: true, message: 'Please write a description!' }]}>
-									<TextArea
-										className={styles.reportTextArea}
-										placeholder="Tell us about the bug you found..."
-										rows={8}
-									/>
-								</Form.Item>
-								<div className={styles.reportInfoAndSubmitContainer}>
-									<p
-										className={
-											styles.reportUserInfo
-										}>{`Reporting as ${session?.user?.name} (${session?.user?.email})`}</p>{' '}
-									<Button className={styles.reportButton} htmlType={loading ? 'button' : 'submit'}>
-										Submit Bug! <SendOutlined />
+								<Form
+									layout={'vertical'}
+									labelCol={{ span: 8 }}
+									labelAlign="left"
+									onFinish={handleSubmitBug}
+									requiredMark={false}
+									scrollToFirstError={true}>
+									<Form.Item
+										name="description"
+										rules={[{ required: true, message: 'Please write a description!' }]}>
+										<TextArea
+											className={styles.reportTextArea}
+											placeholder="Tell us about the bug you found..."
+											rows={8}
+										/>
+									</Form.Item>
+									<div className={styles.reportInfoAndSubmitContainer}>
+										<p
+											className={
+												styles.reportUserInfo
+											}>{`Reporting as ${session?.user?.name} (${session?.user?.email})`}</p>{' '}
+										<Button
+											className={styles.reportButton}
+											htmlType={loading ? 'button' : 'submit'}>
+											Submit Bug! <SendOutlined />
+										</Button>
+									</div>
+								</Form>
+							</>
+						) : (
+							<>
+								<h1 className={styles.reportTitle}>
+									{success ? (
+										<>
+											Success! <CheckCircleFilled />
+										</>
+									) : (
+										<>
+											Uh oh! <CloseCircleFilled />
+										</>
+									)}
+								</h1>
+								<div className={styles.completedScreeen}>
+									<h3 className={styles.reportSubtitle}>
+										{success
+											? `Thanks for helping us squash this bug! We'll take a look and get back to you soon.`
+											: `Something went wrong. Please email us at info@vandyhacks.org!`}
+									</h3>
+									<Button className={styles.reportButton}>
+										<Link href="/">
+											<a>
+												<ArrowLeftOutlined />
+												&nbsp;&nbsp;Return Home
+											</a>
+										</Link>
 									</Button>
 								</div>
-							</Form>
-						</>
-					) : (
-						<>
-							<h1 className={styles.reportTitle}>
-								{success ? (
-									<>
-										Success! <CheckCircleFilled />
-									</>
-								) : (
-									<>
-										Uh oh! <CloseCircleFilled />
-									</>
-								)}
-							</h1>
-							<div className={styles.completedScreeen}>
-								<h3 className={styles.reportSubtitle}>
-									{success
-										? `Thanks for helping us squash this bug! We'll take a look and get back to you soon.`
-										: `Something went wrong. Please email us at info@vandyhacks.org!`}
-								</h3>
-								<Button className={styles.reportButton}>
+							</>
+						)}
+						{bugReportsForTable && bugReportsForTable?.length > 0 && (
+							<>
+								<div className={styles.bugReportsContainer}>
+									<h3 className={styles.yourBugsSubtitle}>Your Reported Bugs</h3>
+									<ConfigProvider
+										theme={{
+											algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+											token: {
+												colorPrimary: '#FFFFFF', // buttons, tab selected, on hover
+												colorBgBase: '#140f2e', // backgrounds
+											},
+										}}>
+										<div>
+											<Table
+												style={{
+													paddingBottom: '20px',
+												}}
+												columns={newCols}
+												dataSource={bugReportsForTable}
+												pagination={false}
+											/>
+										</div>
+									</ConfigProvider>
+								</div>
+								<Button className={styles.goHomeButton}>
 									<Link href="/">
 										<a>
 											<ArrowLeftOutlined />
@@ -142,9 +233,9 @@ const ReportBug = () => {
 										</a>
 									</Link>
 								</Button>
-							</div>
-						</>
-					)}
+							</>
+						)}
+					</div>
 				</div>
 			</Layout>
 		</>

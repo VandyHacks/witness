@@ -3,6 +3,7 @@ import dbConnect from '../../middleware/database';
 import { getSession } from 'next-auth/react';
 import Report from '../../models/Report';
 import { Octokit } from 'octokit';
+import hackathon from '../../models/hackathon';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
@@ -14,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return res.status(200).send(reports);
 
 		case 'POST':
-			const { email, name, role, description, date, status, ghAssignee } = req.body;
+			const { email, name, role, description, date, status } = req.body;
 
 			// Use the GitHub API to create an issue
 			const octokit = new Octokit({
@@ -28,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const fullDescription = `# Bug Report 
 This is a bug report. You can track this issue in the organizer dashboard.
 ### Reporter Information 
-${email} - ${name} - ${role === 'ORGANIZER' ? 'Organizer' : role === 'JUDGE' ? 'Judge' : 'Hacker'}
+Role: ${role === 'ORGANIZER' ? 'Organizer' : role === 'JUDGE' ? 'Judge' : 'Hacker'}
 Issue was reported on ${
 				new Date().toLocaleString('en-US', {
 					timeZone: 'America/Chicago',
@@ -36,6 +37,8 @@ Issue was reported on ${
 			}	
 ### Description 
 ${description}`;
+
+			const SETTINGS = await hackathon.findOne({});
 
 			// Make a request to the GitHub API to create an issue
 			const response = await octokit.request('POST /repos/VandyHacks/witness/issues', {
@@ -76,7 +79,7 @@ ${description}`;
 						.split(' ')[0]
 				}`,
 				body: fullDescription,
-				assignees: [ghAssignee],
+				assignees: [SETTINGS.ON_CALL_DEV as string],
 			});
 
 			// Create a new report in the database
@@ -88,7 +91,7 @@ ${description}`;
 				date,
 				status,
 				ghIssueNumber: response.data.number,
-				ghAssignee: response.data.assignee.login,
+				ghAssignee: SETTINGS.ON_CALL_DEV as string,
 				ghUrl: response.data.html_url,
 			});
 			return res.status(200).send(report);

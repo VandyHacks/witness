@@ -3,9 +3,26 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
+		width: 80%;
 		height: 100%;
-		width: 50%;
+		overflow-y: scroll;
+		padding-top: 0px;
+		padding-top: 100px;
+
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+
+	.reportContainer::-webkit-scrollbar {
+		display: none;
+	}
+	.reportOuterContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100vw;
 	}
 
 	.reportButton {
@@ -13,6 +30,16 @@
 		border: none;
 		font-weight: 600;
 		margin-left: 20px;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+	}
+
+	.goHomeButton {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		margin-bottom: 40px;
 		padding: 6px 10px;
 		transition: 0.2s;
 		color: #444444;
@@ -112,6 +139,17 @@
 		align-items: center;
 		justify-content: center;
 	}
+
+	.yourBugsSubtitle {
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0;
+		text-align: left;
+		color: #eeeeee;
+		padding-bottom: 10px;
+		padding-top: 40px;
+		width: 100%;
+	}
 }
 
 @media (max-width: 1000px) {
@@ -119,9 +157,29 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
+		width: 100%;
 		height: 100%;
-		width: 80%;
+		overflow-y: scroll;
+		padding-top: 100px;
+		padding-left: 40px;
+		padding-right: 40px;
+		padding-bottom: 20px;
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+
+	.reportContainer::-webkit-scrollbar {
+		display: none;
+	}
+
+	.reportOuterContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100vw;
+		height: 100%;
 	}
 
 	.reportButton {
@@ -129,6 +187,16 @@
 		border: none;
 		font-weight: 600;
 		margin-left: 20px;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+	}
+
+	.goHomeButton {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		margin-bottom: 40px;
 		padding: 6px 10px;
 		transition: 0.2s;
 		color: #444444;
@@ -231,5 +299,16 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+	}
+
+	.yourBugsSubtitle {
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0;
+		text-align: left;
+		color: #eeeeee;
+		padding-bottom: 10px;
+		padding-top: 40px;
+		width: 100%;
 	}
 }
