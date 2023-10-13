@@ -1,20 +1,58 @@
-import { Button, ConfigProvider, Form, Layout, Table, Tag, theme } from 'antd';
+import { Button, ConfigProvider, Form, Layout, Skeleton, Table, Tag, theme } from 'antd';
 import styles from '../styles/Report.module.css';
 import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import { ArrowLeftOutlined, BugOutlined, CheckCircleFilled, CloseCircleFilled, SendOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextArea from 'antd/lib/input/TextArea';
 import Link from 'next/link';
 import { RequestType, useCustomSWR } from '../utils/request-utils';
-import { Report } from '../types/client';
+import { GitHubIssueStatus, Report } from '../types/client';
 import { ColumnsType } from 'antd/lib/table';
+import { Octokit } from 'octokit';
+import SignIn from '../components/signIn';
+import { useRouter } from 'next/router';
 
 const ReportBug = () => {
-	const { data: session } = useSession();
+	const { data: session, status } = useSession();
+	const router = useRouter();
 
 	const [success, setSuccess] = useState<boolean | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [githubIssues, setGithubIssues] = useState<GitHubIssueStatus[] | null>(null);
+
+	useEffect(() => {
+		const fetchGithubIssue = async () => {
+			const octokit = new Octokit({
+				auth: process.env.GITHUB_TOKEN,
+			});
+
+			await octokit
+				.request('GET /repos/VandyHacks/witness/issues?state=all', {
+					owner: 'VandyHacks',
+					repo: 'witness',
+					headers: {
+						'X-GitHub-Api-Version': '2022-11-28',
+					},
+				})
+				.then(res => {
+					// parse through issues and match the issue number and status
+					console.log(res.data);
+					const issues = res.data.map((issue: any) => {
+						return {
+							issueNumber: issue.number,
+							status: issue.state,
+						};
+					});
+					setGithubIssues(issues);
+				})
+				.catch(err => {
+					console.error(err);
+				});
+		};
+
+		fetchGithubIssue();
+	}, []);
 
 	const handleSubmitBug = async (input: any) => {
 		setLoading(true);
@@ -24,7 +62,6 @@ const ReportBug = () => {
 			role: session?.userType || 'HACKER',
 			date: new Date().toISOString(),
 			description: input.description,
-			status: 'OPEN',
 			// will replace with on-call dev
 			ghAssignee: 'jacoblurie29',
 		};
@@ -50,6 +87,8 @@ const ReportBug = () => {
 		errorMessage: 'Failed to get bug reports.',
 	});
 
+	if (!session && status === 'unauthenticated') router.push('/');
+
 	const newCols: ColumnsType<Report> = [
 		{
 			title: 'Description',
@@ -71,13 +110,20 @@ const ReportBug = () => {
 			dataIndex: 'status',
 			key: 'status',
 			width: '20%',
-			render: (status?: string) => {
-				return status !== undefined ? (
-					<Tag color={status === 'OPEN' ? 'red' : status === 'CLOSED' ? 'green' : 'yellow'}>
-						{status === 'OPEN' ? 'Open' : status === 'CLOSED' ? 'Closed' : 'In Progress'}
+			render: (_: string, record: Report) => {
+				return (
+					<Tag
+						color={
+							githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
+							'open'
+								? 'red'
+								: 'green'
+						}>
+						{githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
+						'open'
+							? 'Open'
+							: 'Closed'}
 					</Tag>
-				) : (
-					''
 				);
 			},
 		},
@@ -99,7 +145,10 @@ const ReportBug = () => {
 	];
 
 	const bugReportsForTable = // [] as Report[] | undefined;
-		bugReports?.map(x => ({ ...x, key: x._id })) || ([] as Report[]).filter(x => x.email === session?.user?.email);
+		bugReports?.map(x => ({ ...x, key: x._id })).filter(record => record.email === session?.user?.email) ||
+		([] as Report[]);
+
+	console.log(bugReportsForTable);
 
 	return (
 		<>
@@ -130,67 +179,103 @@ const ReportBug = () => {
 					overflow: 'scroll',
 					height: '100vh',
 				}}>
-				<div className={styles.reportOuterContainer}>
-					<div className={styles.reportContainer}>
-						{success == null ? (
-							<>
-								<h1 className={styles.reportTitle}>
-									Report a bug! <BugOutlined />
-								</h1>
-								<div className={styles.reportSubtitleContainer}>
-									<h3 className={styles.reportSubtitle}>Oh no! You&apos;ve found a bug.</h3>
-									<h3 className={styles.reportSubtitle}>&nbsp;Help us squash it!</h3>
-								</div>
+				{!session ? null : (
+					<div className={styles.reportOuterContainer}>
+						<div className={styles.reportContainer}>
+							{success == null ? (
+								<>
+									<h1 className={styles.reportTitle}>
+										Report a bug! <BugOutlined />
+									</h1>
+									<div className={styles.reportSubtitleContainer}>
+										<h3 className={styles.reportSubtitle}>Oh no! You&apos;ve found a bug.</h3>
+										<h3 className={styles.reportSubtitle}>&nbsp;Help us squash it!</h3>
+									</div>
 
-								<Form
-									layout={'vertical'}
-									labelCol={{ span: 8 }}
-									labelAlign="left"
-									onFinish={handleSubmitBug}
-									requiredMark={false}
-									scrollToFirstError={true}>
-									<Form.Item
-										name="description"
-										rules={[{ required: true, message: 'Please write a description!' }]}>
-										<TextArea
-											className={styles.reportTextArea}
-											placeholder="Tell us about the bug you found..."
-											rows={8}
-										/>
-									</Form.Item>
-									<div className={styles.reportInfoAndSubmitContainer}>
-										<p
-											className={
-												styles.reportUserInfo
-											}>{`Reporting as ${session?.user?.name} (${session?.user?.email})`}</p>{' '}
-										<Button
-											className={styles.reportButton}
-											htmlType={loading ? 'button' : 'submit'}>
-											Submit Bug! <SendOutlined />
+									<Form
+										layout={'vertical'}
+										labelCol={{ span: 8 }}
+										labelAlign="left"
+										onFinish={handleSubmitBug}
+										requiredMark={false}
+										scrollToFirstError={true}>
+										<Form.Item
+											name="description"
+											rules={[{ required: true, message: 'Please write a description!' }]}>
+											<TextArea
+												className={styles.reportTextArea}
+												placeholder="Tell us about the bug you found..."
+												rows={8}
+											/>
+										</Form.Item>
+										<div className={styles.reportInfoAndSubmitContainer}>
+											<p
+												className={
+													styles.reportUserInfo
+												}>{`Reporting as ${session?.user?.name} (${session?.user?.email})`}</p>{' '}
+											<Button
+												className={styles.reportButton}
+												htmlType={loading ? 'button' : 'submit'}>
+												Submit Bug! <SendOutlined />
+											</Button>
+										</div>
+									</Form>
+								</>
+							) : (
+								<>
+									<h1 className={styles.reportTitle}>
+										{success ? (
+											<>
+												Success! <CheckCircleFilled />
+											</>
+										) : (
+											<>
+												Uh oh! <CloseCircleFilled />
+											</>
+										)}
+									</h1>
+									<div className={styles.completedScreeen}>
+										<h3 className={styles.reportSubtitle}>
+											{success
+												? `Thanks for helping us squash this bug! We'll take a look and get back to you soon.`
+												: `Something went wrong. Please email us at info@vandyhacks.org!`}
+										</h3>
+										<Button className={styles.reportButton}>
+											<Link href="/">
+												<a>
+													<ArrowLeftOutlined />
+													&nbsp;&nbsp;Return Home
+												</a>
+											</Link>
 										</Button>
 									</div>
-								</Form>
-							</>
-						) : (
-							<>
-								<h1 className={styles.reportTitle}>
-									{success ? (
-										<>
-											Success! <CheckCircleFilled />
-										</>
-									) : (
-										<>
-											Uh oh! <CloseCircleFilled />
-										</>
-									)}
-								</h1>
-								<div className={styles.completedScreeen}>
-									<h3 className={styles.reportSubtitle}>
-										{success
-											? `Thanks for helping us squash this bug! We'll take a look and get back to you soon.`
-											: `Something went wrong. Please email us at info@vandyhacks.org!`}
-									</h3>
-									<Button className={styles.reportButton}>
+								</>
+							)}
+							{bugReportsForTable && bugReportsForTable?.length > 0 && (
+								<>
+									<div className={styles.bugReportsContainer}>
+										<h3 className={styles.yourBugsSubtitle}>Your Reported Bugs</h3>
+										<ConfigProvider
+											theme={{
+												algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
+												token: {
+													colorPrimary: '#FFFFFF', // buttons, tab selected, on hover
+													colorBgBase: '#140f2e', // backgrounds
+												},
+											}}>
+											<div>
+												<Table
+													style={{
+														paddingBottom: '20px',
+													}}
+													columns={newCols}
+													dataSource={bugReportsForTable}
+													pagination={false}
+												/>
+											</div>
+										</ConfigProvider>
+									</div>
+									<Button className={styles.goHomeButton}>
 										<Link href="/">
 											<a>
 												<ArrowLeftOutlined />
@@ -198,45 +283,11 @@ const ReportBug = () => {
 											</a>
 										</Link>
 									</Button>
-								</div>
-							</>
-						)}
-						{bugReportsForTable && bugReportsForTable?.length > 0 && (
-							<>
-								<div className={styles.bugReportsContainer}>
-									<h3 className={styles.yourBugsSubtitle}>Your Reported Bugs</h3>
-									<ConfigProvider
-										theme={{
-											algorithm: [theme.darkAlgorithm, theme.compactAlgorithm],
-											token: {
-												colorPrimary: '#FFFFFF', // buttons, tab selected, on hover
-												colorBgBase: '#140f2e', // backgrounds
-											},
-										}}>
-										<div>
-											<Table
-												style={{
-													paddingBottom: '20px',
-												}}
-												columns={newCols}
-												dataSource={bugReportsForTable}
-												pagination={false}
-											/>
-										</div>
-									</ConfigProvider>
-								</div>
-								<Button className={styles.goHomeButton}>
-									<Link href="/">
-										<a>
-											<ArrowLeftOutlined />
-											&nbsp;&nbsp;Return Home
-										</a>
-									</Link>
-								</Button>
-							</>
-						)}
+								</>
+							)}
+						</div>
 					</div>
-				</div>
+				)}
 			</Layout>
 		</>
 	);

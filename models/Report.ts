@@ -23,9 +23,6 @@ export const ReportSchema = new Schema({
 		type: Date,
 		required: true,
 	},
-	status: {
-		type: String,
-	},
 	ghIssueNumber: {
 		type: Number,
 		required: true,

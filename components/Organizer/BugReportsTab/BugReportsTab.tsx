@@ -1,21 +1,25 @@
 import { Button, Input, InputRef, Skeleton, Space, Table, Tag } from 'antd';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
-import { Report } from '../../../types/client';
+import { GitHubIssueStatus, Report } from '../../../types/client';
 import { ColumnsType } from 'antd/lib/table';
 import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FilterValue } from 'antd/lib/table/interface';
 import styles from '../../../styles/Report.module.css';
+import { Octokit } from 'octokit';
+import { set } from 'mongoose';
 
 const BugReportsTab = () => {
 	const searchInput = useRef<InputRef>(null);
 	const [searchText, setSearchText] = useState('');
 	const [searchedColumn, setSearchedColumn] = useState('');
 	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({
-		status: ['OPEN', 'IN_PROGRESS'],
+		status: [],
 	});
+	const [githubIssues, setGithubIssues] = useState<GitHubIssueStatus[] | null>(null);
+	const [githubIssueLoading, setGithubIssueLoading] = useState<boolean>(false);
 
 	const { data: bugReports, error: bugReportsError } = useCustomSWR<Report[]>({
 		url: '/api/report',
@@ -23,11 +27,41 @@ const BugReportsTab = () => {
 		errorMessage: 'Failed to get bug reports.',
 	});
 
-	if (bugReportsError) return <div>Failed to get bug reports!</div>;
+	useEffect(() => {
+		setGithubIssueLoading(true);
+		const fetchGithubIssue = async () => {
+			const octokit = new Octokit({
+				auth: process.env.GITHUB_TOKEN,
+			});
 
-	if (!bugReports) return <Skeleton />;
+			await octokit
+				.request('GET /repos/VandyHacks/witness/issues?state=all', {
+					owner: 'VandyHacks',
+					repo: 'witness',
+					headers: {
+						'X-GitHub-Api-Version': '2022-11-28',
+					},
+				})
+				.then(res => {
+					// parse through issues and match the issue number and status
 
-	const bugReportsForTable = bugReports?.map(x => ({ ...x, key: x._id })) || ([] as Report[]);
+					const issues = res.data.map((issue: any) => {
+						return {
+							issueNumber: issue.number,
+							status: issue.state,
+						};
+					});
+					setGithubIssues(issues);
+					setGithubIssueLoading(false);
+				})
+				.catch(err => {
+					console.error(err);
+					setGithubIssueLoading(false);
+				});
+		};
+
+		fetchGithubIssue();
+	}, []);
 
 	const handleDeleteIssue = async (id: string | undefined) => {
 		if (!id) return;
@@ -185,7 +219,9 @@ const BugReportsTab = () => {
 			onFilter: (value: string | number | boolean, record: any): boolean => record.role === value,
 			render: (role?: string) => {
 				return role !== undefined ? (
-					<Tag color="blue">{role === 'HACKER' ? 'Hacker' : role === 'JUDGE' ? 'Judge' : 'Organizer'}</Tag>
+					<Tag color={role === 'HACKER' ? 'pink' : role === 'JUDGE' ? 'orange' : 'yellow'}>
+						{role === 'HACKER' ? 'Hacker' : role === 'JUDGE' ? 'Judge' : 'Organizer'}
+					</Tag>
 				) : (
 					''
 				);
@@ -200,17 +236,23 @@ const BugReportsTab = () => {
 			filters: [
 				{ text: 'Open', value: 'OPEN' },
 				{ text: 'Closed', value: 'CLOSED' },
-				{ text: 'In Progress', value: 'IN_PROGRESS' },
 			],
 			filteredValue: filteredInfo['status'] || null,
 			onFilter: (value: string | number | boolean, record: any): boolean => record.status === value,
-			render: (status?: string) => {
-				return status !== undefined ? (
-					<Tag color={status === 'OPEN' ? 'red' : status === 'CLOSED' ? 'green' : 'yellow'}>
-						{status === 'OPEN' ? 'Open' : status === 'CLOSED' ? 'Closed' : 'In Progress'}
+			render: (_: string, record: Report) => {
+				return (
+					<Tag
+						color={
+							githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
+							'open'
+								? 'red'
+								: 'green'
+						}>
+						{githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
+						'open'
+							? 'Open'
+							: 'Closed'}
 					</Tag>
-				) : (
-					''
 				);
 			},
 		},
@@ -251,6 +293,12 @@ const BugReportsTab = () => {
 			),
 		},
 	];
+
+	if (bugReportsError) return <div>Failed to get bug reports!</div>;
+
+	if (!bugReports || githubIssueLoading) return <Skeleton />;
+
+	const bugReportsForTable = bugReports?.map(x => ({ ...x, key: x._id })) || ([] as Report[]);
 
 	return (
 		<div>

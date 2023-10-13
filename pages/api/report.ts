@@ -15,7 +15,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			return res.status(200).send(reports);
 
 		case 'POST':
-			const { email, name, role, description, date, status } = req.body;
+			const { email, name, role, description, date } = req.body;
 
 			// Use the GitHub API to create an issue
 			const octokit = new Octokit({
@@ -89,28 +89,11 @@ ${description}`;
 				role,
 				description,
 				date,
-				status,
 				ghIssueNumber: response.data.number,
 				ghAssignee: SETTINGS.ON_CALL_DEV as string,
 				ghUrl: response.data.html_url,
 			});
 			return res.status(200).send(report);
-
-		case 'PATCH':
-			const { id } = req.body;
-
-			if (!id) {
-				return res.status(400).send('No report ID provided');
-			}
-
-			const { status: newStatus } = req.body;
-
-			if (!newStatus) {
-				return res.status(400).send('No new status provided');
-			}
-
-			const updatedReport = await Report.findByIdAndUpdate(id, { status: { $eq: newStatus } }, { new: true });
-			return res.status(200).send(updatedReport);
 
 		case 'DELETE':
 			const { id: reportId } = req.body;

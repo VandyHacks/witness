@@ -54,20 +54,18 @@ export interface Report {
 	role: ReportRole;
 	description: string;
 	date: string;
-	status: ReportStatus;
 	ghIssueNumber: number;
 	ghAssignee: string;
 	ghUrl: string;
-}
-
-export enum ReportStatus {
-	OPEN = 'OPEN',
-	IN_PROGRESS = 'IN_PROGRESS',
-	CLOSED = 'CLOSED',
 }
 
 export enum ReportRole {
 	HACKER = 'HACKER',
 	JUDGE = 'JUDGE',
 	ORGANIZER = 'ORGANIZER',
+}
+
+export interface GitHubIssueStatus {
+	issueNumber: number;
+	status: string;
 }

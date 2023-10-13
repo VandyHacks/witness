@@ -42,7 +42,7 @@ const HackathonSettings = () => {
 	const handleSave = async () => {
 		if (
 			window.confirm(
-				'IMPORTANT: \nAre you sure you wish to save these dates?\nMake sure you know what you are doing!'
+				'IMPORTANT: \nAre you sure you wish to save these settings?\nMake sure you know what you are doing!'
 			)
 		) {
 			const res = await fetch('/api/hackathon-settings', {
@@ -141,7 +141,7 @@ const HackathonSettings = () => {
 			<br />
 			<br />
 
-			<Button onClick={handleSave}>Save dates to database</Button>
+			<Button onClick={handleSave}>Save settings to database</Button>
 
 			{statusMessage && <div>{statusMessage}</div>}
 		</div>
