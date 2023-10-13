@@ -55,28 +55,6 @@ enum EditingStates {
 	Reject = 'REJECT',
 }
 
-function handleSuccess() {
-	notification['success']({
-		message: (
-			<span>
-				Successfully set schedule!
-				<br />
-				Please refresh the page.
-			</span>
-		),
-		placement: 'bottomRight',
-	});
-}
-
-function handleFailure(message: string) {
-	notification['error']({
-		message: 'Oops, something went wrong!',
-		description: message,
-		placement: 'bottomRight',
-		duration: null,
-	});
-}
-
 export function generateTimes(start: Date, end: Date, interval: number) {
 	const times = [];
 	let current = start;

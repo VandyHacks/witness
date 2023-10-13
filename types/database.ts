@@ -109,6 +109,7 @@ export interface EventData {
 	startTime: String;
 	endTime: String;
 	location: String;
+	nfcPoints: Number;
 }
 
 export interface EventCountData {

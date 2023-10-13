@@ -5,7 +5,6 @@ import hackathon from '../../models/hackathon';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
-	if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
 
 	await dbConnect();
 	switch (req.method) {
@@ -20,6 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			}
 		case 'PATCH':
 			try {
+				if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
 				// extract variables from body
 				const { HACKATHON_START, HACKATHON_END, JUDGING_START, JUDGING_END, ON_CALL_DEV } = req.body;
 

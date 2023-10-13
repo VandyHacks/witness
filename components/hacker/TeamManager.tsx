@@ -1,7 +1,7 @@
 import { Button, Collapse, Descriptions, Divider, Form, Input, notification, Tag } from 'antd';
 import { Content } from 'antd/lib/layout/layout';
 import { useSWRConfig } from 'swr';
-import { handleSubmitFailure } from '../../lib/helpers';
+import { handleSubmitFailure, handleSubmitSuccess } from '../../lib/helpers';
 import { TeamProfile } from '../../types/client';
 import LeaveButton from './LeaveButton';
 import { ScopedMutator } from 'swr/dist/types';
@@ -44,10 +44,9 @@ export default function TeamManager({ profile }: { profile: TeamProfile }) {
 	const onFormFinish = async (data: { teamName: string } | { devpost: string }, mutate: ScopedMutator) => {
 		const success = await handleSubmit(data, mutate);
 		if (success) {
-			notification['success']({
-				message: <span>Successfully Changed!</span>,
-				placement: 'bottomRight',
-			});
+			handleSubmitSuccess('Successfully Changed!');
+		} else {
+			handleSubmitFailure('Failed to Change!');
 		}
 	};
 	const { mutate } = useSWRConfig();
