@@ -39,9 +39,6 @@ export const handleGetHacker = async () => {
 		],
 	});
 
-	// connect to db
-	await dbConnect();
-
 	switch (subAction1) {
 		case 'get-events':
 			await getEvents(user);

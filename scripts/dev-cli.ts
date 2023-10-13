@@ -4,6 +4,9 @@ import * as dotenv from 'dotenv';
 import { handleModifyHacker } from './cli-util/modify-hacker';
 import { handleGetHacker } from './cli-util/get-hacker';
 import { handleGetTeam } from './cli-util/get-team';
+import { handlePopulateTeams } from './cli-util/populate-teams';
+import { handleDeleteCollection } from './cli-util/delete-collection';
+import { handleModifyTeam } from './cli-util/modify-team';
 dotenv.config();
 
 /**
@@ -57,7 +60,7 @@ export const promptAction = async () => {
 		message: 'Select action to perform',
 		choices: [
 			{
-				name: "Get a hacker's document",
+				name: 'GET a hacker',
 				value: 'get-hacker',
 				// sub-action:
 				// 1. see their events
@@ -66,7 +69,7 @@ export const promptAction = async () => {
 				// 4. get entire JSON of their document
 			},
 			{
-				name: 'Get a team document',
+				name: 'GET a team',
 				value: 'get-team',
 				// sub-action:
 				// 1. see their schedule
@@ -74,7 +77,7 @@ export const promptAction = async () => {
 				// 3. get entire JSON of their document
 			},
 			{
-				name: "🏗️ Modify a hacker's document",
+				name: 'MODIFY a hacker',
 				value: 'modify-hacker',
 				// sub-action:
 				// 1. change application status
@@ -83,20 +86,21 @@ export const promptAction = async () => {
 				// 4. check in
 			},
 			{
-				name: '🏗️ Modify a team',
+				name: 'MODIFY a team',
 				value: 'modify-team',
 				// sub-action:
 				// 1. change team name
-				// 2. change team members?
-				// 3. change team invite code?
-				// 4. change devpost link?
+				// 2. change team members
+				// 3. change team invite code
+				// 4. change devpost link
 			},
 			{
-				name: '🏗️ Clear a collection (dangerous)',
+				name: 'CLEAR all collections ⛔️',
 				value: 'clear-collection',
+				// clears Users (Hackers), Teams, Scores, Schedule, Judging Sessions
 			},
 			{
-				name: '🏗️ Populate a collection',
+				name: 'POPULATE a collection 🏗️',
 				value: 'populate-collection',
 			},
 			{
@@ -117,6 +121,12 @@ export const promptAction = async () => {
 				break;
 			case 'modify-hacker':
 				await handleModifyHacker();
+				break;
+			case 'modify-team':
+				await handleModifyTeam();
+				break;
+			case 'clear-collection':
+				await handleDeleteCollection();
 				break;
 			case 'quit':
 				process.exit(0);
