@@ -104,11 +104,6 @@ ${description}`;
 
 			const deletedReport = await Report.findOneAndRemove({ _id: { $eq: reportId } });
 
-			// Use the GitHub API to delete an issue
-			const octokit2 = new Octokit({
-				auth: process.env.GITHUB_TOKEN,
-			});
-
 			return res.status(200).send(deletedReport);
 
 		default:
