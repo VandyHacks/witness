@@ -102,7 +102,7 @@ ${description}`;
 				return res.status(400).send('No report ID provided');
 			}
 
-			const deletedReport = await Report.findByIdAndDelete({ $eq: reportId });
+			const deletedReport = await Report.findOneAndRemove({ _id: { $eq: reportId } });
 
 			// Use the GitHub API to delete an issue
 			const octokit2 = new Octokit({
