@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from 'react';
 import { FilterValue } from 'antd/lib/table/interface';
 import styles from '../../../styles/Report.module.css';
 import { Octokit } from 'octokit';
-import { set } from 'mongoose';
 
 const BugReportsTab = () => {
 	const searchInput = useRef<InputRef>(null);
