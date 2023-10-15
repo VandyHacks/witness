@@ -1,32 +1,15 @@
 import { useEffect, useState } from 'react';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import {
-	Button,
-	Checkbox,
-	Col,
-	DatePicker,
-	Divider,
-	Form,
-	Input,
-	Radio,
-	Row,
-	Skeleton,
-	Table,
-	Upload,
-	UploadFile,
-} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { Button, Checkbox, DatePicker, Form, Input, Radio, Skeleton, Upload, UploadFile } from 'antd';
 import useSWR from 'swr';
-import TeamManager from './TeamManager';
 import Leaderboard from './Leaderboard';
 import JudgingSchedule from './JudgingSchedule';
-import TeamSetup from './TeamSetup';
 import { TeamProfile } from '../../types/client';
 import { ApplicationStatus, UserData, JudgingSessionData, HackathonSettingsData } from '../../types/database';
 import styles from '../../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
-import { ColumnsType } from 'antd/es/table';
 import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
 
