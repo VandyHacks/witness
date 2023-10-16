@@ -46,14 +46,18 @@
 /* add media query for mobile screen */
 @media (max-width: 768px) {
 	.Container {
-		font-size: 30px;
-	}
-
-	.TableContainer {
 		font-size: 20px;
 	}
 
+	.TableContainer {
+		font-size: 15px;
+	}
+
+	.Container > * {
+		padding: 10px 0;
+	}
+
 	.Placeholder {
-		font-size: 40px;
+		font-size: 15px;
 	}
 }
