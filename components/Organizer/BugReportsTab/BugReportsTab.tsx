@@ -276,7 +276,7 @@ const BugReportsTab = () => {
 						target="_blank"
 						rel="noreferrer"
 						style={{ color: 'inherit', textDecoration: 'none' }}>
-						<Button className={styles.githubButton}>View on GitHub</Button>
+						<Button>View on GitHub</Button>
 					</a>
 				),
 		},
@@ -287,7 +287,7 @@ const BugReportsTab = () => {
 			width: '5%',
 			render: (text: string, record: Report) => (
 				<Button className={styles.deleteButton} onClick={() => handleDeleteIssue(record._id)}>
-					<DeleteOutlined className={styles.deleteButtonIcon} />
+					<DeleteOutlined />
 				</Button>
 			),
 		},

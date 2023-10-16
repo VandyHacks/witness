@@ -138,7 +138,7 @@ const ReportBug = () => {
 						target="_blank"
 						rel="noreferrer"
 						style={{ color: 'inherit', textDecoration: 'none' }}>
-						<Button className={styles.githubButton}>View on GitHub</Button>
+						<Button>View on GitHub</Button>
 					</a>
 				),
 		},
@@ -253,7 +253,7 @@ const ReportBug = () => {
 							)}
 							{bugReportsForTable && bugReportsForTable?.length > 0 && (
 								<>
-									<div className={styles.bugReportsContainer}>
+									<div>
 										<h3 className={styles.yourBugsSubtitle}>Your Reported Bugs</h3>
 										<ConfigProvider
 											theme={{
