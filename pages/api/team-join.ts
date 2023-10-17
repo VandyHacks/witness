@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const team = await Team.findOne({ joinCode: { $eq: joinCode } });
 
 			// check if the team exists
-			if (!team) return res.status(404).send('Team not found');
+			if (!team) return res.status(404).send('Team not found or join code is invalid');
 
 			// add the hacker to the team
 			team.members.push(user._id);
