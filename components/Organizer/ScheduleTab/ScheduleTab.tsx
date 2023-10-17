@@ -1,4 +1,4 @@
-import { Button, InputNumber } from 'antd';
+import { Button, InputNumber, Slider, Row, Col } from 'antd';
 import { SetStateAction, useContext, useEffect, useState } from 'react';
 import { matchTeams, handleConfirmSchedule } from '../../../utils/organizer-utils';
 import OrganizerSchedule, { generateTimes } from '../../judges/schedule';
@@ -10,7 +10,7 @@ import { handleSubmitFailure } from '../../../lib/helpers';
 
 const ScheduleTab = () => {
 	// React state
-	const [timesJudged, setTimesJudged] = useState<number>(0);
+	const [timesJudged, setTimesJudged] = useState<number>(1);
 	const [maxTimesJudged, setMaxTimesJudged] = useState<number>(0);
 	const [potentialSchedule, setPotentialSchedule] = useState<JudgingSessionData[] | undefined>(undefined);
 
@@ -108,15 +108,32 @@ const ScheduleTab = () => {
 				<div>Loading...</div>
 			) : (
 				<>
-					<InputNumber
-						placeholder="Number judging sessions per team"
-						style={{ width: 250 }}
-						value={timesJudged || null}
-						onChange={input => {
-							setTimesJudged(input || 0);
-						}}
-						status={1 <= timesJudged && timesJudged <= maxTimesJudged ? '' : 'error'}
-					/>
+                    <Row style={{marginBottom: "-8px"}}>
+                        <Col style={{margin: "auto 8px auto 0"}}>
+                            Number of Judging Sessions Per Team:
+                        </Col>
+                        <Col>
+                            <InputNumber
+                                style={{ margin: '0 1px' }}
+                                min={1}
+                                max={10}
+                                value={timesJudged || null}
+                                onChange={input => {
+                                    setTimesJudged(input || 1);
+                                }}
+                                status={1 <= timesJudged && timesJudged <= maxTimesJudged ? '' : 'error'}
+                            />
+                        </Col>
+                        <Col span={4}>
+                            <Slider
+                                min={1}
+                                max={10}
+                                onChange={setTimesJudged}
+                                value={timesJudged}
+                            />
+                        </Col>
+                    </Row>
+                    <br />
 					<Button
 						onClick={() => handleCreateNewPotentialSchedules(teamsData, judgesData)}
 						style={{ marginBottom: '10px' }}>
