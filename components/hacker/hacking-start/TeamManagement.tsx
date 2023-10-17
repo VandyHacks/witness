@@ -1,52 +1,52 @@
 import React, { useState } from 'react';
 import { TeamProfile } from '../../../types/client';
 import styles from '../../../styles/hacker/Table.module.css';
-import { Button, Form, Input } from 'antd';
+import { Button, Input } from 'antd';
+import useSWR, { mutate } from 'swr';
+import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
 
-const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => {
+const TeamManagement = () => {
 	const [teamName, setTeamName] = useState<string | undefined>(undefined);
-	const [teamCode, setTeamCode] = useState<string | undefined>(undefined);
+	const [joinCode, setTeamCode] = useState<string | undefined>(undefined);
 
-	// TODO:
-	// 1. User has no team:
-	// -- "You have not joined a team yet"
-	// -- join team / create team
-	// -- enter join code here
+	const { data: teamData, error: teamError } = useSWR('/api/team', async url => {
+		const res = await fetch(url, { method: 'GET' });
+		if (!res.ok) return;
+		const { members, ...rest } = await res.json();
 
-	const handleCreateTeam = () => {
-		// TODO:
-		// update endpoint to not require devpost
-		// ensure no team name conflicts
-		console.log('Create Team', teamName);
-		alert('Create team' + teamName);
+		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
+	});
+
+	// handle create/join team
+	const handleAction = async (action: 'CREATE' | 'JOIN') => {
+		const endpoint = action === 'CREATE' ? '/api/team-create' : '/api/team-join';
+		const method = action === 'CREATE' ? 'POST' : 'PATCH';
+		const headers = { 'Content-Type': 'application/json' };
+		const body = JSON.stringify(action === 'CREATE' ? { teamName } : { joinCode });
+
+		const res = await fetch(endpoint, { method, headers, body });
+
+		if (res.ok) {
+			mutate(endpoint);
+			handleSubmitSuccess(`Successfully ${action === 'CREATE' ? 'created' : 'joined'} a team!`);
+		} else {
+			handleSubmitFailure(await res.text());
+		}
 	};
-
-	const handleJoinTeam = () => {
-		// TODO:
-		console.log('Join Team', teamCode);
-		alert('Join team' + teamCode);
-	};
-
-	// 2. User has team:
-	// -- Your team name
-	// -- Join code: <code>
-	// -- Members listed
-	// -- devpost link
-	// -- button to rename team and change devpost
 
 	return (
-		<>
+		<div className={styles.Container}>
 			{/* TODO: not done yet lol */}
-			{teamData !== undefined && (
-				<div className={styles.Container}>
-					Team
+			Team
+			{!teamData && (
+				<>
 					<div className={styles.Placeholder}>You are not in a team yet.</div>
 					<div className={styles.TeamActionContainer}>
 						<div>
 							<div>Create a Team</div>
 							<div className={styles.TeamInput}>
 								<Input placeholder="Enter Team Name" onChange={e => setTeamName(e.target.value)} />
-								<Button htmlType="submit" onClick={handleCreateTeam}>
+								<Button htmlType="submit" onClick={() => handleAction('CREATE')}>
 									Create Team
 								</Button>
 							</div>
@@ -58,15 +58,26 @@ const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => 
 							<div>Join a Team</div>
 							<div className={styles.TeamInput}>
 								<Input placeholder="Enter Team Code" onChange={e => setTeamCode(e.target.value)} />
-								<Button htmlType="submit" onClick={handleJoinTeam}>
-									Create Team
+								<Button htmlType="submit" onClick={() => handleAction('JOIN')}>
+									Join Team
 								</Button>
 							</div>
 						</div>
 					</div>
-				</div>
+				</>
 			)}
-		</>
+			{teamData && (
+				<>
+					<div>Team Name: {teamData.name}</div>
+					<div>Members: {teamData.members}</div>
+					<div>Join Code: {teamData.joinCode}</div>
+					<div>Devpost: {teamData.devpost}</div>
+					{/* TODO: change team name */}
+					{/* TODO: change devpost */}
+					{/* TODO: leave team button */}
+				</>
+			)}
+		</div>
 	);
 };
 
