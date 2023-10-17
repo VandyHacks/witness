@@ -108,32 +108,25 @@ const ScheduleTab = () => {
 				<div>Loading...</div>
 			) : (
 				<>
-                    <Row style={{marginBottom: "-8px"}}>
-                        <Col style={{margin: "auto 8px auto 0"}}>
-                            Number of Judging Sessions Per Team:
-                        </Col>
-                        <Col>
-                            <InputNumber
-                                style={{ margin: '0 1px' }}
-                                min={1}
-                                max={10}
-                                value={timesJudged || null}
-                                onChange={input => {
-                                    setTimesJudged(input || 1);
-                                }}
-                                status={1 <= timesJudged && timesJudged <= maxTimesJudged ? '' : 'error'}
-                            />
-                        </Col>
-                        <Col span={4}>
-                            <Slider
-                                min={1}
-                                max={10}
-                                onChange={setTimesJudged}
-                                value={timesJudged}
-                            />
-                        </Col>
-                    </Row>
-                    <br />
+					<Row style={{ marginBottom: '-8px' }}>
+						<Col style={{ margin: 'auto 8px auto 0' }}>Number of Judging Sessions Per Team:</Col>
+						<Col>
+							<InputNumber
+								style={{ margin: '0 1px' }}
+								min={1}
+								max={10}
+								value={timesJudged || null}
+								onChange={input => {
+									setTimesJudged(input || 1);
+								}}
+								status={1 <= timesJudged && timesJudged <= maxTimesJudged ? '' : 'error'}
+							/>
+						</Col>
+						<Col span={4}>
+							<Slider min={1} max={10} onChange={setTimesJudged} value={timesJudged} />
+						</Col>
+					</Row>
+					<br />
 					<Button
 						onClick={() => handleCreateNewPotentialSchedules(teamsData, judgesData)}
 						style={{ marginBottom: '10px' }}>
