@@ -33,8 +33,8 @@ const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => 
 			{teamData === undefined && (
 				<div className={styles.Container}>
 					<div>You have not joined a team yet</div>
-					<div className={styles.FlexColumn}>
-						<div className={styles.OptionText}>Option 1: Create a team</div>
+					<div>
+						<div>Option 1: Create a team</div>
 
 						{/* Create Team */}
 						<Form onFinish={handleCreateTeam}>
@@ -46,7 +46,7 @@ const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => 
 										message: 'Please enter a team name!                            ',
 									},
 								]}>
-								<Input className={styles.JoinCodeInput} placeholder="Enter Team Name" />
+								<Input placeholder="Enter Team Name" />
 							</Form.Item>
 							<Form.Item
 								name="devpost"
@@ -57,17 +57,15 @@ const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => 
 										pattern: new RegExp('^https://devpost.com/.*'),
 									},
 								]}>
-								<Input className={styles.JoinCodeInput} placeholder="Enter Devpost Link" />
+								<Input placeholder="Enter Devpost Link" />
 							</Form.Item>
 
 							{/* Button */}
-							<Button className={styles.Button} htmlType="submit">
-								Create Team
-							</Button>
+							<Button htmlType="submit">Create Team</Button>
 						</Form>
 					</div>
-					<div className={styles.FlexColumn}>
-						<div className={styles.OptionText}>Option 2: Join a team</div>
+					<div>
+						<div>Option 2: Join a team</div>
 
 						{/* Join Code */}
 						<Form onFinish={handleJoinTeam}>
@@ -79,13 +77,11 @@ const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => 
 										message: 'Please enter a join code!                            ',
 									},
 								]}>
-								<Input className={styles.JoinCodeInput} placeholder="Enter Join Code Here" />
+								<Input placeholder="Enter Join Code Here" />
 							</Form.Item>
 
 							{/* Join Team */}
-							<Button className={styles.Button} htmlType="submit">
-								Join Team
-							</Button>
+							<Button htmlType="submit">Join Team</Button>
 						</Form>
 					</div>
 				</div>
