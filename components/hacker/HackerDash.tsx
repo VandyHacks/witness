@@ -659,6 +659,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											alignItems: 'center',
 											textAlign: 'center',
 											color: 'white',
+											fontSize: '10px',
 										}}>
 										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
 									</div>
