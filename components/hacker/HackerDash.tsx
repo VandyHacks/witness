@@ -16,17 +16,14 @@ import {
 	UploadFile,
 } from 'antd';
 import useSWR from 'swr';
-import TeamManager from './TeamManager';
 import Leaderboard from './Leaderboard';
 import JudgingSchedule from './JudgingSchedule';
-import TeamSetup from './TeamSetup';
 import { TeamProfile } from '../../types/client';
 import { ApplicationStatus, UserData, JudgingSessionData, HackathonSettingsData } from '../../types/database';
 import styles from '../../styles/Form.module.css';
 import { signOut, useSession } from 'next-auth/react';
 import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
-import { ColumnsType } from 'antd/es/table';
 import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
 import TeamManagement from './hacking-start/TeamManagement';
@@ -42,13 +39,6 @@ type HackerProps = {
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
 	const { data: session, status } = useSession();
-	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) return;
-		const { members, ...rest } = await res.json();
-
-		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
-	});
 
 	const { data: user } = useSWR(
 		'/api/user-data',
@@ -666,7 +656,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Header user={user} signOut={signOut} />
 
 									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
-									<TeamManagement teamData={teamData} />
+									<TeamManagement />
 									<Leaderboard />
 									<JudgingSchedule judgingSessionData={judgingSessionData} />
 
