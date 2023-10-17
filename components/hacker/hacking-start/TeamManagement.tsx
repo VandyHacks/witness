@@ -1,23 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TeamProfile } from '../../../types/client';
 import styles from '../../../styles/hacker/Table.module.css';
 import { Button, Form, Input } from 'antd';
 
 const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => {
+	const [teamName, setTeamName] = useState<string | undefined>(undefined);
+	const [teamCode, setTeamCode] = useState<string | undefined>(undefined);
+
 	// TODO:
 	// 1. User has no team:
 	// -- "You have not joined a team yet"
 	// -- join team / create team
 	// -- enter join code here
 
-	const handleCreateTeam = (values: any) => {
+	const handleCreateTeam = () => {
 		// TODO:
-		console.log('Create Team', values);
+		// update endpoint to not require devpost
+		// ensure no team name conflicts
+		console.log('Create Team', teamName);
+		alert('Create team' + teamName);
 	};
 
-	const handleJoinTeam = (values: any) => {
+	const handleJoinTeam = () => {
 		// TODO:
-		console.log('Join Team', values);
+		console.log('Join Team', teamCode);
+		alert('Join team' + teamCode);
 	};
 
 	// 2. User has team:
@@ -28,67 +35,38 @@ const TeamManagement = ({ teamData }: { teamData: TeamProfile | undefined }) => 
 	// -- button to rename team and change devpost
 
 	return (
-		<div>
+		<>
 			{/* TODO: not done yet lol */}
-			{teamData === undefined && (
+			{teamData !== undefined && (
 				<div className={styles.Container}>
-					<div>You have not joined a team yet</div>
-					<div>
-						<div>Option 1: Create a team</div>
+					Team
+					<div className={styles.Placeholder}>You are not in a team yet.</div>
+					<div className={styles.TeamActionContainer}>
+						<div>
+							<div>Create a Team</div>
+							<div className={styles.TeamInput}>
+								<Input placeholder="Enter Team Name" onChange={e => setTeamName(e.target.value)} />
+								<Button htmlType="submit" onClick={handleCreateTeam}>
+									Create Team
+								</Button>
+							</div>
+						</div>
 
-						{/* Create Team */}
-						<Form onFinish={handleCreateTeam}>
-							<Form.Item
-								name="teamName"
-								rules={[
-									{
-										required: true,
-										message: 'Please enter a team name!                            ',
-									},
-								]}>
-								<Input placeholder="Enter Team Name" />
-							</Form.Item>
-							<Form.Item
-								name="devpost"
-								rules={[
-									{
-										required: true,
-										message: 'Please enter a valid Devpost Link (https://devpost.com/...)',
-										pattern: new RegExp('^https://devpost.com/.*'),
-									},
-								]}>
-								<Input placeholder="Enter Devpost Link" />
-							</Form.Item>
+						<div>Or</div>
 
-							{/* Button */}
-							<Button htmlType="submit">Create Team</Button>
-						</Form>
-					</div>
-					<div>
-						<div>Option 2: Join a team</div>
-
-						{/* Join Code */}
-						<Form onFinish={handleJoinTeam}>
-							<Form.Item
-								name="joinCode"
-								rules={[
-									{
-										required: true,
-										message: 'Please enter a join code!                            ',
-									},
-								]}>
-								<Input placeholder="Enter Join Code Here" />
-							</Form.Item>
-
-							{/* Join Team */}
-							<Button htmlType="submit">Join Team</Button>
-						</Form>
+						<div>
+							<div>Join a Team</div>
+							<div className={styles.TeamInput}>
+								<Input placeholder="Enter Team Code" onChange={e => setTeamCode(e.target.value)} />
+								<Button htmlType="submit" onClick={handleJoinTeam}>
+									Create Team
+								</Button>
+							</div>
+						</div>
 					</div>
 				</div>
 			)}
-
-			{teamData && <div>Your team name is: {teamData.name}</div>}
-		</div>
+		</>
 	);
 };
 

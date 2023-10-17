@@ -666,7 +666,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Header user={user} signOut={signOut} />
 
 									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
-									{teamData && <TeamManagement teamData={teamData} />}
+									<TeamManagement teamData={teamData} />
 									<Leaderboard />
 									<JudgingSchedule judgingSessionData={judgingSessionData} />
 

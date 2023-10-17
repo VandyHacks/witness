@@ -9,6 +9,18 @@
 	margin: 0 20px 30px 20px;
 }
 
+.Container:hover {
+	/* animate elevation and upward transition */
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.4);
+	transition: 0.2s;
+	transform: translateY(-4px);
+	background-color: #000000d0;
+}
+
+.Container > * {
+	font-size: 20px;
+}
+
 .TableContainer {
 	margin-top: 20px;
 	overflow-y: auto;
@@ -43,8 +55,49 @@
 	color: #ffffff80;
 }
 
+.TeamActionContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.TeamActionContainer > * {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	gap: 20px;
+}
+
+.TeamInput {
+	font-size: 30px;
+	font-weight: bold;
+	color: #ffffff;
+	width: 80%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.TeamInput > button {
+	margin: 10px auto;
+	width: 100%;
+}
+
 /* add media query for mobile screen */
 @media (max-width: 768px) {
+	.TeamActionContainer {
+		flex-direction: column;
+	}
+
+	/* second children of TeamActionContainer */
+	.TeamActionContainer > div:nth-child(2) {
+		margin: 20px;
+	}
+
 	.Container {
 		font-size: 20px;
 	}
