@@ -25,9 +25,9 @@ export default async function handler(
 	if (req.method === 'GET') {
 		let teams = await Team.find();
 
-        if (req.query.submitted) {
-            teams = teams.filter(team => team.devpost !== '');
-        }
+		if (req.query.submitted) {
+			teams = teams.filter(team => team.devpost !== '');
+		}
 
 		switch (session!.userType) {
 			// send all team info to organizer
