@@ -22,6 +22,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				users = users.populate('application');
 			}
 
+            if (userType == 'JUDGE' && req.query.isCheckedIn){
+                users = users.where('isJudgeCheckedIn').equals(true);
+            }
+
 			return res.status(200).send(await users);
 		default:
 			return res.status(405).send('Method not supported brother');

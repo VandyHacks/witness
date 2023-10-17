@@ -91,8 +91,9 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 					dataIndex: teamName as string,
 					key: teamName as string,
 					render: TableCell,
+                    locationNum: locationNum,
 				};
-			}),
+			}).sort((a, b) => (a.locationNum as number) - (b.locationNum as number)),
 		],
 		[teams, data]
 	);
