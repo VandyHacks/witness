@@ -17,6 +17,8 @@ import {
 } from 'antd';
 import useSWR from 'swr';
 import TeamManager from './TeamManager';
+import Leaderboard from './Leaderboard';
+import JudgingSchedule from './JudgingSchedule';
 import TeamSetup from './TeamSetup';
 import { TeamProfile } from '../../types/client';
 import { ApplicationStatus, UserData, JudgingSessionData, HackathonSettingsData } from '../../types/database';
@@ -36,6 +38,7 @@ type HackerProps = {
 	userApplicationStatus: number;
 	setUserApplicationStatus: (newType: number) => void;
 };
+
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
 	const { data: session, status } = useSession();
@@ -161,48 +164,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		});
 		window.location.reload();
 	};
-
-	const judgingSessionColumns: ColumnsType<JudgingSessionData> = [
-		{
-			title: 'Time',
-			dataIndex: 'time',
-			key: 'name',
-			width: '25vw',
-			render: time => {
-				let startTime = new Date(time);
-				// add 10 minutes
-				let endTime = new Date(startTime.getTime() + 10 * 60000);
-				// return <>{startTime.getHours()}:{startTime.getMinutes()} - {endTime.getHours()}:{endTime.getMinutes()}</>
-				return (
-					<>
-						{startTime.toLocaleTimeString('default', {
-							hour: '2-digit',
-							minute: '2-digit',
-						})}{' '}
-						-{' '}
-						{endTime.toLocaleTimeString('default', {
-							hour: '2-digit',
-							minute: '2-digit',
-						})}
-					</>
-				);
-			},
-		},
-		{
-			title: 'Table',
-			dataIndex: 'team',
-			key: 'team',
-			width: '25vw',
-			render: loc => <>{loc.locationNum}</>,
-		},
-		{
-			title: 'Judge',
-			dataIndex: 'judge',
-			key: 'judge',
-			width: '50vw',
-			render: judge => <>{judge.name}</>,
-		},
-	];
 
 	const [judgingSessionData, setJudgingSessionData] = useState<JudgingSessionData[]>();
 
@@ -706,6 +667,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 
 									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
 									{teamData && <TeamManagement teamData={teamData} />}
+									<Leaderboard />
+									<JudgingSchedule judgingSessionData={judgingSessionData} />
 
 									{/* TODO: remove once ready. placeholder */}
 									<div
@@ -715,6 +678,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											alignItems: 'center',
 											textAlign: 'center',
 											color: 'white',
+											fontSize: '10px',
 										}}>
 										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
 									</div>
