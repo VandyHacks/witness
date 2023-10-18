@@ -1,21 +1,18 @@
-import { Button, Skeleton, Divider } from 'antd';
+import { Button, InputNumber, Slider, Row, Col } from 'antd';
 import { SetStateAction, useContext, useEffect, useState } from 'react';
-import {
-	TIMES_JUDGED,
-	generateScheduleA,
-	generateScheduleB,
-	handleConfirmSchedule,
-} from '../../../utils/organizer-utils';
-import OrganizerSchedule from '../../judges/schedule';
-import { ResponseError, JudgingSessionData, UserData, TeamData } from '../../../types/database';
+import { matchTeams, handleConfirmSchedule } from '../../../utils/organizer-utils';
+import OrganizerSchedule, { generateTimes } from '../../judges/schedule';
+import { ResponseError, JudgingSessionData, UserData, TeamData, HackathonSettingsData } from '../../../types/database';
 import Title from 'antd/lib/typography/Title';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 import { ThemeContext, getBaseColor } from '../../../theme/themeProvider';
+import { handleSubmitFailure } from '../../../lib/helpers';
 
 const ScheduleTab = () => {
 	// React state
-	const [potentialScheduleA, setPotentialScheduleA] = useState<JudgingSessionData[] | undefined>(undefined);
-	const [potentialScheduleB, setPotentialScheduleB] = useState<JudgingSessionData[] | undefined>(undefined);
+	const [timesJudged, setTimesJudged] = useState<number>(1);
+	const [maxTimesJudged, setMaxTimesJudged] = useState<number>(0);
+	const [potentialSchedule, setPotentialSchedule] = useState<JudgingSessionData[] | undefined>(undefined);
 
 	const { baseTheme } = useContext(ThemeContext);
 
@@ -28,33 +25,32 @@ const ScheduleTab = () => {
 
 	// Judge data
 	const { data: judgesData, error: judgesError } = useCustomSWR<UserData[]>({
-		url: '/api/users?usertype=JUDGE',
+		url: '/api/users?usertype=JUDGE&isCheckedIn=true',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of judges.',
 	});
 
 	// Teams data
 	const { data: teamsData, error: teamsError } = useCustomSWR<TeamData[]>({
-		url: '/api/teams',
+		url: '/api/teams?submitted=true',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of teams.',
 	});
 
-	// Check if schedule is impossible
-	const isScheduleImpossible = () =>
-		teamsData && judgesData && (teamsData.length * TIMES_JUDGED) / 12 > judgesData.length;
+	// Get hackathon settings
+	const { data: hackathonSettings, error: hackathonError } = useCustomSWR<HackathonSettingsData>({
+		url: '/api/hackathon-settings',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get hackathon times.',
+	});
 
 	// Confirm potential schedule
-	const handleConfirmPotentialSchedules = (
-		potentialScheduleA: JudgingSessionData[] | undefined,
-		potentialScheduleB: JudgingSessionData[] | undefined
-	) => {
+	const handleConfirmPotentialSchedules = (potentialSchedule: JudgingSessionData[] | undefined) => {
 		// Exit early if we don't have data yet
-		if (!potentialScheduleA || !potentialScheduleB) return;
+		if (!potentialSchedule) return;
 
 		// Send requests to confirm the schedule
-		handleConfirmSchedule(potentialScheduleA);
-		handleConfirmSchedule(potentialScheduleB);
+		handleConfirmSchedule(potentialSchedule);
 	};
 
 	// Set potential schedule
@@ -62,10 +58,24 @@ const ScheduleTab = () => {
 		// Confirm with user
 		if (!window.confirm('Are you sure you want to create a new schedule?')) return;
 
+		if (timesJudged < 1 || timesJudged > maxTimesJudged) {
+			handleSubmitFailure('Invalid number of judging sessions per team.');
+			return;
+		}
+
 		// Set that potential schedules as newly generated schedules
-		setPotentialScheduleA(generateScheduleA(teams, judges));
-		setPotentialScheduleB(generateScheduleB(teams, judges));
+		let judgingTimes = generateTimes(
+			new Date(hackathonSettings?.JUDGING_START as string),
+			new Date(hackathonSettings?.JUDGING_END as string),
+			10
+		);
+		setPotentialSchedule(matchTeams(teams, judges, judgingTimes, timesJudged));
 	};
+
+	useEffect(() => {
+		if (!teamsData || !judgesData) return;
+		setMaxTimesJudged(Math.floor((judgesData?.length * 12) / teamsData?.length));
+	}, [teamsData, judgesData]);
 
 	useEffect(() => {
 		// Exit early if we don't have data yet
@@ -75,13 +85,16 @@ const ScheduleTab = () => {
 		const time = new Date('2022-10-23T11:00:00').getTime();
 
 		// Set the data after filtering it by time
-		setPotentialScheduleA(
-			judgingSessions.filter(judgingSession => new Date(judgingSession.time as string).getTime() < time)
+		setPotentialSchedule(
+			judgingSessions.filter(judgingSession => {
+				let time = new Date(judgingSession.time as string);
+				return (
+					new Date(hackathonSettings?.JUDGING_START as string) <= time &&
+					time <= new Date(hackathonSettings?.JUDGING_END as string)
+				);
+			})
 		);
-		setPotentialScheduleB(
-			judgingSessions.filter(judgingSession => new Date(judgingSession.time as string).getTime() >= time)
-		);
-	}, [judgingSessions]);
+	}, [judgingSessions, hackathonSettings]);
 
 	// Combine all the loading, null, and error states
 	const error = judgingSessionsError || judgesError || teamsError;
@@ -95,58 +108,56 @@ const ScheduleTab = () => {
 				<div>Loading...</div>
 			) : (
 				<>
+					<Row style={{ marginBottom: '-8px' }}>
+						<Col style={{ margin: 'auto 8px auto 0' }}>Number of Judging Sessions Per Team:</Col>
+						<Col>
+							<InputNumber
+								style={{ margin: '0 1px' }}
+								min={1}
+								max={10}
+								value={timesJudged || null}
+								onChange={input => {
+									setTimesJudged(input || 1);
+								}}
+								status={1 <= timesJudged && timesJudged <= maxTimesJudged ? '' : 'error'}
+							/>
+						</Col>
+						<Col span={4}>
+							<Slider min={1} max={10} onChange={setTimesJudged} value={timesJudged} />
+						</Col>
+					</Row>
+					<br />
 					<Button
 						onClick={() => handleCreateNewPotentialSchedules(teamsData, judgesData)}
 						style={{ marginBottom: '10px' }}>
 						Generate Potential Judging Schedule
 					</Button>
-					{potentialScheduleA && potentialScheduleB && (
+					{potentialSchedule && (
 						<Button
-							onClick={() => handleConfirmPotentialSchedules(potentialScheduleA, potentialScheduleB)}
+							onClick={() => handleConfirmPotentialSchedules(potentialSchedule)}
 							style={{ marginBottom: '10px' }}>
 							Confirm Schedule
 						</Button>
 					)}
 
 					<br />
-					{isScheduleImpossible() ? (
-						<div>The schedule is impossible! Run.</div>
-					) : (
-						<div>The schedule is possible!</div>
-					)}
 					<div>Count of Teams: {teamsData?.length}</div>
 					<div>Count of Judges: {judgesData?.length}</div>
+					<div>Maximum Possible Number of Judging Sessions Per Team: {maxTimesJudged}</div>
 					<Title
 						style={{
 							color: getBaseColor(baseTheme),
 						}}>
-						Expo A
+						Judging Schedule
 					</Title>
-					{potentialScheduleA && (
+					{potentialSchedule && (
 						<OrganizerSchedule
-							data={potentialScheduleA}
+							data={potentialSchedule}
 							handleChange={function (value: SetStateAction<string>): void {
 								throw new Error('Function not implemented.');
 							}}
-							sessionTimeStart={new Date('2022-10-23T10:00:00')}
-							sessionTimeEnd={new Date('2022-10-23T11:00:00')}
-						/>
-					)}
-					<div style={{ height: '20px' }} />
-					<Title
-						style={{
-							color: getBaseColor(baseTheme),
-						}}>
-						Expo B
-					</Title>
-					{potentialScheduleB && (
-						<OrganizerSchedule
-							data={potentialScheduleB}
-							handleChange={function (value: SetStateAction<string>): void {
-								throw new Error('Function not implemented.');
-							}}
-							sessionTimeStart={new Date('2022-10-23T11:30:00')}
-							sessionTimeEnd={new Date('2022-10-23T12:30:00')}
+							sessionTimeStart={new Date(hackathonSettings?.JUDGING_START as string)}
+							sessionTimeEnd={new Date(hackathonSettings?.JUDGING_END as string)}
 						/>
 					)}
 				</>

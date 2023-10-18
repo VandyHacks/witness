@@ -1,46 +1,6 @@
 import { ScopedMutator } from 'swr/dist/types';
-import { ManageFormFields } from '../components/Organizer/ManageUsersTab/manageRoleForm';
-import { generateTimes } from '../components/judges/schedule';
 import { handleSubmitSuccess, handleSubmitFailure } from '../lib/helpers';
 import { JudgingSessionData, PreAddData, TeamData, UserData } from '../types/database';
-
-/**
- * The number of times each team will be judged.
- * @type {number}
- */
-export const TIMES_JUDGED = 3;
-
-/**
- * Generates schedule sessions for Teams A based on the given array of teams and judges.
- * @param {TeamData[]} teams - The array of team data objects to generate sessions for.
- * @param {UserData[]} judges - The array of user data objects from which judges will be selected.
- * @returns {Array} An array of schedule session data objects for Teams A.
- */
-export const generateScheduleA = (teams: TeamData[], judges: UserData[]) => {
-	const teamsPerSession = Math.floor(teams.length / 2);
-
-	const timesOne = generateTimes(new Date('2022-10-23T10:00:00'), new Date('2022-10-23T11:00:00'), 10);
-
-	const sessionsA = matchTeams(teams.slice(0, teamsPerSession), judges, timesOne);
-
-	return sessionsA;
-};
-
-/**
- * Generates schedule sessions for Teams B based on the given array of teams and judges.
- * @param {TeamData[]} teams - The array of team data objects to generate sessions for.
- * @param {UserData[]} judges - The array of user data objects from which judges will be selected.
- * @returns {Array} An array of schedule session data objects for Teams B.
- */
-export const generateScheduleB = (teams: TeamData[], judges: UserData[]) => {
-	const teamsPerSession = Math.floor(teams.length / 2);
-
-	const timesTwo = generateTimes(new Date('2022-10-23T11:30:00'), new Date('2022-10-23T12:30:00'), 10);
-
-	const sessionsB = matchTeams(teams.slice(teamsPerSession, teams.length), judges, timesTwo);
-
-	return sessionsB;
-};
 
 /**
  * Handles pre-add user deletion with the specified user data.
@@ -73,10 +33,10 @@ export const handlePreAddDelete = async (user: PreAddData, mutate: ScopedMutator
  * @param {Date[]} times - The array of time slots for which to generate sessions.
  * @returns {Array} An array of schedule session data objects.
  */
-export const matchTeams = (teams: TeamData[], judges: UserData[], times: Date[]) => {
+export const matchTeams = (teams: TeamData[], judges: UserData[], times: Date[], timesJudged: number) => {
 	let sessions = [];
 
-	const numSessions = TIMES_JUDGED * teams.length;
+	const numSessions = timesJudged * teams.length;
 
 	const perTimes = Math.floor(numSessions / times.length);
 	let remTimes = numSessions % times.length;

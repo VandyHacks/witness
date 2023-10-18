@@ -82,17 +82,20 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				width: 100,
 				render: (time: string) => DateTime.fromISO(time).toLocaleString(DateTime.TIME_SIMPLE),
 			},
-			...teams.map(teamName => {
-				let locationNum = data
-					.filter(x => x.team !== null && x.team.name !== null)
-					.find(x => x.team.name === teamName)?.team.locationNum;
-				return {
-					title: (teamName as string) + ' (Table ' + locationNum + ')',
-					dataIndex: teamName as string,
-					key: teamName as string,
-					render: TableCell,
-				};
-			}),
+			...teams
+				.map(teamName => {
+					let locationNum = data
+						.filter(x => x.team !== null && x.team.name !== null)
+						.find(x => x.team.name === teamName)?.team.locationNum;
+					return {
+						title: (teamName as string) + ' (Table ' + locationNum + ')',
+						dataIndex: teamName as string,
+						key: teamName as string,
+						render: TableCell,
+						locationNum: locationNum,
+					};
+				})
+				.sort((a, b) => (a.locationNum as number) - (b.locationNum as number)),
 		],
 		[teams, data]
 	);

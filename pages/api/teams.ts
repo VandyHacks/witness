@@ -23,7 +23,12 @@ export default async function handler(
 	if (!['JUDGE', 'ORGANIZER'].includes(session?.userType as string)) return res.status(403).send('Forbidden');
 
 	if (req.method === 'GET') {
-		const teams = await Team.find();
+		let teams = await Team.find();
+
+		if (req.query.submitted) {
+			teams = teams.filter(team => team.devpost !== '');
+		}
+
 		switch (session!.userType) {
 			// send all team info to organizer
 			case 'ORGANIZER': {
