@@ -94,7 +94,7 @@ const ScheduleTab = () => {
 				);
 			})
 		);
-	}, [judgingSessions]);
+	}, [judgingSessions, hackathonSettings]);
 
 	// Combine all the loading, null, and error states
 	const error = judgingSessionsError || judgesError || teamsError;
