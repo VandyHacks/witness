@@ -26,8 +26,8 @@ export default function OrganizerDash() {
 		errorMessage: 'Failed to get user object.',
 	});
 
+	// Set theme
 	useEffect(() => {
-		console.log(userData);
 		if (userData && userData.settings && userData.settings.accentColor && userData.settings.baseTheme) {
 			setAccentColor(userData.settings.accentColor as AccentColor);
 			setBaseTheme(userData.settings.baseTheme as Theme);

@@ -79,24 +79,24 @@ export default function JudgeDash() {
 	});
 
 	// User data
-	const { data: userData, error: hackersError } = useCustomSWR<UserData>({
+	const { data: userData, error: judgeError } = useCustomSWR<UserData>({
 		url: '/api/user-data',
 		method: RequestType.GET,
-		errorMessage: 'Failed to get user object.',
+		errorMessage: 'Failed to get judge object.',
 	});
 
+	// Set theme
 	useEffect(() => {
-		console.log(userData);
 		if (userData && userData.settings && userData.settings.accentColor && userData.settings.baseTheme) {
 			setAccentColor(userData.settings.accentColor as AccentColor);
 			setBaseTheme(userData.settings.baseTheme as Theme);
 		}
 
-		if (hackersError) {
+		if (judgeError) {
 			setAccentColor(AccentColor.MONOCHROME);
 			setBaseTheme(Theme.DARK);
 		}
-	}, [userData, setAccentColor, setBaseTheme, hackersError]);
+	}, [userData, setAccentColor, setBaseTheme, judgeError]);
 
 	// Get data for form component, formData will be false if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
