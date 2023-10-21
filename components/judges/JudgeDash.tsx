@@ -1,4 +1,4 @@
-import { Divider, notification, Skeleton } from 'antd';
+import { Divider, Skeleton } from 'antd';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import JudgingForm from './JudgingForm';
@@ -12,6 +12,8 @@ import ThemeControl from '../Organizer/SettingsTab/ThemeControl';
 import { getAccentColor, getBaseColor, getThemedClass, ThemeContext } from '../../theme/themeProvider';
 import styles from '../../styles/Judge.module.css';
 import { handleSubmitSuccess } from '../../lib/helpers';
+import Link from 'next/link';
+import { BugOutlined } from '@ant-design/icons';
 
 // let { JUDGING_LENGTH } = process.env;
 const JUDGING_LENGTH = '600000';
@@ -196,6 +198,12 @@ export default function JudgeDash() {
 			{!formData && teamID && <Skeleton />}
 			<div className={styles['theme-control-container']}>
 				<ThemeControl />
+			</div>
+			<div className={styles['reportABugContainer']}>
+				<Link href="/report">
+					<div className={styles['reportABugText']}>Report a bug!</div>
+				</Link>
+				<BugOutlined />
 			</div>
 		</div>
 	);

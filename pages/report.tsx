@@ -10,7 +10,6 @@ import { RequestType, useCustomSWR } from '../utils/request-utils';
 import { GitHubIssueStatus, Report } from '../types/client';
 import { ColumnsType } from 'antd/lib/table';
 import { Octokit } from 'octokit';
-import SignIn from '../components/signIn';
 import { useRouter } from 'next/router';
 
 const ReportBug = () => {
@@ -62,8 +61,6 @@ const ReportBug = () => {
 			role: session?.userType || 'HACKER',
 			date: new Date().toISOString(),
 			description: input.description,
-			// will replace with on-call dev
-			ghAssignee: 'jacoblurie29',
 		};
 		const res = await fetch('/api/report', {
 			method: 'POST',
@@ -147,8 +144,6 @@ const ReportBug = () => {
 	const bugReportsForTable = // [] as Report[] | undefined;
 		bugReports?.map(x => ({ ...x, key: x._id })).filter(record => record.email === session?.user?.email) ||
 		([] as Report[]);
-
-	console.log(bugReportsForTable);
 
 	return (
 		<>
@@ -275,14 +270,16 @@ const ReportBug = () => {
 											</div>
 										</ConfigProvider>
 									</div>
-									<Button className={styles.goHomeButton}>
-										<Link href="/">
-											<a>
-												<ArrowLeftOutlined />
-												&nbsp;&nbsp;Return Home
-											</a>
-										</Link>
-									</Button>
+									{success == null && (
+										<Button className={styles.goHomeButton}>
+											<Link href="/">
+												<a>
+													<ArrowLeftOutlined />
+													&nbsp;&nbsp;Return Home
+												</a>
+											</Link>
+										</Button>
+									)}
 								</>
 							)}
 						</div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { UploadOutlined } from '@ant-design/icons';
+import { BugOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, DatePicker, Form, Input, Radio, Skeleton, Upload, UploadFile } from 'antd';
 import useSWR from 'swr';
 import Leaderboard from './Leaderboard';
@@ -12,6 +12,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
 import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
+import Link from 'next/link';
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
@@ -662,6 +663,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											fontSize: '10px',
 										}}>
 										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
+									</div>
+									<div className={styles['reportABugContainer']}>
+										<Link href="/report">
+											<div className={styles['reportABugText']}>Report a bug!</div>
+										</Link>
+										<BugOutlined />
 									</div>
 
 									{/* TODO: these are being refactored. should remove this after complete */}

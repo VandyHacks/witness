@@ -7,6 +7,9 @@ import hackathon from '../../models/hackathon';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
+	if (!session || !session.user || !session.user.email) {
+		return res.status(403).send('Unauthorized');
+	}
 
 	await dbConnect();
 	switch (req.method) {
@@ -30,11 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 This is a bug report. You can track this issue in the organizer dashboard.
 ### Reporter Information 
 Role: ${role === 'ORGANIZER' ? 'Organizer' : role === 'JUDGE' ? 'Judge' : 'Hacker'}
-Issue was reported on ${
-				new Date().toLocaleString('en-US', {
-					timeZone: 'America/Chicago',
-				}) + ' CT'
-			}	
+Issue was reported on ${getDateString()} at ${getTimeString()}	
 ### Description 
 ${description}`;
 
@@ -47,37 +46,8 @@ ${description}`;
 				headers: {
 					'X-GitHub-Api-Version': '2022-11-28',
 				},
-				title: `[BUG REPORT] Bug found by ${
-					role === 'ORGANIZER' ? 'an organizer' : role === 'JUDGE' ? 'a judge' : 'a hacker'
-				} on ${
-					new Date()
-						.toLocaleString('en-US', {
-							timeZone: 'America/Chicago',
-						})
-						.split(',')[0]
-				} at
-					${
-						new Date()
-							.toLocaleString('en-US', {
-								timeZone: 'America/Chicago',
-							})
-							.split(',')[1]
-							.split(':')[0] +
-						':' +
-						new Date()
-							.toLocaleString('en-US', {
-								timeZone: 'America/Chicago',
-							})
-							.split(',')[1]
-							.split(':')[1]
-					} ${
-					new Date()
-						.toLocaleString('en-US', {
-							timeZone: 'America/Chicago',
-						})
-						.split(' ')[2]
-						.split(' ')[0]
-				}`,
+				title: `[BUG REPORT] Bug found by ${getRoleString(role)} on ${getDateString()} at
+					${getTimeString()}`,
 				body: fullDescription,
 				assignees: [SETTINGS.ON_CALL_DEV as string],
 			});
@@ -96,6 +66,8 @@ ${description}`;
 			return res.status(200).send(report);
 
 		case 'DELETE':
+			if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
+
 			const { id: reportId } = req.body;
 
 			if (!reportId) {
@@ -110,3 +82,53 @@ ${description}`;
 			return res.status(405).send('Method not supported brother');
 	}
 }
+
+export const getRoleString = (role: string) => {
+	switch (role) {
+		case 'ORGANIZER':
+			return 'Organizer';
+		case 'JUDGE':
+			return 'Judge';
+		case 'HACKER':
+			return 'Hacker';
+		default:
+			return 'Unknown';
+	}
+};
+
+export const getDateString = () => {
+	const dateObj = new Date();
+	return `${
+		dateObj
+			.toLocaleString('en-US', {
+				timeZone: 'America/Chicago',
+			})
+			.split(',')[0]
+	}`;
+};
+
+export const getTimeString = () => {
+	const dateObj = new Date();
+	return `${
+		dateObj
+			.toLocaleString('en-US', {
+				timeZone: 'America/Chicago',
+			})
+			.split(',')[1]
+			.split(':')[0]
+	}:${
+		dateObj
+			.toLocaleString('en-US', {
+				timeZone: 'America/Chicago',
+			})
+			.split(',')[1]
+			.split(':')[1]
+	} ${
+		new Date()
+			.toLocaleString('en-US', {
+				timeZone: 'America/Chicago',
+			})
+			.split(' ')[2]
+			.split(' ')[0]
+	} CT`;
+};

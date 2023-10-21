@@ -168,3 +168,26 @@
 .theme-control-container {
 	padding-top: 40px;
 }
+
+.reportABugContainer {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	padding-top: 20px;
+	padding-bottom: 10px;
+	color: white !important;
+}
+
+.reportABugText {
+	font-size: 14px;
+	font-weight: 600;
+	padding-right: 10px;
+	text-decoration: underline;
+	color: white !important;
+}
+
+.reportABugText:hover {
+	cursor: pointer;
+}

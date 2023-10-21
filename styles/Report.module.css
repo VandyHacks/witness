@@ -208,7 +208,7 @@
 		margin: 0;
 		text-align: center;
 		color: #ffffff;
-		padding-bottom: 5px;
+		padding-bottom: 20px;
 	}
 
 	.reportSubtitle {
@@ -217,6 +217,7 @@
 		margin: 0;
 		text-align: center;
 		color: #eeeeee;
+		padding-bottom: 20px;
 	}
 
 	.reportTextArea {

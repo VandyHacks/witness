@@ -245,12 +245,18 @@ const BugReportsTab = () => {
 							githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
 							'open'
 								? 'red'
-								: 'green'
+								: githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)
+										?.status === 'closed'
+								? 'green'
+								: 'purple'
 						}>
 						{githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
 						'open'
 							? 'Open'
-							: 'Closed'}
+							: githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
+							  'closed'
+							? 'Closed'
+							: 'Deleted'}
 					</Tag>
 				);
 			},
