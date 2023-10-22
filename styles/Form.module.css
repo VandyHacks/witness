@@ -158,6 +158,30 @@
 	margin-bottom: 305px;
 }
 
+.reportABugContainer {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	color: white !important;
+}
+
+.reportABugText {
+	font-size: 16px;
+	font-weight: 600;
+	padding-right: 10px;
+	padding-left: 10px;
+	text-decoration: underline;
+	color: white !important;
+}
+
+.reportABugText:hover {
+	cursor: pointer;
+}
+
 @media (max-width: 1550px) {
 	.Label {
 		width: 230px;

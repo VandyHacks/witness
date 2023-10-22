@@ -5,6 +5,7 @@ const HackathonSchema = new Schema({
 	HACKATHON_END: { type: String, required: true }, // MM/DD/YYYY hh:mm A
 	JUDGING_START: { type: String, required: true }, // MM/DD/YYYY hh:mm A
 	JUDGING_END: { type: String, required: true }, // MM/DD/YYYY hh:mm A
+	ON_CALL_DEV: { type: String, required: true },
 });
 
 // prevent recompilation of model if it already exists

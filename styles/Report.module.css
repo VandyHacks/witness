@@ -1,0 +1,322 @@
+@media (min-width: 1001px) {
+	.reportContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
+		height: 100%;
+		overflow-y: scroll;
+		padding-top: 100px;
+		padding-left: 40px;
+		padding-right: 40px;
+		padding-bottom: 20px;
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+
+	.reportContainer::-webkit-scrollbar {
+		display: none;
+	}
+	.reportOuterContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100vw;
+		height: 100%;
+	}
+
+	.reportButton {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		margin-left: 20px;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+	}
+
+	.goHomeButton {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		margin-bottom: 40px;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+	}
+
+	.reportTitle {
+		font-size: 40px;
+		font-weight: 800;
+		margin: 0;
+		text-align: center;
+		color: #ffffff;
+		padding-bottom: 20px;
+	}
+
+	.reportSubtitle {
+		font-size: 18px;
+		font-weight: 600;
+		margin: 0;
+		text-align: center;
+		color: #eeeeee;
+		padding-bottom: 20px;
+	}
+
+	.reportTextArea {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+		margin-bottom: 10px;
+	}
+
+	.reportInfoAndSubmitContainer {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-end;
+		width: 100%;
+		margin-bottom: 20px;
+	}
+
+	.reportUserInfo {
+		font-size: 10px;
+		font-weight: 600;
+		margin: 0;
+		text-align: center;
+		color: #cccccc;
+		padding-left: 10px;
+	}
+
+	.reportSubtitleContainer {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.Label {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		height: max-content;
+		width: max-content;
+		width: 300px;
+		padding-bottom: 10px;
+		text-align: right;
+		padding-top: 10px;
+	}
+
+	.deleteButton {
+		color: white;
+		border: none;
+		border-radius: 5px;
+		font-size: 16px;
+		font-weight: 600;
+		transition: 0.2s;
+		background: transparent;
+		box-shadow: none !important;
+	}
+
+	.deleteButton:hover {
+		background-color: #c53131 !important;
+		color: white !important;
+		border-radius: 5px;
+		font-size: 16px;
+		font-weight: 600;
+		transition: 0.2s;
+		background: transparent;
+		box-shadow: none !important;
+	}
+
+	.completedScreeen {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.yourBugsSubtitle {
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0;
+		text-align: left;
+		color: #eeeeee;
+		padding-bottom: 10px;
+		padding-top: 40px;
+		width: 100%;
+	}
+}
+
+@media (max-width: 1000px) {
+	.reportContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
+		height: 100%;
+		overflow-y: scroll;
+		padding-top: 100px;
+		padding-left: 40px;
+		padding-right: 40px;
+		padding-bottom: 20px;
+		-ms-overflow-style: none; /* IE and Edge */
+		scrollbar-width: none; /* Firefox */
+	}
+
+	.reportContainer::-webkit-scrollbar {
+		display: none;
+	}
+
+	.reportOuterContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100vw;
+		height: 100%;
+	}
+
+	.reportButton {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		margin-left: 20px;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+	}
+
+	.goHomeButton {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		margin-bottom: 40px;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+	}
+
+	.reportTitle {
+		font-size: 40px;
+		font-weight: 800;
+		margin: 0;
+		text-align: center;
+		color: #ffffff;
+		padding-bottom: 20px;
+	}
+
+	.reportSubtitle {
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0;
+		text-align: center;
+		color: #eeeeee;
+		padding-bottom: 20px;
+	}
+
+	.reportTextArea {
+		border-radius: 10px;
+		border: none;
+		font-weight: 600;
+		padding: 6px 10px;
+		transition: 0.2s;
+		color: #444444;
+		margin-bottom: 10px;
+	}
+
+	.reportTextAreaForm {
+		width: 100%;
+	}
+
+	.reportInfoAndSubmitContainer {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-end;
+		width: 100%;
+		margin-bottom: 20px;
+	}
+
+	.reportUserInfo {
+		font-size: 10px;
+		font-weight: 600;
+		margin: 0;
+		text-align: center;
+		color: #cccccc;
+		padding-left: 10px;
+	}
+
+	.reportSubtitleContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding-bottom: 20px;
+		padding-top: 10px;
+	}
+	.Label {
+		color: white;
+		font-weight: bold;
+		font-size: medium;
+		white-space: break-spaces;
+		height: max-content;
+		width: max-content;
+		width: 300px;
+		padding-bottom: 10px;
+		text-align: right;
+		padding-top: 10px;
+	}
+
+	.deleteButton {
+		color: white;
+		border: none;
+		border-radius: 5px;
+		font-size: 16px;
+		font-weight: 600;
+		transition: 0.2s;
+		background: transparent;
+		box-shadow: none !important;
+	}
+
+	.deleteButton:hover {
+		background-color: #c53131 !important;
+		color: white !important;
+		border-radius: 5px;
+		font-size: 16px;
+		font-weight: 600;
+		transition: 0.2s;
+		background: transparent;
+		box-shadow: none !important;
+	}
+
+	.completedScreeen {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.yourBugsSubtitle {
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0;
+		text-align: left;
+		color: #eeeeee;
+		padding-bottom: 10px;
+		padding-top: 40px;
+		width: 100%;
+	}
+
+	.table-container {
+		width: 90vw;
+		overflow: scroll;
+	}
+}

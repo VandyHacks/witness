@@ -33,6 +33,7 @@
 		"next": "12.2.5",
 		"next-auth": "^4.10.3",
 		"node-ical": "^0.15.1",
+		"octokit": "^2.1.0",
 		"react": "18.0.0",
 		"react-dom": "18.0.0",
 		"react-highlight-words": "^0.18.0",

@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			try {
 				if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
 				// extract variables from body
-				const { HACKATHON_START, HACKATHON_END, JUDGING_START, JUDGING_END } = req.body;
+				const { HACKATHON_START, HACKATHON_END, JUDGING_START, JUDGING_END, ON_CALL_DEV } = req.body;
 
 				// check if hackathon settings valid (must be correct format of date)
 				const isValid =
@@ -42,6 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 							HACKATHON_END,
 							JUDGING_START,
 							JUDGING_END,
+							ON_CALL_DEV,
 						},
 					},
 					{

@@ -5,7 +5,6 @@ import user from '../../models/user';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
-	if (session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
 
 	await dbConnect();
 	switch (req.method) {
