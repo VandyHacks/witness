@@ -1,17 +1,27 @@
-import { Divider, notification, Skeleton } from 'antd';
+import { Divider, Skeleton } from 'antd';
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import useSWR, { useSWRConfig } from 'swr';
 import JudgingForm from './JudgingForm';
 import { JudgeSchedule } from './schedule';
 import TeamSelect from './TeamSelect';
 import { JudgingFormFields, TeamSelectData } from '../../types/client';
-import { JudgingSessionData, ResponseError } from '../../types/database';
+import { JudgingSessionData, ResponseError, UserData } from '../../types/database';
 import { signOut, useSession } from 'next-auth/react';
 import { ScopedMutator } from 'swr/dist/types';
 import ThemeControl from '../Organizer/SettingsTab/ThemeControl';
-import { getAccentColor, getBaseColor, getThemedClass, ThemeContext } from '../../theme/themeProvider';
+import {
+	AccentColor,
+	getAccentColor,
+	getBaseColor,
+	getThemedClass,
+	Theme,
+	ThemeContext,
+} from '../../theme/themeProvider';
 import styles from '../../styles/Judge.module.css';
 import { handleSubmitSuccess } from '../../lib/helpers';
+import Link from 'next/link';
+import { BugOutlined } from '@ant-design/icons';
+import { useCustomSWR, RequestType } from '../../utils/request-utils';
 
 // let { JUDGING_LENGTH } = process.env;
 const JUDGING_LENGTH = '600000';
@@ -50,11 +60,12 @@ export default function JudgeDash() {
 	const [teamID, setTeamID] = useState('');
 	const [currentScheduleItem, setCurrentScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [nextScheduleItem, setNextScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
+	const [isNewForm, setIsNewForm] = useState(false);
 	const [nextIndex, setNextIndex] = useState(-1);
 	const { mutate } = useSWRConfig();
 	const judgingLength = parseInt(JUDGING_LENGTH || '0');
 
-	const { baseTheme, accentColor } = useContext(ThemeContext);
+	const { baseTheme, accentColor, setAccentColor, setBaseTheme } = useContext(ThemeContext);
 
 	// Get data for teams dropdown
 	const { data: teamsData, error: teamsError } = useSWR('/api/teams', async url => {
@@ -67,7 +78,26 @@ export default function JudgeDash() {
 		return (await res.json()) as TeamSelectData[];
 	});
 
-	const [isNewForm, setIsNewForm] = useState(false);
+	// User data
+	const { data: userData, error: judgeError } = useCustomSWR<UserData>({
+		url: '/api/user-data',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get judge object.',
+	});
+
+	// Set theme
+	useEffect(() => {
+		if (userData && userData.settings && userData.settings.accentColor && userData.settings.baseTheme) {
+			setAccentColor(userData.settings.accentColor as AccentColor);
+			setBaseTheme(userData.settings.baseTheme as Theme);
+		}
+
+		if (judgeError) {
+			setAccentColor(AccentColor.MONOCHROME);
+			setBaseTheme(Theme.DARK);
+		}
+	}, [userData, setAccentColor, setBaseTheme, judgeError]);
+
 	// Get data for form component, formData will be false if teamId is not yet set.
 	const { data: formData, error: formError } = useSWR(
 		() => (teamID ? ['/api/judging-form', teamID] : null),
@@ -196,6 +226,12 @@ export default function JudgeDash() {
 			{!formData && teamID && <Skeleton />}
 			<div className={styles['theme-control-container']}>
 				<ThemeControl />
+			</div>
+			<div className={styles['reportABugContainer']}>
+				<Link href="/report">
+					<div className={styles['reportABugText']}>Report a bug!</div>
+				</Link>
+				<BugOutlined />
 			</div>
 		</div>
 	);

@@ -1,9 +1,10 @@
-import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin } from 'antd';
-import React, { useMemo, useState } from 'react';
+import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme } from 'antd';
+import React, { useContext, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { JudgingSessionData } from '../../types/database';
 import { User } from 'next-auth';
+import { ThemeContext, getAccentColor } from '../../theme/themeProvider';
 
 interface ScheduleProps {
 	data: JudgingSessionData[];
@@ -183,6 +184,8 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 
 export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
 	const [showPast, setShowPast] = useState(false);
+	const { accentColor, baseTheme } = useContext(ThemeContext);
+
 	const columns = [
 		{
 			title: 'Time',
@@ -201,7 +204,9 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 						{name} (Table {locationNum})
 					</td>
 					<Link href={link} passHref>
-						<a style={{ color: '#1890ff' }} target="_blank">
+						<a
+							style={{ color: getAccentColor(accentColor, baseTheme), textDecoration: 'underline' }}
+							target="_blank">
 							Devpost
 						</a>
 					</Link>
