@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FilterValue } from 'antd/lib/table/interface';
 import styles from '../../../styles/Report.module.css';
 import { Octokit } from 'octokit';
+import { getTagColorFromRole, getTagTextFromRole } from '../../../utils/bugs-utils';
 
 const BugReportsTab = () => {
 	const searchInput = useRef<InputRef>(null);
@@ -240,23 +241,8 @@ const BugReportsTab = () => {
 			onFilter: (value: string | number | boolean, record: any): boolean => record.status === value,
 			render: (_: string, record: Report) => {
 				return (
-					<Tag
-						color={
-							githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
-							'open'
-								? 'red'
-								: githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)
-										?.status === 'closed'
-								? 'green'
-								: 'purple'
-						}>
-						{githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
-						'open'
-							? 'Open'
-							: githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
-							  'closed'
-							? 'Closed'
-							: 'Deleted'}
+					<Tag color={getTagColorFromRole(githubIssues, record)}>
+						{getTagTextFromRole(githubIssues, record)}
 					</Tag>
 				);
 			},

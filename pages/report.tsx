@@ -11,6 +11,8 @@ import { GitHubIssueStatus, Report } from '../types/client';
 import { ColumnsType } from 'antd/lib/table';
 import { Octokit } from 'octokit';
 import { useRouter } from 'next/router';
+import { handleSubmitFailure, handleSubmitSuccess } from '../lib/helpers';
+import { getTagColorFromRole, getTagTextFromRole } from '../utils/bugs-utils';
 
 const ReportBug = () => {
 	const { data: session, status } = useSession();
@@ -72,8 +74,10 @@ const ReportBug = () => {
 
 		if (res.status === 200) {
 			setSuccess(true);
+			handleSubmitSuccess('Successfully submitted bug.');
 		} else {
 			setSuccess(false);
+			handleSubmitFailure('Failed to submit bug.');
 		}
 		setLoading(false);
 	};
@@ -109,23 +113,8 @@ const ReportBug = () => {
 			width: '20%',
 			render: (_: string, record: Report) => {
 				return (
-					<Tag
-						color={
-							githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
-							'open'
-								? 'red'
-								: githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)
-										?.status === 'closed'
-								? 'green'
-								: 'purple'
-						}>
-						{githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
-						'open'
-							? 'Open'
-							: githubIssues?.find((issue: any) => issue.issueNumber === record.ghIssueNumber)?.status ===
-							  'closed'
-							? 'Closed'
-							: 'Deleted'}
+					<Tag color={getTagColorFromRole(githubIssues, record)}>
+						{getTagTextFromRole(githubIssues, record)}
 					</Tag>
 				);
 			},
@@ -183,7 +172,7 @@ const ReportBug = () => {
 				{!session ? null : (
 					<div className={styles.reportOuterContainer}>
 						<div className={styles.reportContainer}>
-							{success == null ? (
+							{success === null ? (
 								<>
 									<h1 className={styles.reportTitle}>
 										Report a bug! <BugOutlined />
@@ -264,7 +253,7 @@ const ReportBug = () => {
 													colorBgBase: '#140f2e', // backgrounds
 												},
 											}}>
-											<div>
+											<div className={styles['table-container']}>
 												<Table
 													style={{
 														paddingBottom: '20px',
@@ -277,7 +266,7 @@ const ReportBug = () => {
 											</div>
 										</ConfigProvider>
 									</div>
-									{success == null && (
+									{success === null && (
 										<Button className={styles.goHomeButton}>
 											<Link href="/">
 												<a>

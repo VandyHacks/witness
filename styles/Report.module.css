@@ -4,12 +4,13 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: flex-start;
-		width: 80%;
+		width: 100%;
 		height: 100%;
 		overflow-y: scroll;
-		padding-top: 0px;
 		padding-top: 100px;
-
+		padding-left: 40px;
+		padding-right: 40px;
+		padding-bottom: 20px;
 		-ms-overflow-style: none; /* IE and Edge */
 		scrollbar-width: none; /* Firefox */
 	}
@@ -23,6 +24,7 @@
 		align-items: center;
 		justify-content: flex-start;
 		width: 100vw;
+		height: 100%;
 	}
 
 	.reportButton {
@@ -311,5 +313,10 @@
 		padding-bottom: 10px;
 		padding-top: 40px;
 		width: 100%;
+	}
+
+	.table-container {
+		width: 90vw;
+		overflow: scroll;
 	}
 }

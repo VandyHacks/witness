@@ -83,7 +83,13 @@ ${description}`;
 	}
 }
 
-export const getRoleString = (role: string) => {
+/**
+ * Returns a string representation of the role
+ *
+ * @param role The role to get a string representation of
+ * @returns A string representation of the role
+ */
+const getRoleString = (role: string) => {
 	switch (role) {
 		case 'ORGANIZER':
 			return 'Organizer';
@@ -96,7 +102,12 @@ export const getRoleString = (role: string) => {
 	}
 };
 
-export const getDateString = () => {
+/**
+ * Returns a string representation of the current date
+ *
+ * @returns A string representation of the current date in the format of MM/DD/YYYY
+ */
+const getDateString = () => {
 	const dateObj = new Date();
 	return `${
 		dateObj
@@ -107,7 +118,12 @@ export const getDateString = () => {
 	}`;
 };
 
-export const getTimeString = () => {
+/**
+ * Returns a string representation of the current time
+ *
+ * @returns A string representation of the current time in the format of HH:MM AM/PM CT
+ */
+const getTimeString = () => {
 	const dateObj = new Date();
 	return `${
 		dateObj
