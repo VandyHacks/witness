@@ -646,7 +646,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							{/* Hacking Code */}
 							{hackathonStarted && (
 								<div style={{ padding: '20px' }}>
-									<Header user={user} signOut={signOut} />
+									<Header user={user} signOut={signOut} setting={setting as HackathonSettingsData} />
 
 									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
 									<Leaderboard />
