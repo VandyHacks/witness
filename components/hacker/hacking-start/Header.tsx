@@ -15,44 +15,69 @@ const Header = ({
 	signOut: () => void;
 	setting: HackathonSettingsData;
 }) => {
+	// Contains event name and image
 	interface EventParams {
 		eventName: string;
 		eventImage: string;
 		countDown?: Date;
 	}
-
-	const hackingBeginSoon: EventParams = {
+	const [curEvent, setCurEvent] = useState<EventParams>({
 		eventName: 'Hacking Begins Soon',
 		eventImage: '/hacking-begin-soon.svg',
-	};
-	const hackingCountDown: EventParams = {
-		eventName: 'Hacking Begins Soon',
-		eventImage: '/hacking-countdown.svg',
-	};
-	const judging: EventParams = {
-		eventName: 'Hacking Begins Soon',
-		eventImage: '/judging.svg',
-	};
-	const hackingEnded: EventParams = {
-		eventName: 'Hacking Begins Soon',
-		eventImage: '/hacking-ended.svg',
-	};
-	const [curEvent, setCurEvent] = useState<EventParams>(hackingBeginSoon);
+	});
 
-	const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
-	const hackingCountDownDate = new Date(hackingStartDate);
-	hackingCountDownDate.setDate(hackingStartDate.getDate() - 1);
-	const judgeStartDate = new Date(Date.parse(setting.JUDGING_START));
-	const judgeEndDate = new Date(Date.parse(setting.JUDGING_END));
-	const hackingEndDate = new Date(Date.parse(setting.HACKATHON_END));
-	const curDate = new Date();
+	useEffect(() => {
+		// All events
+		const hackingBeginSoon: EventParams = {
+			eventName: 'Hacking Begins Soon',
+			eventImage: '/hacking-begin-soon.svg',
+		};
+		const hackingCountDown: EventParams = {
+			eventName: 'Hacking Begins',
+			eventImage: '/hacking-countdown.svg',
+		};
+		const judging: EventParams = {
+			eventName: 'Judging',
+			eventImage: '/judging.svg',
+		};
+		const hackingEnded: EventParams = {
+			eventName: 'Hacking Ended',
+			eventImage: '/hacking-ended.svg',
+		};
+		const duringHackathon: EventParams = {
+			eventName: 'Hacking Now',
+			eventImage: '/during-hackathon.svg',
+		};
 
-	console.log('Cur ', curDate);
-	console.log('Start ', hackingStartDate);
-	console.log('Countdown ', hackingCountDownDate);
-	console.log('Judge start ', judgeStartDate);
-	console.log('Judge end ', judgeEndDate);
-	console.log('End', hackingEndDate);
+		// Dates from setting
+		const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
+		const hackingCountDownDate = new Date(hackingStartDate);
+		hackingCountDownDate.setDate(hackingStartDate.getDate() - 1);
+		const judgeStartDate = new Date(Date.parse(setting.JUDGING_START));
+		const judgeEndDate = new Date(Date.parse(setting.JUDGING_END));
+		const hackingEndDate = new Date(Date.parse(setting.HACKATHON_END));
+		const curDate = new Date();
+
+		console.log('Cur ', curDate);
+		console.log('Start ', hackingStartDate);
+		console.log('Countdown ', hackingCountDownDate);
+		console.log('Judge start ', judgeStartDate);
+		console.log('Judge end ', judgeEndDate);
+		console.log('End', hackingEndDate);
+
+		// Set current event based on date
+		if (curDate < hackingCountDownDate) {
+			setCurEvent(hackingBeginSoon);
+		} else if (curDate < hackingStartDate && curDate > hackingCountDownDate) {
+			setCurEvent(hackingCountDown);
+		} else if (curDate < judgeStartDate && curDate > hackingStartDate) {
+			setCurEvent(duringHackathon);
+		} else if (curDate < judgeEndDate && curDate > judgeStartDate) {
+			setCurEvent(judging);
+		} else {
+			setCurEvent(hackingEnded);
+		}
+	}, [setting]);
 
 	return (
 		<>
@@ -74,6 +99,7 @@ const Header = ({
 					</span>
 					<span className={styles.CurEvent}>
 						<div className={styles.CurEventText}>Current Event</div>
+
 						<Image src={curEvent.eventImage} width={300} height={300} alt="Hacking Begin Soon" />
 						<div className={styles.CurEventText}>{curEvent.eventName}</div>
 					</span>
