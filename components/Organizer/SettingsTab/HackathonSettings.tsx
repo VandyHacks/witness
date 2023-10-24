@@ -22,6 +22,38 @@ const HackathonSettings = () => {
 			value: 'zineanteoh',
 			label: 'Zi Teoh',
 		},
+		{
+			value: 'lisaliuu',
+			label: 'Lisa Liu',
+		},
+		{
+			value: 'carolhe134',
+			label: 'Carol He',
+		},
+		{
+			value: 'jiashuharryhuang',
+			label: 'Jiashu Huang',
+		},
+		{
+			value: 'abi-kothapalli',
+			label: 'Abi Kothapalli',
+		},
+		{
+			value: 'shansitads',
+			label: 'Shansita Sharma',
+		},
+		{
+			value: 'gabrield2731',
+			label: 'Gabriel Dong',
+		},
+		{
+			value: 'aryang4rg',
+			label: 'Aryan Garg',
+		},
+		{
+			value: 'junolia',
+			label: 'Alexa Reid',
+		},
 	];
 
 	// fetch hackathon settings on load at /api/hackathon-settings
