@@ -32,10 +32,10 @@ const Header = ({
 			eventName: 'Hacking Begins Soon',
 			eventImage: '/hacking-begin-soon.svg',
 		};
-		const hackingCountDown: EventParams = {
-			eventName: 'Hacking Begins',
-			eventImage: '/hacking-countdown.svg',
-		};
+		// const hackingCountDown: EventParams = {
+		// 	eventName: 'Hacking Begins',
+		// 	eventImage: '/hacking-countdown.svg',
+		// };
 		const judging: EventParams = {
 			eventName: 'Judging',
 			eventImage: '/judging.svg',
@@ -58,18 +58,18 @@ const Header = ({
 		const hackingEndDate = new Date(Date.parse(setting.HACKATHON_END));
 		const curDate = new Date();
 
-		console.log('Cur ', curDate);
-		console.log('Start ', hackingStartDate);
-		console.log('Countdown ', hackingCountDownDate);
-		console.log('Judge start ', judgeStartDate);
-		console.log('Judge end ', judgeEndDate);
-		console.log('End', hackingEndDate);
+		// console.log('Cur ', curDate);
+		// console.log('Start ', hackingStartDate);
+		// console.log('Countdown ', hackingCountDownDate);
+		// console.log('Judge start ', judgeStartDate);
+		// console.log('Judge end ', judgeEndDate);
+		// console.log('End', hackingEndDate);
 
 		// Set current event based on date
-		if (curDate < hackingCountDownDate) {
+		if (curDate < hackingStartDate) {
 			setCurEvent(hackingBeginSoon);
-		} else if (curDate < hackingStartDate && curDate > hackingCountDownDate) {
-			setCurEvent(hackingCountDown);
+			// } else if (curDate < hackingStartDate && curDate > hackingCountDownDate) {
+			// 	setCurEvent(hackingCountDown);
 		} else if (curDate < judgeStartDate && curDate > hackingStartDate) {
 			setCurEvent(duringHackathon);
 		} else if (curDate < judgeEndDate && curDate > judgeStartDate) {
