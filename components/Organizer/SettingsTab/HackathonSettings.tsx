@@ -1,4 +1,4 @@
-import { Button, DatePicker, Space } from 'antd';
+import { Button, DatePicker, Select, Space } from 'antd';
 import dayjs from 'dayjs';
 import React, { useContext, useEffect, useState } from 'react';
 import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
@@ -8,8 +8,53 @@ import { HackathonSettingsData } from '../../../types/database';
 const HackathonSettings = () => {
 	const { baseTheme } = useContext(ThemeContext);
 	const [hackathonSetting, setHackathonSetting] = useState<HackathonSettingsData | undefined>(undefined);
+	const [onCallDev, setOnCallDev] = useState<string>('');
 	const [loading, setLoading] = useState<boolean>(false);
 	const [statusMessage, setStatusMessage] = useState<string>('');
+
+	// hehe sorry
+	const devInputValues = [
+		{
+			value: 'jacoblurie29',
+			label: 'Jacob Lurie',
+		},
+		{
+			value: 'zineanteoh',
+			label: 'Zi Teoh',
+		},
+		{
+			value: 'lisaliuu',
+			label: 'Lisa Liu',
+		},
+		{
+			value: 'carolhe134',
+			label: 'Carol He',
+		},
+		{
+			value: 'jiashuharryhuang',
+			label: 'Jiashu Huang',
+		},
+		{
+			value: 'abi-kothapalli',
+			label: 'Abi Kothapalli',
+		},
+		{
+			value: 'shansitads',
+			label: 'Shansita Sharma',
+		},
+		{
+			value: 'gabrield2731',
+			label: 'Gabriel Dong',
+		},
+		{
+			value: 'aryang4rg',
+			label: 'Aryan Garg',
+		},
+		{
+			value: 'junolia',
+			label: 'Alexa Reid',
+		},
+	];
 
 	// fetch hackathon settings on load at /api/hackathon-settings
 	useEffect(() => {
@@ -29,7 +74,7 @@ const HackathonSettings = () => {
 	const handleSave = async () => {
 		if (
 			window.confirm(
-				'IMPORTANT: \nAre you sure you wish to save these dates?\nMake sure you know what you are doing!'
+				'IMPORTANT: \nAre you sure you wish to save these settings?\nMake sure you know what you are doing!'
 			)
 		) {
 			const res = await fetch('/api/hackathon-settings', {
@@ -83,7 +128,18 @@ const HackathonSettings = () => {
 		setStatusMessage('Changes not saved yet.');
 	};
 
+	const handleOnCallDevChange = (value: string) => {
+		setOnCallDev(value);
+		setHackathonSetting(prev => {
+			if (prev) return { ...prev, ON_CALL_DEV: value };
+			return undefined;
+		});
+		setStatusMessage('Changes not saved yet.');
+	};
+
 	if (loading) return <div>Loading...</div>;
+
+	console.log('Hackathon Settings: ', hackathonSetting);
 
 	return (
 		<div style={{ color: getBaseColor(baseTheme) }}>
@@ -108,7 +164,17 @@ const HackathonSettings = () => {
 			<br />
 			<br />
 
-			<Button onClick={handleSave}>Save dates to database</Button>
+			<div>On Call Developer</div>
+			<Select
+				options={devInputValues}
+				defaultValue={hackathonSetting?.ON_CALL_DEV || 'jacoblurie29'}
+				onChange={handleOnCallDevChange}
+			/>
+
+			<br />
+			<br />
+
+			<Button onClick={handleSave}>Save settings to database</Button>
 
 			{statusMessage && <div>{statusMessage}</div>}
 		</div>

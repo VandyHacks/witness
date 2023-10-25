@@ -46,3 +46,26 @@ export interface TeamProfile {
 	devpost: URL;
 	members: string[];
 }
+
+export interface Report {
+	_id?: string;
+	email: string;
+	name: string;
+	role: ReportRole;
+	description: string;
+	date: string;
+	ghIssueNumber: number;
+	ghAssignee: string;
+	ghUrl: string;
+}
+
+export enum ReportRole {
+	HACKER = 'HACKER',
+	JUDGE = 'JUDGE',
+	ORGANIZER = 'ORGANIZER',
+}
+
+export interface GitHubIssueStatus {
+	issueNumber: number;
+	status: string;
+}

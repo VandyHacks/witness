@@ -12,6 +12,7 @@ import { useContext, useEffect } from 'react';
 import SettingsTab from './SettingsTab/SettingsTab';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
 import { UserData } from '../../types/database';
+import BugReportsTab from './BugReportsTab/BugReportsTab';
 
 export default function OrganizerDash() {
 	// Get session data
@@ -25,8 +26,8 @@ export default function OrganizerDash() {
 		errorMessage: 'Failed to get user object.',
 	});
 
+	// Set theme
 	useEffect(() => {
-		console.log(userData);
 		if (userData && userData.settings && userData.settings.accentColor && userData.settings.baseTheme) {
 			setAccentColor(userData.settings.accentColor as AccentColor);
 			setBaseTheme(userData.settings.baseTheme as Theme);
@@ -99,8 +100,13 @@ export default function OrganizerDash() {
 							children: <EventsTab />,
 						},
 						{
-							label: `Settings`,
+							label: 'Bug Reports',
 							key: '7',
+							children: <BugReportsTab />,
+						},
+						{
+							label: `Settings`,
+							key: '8',
 							children: <SettingsTab />,
 						},
 					]}
