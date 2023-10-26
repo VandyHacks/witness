@@ -35,6 +35,12 @@ export const handlePopulateTeams = async () => {
 const createTeams = async () => {
 	for (let i = 0; i < 10; ++i) {
 		const teamName = `${faker.commerce.productAdjective()} ${faker.commerce.productAdjective()} ${faker.commerce.product()}`;
+
+		if (await Team.find({ name: teamName })) {
+			--i;
+			continue;
+		}
+
 		const team = new Team({
 			name: teamName,
 			members: [],
