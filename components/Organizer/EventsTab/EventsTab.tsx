@@ -121,15 +121,12 @@ export default function Events() {
 	});
 
 	useEffect(() => {
-		console.log(events);
 		if (eventsData && eventsData.length > 0) {
-			console.log(eventsCountData);
 			setEvents(
 				eventsData.map((event: EventData) => {
 					// TODO convert startTime and endTime here so we don't have to do it in the render function
 					const count = eventsCountData?.find((e: any) => e._id === event._id) || 0;
 
-					console.log(event);
 					return {
 						key: event._id,
 						...event,
