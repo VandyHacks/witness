@@ -125,7 +125,27 @@ const TeamManagement = () => {
 
 					<div>Members: {teamData.members}</div>
 					<div>Join Code: {teamData.joinCode}</div>
-					<div>Devpost: {teamData.devpost}</div>
+
+					{!showChangeDevpost && (
+						<>
+							<div>Devpost: {teamData.devpost}</div>
+						</>
+					)}
+
+					{showChangeDevpost && (
+						<>
+							<div className={styles.TeamNameInputContainer}>
+								<span>Devpost:</span>
+								<Input
+									onPressEnter={handleUpdateTeam}
+									onChange={event => setNewTeamName(event.target.value)}
+									className={styles.TeamNameInput}
+									placeholder="New Team Name"
+									defaultValue={teamData.name}
+								/>
+							</div>
+						</>
+					)}
 
 					<div className={styles.TeamButtonContainer}>
 						{/* TODO: change team name */}
@@ -134,7 +154,7 @@ const TeamManagement = () => {
 						</button>
 						{/* TODO: change devpost */}
 						<button className={styles.TeamButton} onClick={() => setShowChangeDevpost(true)}>
-							Change Devpost
+							Change Devpost Link
 						</button>
 						{/* TODO: leave team button */}
 						<button className={styles.TeamButton}>Leave the Team</button>
