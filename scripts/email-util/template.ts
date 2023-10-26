@@ -4,27 +4,27 @@ import { SendEmailRequest } from '@aws-sdk/client-ses';
 export interface EmailData {
 	emails: string[];
 	subject: string;
-	html: string;
-	text: string;
+	htmlBody: string;
+	textBody: string;
 }
 
 /**
  * emails: list of strings
  */
-export const template = async ({ emails, subject, html, text }: EmailData): Promise<SendEmailRequest> => ({
+export const template = ({ emails, subject, htmlBody, textBody }: EmailData): SendEmailRequest => ({
 	Destination: {
-		ToAddresses: emails, // Email address/addresses that you want to send your email
+		BccAddresses: emails, // Email address/addresses that you want to send your email
 	},
 	Message: {
 		Body: {
 			Html: {
 				// HTML Format of the email
 				Charset: 'UTF-8',
-				Data: html ? html : text,
+				Data: htmlBody ? htmlBody : textBody,
 			},
 			Text: {
 				Charset: 'UTF-8',
-				Data: text,
+				Data: textBody,
 			},
 		},
 		Subject: {
