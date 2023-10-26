@@ -5,6 +5,19 @@ import { UserData } from '../../types/database';
 import User from '../../models/user';
 import { EmailData } from '../email-util/template';
 
+export const getHardcodeRecipients = (prompt: promptSync.Prompt) => {
+	let hardcodeRecipients = prompt('Are you hardcoding the recipients? (y/n) ');
+
+	while (hardcodeRecipients !== 'y' && hardcodeRecipients !== 'n') {
+		hardcodeRecipients = prompt('Please enter either y or n: ');
+	}
+
+	if (hardcodeRecipients === 'y') {
+		return true;
+	}
+	return false;
+};
+
 export const getSubject = (prompt: promptSync.Prompt) => {
 	let subject = prompt('Enter the email subject (required): ');
 
@@ -124,18 +137,25 @@ export const getRecipients = async (statuses: number[]) => {
 
 // todo: extract the while stuffs
 // todo: make terminal more readable
-export const getConfirmation = (prompt: promptSync.Prompt, inputtedData: any, emails: string[]) => {
+export const getConfirmation = (
+	prompt: promptSync.Prompt,
+	inputtedData: any,
+	hardcodeRecipients: boolean,
+	emails?: string[]
+) => {
 	console.log('Here is what you entered: ');
 	console.log(inputtedData);
 
-	let wantAllRecipients = prompt('Would you like to see the full recipient list? (y/n) ');
+	if (!hardcodeRecipients) {
+		let wantAllRecipients = prompt('Would you like to see the full recipient list? (y/n) ');
 
-	while (wantAllRecipients !== 'y' && wantAllRecipients !== 'n') {
-		wantAllRecipients = prompt('Please enter either y or n: ');
-	}
+		while (wantAllRecipients !== 'y' && wantAllRecipients !== 'n') {
+			wantAllRecipients = prompt('Please enter either y or n: ');
+		}
 
-	if (wantAllRecipients === 'y') {
-		console.log(emails);
+		if (wantAllRecipients === 'y') {
+			console.log(emails);
+		}
 	}
 
 	let hasConfirmed = prompt('Would you like to send your email? (y/n) ');
