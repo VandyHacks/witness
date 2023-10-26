@@ -70,7 +70,7 @@ const getSchedule = async (team: TeamData) => {
 	});
 	schedules.forEach(schedule => {
 		console.log('Schedule:');
-		console.log(`Zoom: ${schedule.zoom}`);
+		console.log(`Table Number: ${team.locationNum}`);
 		console.log(`Time: ${schedule.time}`);
 		schedule.judges.forEach(async judgeId => {
 			const judge: UserData | null = await User.findOne({ _id: judgeId });
