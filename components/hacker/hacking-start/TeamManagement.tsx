@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TeamProfile } from '../../../types/client';
 import styles from '../../../styles/hacker/Table.module.css';
-import { Button, Input } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import useSWR, { mutate } from 'swr';
 import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
 
@@ -14,6 +14,7 @@ const TeamManagement = () => {
 	// New team name to update
 	const [newTeamName, setNewTeamName] = useState<string | undefined>('');
 	const [newDevPost, setNewDevPost] = useState<string>('');
+	const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
 
 	const {
 		data: teamData,
@@ -38,6 +39,7 @@ const TeamManagement = () => {
 		if (res.ok) {
 			// mutate(endpoint);
 			handleSubmitSuccess(`Successfully ${action === 'CREATE' ? 'created' : 'joined'} a team!`);
+			window.location.reload();
 		} else {
 			handleSubmitFailure('Server error. Please contact one of our members for help');
 		}
@@ -116,6 +118,25 @@ const TeamManagement = () => {
 
 			// Reset state
 			setNewDevPost('');
+		} else {
+			handleSubmitFailure('Server error. Please contact one of our members for help');
+		}
+	};
+
+	const handleLeaveTeam = async () => {
+		const endpoint = '/api/team-leave';
+		const method = 'PATCH';
+		const headers = { 'Content-Type': 'application/json' };
+
+		const res = await fetch(endpoint, { method, headers });
+
+		if (res.ok) {
+			handleSubmitSuccess(`You have left the team`);
+
+			// Reset state
+			setShowLeaveModal(false);
+
+			window.location.reload();
 		} else {
 			handleSubmitFailure('Server error. Please contact one of our members for help');
 		}
@@ -213,8 +234,16 @@ const TeamManagement = () => {
 							Change Devpost Link
 						</button>
 						{/* TODO: leave team button */}
-						<button className={styles.TeamButton}>Leave the Team</button>
+						<button className={styles.TeamButton} onClick={() => setShowLeaveModal(true)}>
+							Leave the Team
+						</button>
 					</div>
+
+					<Modal
+						title="Are you sure you want to leave the current team?"
+						open={showLeaveModal}
+						onOk={handleLeaveTeam}
+						onCancel={() => setShowLeaveModal(false)}></Modal>
 				</>
 			)}
 		</div>
