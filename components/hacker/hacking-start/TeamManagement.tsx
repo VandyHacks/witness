@@ -41,7 +41,7 @@ const TeamManagement = () => {
 			handleSubmitSuccess(`Successfully ${action === 'CREATE' ? 'created' : 'joined'} a team!`);
 			window.location.reload();
 		} else {
-			handleSubmitFailure('Server error. Please contact one of our members for help');
+			handleSubmitFailure('There was an error. Are you sure the team is not filled up already?');
 		}
 	};
 
