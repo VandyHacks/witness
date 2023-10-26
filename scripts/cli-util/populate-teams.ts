@@ -38,7 +38,7 @@ const createTeams = async () => {
 		const team = new Team({
 			name: teamName,
 			members: [],
-			devpost: 'test devpost',
+			devpost: `https://devpost.com/${faker.random.alphaNumeric(6)}`,
 			joinCode: `test join code: ${faker.random.alphaNumeric(6)}`,
 		});
 		await team.save();
