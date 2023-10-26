@@ -140,8 +140,7 @@ const TeamManagement = () => {
 									onPressEnter={handleUpdateTeam}
 									onChange={event => setNewTeamName(event.target.value)}
 									className={styles.TeamNameInput}
-									placeholder="New Team Name"
-									defaultValue={teamData.name}
+									placeholder="New Devpost Link"
 								/>
 							</div>
 						</>
