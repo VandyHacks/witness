@@ -3,7 +3,6 @@ import User from '../../models/user';
 import Team from '../../models/team';
 import { promptAction } from '../dev-cli';
 import { faker } from '@faker-js/faker';
-import { UserData, TeamData } from '../../types/database';
 
 export const handlePopulateTeams = async () => {
 	const choice = await select({
