@@ -138,24 +138,24 @@
 		font-size: 15px;
 	}
 
-  .TeamNameInput {
-    width: 100%;
-  }
+	.TeamNameInput {
+		width: 100%;
+	}
 
-  .TeamButtonContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    margin: 20px 0 0 0;
-  }
+	.TeamButtonContainer {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: flex-start;
+		margin: 20px 0 0 0;
+	}
 
-  .TeamButton {
-    margin: 15px 0px 15px 0px;
-    padding: 5px 15px 5px 15px;
-    border-radius: 10%;
-    background-color: #535353;
-    color: white;
-    white-space: nowrap;
-  }
+	.TeamButton {
+		margin: 15px 0px 15px 0px;
+		padding: 5px 15px 5px 15px;
+		border-radius: 10%;
+		background-color: #535353;
+		color: white;
+		white-space: nowrap;
+	}
 }
