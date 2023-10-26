@@ -72,9 +72,14 @@ const TeamManagement = () => {
 					<div>Members: {teamData.members}</div>
 					<div>Join Code: {teamData.joinCode}</div>
 					<div>Devpost: {teamData.devpost}</div>
-					{/* TODO: change team name */}
-					{/* TODO: change devpost */}
-					{/* TODO: leave team button */}
+					<div className={styles.TeamButtonContainer}>
+						{/* TODO: change team name */}
+						<button className={styles.TeamButton}>Rename Team</button>
+						{/* TODO: change devpost */}
+						<button className={styles.TeamButton}>Change Devpost</button>
+						{/* TODO: leave team button */}
+						<button className={styles.TeamButton}>Leave the Team</button>
+					</div>
 				</>
 			)}
 		</div>
