@@ -104,11 +104,14 @@
 
 .TeamNameInputContainer {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 }
 
 .TeamNameInput {
-	width: 50%;
+  all: unset;
+  outline: none;
+  margin: 0 0 0 15px;
+  background-color: #535353;
 }
 
 /* add media query for mobile screen */
@@ -138,17 +141,13 @@
 		font-size: 15px;
 	}
 
-	.TeamNameInput {
-		width: 100%;
-	}
-
-	.TeamButtonContainer {
-		display: flex;
-		flex-direction: column;
-		justify-content: flex-start;
-		align-items: flex-start;
-		margin: 20px 0 0 0;
-	}
+  .TeamButtonContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 20px 0 0 0;
+  }
 
 	.TeamButton {
 		margin: 15px 0px 15px 0px;

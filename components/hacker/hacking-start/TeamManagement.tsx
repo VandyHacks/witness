@@ -39,11 +39,12 @@ const TeamManagement = () => {
 			// mutate(endpoint);
 			handleSubmitSuccess(`Successfully ${action === 'CREATE' ? 'created' : 'joined'} a team!`);
 		} else {
-			handleSubmitFailure(await res.text());
+			handleSubmitFailure('Server error. Please contact one of our members for help');
 		}
 	};
 
-	const handleUpdateTeam = async () => {
+	const handleUpdateTeam = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		if (!newTeamName) {
 			// Empty team name
 			handleSubmitFailure('Team name cannot be empty!');
@@ -63,8 +64,60 @@ const TeamManagement = () => {
 			// Update the teamData
 			mutate();
 			handleSubmitSuccess(`Successfully Changed Team Name!`);
+
+			// Reset state
+			setNewTeamName('');
 		} else {
-			handleSubmitFailure(await res.text());
+			handleSubmitFailure('Server error. Please contact one of our members for help');
+		}
+	};
+
+	const isDevpostURL = (input: string): boolean => {
+		const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+		const devpostPattern = /devpost/i;
+
+		if (urlPattern.test(input) && devpostPattern.test(input)) {
+			return true;
+		}
+
+		return false;
+	};
+
+	const handleUpdateDevpost = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+
+		if (!newDevPost) {
+			// Empty team name
+			handleSubmitFailure('Devpost link cannot be empty!');
+			setShowChangeDevpost(false);
+			return;
+		}
+
+		if (!isDevpostURL(newDevPost)) {
+			// Valid Devpost URL
+			handleSubmitFailure('Devpost link is invalid');
+			setShowChangeDevpost(false);
+			return;
+		}
+
+		const endpoint = '/api/team-update';
+		const method = 'PATCH';
+		const headers = { 'Content-Type': 'application/json' };
+		const body = JSON.stringify({ teamName: '', devpost: newDevPost });
+
+		const res = await fetch(endpoint, { method, headers, body });
+
+		if (res.ok) {
+			// mutate(endpoint);
+			setShowChangeDevpost(false);
+			// Update the teamData
+			mutate();
+			handleSubmitSuccess(`Successfully Changed Devpost Link!`);
+
+			// Reset state
+			setNewDevPost('');
+		} else {
+			handleSubmitFailure('Server error. Please contact one of our members for help');
 		}
 	};
 
@@ -112,13 +165,15 @@ const TeamManagement = () => {
 						<>
 							<div className={styles.TeamNameInputContainer}>
 								<span>Team Name:</span>
-								<Input
-									onPressEnter={handleUpdateTeam}
-									onChange={event => setNewTeamName(event.target.value)}
-									className={styles.TeamNameInput}
-									placeholder="New Team Name"
-									defaultValue={teamData.name}
-								/>
+								<form onSubmit={event => handleUpdateTeam(event)}>
+									<input
+										onChange={event => setNewTeamName(event.target.value)}
+										type="text"
+										className={styles.TeamNameInput}
+										defaultValue={teamData.name}></input>
+									<button>Submit</button>
+									<button onClick={() => setShowRenameTeam(false)}>Cancel</button>
+								</form>
 							</div>
 						</>
 					)}
@@ -136,12 +191,14 @@ const TeamManagement = () => {
 						<>
 							<div className={styles.TeamNameInputContainer}>
 								<span>Devpost:</span>
-								<Input
-									onPressEnter={handleUpdateTeam}
-									onChange={event => setNewTeamName(event.target.value)}
-									className={styles.TeamNameInput}
-									placeholder="New Devpost Link"
-								/>
+								<form onSubmit={event => handleUpdateDevpost(event)}>
+									<input
+										onChange={event => setNewDevPost(event.target.value)}
+										type="text"
+										className={styles.TeamNameInput}></input>
+									<button>Submit</button>
+									<button onClick={() => setShowChangeDevpost(false)}>Cancel</button>
+								</form>
 							</div>
 						</>
 					)}
