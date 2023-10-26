@@ -68,11 +68,11 @@ const getSchedule = async (team: TeamData) => {
 	const schedules: ScheduleData[] | null = await Schedule.find({
 		team: team._id,
 	});
-	schedules.forEach((schedule) => {
+	schedules.forEach(schedule => {
 		console.log('Schedule:');
 		console.log(`Zoom: ${schedule.zoom}`);
 		console.log(`Time: ${schedule.time}`);
-		schedule.judges.forEach(async (judgeId) => {
+		schedule.judges.forEach(async judgeId => {
 			const judge: UserData | null = await User.findOne({ _id: judgeId });
 			if (!judge) {
 				console.log('Judge not found');

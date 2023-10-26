@@ -55,5 +55,5 @@ const createTeams = async () => {
 			await user.save();
 		}
 	}
-	console.log("Done!");
+	console.log('Done!');
 };
