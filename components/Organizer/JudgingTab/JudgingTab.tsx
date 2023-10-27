@@ -42,7 +42,7 @@ const JudgingTab = () => {
 					{/* check in judges */}
 					<CheckInJudges judgeData={judgeData} />
 
-                    {/* scoreboard of teams */}
+					{/* scoreboard of teams */}
 					<Scoreboard teamData={teamsData} scoreData={scoresData} judgeData={judgeData} />
 
 					{/* judge scores table */}
