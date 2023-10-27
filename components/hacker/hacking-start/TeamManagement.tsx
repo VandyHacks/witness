@@ -5,6 +5,13 @@ import { Button, Input, Modal } from 'antd';
 import useSWR, { mutate } from 'swr';
 import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
 
+const isDevpostURL = (input: string): boolean => {
+	const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
+	const devpostPattern = /devpost/i;
+
+	return urlPattern.test(input) && devpostPattern.test(input);
+};
+
 const TeamManagement = () => {
 	// Team to join
 	const [teamName, setTeamName] = useState<string | undefined>(undefined);
@@ -74,17 +81,6 @@ const TeamManagement = () => {
 		}
 	};
 
-	const isDevpostURL = (input: string): boolean => {
-		const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
-		const devpostPattern = /devpost/i;
-
-		if (urlPattern.test(input) && devpostPattern.test(input)) {
-			return true;
-		}
-
-		return false;
-	};
-
 	const handleUpdateDevpost = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
@@ -144,7 +140,6 @@ const TeamManagement = () => {
 
 	return (
 		<div className={styles.Container}>
-			{/* TODO: not done yet lol */}
 			Team
 			{!teamData && (
 				<>

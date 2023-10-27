@@ -21,7 +21,9 @@ const Header = ({ user, signOut }: { user: UserData; signOut: () => void }) => {
 				<span className={styles.UserName}>
 					<div className={styles.Greeting}>Hello,</div>
 					<div className={styles.Greeting}>{user.name}</div>
-					<div className={styles.NFCPoint}>Your currently have {user.nfcPoints} points</div>
+					<div className={styles.NFCPoint}>
+						You currently have {user.nfcPoints} points. Participate in events to start earning more!
+					</div>
 				</span>
 				<span className={styles.CurEvent}>
 					<div className={styles.CurEventText}>Current Event</div>

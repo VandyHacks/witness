@@ -46,6 +46,16 @@
 	padding-bottom: 15px;
 }
 
+.Description {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 1rem;
+	color: #535353;
+}
+
 .Placeholder {
 	display: flex;
 	justify-content: center;
@@ -100,6 +110,11 @@
 	background-color: #535353;
 	color: white;
 	white-space: nowrap;
+}
+
+.TeamButton:hover {
+	background-color: #000000;
+	cursor: pointer;
 }
 
 .TeamNameInputContainer {

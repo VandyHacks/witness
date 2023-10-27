@@ -642,62 +642,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<div style={{ padding: '20px' }}>
 									<Header user={user} signOut={signOut} />
 
-									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
 									<TeamManagement />
-									<Leaderboard />
 									<JudgingSchedule judgingSessionData={judgingSessionData} />
+									<Leaderboard />
 
-									{/* TODO: remove once ready. placeholder */}
-									<div
-										style={{
-											display: 'flex',
-											flexDirection: 'column',
-											alignItems: 'center',
-											textAlign: 'center',
-											color: 'white',
-											fontSize: '10px',
-										}}>
-										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
-									</div>
 									<div className={styles['reportABugContainer']}>
 										<Link href="/report">
 											<div className={styles['reportABugText']}>Report a bug!</div>
 										</Link>
 										<BugOutlined />
 									</div>
-
-									{/* TODO: these are being refactored. should remove this after complete */}
-									{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-										<Button size="small" type="default" onClick={() => signOut()}>
-											Sign out
-										</Button>
-										<div style={{ paddingLeft: '10px', color: 'white' }}>
-											Signed in as {session?.user?.email}
-										</div>
-										<div style={{ paddingLeft: '20px', color: 'white' }}>
-											Current NFC Points: {user.nfcPoints}
-										</div>
-									</div>
-									{!teamData && <TeamSetup />}
-									{teamData && (
-										<div style={{ width: '60vw', margin: 'auto' }}>
-											<Content style={{ width: '60vw', margin: 'auto' }}>
-												<Table
-													locale={{
-														emptyText: (
-															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-																<h3>Stay tuned! You will see your schedule soon!</h3>
-															</div>
-														),
-													}}
-													columns={judgingSessionColumns}
-													dataSource={judgingSessionData}
-												/>
-												<Divider />
-											</Content>
-											<TeamManager profile={teamData} />
-										</div>
-									)} */}
 								</div>
 							)}
 
