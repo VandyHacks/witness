@@ -257,7 +257,7 @@ const computeScoreboard = (scoreData: ScoreData[], teamData: TeamData[]) => {
 			count: count,
 			rank: 0,
 			norm_rank: 0,
-            devpost: team.devpost,
+			devpost: team.devpost,
 		};
 	});
 
@@ -281,5 +281,5 @@ const computeScoreboard = (scoreData: ScoreData[], teamData: TeamData[]) => {
 		team.rank = index + 1 - diff;
 	});
 
-	return teamScoreboardData
+	return teamScoreboardData;
 };
