@@ -4,6 +4,7 @@ import Team from '../../models/team';
 import User from '../../models/user';
 import { promptAction } from '../dev-cli';
 import { ApplicationStatus, TeamData, UserData } from '../../types/database';
+import { ObjectId } from 'mongoose';
 
 // TODO: zi
 /**
@@ -226,7 +227,7 @@ const leaveTeam = async (hacker: UserData) => {
 		return promptAction();
 	}
 
-	const teamDoc: TeamData | null = await Team.findById(teamId);
+	const teamDoc = await Team.findById(teamId);
 
 	// check if team exists
 	if (!teamDoc) {
@@ -257,7 +258,8 @@ const leaveTeam = async (hacker: UserData) => {
 	}
 
 	// perform deletion and log
-	await Team.updateOne({ _id: teamId }, { $pull: { members: hacker._id } });
+	teamDoc.members = teamDoc.members.filter((member: ObjectId) => member.toString() !== hacker._id.toString());
+	await teamDoc.save();
 	await User.updateOne({ email: hacker.email }, { team: null });
 	console.log('Left team successfully');
 };

@@ -16,7 +16,10 @@ const Leaderboard = () => {
 
 	return (
 		<div className={styles.Container}>
-			Leaderboard
+			Points Leaderboard
+			<div className={styles.Description}>
+				Participate and check in to events to earn points. Points can be used to redeem prizes!
+			</div>
 			{leaderboardError ? (
 				<div className={styles.Placeholder}>Failed to load data.</div>
 			) : !leaderboardData ? (
