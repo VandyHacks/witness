@@ -105,6 +105,25 @@
 	font-weight: 700;
 }
 
+.IconContainer {
+	position: relative;
+	width: 300px;
+	height: 300px;
+	margin: 0 auto;
+}
+
+.Timer {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #fff;
+	text-align: center;
+	width: 100%;
+	font-size: 50px;
+	font-weight: 700;
+}
+
 @media (max-width: 768px) {
 	.Greeting {
 		font-size: 55px;

@@ -42,6 +42,7 @@ const Header = ({
 	setting: HackathonSettingsData;
 }) => {
 	const [curEvent, setCurEvent] = useState<EventParams>(hackingBeginSoon);
+	const [timeLeft, setTimeLeft] = useState<string>('');
 
 	useEffect(() => {
 		// Dates from setting
@@ -66,6 +67,24 @@ const Header = ({
 		}
 	}, [setting]);
 
+	useEffect(() => {
+		if (curEvent === hackingCountDown) {
+			const interval = setInterval(() => {
+				const curDate = new Date();
+				const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
+				const timeLeft = Math.floor((hackingStartDate.getTime() - curDate.getTime()) / 1000);
+				const hours = Math.floor(timeLeft / 3600);
+				const minutes = Math.floor((timeLeft % 3600) / 60);
+				const seconds = timeLeft % 60;
+				const timeString = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${
+					seconds < 10 ? '0' : ''
+				}${seconds}`;
+				setTimeLeft(timeString);
+			}, 1000);
+			return () => clearInterval(interval);
+		}
+	}, [curEvent, setting.HACKATHON_START]);
+
 	return (
 		<>
 			<div className={styles.HeaderBox}>
@@ -89,7 +108,10 @@ const Header = ({
 				</span>
 				<span className={styles.CurEvent}>
 					<div className={styles.CurEventText}>Current Event</div>
-					<Image src={curEvent.eventImage} width={300} height={300} alt={curEvent.eventName} />
+					<div className={styles.IconContainer}>
+						<Image src={curEvent.eventImage} width={300} height={300} alt={curEvent.eventName} />
+						{curEvent === hackingCountDown && <div className={styles.Timer}>{timeLeft}</div>}
+					</div>
 					<div className={styles.CurEventText}>{curEvent.eventName}</div>
 				</span>
 			</div>
