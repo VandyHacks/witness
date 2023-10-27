@@ -1,7 +1,7 @@
 import { Table, Button, Input, InputRef, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
-import { TeamData } from '../../../types/database';
+import { ScoreData, TeamData } from '../../../types/database';
 import { ExportToCsv } from 'export-to-csv';
 import { FilterConfirmProps, FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
@@ -153,7 +153,6 @@ export default function Scoreboard(props: AllScoresProps) {
 			sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo.order : null,
 		},
 		{
-			// add a new column for "see team devpost"
 			title: 'Devpost',
 			dataIndex: 'devpost',
 			key: 'devpost',
@@ -206,7 +205,7 @@ export default function Scoreboard(props: AllScoresProps) {
 	);
 }
 
-const computeScoreboard = (scoreData: AllScoresProps['scoreData'], teamData: AllScoresProps['teamData']) => {
+const computeScoreboard = (scoreData: ScoreData[], teamData: TeamData[]) => {
 	let scoresByJudge: Record<string, number[]> = {};
 	let judgeStats: Record<string, { avg: number; stdev: number }> = {};
 
@@ -258,6 +257,7 @@ const computeScoreboard = (scoreData: AllScoresProps['scoreData'], teamData: All
 			count: count,
 			rank: 0,
 			norm_rank: 0,
+            devpost: team.devpost,
 		};
 	});
 
@@ -281,17 +281,5 @@ const computeScoreboard = (scoreData: AllScoresProps['scoreData'], teamData: All
 		team.rank = index + 1 - diff;
 	});
 
-	return teamScoreboardData.map(team => {
-		// get devpost from teamData
-		const tempTeamData = teamData.find(teamData => teamData._id === team.key);
-		if (!tempTeamData) {
-			return team;
-		}
-		const devpost = tempTeamData.devpost;
-
-		return {
-			...team,
-			devpost,
-		};
-	});
+	return teamScoreboardData
 };
