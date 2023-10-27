@@ -99,8 +99,18 @@ const Header = ({
 				setTimeLeft(timeString);
 			}, 1000);
 			return () => clearInterval(interval);
+		} else if (curEvent === judging) {
+			const interval = setInterval(() => {
+				const judgingDateEnd = new Date(Date.parse(setting.JUDGING_END));
+				const curDate = new Date();
+
+				if (curDate > judgingDateEnd) {
+					setCurEvent(hackingEnded);
+					return () => clearInterval(interval);
+				}
+			}, 1000);
 		}
-	}, [curEvent, setting.HACKATHON_START, setting.HACKATHON_END]);
+	}, [curEvent, setting.HACKATHON_START, setting.HACKATHON_END, setting.JUDGING_END]);
 
 	return (
 		<>

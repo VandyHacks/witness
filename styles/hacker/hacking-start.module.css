@@ -91,8 +91,7 @@
 }
 
 .CurEvent {
-	/* background-color: lightgreen; */
-	width: 25%;
+	width: 300px;
 	display: flex;
 	flex-direction: column;
 }
