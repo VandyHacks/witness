@@ -3,10 +3,6 @@ import styles from '../../../styles/hacker/hacking-start.module.css';
 import Image from 'next/image';
 import VHLogo from '../../../public/vh-logo.png';
 import { HackathonSettingsData, UserData } from '../../../types/database';
-import HackingBeginSoon from '../../../public/hacking-begin-soon.svg';
-import Judging from '../../../public/judging.svg';
-import HackingEnded from '../../../public/hacking-ended.svg';
-import DuringHackathon from '../../../public/during-hackathon.svg';
 
 // Contains event name and image
 interface EventParams {
@@ -17,23 +13,23 @@ interface EventParams {
 
 const hackingBeginSoon: EventParams = {
 	eventName: 'Hacking Begins Soon',
-	eventImage: HackingBeginSoon,
+	eventImage: '/hacking-begin-soon.svg',
 };
-// const hackingCountDown: EventParams = {
-// 	eventName: 'Hacking Begins',
-// 	eventImage: '/hacking-countdown.svg',
-// };
-const judging: EventParams = {
-	eventName: 'Judging',
-	eventImage: Judging,
-};
-const hackingEnded: EventParams = {
-	eventName: 'Hacking Ended',
-	eventImage: HackingEnded,
+const hackingCountDown: EventParams = {
+	eventName: 'Hacking Begins',
+	eventImage: '/hacking-countdown.svg',
 };
 const duringHackathon: EventParams = {
 	eventName: 'Hacking Now',
-	eventImage: DuringHackathon,
+	eventImage: '/during-hackathon.svg',
+};
+const judging: EventParams = {
+	eventName: 'Judging',
+	eventImage: '/judging.svg',
+};
+const hackingEnded: EventParams = {
+	eventName: 'Hacking Ended',
+	eventImage: '/hacking-ended.svg',
 };
 
 const Header = ({
@@ -48,29 +44,19 @@ const Header = ({
 	const [curEvent, setCurEvent] = useState<EventParams>(hackingBeginSoon);
 
 	useEffect(() => {
-		// All events
-
 		// Dates from setting
 		const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
 		const hackingCountDownDate = new Date(hackingStartDate);
 		hackingCountDownDate.setDate(hackingStartDate.getDate() - 1);
 		const judgeStartDate = new Date(Date.parse(setting.JUDGING_START));
 		const judgeEndDate = new Date(Date.parse(setting.JUDGING_END));
-		const hackingEndDate = new Date(Date.parse(setting.HACKATHON_END));
 		const curDate = new Date();
-
-		// console.log('Cur ', curDate);
-		// console.log('Start ', hackingStartDate);
-		// console.log('Countdown ', hackingCountDownDate);
-		// console.log('Judge start ', judgeStartDate);
-		// console.log('Judge end ', judgeEndDate);
-		// console.log('End', hackingEndDate);
 
 		// Set current event based on date
 		if (curDate < hackingStartDate) {
 			setCurEvent(hackingBeginSoon);
-			// } else if (curDate < hackingStartDate && curDate > hackingCountDownDate) {
-			// 	setCurEvent(hackingCountDown);
+		} else if (curDate < hackingStartDate && curDate > hackingCountDownDate) {
+			setCurEvent(hackingCountDown);
 		} else if (curDate < judgeStartDate && curDate > hackingStartDate) {
 			setCurEvent(duringHackathon);
 		} else if (curDate < judgeEndDate && curDate > judgeStartDate) {
@@ -104,7 +90,6 @@ const Header = ({
 				<span className={styles.CurEvent}>
 					<div className={styles.CurEventText}>Current Event</div>
 					<Image src={curEvent.eventImage} width={300} height={300} alt={curEvent.eventName} />
-					{/* {curEvent.eventImage} */}
 					<div className={styles.CurEventText}>{curEvent.eventName}</div>
 				</span>
 			</div>
