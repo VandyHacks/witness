@@ -640,7 +640,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							{/* Hacking Code */}
 							{hackathonStarted && (
 								<div style={{ padding: '20px' }}>
-									<Header user={user} signOut={signOut} />
+									<Header user={user} signOut={signOut} setting={setting as HackathonSettingsData} />
 
 									<TeamManagement />
 									<JudgingSchedule judgingSessionData={judgingSessionData} />

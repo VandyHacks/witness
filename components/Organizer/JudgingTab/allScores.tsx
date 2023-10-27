@@ -10,8 +10,7 @@ import Highlighter from 'react-highlight-words';
 export interface AllScoresProps {
 	scoreData: ScoreData[];
 	teamData: TeamData[];
-	userData: UserData[]; // TODO: No need to have all users if you only use the judges anyway
-	selectedTeamId?: string | null;
+	judgeData: UserData[]; // TODO: No need to have all users if you only use the judges anyway
 }
 
 export default function AllScores(props: AllScoresProps) {
@@ -24,13 +23,9 @@ export default function AllScores(props: AllScoresProps) {
 	let data = props;
 	let scoreData = data.scoreData;
 
-	if (data.selectedTeamId) {
-		scoreData = scoreData.filter(x => x.team.toString() === data.selectedTeamId);
-	}
-
 	let work = scoreData.map(score => {
 		let tempTeam = data.teamData[data.teamData.findIndex(p => p._id == score.team)];
-		let tempJudge = data.userData[data.userData.findIndex(p => p._id == score.judge)];
+		let tempJudge = data.judgeData[data.judgeData.findIndex(p => p._id == score.judge)];
 
 		let teamName;
 		let judgeName;
