@@ -205,6 +205,9 @@ export default function Scoreboard(props: AllScoresProps) {
 	);
 }
 
+/**
+ * Computes the scoreboard data from the score data and team data
+ */
 const computeScoreboard = (scoreData: ScoreData[], teamData: TeamData[]) => {
 	let scoresByJudge: Record<string, number[]> = {};
 	let judgeStats: Record<string, { avg: number; stdev: number }> = {};
