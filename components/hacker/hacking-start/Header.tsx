@@ -60,7 +60,21 @@ const Header = ({
 	}, [setting]);
 
 	useEffect(() => {
-		if (curEvent === hackingCountDown) {
+		if (curEvent === hackingBeginSoon) {
+			const interval = setInterval(() => {
+				// check every second if hacking should start
+				const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
+
+				const curDate = new Date();
+
+				if (curDate >= hackingStartDate) {
+					setCurEvent(hackingCountDown);
+					return () => clearInterval(interval);
+				}
+			}, 1000);
+
+			return () => clearInterval(interval);
+		} else if (curEvent === hackingCountDown) {
 			const interval = setInterval(() => {
 				const hackingEndDate = new Date(Date.parse(setting.HACKATHON_END));
 				const curDate = new Date();
@@ -70,6 +84,7 @@ const Header = ({
 
 				if (timeLeft < 0) {
 					setTimeLeft('00:00:00');
+					setCurEvent(judging);
 					return;
 				}
 
@@ -85,7 +100,7 @@ const Header = ({
 			}, 1000);
 			return () => clearInterval(interval);
 		}
-	}, [curEvent, setting.HACKATHON_END]);
+	}, [curEvent, setting.HACKATHON_START, setting.HACKATHON_END]);
 
 	return (
 		<>
