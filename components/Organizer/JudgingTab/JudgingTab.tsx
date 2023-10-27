@@ -3,6 +3,7 @@ import { useCustomSWR, RequestType } from '../../../utils/request-utils';
 import AllScores from './allScores';
 import styles from '../../../styles/Organizer.module.css';
 import CheckInJudges from './checkInJudges';
+import Scoreboard from './Scoreboard';
 
 const JudgingTab = () => {
 	// Teams data
@@ -41,8 +42,11 @@ const JudgingTab = () => {
 					{/* check in judges */}
 					<CheckInJudges judgeData={judgeData} />
 
+					{/* scoreboard of teams */}
+					<Scoreboard teamData={teamsData} scoreData={scoresData} judgeData={judgeData} />
+
 					{/* judge scores table */}
-					<AllScores teamData={teamsData} scoreData={scoresData} userData={judgeData} />
+					<AllScores teamData={teamsData} scoreData={scoresData} judgeData={judgeData} />
 				</>
 			)}
 		</div>
