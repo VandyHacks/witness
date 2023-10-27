@@ -220,18 +220,15 @@ const TeamManagement = () => {
 					)}
 
 					<div className={styles.TeamButtonContainer}>
-						{/* TODO: change team name */}
-						<button className={styles.TeamButton} onClick={() => setShowRenameTeam(true)}>
+						<Button htmlType="submit" onClick={() => setShowRenameTeam(true)}>
 							Rename Team
-						</button>
-						{/* TODO: change devpost */}
-						<button className={styles.TeamButton} onClick={() => setShowChangeDevpost(true)}>
+						</Button>
+						<Button htmlType="submit" onClick={() => setShowChangeDevpost(true)}>
 							Change Devpost Link
-						</button>
-						{/* TODO: leave team button */}
-						<button className={styles.TeamButton} onClick={() => setShowLeaveModal(true)}>
+						</Button>
+						<Button htmlType="submit" onClick={() => setShowLeaveModal(true)}>
 							Leave the Team
-						</button>
+						</Button>
 					</div>
 
 					<Modal
