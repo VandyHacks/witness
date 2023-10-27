@@ -18,79 +18,8 @@ export default function Scoreboard(props: AllScoresProps) {
 	let data = props;
 	let { scoreData, teamData } = data;
 
-	let scoresByJudge: Record<string, number[]> = {};
-	let judgeStats: Record<string, { avg: number; stdev: number }> = {};
-
-	scoreData.forEach(score => {
-		let judge = score.judge.toString();
-		let total = score.technicalAbility + score.creativity + score.utility + score.presentation + score.wowFactor;
-		if (judge in scoresByJudge) {
-			scoresByJudge[judge].push(total);
-		} else {
-			scoresByJudge[judge] = [total];
-		}
-	});
-
-	for (let judge in scoresByJudge) {
-		let avg = scoresByJudge[judge].reduce((a, b) => a + b, 0) / scoresByJudge[judge].length;
-		let stdev = Math.sqrt(
-			scoresByJudge[judge].reduce((a, b) => a + (b - avg) ** 2, 0) / scoresByJudge[judge].length
-		);
-
-		judgeStats[judge] = {
-			avg: avg,
-			stdev: stdev,
-		};
-	}
-
-	let work = teamData.map(team => {
-		let currScores = scoreData.filter(score => score.team === team._id);
-		let count = currScores.length;
-
-		let total = 0;
-		let norm_total = 0;
-		currScores.forEach(score => {
-			const tmpTotal =
-				score.technicalAbility + score.creativity + score.utility + score.presentation + score.wowFactor;
-			total += tmpTotal;
-
-			norm_total +=
-				(tmpTotal - judgeStats[score.judge.toString()].avg) / judgeStats[score.judge.toString()].stdev;
-		});
-
-		let avg = count > 0 ? total / count : -1;
-		let norm_avg = count > 0 ? norm_total / count : -1;
-
-		return {
-			team: team.name,
-			key: team._id,
-			score: avg,
-			norm_score: norm_avg,
-			count: count,
-			rank: 0,
-			norm_rank: 0,
-		};
-	});
-
-	work = work.filter(team => team.count > 0);
-
-	work.sort((a, b) => b.norm_score - a.norm_score);
-	let diff = 0;
-	work.forEach((team, index) => {
-		if (index > 0 && team.norm_score === work[index - 1].norm_score) {
-			diff++;
-		}
-		team.norm_rank = index + 1;
-	});
-
-	work.sort((a, b) => b.score - a.score);
-	diff = 0;
-	work.forEach((team, index) => {
-		if (index > 0 && team.score === work[index - 1].score) {
-			diff++;
-		}
-		team.rank = index + 1 - diff;
-	});
+	// fancy algorithm to compute scoreboard data
+	const teamScoreboardData = computeScoreboard(scoreData, teamData);
 
 	const handleChange = (pagination: any, filters: any, sorter: any) => {
 		setSortedInfo(sorter as SorterResult<TeamData>);
@@ -225,13 +154,13 @@ export default function Scoreboard(props: AllScoresProps) {
 		},
 	];
 
-	const exportCSV: any = (work: any) => {
+	const exportCSV: any = (teamScoreboardData: any) => {
 		const csvExporter = new ExportToCsv({
 			filename: 'judging-data',
 			showLabels: true,
 			headers: newCols.map((col: any) => col.title),
 		});
-		csvExporter.generateCsv(work);
+		csvExporter.generateCsv(teamScoreboardData);
 	};
 
 	return (
@@ -242,22 +171,100 @@ export default function Scoreboard(props: AllScoresProps) {
 					width: '100%',
 					justifyContent: 'space-between',
 				}}>
-				<h2>Scoreboard ({work.length ?? 0})</h2>
+				<h2>Scoreboard ({teamScoreboardData.length ?? 0})</h2>
 				<Button type="primary" onClick={clearFilters}>
 					Clear filters
 				</Button>
 			</Space>
 			<Table
-				dataSource={work}
+				dataSource={teamScoreboardData}
 				columns={newCols}
 				onChange={handleChange}
 				sortDirections={['descend', 'ascend']}></Table>
 			<Button
 				onClick={() => {
-					exportCSV(work);
+					exportCSV(teamScoreboardData);
 				}}>
 				Export
 			</Button>
 		</>
 	);
 }
+
+const computeScoreboard = (scoreData: AllScoresProps['scoreData'], teamData: AllScoresProps['teamData']) => {
+	let scoresByJudge: Record<string, number[]> = {};
+	let judgeStats: Record<string, { avg: number; stdev: number }> = {};
+
+	scoreData.forEach(score => {
+		let judge = score.judge.toString();
+		let total = score.technicalAbility + score.creativity + score.utility + score.presentation + score.wowFactor;
+		if (judge in scoresByJudge) {
+			scoresByJudge[judge].push(total);
+		} else {
+			scoresByJudge[judge] = [total];
+		}
+	});
+
+	for (let judge in scoresByJudge) {
+		let avg = scoresByJudge[judge].reduce((a, b) => a + b, 0) / scoresByJudge[judge].length;
+		let stdev = Math.sqrt(
+			scoresByJudge[judge].reduce((a, b) => a + (b - avg) ** 2, 0) / scoresByJudge[judge].length
+		);
+
+		judgeStats[judge] = {
+			avg: avg,
+			stdev: stdev,
+		};
+	}
+
+	let teamScoreboardData = teamData.map(team => {
+		let currScores = scoreData.filter(score => score.team === team._id);
+		let count = currScores.length;
+
+		let total = 0;
+		let norm_total = 0;
+		currScores.forEach(score => {
+			const tmpTotal =
+				score.technicalAbility + score.creativity + score.utility + score.presentation + score.wowFactor;
+			total += tmpTotal;
+
+			norm_total +=
+				(tmpTotal - judgeStats[score.judge.toString()].avg) / judgeStats[score.judge.toString()].stdev;
+		});
+
+		let avg = count > 0 ? total / count : -1;
+		let norm_avg = count > 0 ? norm_total / count : -1;
+
+		return {
+			team: team.name,
+			key: team._id,
+			score: avg,
+			norm_score: norm_avg,
+			count: count,
+			rank: 0,
+			norm_rank: 0,
+		};
+	});
+
+	teamScoreboardData = teamScoreboardData.filter(team => team.count > 0);
+
+	teamScoreboardData.sort((a, b) => b.norm_score - a.norm_score);
+	let diff = 0;
+	teamScoreboardData.forEach((team, index) => {
+		if (index > 0 && team.norm_score === teamScoreboardData[index - 1].norm_score) {
+			diff++;
+		}
+		team.norm_rank = index + 1;
+	});
+
+	teamScoreboardData.sort((a, b) => b.score - a.score);
+	diff = 0;
+	teamScoreboardData.forEach((team, index) => {
+		if (index > 0 && team.score === teamScoreboardData[index - 1].score) {
+			diff++;
+		}
+		team.rank = index + 1 - diff;
+	});
+
+	return teamScoreboardData;
+};
