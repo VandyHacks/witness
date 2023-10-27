@@ -80,7 +80,7 @@ const Header = ({
 	}, [setting]);
 
 	return (
-		<>
+		<div>
 			<div className={styles.HeaderBox}>
 				<div className={styles.HeaderTopBox}>
 					<Image alt="" width={150} height={150} src={VHLogo} />
@@ -105,7 +105,21 @@ const Header = ({
 					</span>
 				</div>
 			</div>
-		</>
+			<div className={styles.HeaderMiddleBox}>
+				<span className={styles.UserName}>
+					<div className={styles.Greeting}>Hello,</div>
+					<div className={styles.Greeting}>{user.name}</div>
+					<div className={styles.NFCPoint}>
+						You currently have {user.nfcPoints} points. Participate in events to start earning more!
+					</div>
+				</span>
+				<span className={styles.CurEvent}>
+					<div className={styles.CurEventText}>Current Event</div>
+					<Image src={HackingBeginSoon} width={300} height={300} alt="Hacking Begin Soon" />
+					<div className={styles.CurEventText}>Hacking Begins Soon</div>
+				</span>
+			</div>
+		</div>
 	);
 };
 

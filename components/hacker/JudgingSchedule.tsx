@@ -34,6 +34,9 @@ const JudgingSchedule = ({ judgingSessionData }: JudgingScheduleProps) => {
 	return (
 		<div className={styles.Container}>
 			Judging Schedule
+			<div className={styles.Description}>
+				You will be assigned a table and judge for judging. Please be at your table at the time indicated below.
+			</div>
 			{judgingSessionData?.length === 0 ? (
 				<div className={styles.Placeholder}>Schedule will show up here when hacking ends!</div>
 			) : (
