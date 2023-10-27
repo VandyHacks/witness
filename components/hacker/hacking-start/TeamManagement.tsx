@@ -6,10 +6,9 @@ import useSWR, { mutate } from 'swr';
 import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
 
 const isDevpostURL = (input: string): boolean => {
-	const urlPattern = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/;
-	const devpostPattern = /devpost/i;
+	if (!input) return false;
 
-	return urlPattern.test(input) && devpostPattern.test(input);
+	return input.startsWith('https://devpost.com/') || input.startsWith('http://www.devpost.com/');
 };
 
 const TeamManagement = () => {
@@ -22,6 +21,7 @@ const TeamManagement = () => {
 	const [newTeamName, setNewTeamName] = useState<string | undefined>('');
 	const [newDevPost, setNewDevPost] = useState<string>('');
 	const [showLeaveModal, setShowLeaveModal] = useState<boolean>(false);
+	const [showRenameTeamModal, setShowRenameTeamModal] = useState<boolean>(false);
 
 	const {
 		data: teamData,
@@ -52,8 +52,7 @@ const TeamManagement = () => {
 		}
 	};
 
-	const handleUpdateTeam = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
+	const handleUpdateTeam = async () => {
 		if (!newTeamName) {
 			// Empty team name
 			handleSubmitFailure('Team name cannot be empty!');
@@ -66,6 +65,7 @@ const TeamManagement = () => {
 		const body = JSON.stringify({ teamName: newTeamName });
 
 		const res = await fetch(endpoint, { method, headers, body });
+		const message = await res.text();
 
 		if (res.ok) {
 			// mutate(endpoint);
@@ -77,13 +77,12 @@ const TeamManagement = () => {
 			// Reset state
 			setNewTeamName('');
 		} else {
-			handleSubmitFailure('Server error. Please contact one of our members for help');
+			// handle submit failure the resupose message
+			handleSubmitFailure(message);
 		}
 	};
 
-	const handleUpdateDevpost = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
+	const handleUpdateDevpost = async () => {
 		if (!newDevPost) {
 			// Empty team name
 			handleSubmitFailure('Devpost link cannot be empty!');
@@ -93,7 +92,9 @@ const TeamManagement = () => {
 
 		if (!isDevpostURL(newDevPost)) {
 			// Valid Devpost URL
-			handleSubmitFailure('Devpost link is invalid');
+			handleSubmitFailure(
+				'Devpost link is invalid. Must start with https://devpost.com/ or https://www.devpost.com/'
+			);
 			setShowChangeDevpost(false);
 			return;
 		}
@@ -104,6 +105,7 @@ const TeamManagement = () => {
 		const body = JSON.stringify({ teamName: '', devpost: newDevPost });
 
 		const res = await fetch(endpoint, { method, headers, body });
+		const message = await res.text();
 
 		if (res.ok) {
 			// mutate(endpoint);
@@ -115,7 +117,7 @@ const TeamManagement = () => {
 			// Reset state
 			setNewDevPost('');
 		} else {
-			handleSubmitFailure('Server error. Please contact one of our members for help');
+			handleSubmitFailure(message);
 		}
 	};
 
@@ -125,6 +127,7 @@ const TeamManagement = () => {
 		const headers = { 'Content-Type': 'application/json' };
 
 		const res = await fetch(endpoint, { method, headers });
+		const message = await res.text();
 
 		if (res.ok) {
 			handleSubmitSuccess(`You have left the team`);
@@ -134,13 +137,17 @@ const TeamManagement = () => {
 
 			window.location.reload();
 		} else {
-			handleSubmitFailure('Server error. Please contact one of our members for help');
+			handleSubmitFailure(message);
 		}
 	};
 
 	return (
 		<div className={styles.Container}>
 			Team
+			<div className={styles.Description}>
+				You can create a team or join a team (1 - 4 people per team). Devpost link must be submitted by 12:30 PM
+				on October 29th.
+			</div>
 			{!teamData && (
 				<>
 					<div className={styles.Placeholder}>You are not in a team yet.</div>
@@ -171,41 +178,24 @@ const TeamManagement = () => {
 			)}
 			{teamData && (
 				<>
-					{!showRenameTeam && <div>Team Name: {teamData.name}</div>}
-
-					{showRenameTeam && (
-						<div className={styles.TeamNameInputContainer}>
-							<span>Team Name:</span>
-							<form onSubmit={event => handleUpdateTeam(event)}>
-								<input
-									onChange={event => setNewTeamName(event.target.value)}
-									type="text"
-									className={styles.TeamNameInput}
-									defaultValue={teamData.name}></input>
-								<button>Submit</button>
-								<button onClick={() => setShowRenameTeam(false)}>Cancel</button>
-							</form>
+					<div className={styles.TeamContainer}>
+						<div className={styles.TeamRow}>
+							<div className={styles.TeamRowLabel}>Team Name:</div>
+							<div className={styles.TeamRowValue}>{teamData.name}</div>
 						</div>
-					)}
-
-					<div>Members: {teamData.members}</div>
-					<div>Join Code: {teamData.joinCode}</div>
-
-					{!showChangeDevpost && <div>Devpost: {teamData.devpost}</div>}
-
-					{showChangeDevpost && (
-						<div className={styles.TeamNameInputContainer}>
-							<span>Devpost:</span>
-							<form onSubmit={event => handleUpdateDevpost(event)}>
-								<input
-									onChange={event => setNewDevPost(event.target.value)}
-									type="text"
-									className={styles.TeamNameInput}></input>
-								<button>Submit</button>
-								<button onClick={() => setShowChangeDevpost(false)}>Cancel</button>
-							</form>
+						<div className={styles.TeamRow}>
+							<div className={styles.TeamRowLabel}>Members:</div>
+							<div className={styles.TeamRowValue}>{teamData.members}</div>
 						</div>
-					)}
+						<div className={styles.TeamRow}>
+							<div className={styles.TeamRowLabel}>Join Code:</div>
+							<div className={styles.TeamRowValue}>{teamData.joinCode}</div>
+						</div>
+						<div className={styles.TeamRow}>
+							<div className={styles.TeamRowLabel}>Devpost:</div>
+							<div className={styles.TeamRowValue}>{teamData.devpost}</div>
+						</div>
+					</div>
 
 					<div className={styles.TeamButtonContainer}>
 						<Button htmlType="submit" onClick={() => setShowRenameTeam(true)}>
@@ -220,10 +210,32 @@ const TeamManagement = () => {
 					</div>
 
 					<Modal
+						title="Rename Team"
+						open={showRenameTeam}
+						onCancel={() => setShowRenameTeam(false)}
+						onOk={handleUpdateTeam}
+						destroyOnClose={true}>
+						<Input onChange={event => setNewTeamName(event.target.value)} defaultValue={teamData.name} />
+					</Modal>
+
+					<Modal
+						title="Change Devpost Link"
+						open={showChangeDevpost}
+						onCancel={() => setShowChangeDevpost(false)}
+						onOk={handleUpdateDevpost}
+						destroyOnClose={true}>
+						<Input
+							onChange={event => setNewDevPost(event.target.value)}
+							defaultValue={teamData.devpost.toString()}
+						/>
+					</Modal>
+
+					<Modal
 						title="Are you sure you want to leave the current team?"
 						open={showLeaveModal}
 						onOk={handleLeaveTeam}
-						onCancel={() => setShowLeaveModal(false)}></Modal>
+						onCancel={() => setShowLeaveModal(false)}
+					/>
 				</>
 			)}
 		</div>

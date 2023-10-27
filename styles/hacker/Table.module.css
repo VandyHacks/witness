@@ -54,6 +54,7 @@
 	align-items: center;
 	font-size: 1rem;
 	color: #535353;
+	padding-bottom: 10px;
 }
 
 .Placeholder {
@@ -104,30 +105,24 @@
 	gap: 20px;
 }
 
-.TeamButton {
-	margin: 0px 15px 0px 15px;
-	padding: 5px 15px 5px 15px;
-	border-radius: 10%;
-	background-color: #535353;
-	color: white;
-	white-space: nowrap;
+.TeamContainer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
 }
 
-.TeamButton:hover {
-	background-color: #000000;
-	cursor: pointer;
-}
-
-.TeamNameInputContainer {
+.TeamRow {
 	display: flex;
 	flex-direction: row;
 }
 
-.TeamNameInput {
-	all: unset;
-	outline: none;
-	margin: 0 0 0 15px;
-	background-color: #535353;
+.TeamRowLabel {
+	width: 250px;
+}
+
+.TeamRowValue {
+	color: #c9a76b;
 }
 
 /* add media query for mobile screen */
@@ -163,14 +158,5 @@
 		justify-content: flex-start;
 		align-items: flex-start;
 		margin: 20px 0 0 0;
-	}
-
-	.TeamButton {
-		margin: 15px 0px 15px 0px;
-		padding: 5px 15px 5px 15px;
-		border-radius: 10%;
-		background-color: #535353;
-		color: white;
-		white-space: nowrap;
 	}
 }
