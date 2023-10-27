@@ -69,7 +69,7 @@ export const handleDeleteCollection = async () => {
 	}
 
 	if (del) {
-		await User.deleteMany({ userType: 'HACKER', email: { $ne: 'test-hacker@vandyhacks.dev' } });
+		await User.deleteMany({ userType: 'HACKER', email: { $ne: 'testhacker@vandyhacks.dev' } });
 		await Team.deleteMany({});
 		await Scores.deleteMany({});
 		await Schedule.deleteMany({});
