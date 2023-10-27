@@ -121,7 +121,8 @@
 	width: 250px;
 }
 
-.TeamRowValue, .TeamListValue {
+.TeamRowValue,
+.TeamListValue {
 	color: #c9a76b;
 }
 
@@ -165,8 +166,8 @@
 		padding-bottom: 20px;
 	}
 
-  .TeamListValue {
-    color: #c9a76b;
-    font-size: 12px;
-  }
+	.TeamListValue {
+		color: #c9a76b;
+		font-size: 12px;
+	}
 }
