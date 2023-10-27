@@ -171,52 +171,40 @@ const TeamManagement = () => {
 			)}
 			{teamData && (
 				<>
-					{!showRenameTeam && (
-						<>
-							<div>Team Name: {teamData.name}</div>
-						</>
-					)}
+					{!showRenameTeam && <div>Team Name: {teamData.name}</div>}
 
 					{showRenameTeam && (
-						<>
-							<div className={styles.TeamNameInputContainer}>
-								<span>Team Name:</span>
-								<form onSubmit={event => handleUpdateTeam(event)}>
-									<input
-										onChange={event => setNewTeamName(event.target.value)}
-										type="text"
-										className={styles.TeamNameInput}
-										defaultValue={teamData.name}></input>
-									<button>Submit</button>
-									<button onClick={() => setShowRenameTeam(false)}>Cancel</button>
-								</form>
-							</div>
-						</>
+						<div className={styles.TeamNameInputContainer}>
+							<span>Team Name:</span>
+							<form onSubmit={event => handleUpdateTeam(event)}>
+								<input
+									onChange={event => setNewTeamName(event.target.value)}
+									type="text"
+									className={styles.TeamNameInput}
+									defaultValue={teamData.name}></input>
+								<button>Submit</button>
+								<button onClick={() => setShowRenameTeam(false)}>Cancel</button>
+							</form>
+						</div>
 					)}
 
 					<div>Members: {teamData.members}</div>
 					<div>Join Code: {teamData.joinCode}</div>
 
-					{!showChangeDevpost && (
-						<>
-							<div>Devpost: {teamData.devpost}</div>
-						</>
-					)}
+					{!showChangeDevpost && <div>Devpost: {teamData.devpost}</div>}
 
 					{showChangeDevpost && (
-						<>
-							<div className={styles.TeamNameInputContainer}>
-								<span>Devpost:</span>
-								<form onSubmit={event => handleUpdateDevpost(event)}>
-									<input
-										onChange={event => setNewDevPost(event.target.value)}
-										type="text"
-										className={styles.TeamNameInput}></input>
-									<button>Submit</button>
-									<button onClick={() => setShowChangeDevpost(false)}>Cancel</button>
-								</form>
-							</div>
-						</>
+						<div className={styles.TeamNameInputContainer}>
+							<span>Devpost:</span>
+							<form onSubmit={event => handleUpdateDevpost(event)}>
+								<input
+									onChange={event => setNewDevPost(event.target.value)}
+									type="text"
+									className={styles.TeamNameInput}></input>
+								<button>Submit</button>
+								<button onClick={() => setShowChangeDevpost(false)}>Cancel</button>
+							</form>
+						</div>
 					)}
 
 					<div className={styles.TeamButtonContainer}>
