@@ -7,7 +7,9 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"format": "yarn prettier --write ."
+		"format": "yarn prettier --write .",
+		"email": "ts-node scripts/generic-email.ts",
+		"dev-cli": "ts-node scripts/dev-cli.ts"
 	},
 	"dependencies": {
 		"@ant-design/icons": "^4.7.0",
