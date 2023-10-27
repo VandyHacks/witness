@@ -4,7 +4,37 @@ import Image from 'next/image';
 import VHLogo from '../../../public/vh-logo.png';
 import { HackathonSettingsData, UserData } from '../../../types/database';
 import HackingBeginSoon from '../../../public/hacking-begin-soon.svg';
-import useSWR from 'swr';
+import Judging from '../../../public/judging.svg';
+import HackingEnded from '../../../public/hacking-ended.svg';
+import DuringHackathon from '../../../public/during-hackathon.svg';
+
+// Contains event name and image
+interface EventParams {
+	eventName: string;
+	eventImage: string;
+	countDown?: Date;
+}
+
+const hackingBeginSoon: EventParams = {
+	eventName: 'Hacking Begins Soon',
+	eventImage: HackingBeginSoon,
+};
+// const hackingCountDown: EventParams = {
+// 	eventName: 'Hacking Begins',
+// 	eventImage: '/hacking-countdown.svg',
+// };
+const judging: EventParams = {
+	eventName: 'Judging',
+	eventImage: Judging,
+};
+const hackingEnded: EventParams = {
+	eventName: 'Hacking Ended',
+	eventImage: HackingEnded,
+};
+const duringHackathon: EventParams = {
+	eventName: 'Hacking Now',
+	eventImage: DuringHackathon,
+};
 
 const Header = ({
 	user,
@@ -15,39 +45,10 @@ const Header = ({
 	signOut: () => void;
 	setting: HackathonSettingsData;
 }) => {
-	// Contains event name and image
-	interface EventParams {
-		eventName: string;
-		eventImage: string;
-		countDown?: Date;
-	}
-	const [curEvent, setCurEvent] = useState<EventParams>({
-		eventName: 'Hacking Begins Soon',
-		eventImage: '/hacking-begin-soon.svg',
-	});
+	const [curEvent, setCurEvent] = useState<EventParams>(hackingBeginSoon);
 
 	useEffect(() => {
 		// All events
-		const hackingBeginSoon: EventParams = {
-			eventName: 'Hacking Begins Soon',
-			eventImage: '/hacking-begin-soon.svg',
-		};
-		// const hackingCountDown: EventParams = {
-		// 	eventName: 'Hacking Begins',
-		// 	eventImage: '/hacking-countdown.svg',
-		// };
-		const judging: EventParams = {
-			eventName: 'Judging',
-			eventImage: '/judging.svg',
-		};
-		const hackingEnded: EventParams = {
-			eventName: 'Hacking Ended',
-			eventImage: '/hacking-ended.svg',
-		};
-		const duringHackathon: EventParams = {
-			eventName: 'Hacking Now',
-			eventImage: '/during-hackathon.svg',
-		};
 
 		// Dates from setting
 		const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
@@ -102,8 +103,9 @@ const Header = ({
 				</span>
 				<span className={styles.CurEvent}>
 					<div className={styles.CurEventText}>Current Event</div>
-					<Image src={HackingBeginSoon} width={300} height={300} alt="Hacking Begin Soon" />
-					<div className={styles.CurEventText}>Hacking Begins Soon</div>
+					<Image src={curEvent.eventImage} width={300} height={300} alt={curEvent.eventName} />
+					{/* {curEvent.eventImage} */}
+					<div className={styles.CurEventText}>{curEvent.eventName}</div>
 				</span>
 			</div>
 		</>
