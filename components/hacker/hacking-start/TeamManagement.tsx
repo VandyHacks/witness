@@ -188,9 +188,9 @@ const TeamManagement = () => {
 							<div className={styles.TeamListValue}>
 								{teamData.members.map(member => {
 									return (
-										<span key={member} style={{ marginRight: '10px' }}>
+										<div key={member} style={{ marginRight: '10px' }}>
 											{member}
-										</span>
+										</div>
 									);
 								})}
 							</div>
