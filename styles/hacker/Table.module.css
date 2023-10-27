@@ -126,8 +126,8 @@
 }
 
 .TeamListValue {
-  color: #c9a76b;
-  display: flex;
+	color: #c9a76b;
+	display: flex;
 }
 
 /* add media query for mobile screen */
@@ -170,7 +170,7 @@
 		padding-bottom: 20px;
 	}
 
-  .TeamListValue {
-    flex-direction: column;    
-  }
+	.TeamListValue {
+		flex-direction: column;
+	}
 }
