@@ -80,7 +80,7 @@ const Header = ({
 	}, [setting]);
 
 	return (
-		<div>
+		<>
 			<div className={styles.HeaderBox}>
 				<div className={styles.HeaderTopBox}>
 					<Image alt="" width={150} height={150} src={VHLogo} />
@@ -89,19 +89,6 @@ const Header = ({
 						<button className={styles.SignOutButton} onClick={() => signOut()}>
 							Sign Out
 						</button>
-					</span>
-				</div>
-				<div className={styles.HeaderMiddleBox}>
-					<span className={styles.UserName}>
-						<div className={styles.Greeting}>Hello,</div>
-						<div className={styles.Greeting}>{user.name}</div>
-						<div className={styles.NFCPoint}>Your currently have {user.nfcPoints} points</div>
-					</span>
-					<span className={styles.CurEvent}>
-						<div className={styles.CurEventText}>Current Event</div>
-
-						<Image src={curEvent.eventImage} width={300} height={300} alt="Hacking Begin Soon" />
-						<div className={styles.CurEventText}>{curEvent.eventName}</div>
 					</span>
 				</div>
 			</div>
@@ -119,7 +106,7 @@ const Header = ({
 					<div className={styles.CurEventText}>Hacking Begins Soon</div>
 				</span>
 			</div>
-		</div>
+		</>
 	);
 };
 
