@@ -1,4 +1,4 @@
-import { Table, Tag, Button, Input, InputRef, Space, TableProps } from 'antd';
+import { Table, Tag, Button, Input, InputRef, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
 import { TeamData, ScoreData, UserData } from '../../../types/database';
@@ -6,14 +6,10 @@ import { ExportToCsv } from 'export-to-csv';
 import { FilterConfirmProps, FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import { AllScoresProps } from './allScores';
 
-export interface AllScoresProps {
-	scoreData: ScoreData[];
-	teamData: TeamData[];
-	judgeData: UserData[]; // TODO: No need to have all users if you only use the judges anyway
-}
 
-export default function AllScores(props: AllScoresProps) {
+export default function Scoreboard(props: AllScoresProps) {
 	const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
 	const [sortedInfo, setSortedInfo] = useState<SorterResult<TeamData>>({});
 	const [searchedColumn, setSearchedColumn] = useState('');
@@ -21,29 +17,65 @@ export default function AllScores(props: AllScoresProps) {
 	const searchInput = useRef<InputRef>(null);
 
 	let data = props;
-	let scoreData = data.scoreData;
+    let { scoreData, teamData } = data;
 
-	let work = scoreData.map(score => {
-		let tempTeam = data.teamData[data.teamData.findIndex(p => p._id == score.team)];
-		let tempJudge = data.judgeData[data.judgeData.findIndex(p => p._id == score.judge)];
+    let scoresByJudge: Record<string, number[]> = {};
+    let judgeStats: Record<string, {avg: number, stdev: number}> = {};
 
-		let teamName;
-		let judgeName;
-		if (typeof tempTeam !== 'undefined') {
-			teamName = tempTeam.name;
-		}
-		if (typeof tempJudge !== 'undefined') {
-			judgeName = tempJudge.name;
-		}
+    scoreData.forEach(score => {
+        let judge = score.judge.toString()
+        let total = score.technicalAbility + score.creativity + score.utility + score.presentation + score.wowFactor
+        if (judge in scoresByJudge) {
+            scoresByJudge[judge].push(total);
+        } else {
+            scoresByJudge[judge] = [total];
+        }
+    });
 
-		return {
-			...score,
-			team: teamName,
-			judge: judgeName,
-			key: score._id,
-			total: score.technicalAbility + score.creativity + score.utility + score.presentation + score.wowFactor,
-		};
-	});
+    for (let judge in scoresByJudge) {
+        let avg = scoresByJudge[judge].reduce((a, b) => a + b, 0) / scoresByJudge[judge].length;
+        let stdev = Math.sqrt(scoresByJudge[judge].reduce((a, b) => a + (b - avg) ** 2, 0) / scoresByJudge[judge].length);
+
+        judgeStats[judge] = {
+            avg: avg,
+            stdev: stdev
+        };
+    }
+
+    let work = teamData.map(team => {
+        let currScores = scoreData.filter(score => score.team === team._id);
+        let count = currScores.length;
+
+        let total = 0;
+        let norm_total = 0;
+        currScores.forEach(score => { 
+            const tmpTotal = score.technicalAbility + score.creativity + score.utility + score.presentation + score.wowFactor;
+            total += tmpTotal;
+
+            norm_total += (tmpTotal - judgeStats[score.judge.toString()].avg) / judgeStats[score.judge.toString()].stdev;
+        });
+
+        let avg = count > 0 ? total / count : -1;
+        let norm_avg = count > 0 ? norm_total / count : -1;
+
+        return {
+            team: team.name,
+            key: team._id,
+            score: avg,
+            norm_score: norm_avg,
+            count: count,
+            rank: 0,
+            norm_rank: 0,
+        };
+    });
+
+    work = work.filter(team => team.count > 0);
+
+    work.sort((a, b) => b.score - a.score);
+    work.forEach((team, index) => team.rank = index + 1);
+
+    work.sort((a, b) => b.norm_score - a.norm_score);
+    work.forEach((team, index) => team.norm_rank = index + 1);
 
 	const handleChange = (pagination: any, filters: any, sorter: any) => {
 		setSortedInfo(sorter as SorterResult<TeamData>);
@@ -142,63 +174,39 @@ export default function AllScores(props: AllScoresProps) {
 			...getColumnSearchProps('team'),
 		},
 		{
-			title: 'Judge',
-			dataIndex: 'judge',
-			key: 'judge',
-			...getColumnSearchProps('judge'),
-			render: (tag: any) => <Tag>{tag}</Tag>,
-		},
-		{
-			title: 'Total',
-			dataIndex: 'total',
-			key: 'total',
+			title: 'Rank',
+			dataIndex: 'rank',
+			key: 'rank',
 			sorter: (a: any, b: any) => a.total - b.total,
-			sortOrder: sortedInfo.columnKey === 'total' ? sortedInfo.order : null,
+			sortOrder: sortedInfo.columnKey === 'rank' ? sortedInfo.order : null,
 		},
 		{
-			title: 'Technical Ability',
-			dataIndex: 'technicalAbility',
-			key: 'technicalAbility',
-			sorter: (a: any, b: any) => a.technicalAbility - b.technicalAbility,
-			sortOrder: sortedInfo.columnKey === 'technicalAbility' ? sortedInfo.order : null,
+			title: 'Average Score',
+			dataIndex: 'score',
+			key: 'score',
+			sorter: (a: any, b: any) => a.total - b.total,
+			sortOrder: sortedInfo.columnKey === 'score' ? sortedInfo.order : null,
 		},
 		{
-			title: 'Creativity',
-			dataIndex: 'creativity',
-			key: 'creativity',
-			sorter: (a: any, b: any) => a.creativity - b.creativity,
-			sortOrder: sortedInfo.columnKey === 'creativity' ? sortedInfo.order : null,
+			title: 'Normalized Rank',
+			dataIndex: 'norm_rank',
+			key: 'norm_rank',
+			sorter: (a: any, b: any) => a.total - b.total,
+			sortOrder: sortedInfo.columnKey === 'rank' ? sortedInfo.order : null,
 		},
-		{
-			title: 'Utility',
-			dataIndex: 'utility',
-			key: 'utility',
-			sorter: (a: any, b: any) => a.utility - b.utility,
-			sortOrder: sortedInfo.columnKey === 'utility' ? sortedInfo.order : null,
+        {
+			title: 'Normalized Average Score',
+			dataIndex: 'norm_score',
+			key: 'norm_score',
+			sorter: (a: any, b: any) => a.total - b.total,
+			sortOrder: sortedInfo.columnKey === 'norm_score' ? sortedInfo.order : null,
 		},
-		{
-			title: 'Presentation',
-			dataIndex: 'presentation',
-			key: 'presentation',
-			sorter: (a: any, b: any) => a.presentation - b.presentation,
-			sortOrder: sortedInfo.columnKey === 'presentation' ? sortedInfo.order : null,
-		},
-		{
-			title: 'Wow Factor',
-			dataIndex: 'wowFactor',
-			key: 'wowFactor',
-			sorter: (a: any, b: any) => a.wowFactor - b.wowFactor,
-			sortOrder: sortedInfo.columnKey === 'wowFactor' ? sortedInfo.order : null,
-		},
-		{
-			title: 'Comments',
-			dataIndex: 'comments',
-			key: 'comments',
-		},
-		{
-			title: 'Feedback',
-			dataIndex: 'feedback',
-			key: 'feedback',
+        {
+			title: 'Judge Count',
+			dataIndex: 'count',
+			key: 'count',
+			sorter: (a: any, b: any) => a.total - b.total,
+			sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo.order : null,
 		},
 	];
 
@@ -219,7 +227,7 @@ export default function AllScores(props: AllScoresProps) {
 					width: '100%',
 					justifyContent: 'space-between',
 				}}>
-				<h2>Judges Comments ({work.length ?? 0})</h2>
+				<h2>Scoreboard ({work.length ?? 0})</h2>
 				<Button type="primary" onClick={clearFilters}>
 					Clear filters
 				</Button>
