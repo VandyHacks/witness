@@ -19,10 +19,6 @@ const hackingCountDown: EventParams = {
 	eventName: 'Hacking Begins',
 	eventImage: '/hacking-countdown.svg',
 };
-const duringHackathon: EventParams = {
-	eventName: 'Hacking Now',
-	eventImage: '/during-hackathon.svg',
-};
 const judging: EventParams = {
 	eventName: 'Judging',
 	eventImage: '/judging.svg',
@@ -47,20 +43,16 @@ const Header = ({
 	useEffect(() => {
 		// Dates from setting
 		const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
-		const hackingCountDownDate = new Date(hackingStartDate);
-		hackingCountDownDate.setDate(hackingStartDate.getDate() - 1);
-		const judgeStartDate = new Date(Date.parse(setting.JUDGING_START));
-		const judgeEndDate = new Date(Date.parse(setting.JUDGING_END));
+		const hackingEndDate = new Date(Date.parse(setting.HACKATHON_END));
+		const judgingDateEnd = new Date(Date.parse(setting.JUDGING_END));
 		const curDate = new Date();
 
-		// Set current event based on date
+		// Check if hacking has started
 		if (curDate < hackingStartDate) {
 			setCurEvent(hackingBeginSoon);
-		} else if (curDate < hackingStartDate && curDate > hackingCountDownDate) {
+		} else if (curDate < hackingEndDate) {
 			setCurEvent(hackingCountDown);
-		} else if (curDate < judgeStartDate && curDate > hackingStartDate) {
-			setCurEvent(duringHackathon);
-		} else if (curDate < judgeEndDate && curDate > judgeStartDate) {
+		} else if (curDate <= judgingDateEnd) {
 			setCurEvent(judging);
 		} else {
 			setCurEvent(hackingEnded);
@@ -70,8 +62,10 @@ const Header = ({
 	useEffect(() => {
 		if (curEvent === hackingCountDown) {
 			const interval = setInterval(() => {
-				const curDate = new Date();
 				const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
+				const curDate = new Date();
+
+				// convert time to 00:00:00 format
 				const timeLeft = Math.floor((hackingStartDate.getTime() - curDate.getTime()) / 1000);
 				const hours = Math.floor(timeLeft / 3600);
 				const minutes = Math.floor((timeLeft % 3600) / 60);
@@ -79,6 +73,8 @@ const Header = ({
 				const timeString = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}:${
 					seconds < 10 ? '0' : ''
 				}${seconds}`;
+
+				// set time left
 				setTimeLeft(timeString);
 			}, 1000);
 			return () => clearInterval(interval);
