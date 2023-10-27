@@ -71,11 +71,23 @@ export default function Scoreboard(props: AllScoresProps) {
 
     work = work.filter(team => team.count > 0);
 
-    work.sort((a, b) => b.score - a.score);
-    work.forEach((team, index) => team.rank = index + 1);
-
     work.sort((a, b) => b.norm_score - a.norm_score);
-    work.forEach((team, index) => team.norm_rank = index + 1);
+    let diff = 0;
+    work.forEach((team, index) => {
+        if((index > 0) && (team.norm_score === work[index - 1].norm_score)) {
+            diff++;
+        }
+        team.norm_rank = index + 1;
+    });
+
+    work.sort((a, b) => b.score - a.score);
+    diff = 0;
+    work.forEach((team, index) => {
+        if((index > 0) && (team.score === work[index - 1].score)) {
+            diff++;
+        }
+        team.rank = index + 1 - diff;
+    });
 
 	const handleChange = (pagination: any, filters: any, sorter: any) => {
 		setSortedInfo(sorter as SorterResult<TeamData>);
