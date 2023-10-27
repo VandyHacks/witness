@@ -62,11 +62,17 @@ const Header = ({
 	useEffect(() => {
 		if (curEvent === hackingCountDown) {
 			const interval = setInterval(() => {
-				const hackingStartDate = new Date(Date.parse(setting.HACKATHON_START));
+				const hackingEndDate = new Date(Date.parse(setting.HACKATHON_END));
 				const curDate = new Date();
 
 				// convert time to 00:00:00 format
-				const timeLeft = Math.floor((hackingStartDate.getTime() - curDate.getTime()) / 1000);
+				const timeLeft = Math.floor((hackingEndDate.getTime() - curDate.getTime()) / 1000);
+
+				if (timeLeft < 0) {
+					setTimeLeft('00:00:00');
+					return;
+				}
+
 				const hours = Math.floor(timeLeft / 3600);
 				const minutes = Math.floor((timeLeft % 3600) / 60);
 				const seconds = timeLeft % 60;
@@ -79,7 +85,7 @@ const Header = ({
 			}, 1000);
 			return () => clearInterval(interval);
 		}
-	}, [curEvent, setting.HACKATHON_START]);
+	}, [curEvent, setting.HACKATHON_END]);
 
 	return (
 		<>
