@@ -152,6 +152,21 @@ export default function Scoreboard(props: AllScoresProps) {
 			sorter: (a: any, b: any) => a.count - b.count,
 			sortOrder: sortedInfo.columnKey === 'count' ? sortedInfo.order : null,
 		},
+		{
+			// add a new column for "see team devpost"
+			title: 'Devpost',
+			dataIndex: 'devpost',
+			key: 'devpost',
+			render: (devpost: string) => {
+				if (!devpost) return <span>N/A</span>;
+
+				return (
+					<a href={devpost} target="_blank" rel="noreferrer">
+						{devpost}
+					</a>
+				);
+			},
+		},
 	];
 
 	const exportCSV: any = (teamScoreboardData: any) => {
@@ -266,5 +281,17 @@ const computeScoreboard = (scoreData: AllScoresProps['scoreData'], teamData: All
 		team.rank = index + 1 - diff;
 	});
 
-	return teamScoreboardData;
+	return teamScoreboardData.map(team => {
+		// get devpost from teamData
+		const tempTeamData = teamData.find(teamData => teamData._id === team.key);
+		if (!tempTeamData) {
+			return team;
+		}
+		const devpost = tempTeamData.devpost;
+
+		return {
+			...team,
+			devpost,
+		};
+	});
 };
