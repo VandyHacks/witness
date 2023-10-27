@@ -18,17 +18,13 @@ import {
 	ThemeContext,
 } from '../../theme/themeProvider';
 import styles from '../../styles/Judge.module.css';
-import { handleSubmitSuccess } from '../../lib/helpers';
+import { handleSubmitSuccess, handleSubmitFailure } from '../../lib/helpers';
 import Link from 'next/link';
 import { BugOutlined } from '@ant-design/icons';
 import { useCustomSWR, RequestType } from '../../utils/request-utils';
 
 // let { JUDGING_LENGTH } = process.env;
 const JUDGING_LENGTH = '600000';
-
-function handleSubmitFailure(errorDescription: string) {
-	handleSubmitFailure('Ooops, something went wrong!');
-}
 
 async function handleSubmit(
 	formData: JudgingFormFields,
