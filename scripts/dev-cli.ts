@@ -128,6 +128,9 @@ export const promptAction = async () => {
 			case 'clear-collection':
 				await handleDeleteCollection();
 				break;
+			case 'populate-collection':
+				await handlePopulateTeams();
+				break;
 			case 'quit':
 				process.exit(0);
 				break;

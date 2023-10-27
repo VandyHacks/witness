@@ -27,6 +27,7 @@
 		"dotenv": "^16.0.2",
 		"escape-html": "^1.0.3",
 		"export-to-csv": "^0.2.1",
+		"faker": "^6.6.6",
 		"formidable": "^2.0.1",
 		"luxon": "^3.0.3",
 		"mongodb": "^4.9.1",
