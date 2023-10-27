@@ -1,7 +1,7 @@
-import { Table, Tag, Button, Input, InputRef, Space } from 'antd';
+import { Table, Button, Input, InputRef, Space } from 'antd';
 import React, { useRef, useState } from 'react';
 
-import { TeamData, ScoreData, UserData } from '../../../types/database';
+import { TeamData } from '../../../types/database';
 import { ExportToCsv } from 'export-to-csv';
 import { FilterConfirmProps, FilterValue, SorterResult } from 'antd/lib/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
