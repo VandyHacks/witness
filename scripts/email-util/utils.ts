@@ -3,39 +3,25 @@ import promptSync from 'prompt-sync';
 import dbConnect from '../../middleware/database';
 import { UserData } from '../../types/database';
 import User from '../../models/user';
-import { EmailData } from '../email-util/template';
 
-export const getHardcodeRecipients = (prompt: promptSync.Prompt) => {
-	let hardcodeRecipients = prompt('Are you hardcoding the recipients? (y/n) ');
+const prompt = promptSync({ sigint: true });
 
-	while (hardcodeRecipients !== 'y' && hardcodeRecipients !== 'n') {
-		hardcodeRecipients = prompt('Please enter either y or n: ');
+const getYesOrNo = (promptString: string) => {
+	let input: string = prompt(promptString);
+	while (input !== 'y' && input !== 'n') {
+		input = prompt('    Please enter either y or n: ');
 	}
-
-	if (hardcodeRecipients === 'y') {
-		return true;
-	}
-	return false;
+	return input;
 };
 
-export const getSubject = (prompt: promptSync.Prompt) => {
-	let subject = prompt('Enter the email subject (required): ');
-
-	while (subject === '') {
-		subject = prompt('Please enter the email subject: ');
-	}
-
-	return subject;
-};
-
-const getBody = async (promptString: string, prompt: promptSync.Prompt) => {
-	let filePath = prompt(promptString);
-	let file = '';
-	let hasError = false;
+const getBody = async (promptString: string) => {
+	let filePath: string = prompt(promptString);
+	let file: string = '';
+	let hasError: boolean = false;
 
 	do {
 		if (hasError) {
-			filePath = prompt('Bad file path! Try again: ');
+			filePath = prompt('    Bad file path! Try again: ');
 		}
 
 		try {
@@ -49,43 +35,16 @@ const getBody = async (promptString: string, prompt: promptSync.Prompt) => {
 	return { file, filePath };
 };
 
-export const getHtmlBody = async (prompt: promptSync.Prompt) => {
-	let htmlBody = '';
-	let htmlPath = '';
-
-	let hasHTML = prompt('Does the email support an HTML body? (y/n) ');
-
-	while (hasHTML !== 'y' && hasHTML !== 'n') {
-		hasHTML = prompt('Please enter either y or n: ');
-	}
-
-	if (hasHTML === 'y') {
-		const { file, filePath } = await getBody('Enter the path to the HTML body: ', prompt);
-		htmlBody = file;
-		htmlPath = filePath;
-	}
-
-	return { htmlBody, htmlPath };
-};
-
-export const getTextBody = async (prompt: promptSync.Prompt) => {
-	const { file: textBody, filePath: textPath } = await getBody(
-		'Enter the path to the plain text body (required): ',
-		prompt
-	);
-	return { textBody, textPath };
-};
-
-export const getStatuses = (prompt: promptSync.Prompt) => {
-	let rawStatuses = prompt(
+const getStatuses = () => {
+	let rawStatuses: string = prompt(
 		'Enter the ApplicationStatus(es) of the hackers you want to receive your email as integers delimited by commas (required): '
 	);
-	let statuses = [];
-	let hasError = false;
+	let statuses: number[] = [];
+	let hasError: boolean = false;
 
 	do {
 		if (hasError) {
-			rawStatuses = prompt('Bad ApplicationStatus(es)! Try again: ');
+			rawStatuses = prompt('    Bad ApplicationStatus(es)! Try again: ');
 		}
 
 		try {
@@ -112,8 +71,7 @@ export const getStatuses = (prompt: promptSync.Prompt) => {
 	return statuses;
 };
 
-// SLICE EMAILS INTO CHUNKS OF 50
-export const splitEmails = (emails: string[]) => {
+const splitEmails = (emails: string[]) => {
 	const chunkSize = 50;
 	const chunkedEmails = [];
 	for (let i = 0; i < emails.length; i += chunkSize) {
@@ -122,7 +80,7 @@ export const splitEmails = (emails: string[]) => {
 	return chunkedEmails;
 };
 
-export const getRecipients = async (statuses: number[]) => {
+const getQueriedRecipients = async (statuses: number[]) => {
 	await dbConnect(process.env.DATABASE_URL);
 
 	const query = {
@@ -135,37 +93,53 @@ export const getRecipients = async (statuses: number[]) => {
 	return { chunkedEmails: splitEmails(emails), emails };
 };
 
-// todo: extract the while stuffs
-// todo: make terminal more readable
-export const getConfirmation = (
-	prompt: promptSync.Prompt,
-	inputtedData: any,
-	hardcodeRecipients: boolean,
-	emails?: string[]
-) => {
-	console.log('Here is what you entered: ');
-	console.log(inputtedData);
+export const getSubject = () => {
+	let subject: string = prompt('Enter the email subject (required): ');
+	while (subject === '') {
+		subject = prompt('    Please enter the email subject: ');
+	}
+	return subject;
+};
 
-	if (!hardcodeRecipients) {
-		let wantAllRecipients = prompt('Would you like to see the full recipient list? (y/n) ');
+export const getHtmlBody = async () => {
+	return getYesOrNo('Does the email support an HTML body? (y/n) ') === 'y'
+		? getBody('Enter the path to the HTML body: ')
+		: { file: '', filePath: '' };
+};
 
-		while (wantAllRecipients !== 'y' && wantAllRecipients !== 'n') {
-			wantAllRecipients = prompt('Please enter either y or n: ');
-		}
+export const getTextBody = async () => {
+	return getBody('Enter the path to the plain text body (required): ');
+};
 
-		if (wantAllRecipients === 'y') {
-			console.log(emails);
-		}
+export const getRecipients = async (hardcodedRecipients: string[]) => {
+	if (getYesOrNo('Did you hardcode the recipients? (y/n) ') === 'y') {
+		return { chunkedEmails: splitEmails(hardcodedRecipients), emails: hardcodedRecipients, statuses: [] };
+	} else {
+		// ApplicationStatus(es)
+		const statuses = getStatuses();
+
+		// Email addresses
+		const { chunkedEmails, emails } = await getQueriedRecipients(statuses);
+
+		return { chunkedEmails, emails, statuses };
+	}
+};
+
+export const getConfirmation = (inputtedData: any) => {
+	const { allRecipients, ...inputs } = inputtedData;
+
+	console.log('\nHere is what you entered: ');
+	if (inputs['ApplicationStatus(es)'].length === 0) {
+		delete inputs['ApplicationStatus(es)'];
+	}
+	console.log(inputs);
+
+	if (getYesOrNo('\nWould you like to see the full recipient list? (y/n) ') === 'y') {
+		console.log(allRecipients);
 	}
 
-	let hasConfirmed = prompt('Would you like to send your email? (y/n) ');
-
-	while (hasConfirmed !== 'y' && hasConfirmed !== 'n') {
-		hasConfirmed = prompt('Please enter either y or n: ');
-	}
-
-	if (hasConfirmed === 'n') {
-		console.log('Have a nice day!');
+	if (getYesOrNo('\nWould you like to send your email? (y/n) ') === 'n') {
+		console.log('\nHave a nice day!');
 		process.exit(0);
 	}
 };
