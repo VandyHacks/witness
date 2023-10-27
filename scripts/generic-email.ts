@@ -15,7 +15,7 @@ dotenv.config();
 // NOTE: To use this CLI tool, run `yarn email` in your terminal.
 
 // ***Update this object if sending to hardcoded recipient email addresses***
-const hardcodedRecipients: string[] = ['carolhe.che.17@gmail.com', 'hycarolhy@yahoo.com'];
+const hardcodedRecipients: string[] = ['example@gmail.com', 'fake@yahoo.com'];
 
 /**
  * Calls sendAllEmails to attempt to send emails to all recipients
@@ -65,7 +65,7 @@ const sendAllEmails = async () => {
  * @returns chunkedEmails Contains email addresses of all recipients in chunks of 50
  */
 const promptUser = async () => {
-	// Instructions
+	// Instructions/Warning
 	printInstructionsOrWarning();
 
 	// Subject

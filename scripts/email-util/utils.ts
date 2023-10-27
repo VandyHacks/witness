@@ -162,7 +162,7 @@ export const printInstructionsOrWarning = () => {
 			"\n\nThis CLI tool is used to mass email hackers! To prevent accidental mass emailing, please read all of the following instructions carefully!\
 			\n\
 			\n1.  If you're testing this tool, update your .env to use the test database. Otherwise, update your .env to use the production database.\
-			\n2.  If there are < or > 8 values for the enum ApplicationStatus (see types/database.ts), update lines 78 and 167 in scripts/email-util/utils.ts accordingly, and make a PR for these changes.\
+			\n2.  If there are < or > 8 values for the enum ApplicationStatus (see types/database.ts), update the info in scripts/email-util/utils.ts on lines 78 and 165 accordingly, and make a PR for these changes.\
 			\n3.  Know what the email's subject line is.\
 			\n4.  If your email has an HTML body, create a .html file with your content.\
 			\n5.  Create a plain text version of your content in another file. This is required!\
