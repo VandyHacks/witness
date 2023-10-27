@@ -1,6 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { SendEmailRequest } from '@aws-sdk/client-ses';
 
+/**
+ * Type for email data
+ */
 export interface EmailData {
 	emails: string[];
 	subject: string;
@@ -9,24 +12,33 @@ export interface EmailData {
 }
 
 /**
- * emails: list of strings
+ * Template for sending email using AWS SES
+ * @param object Deconstruct input for email data
+ * @returns Email data in the form that AWS SES requires
  */
 export const template = ({ emails, subject, htmlBody, textBody }: EmailData): SendEmailRequest => ({
 	Destination: {
-		BccAddresses: emails, // Email address/addresses that you want to send your email
+		// BCC recipients for mass emailing
+		BccAddresses: emails,
 	},
+
 	Message: {
 		Body: {
+			// HTML Format of the email body
 			Html: {
-				// HTML Format of the email
 				Charset: 'UTF-8',
+				// If there is no HTML body, pass the plain text body
 				Data: htmlBody ? htmlBody : textBody,
 			},
+
+			// Plain text Format of the email body
 			Text: {
 				Charset: 'UTF-8',
 				Data: textBody,
 			},
 		},
+
+		// Subject of email
 		Subject: {
 			Charset: 'UTF-8',
 			Data: subject,
