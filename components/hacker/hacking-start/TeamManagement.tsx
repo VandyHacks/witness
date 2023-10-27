@@ -202,7 +202,7 @@ const TeamManagement = () => {
 							Rename Team
 						</Button>
 						<Button htmlType="submit" onClick={() => setShowChangeDevpost(true)}>
-							Change Devpost Link
+							Add Devpost Link
 						</Button>
 						<Button htmlType="submit" onClick={() => setShowLeaveModal(true)}>
 							Leave the Team
@@ -226,7 +226,7 @@ const TeamManagement = () => {
 						destroyOnClose={true}>
 						<Input
 							onChange={event => setNewDevPost(event.target.value)}
-							defaultValue={teamData.devpost.toString()}
+							defaultValue={teamData.devpost && teamData.devpost.toString()}
 						/>
 					</Modal>
 
