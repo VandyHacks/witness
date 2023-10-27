@@ -657,32 +657,35 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 
 							{/* Pre-hacking code */}
 							{!hackathonStarted && (
-								<div className={styles.SubmittedForm}>
-									<div className={styles.ThankYouMessage}>
-										Congratulations!
-										<br />
-										You have been accepted to VandyHacks!
-										<div style={{ width: '100%', height: '16px' }}></div>
-										<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
-											<Button size="large" type="link">
-												Click here to join our Discord
-											</Button>
-										</a>
-										<br />
-										<br />
-										More information will appear here as we get closer to the hackathon!
-										<div className={styles.SignInInfo}>
-											<div>Signed in as {session?.user?.email}</div>
-											<Button
-												style={{ marginTop: '8px' }}
-												size="small"
-												type="default"
-												onClick={() => signOut()}>
-												Sign out
-											</Button>
+								<>
+									<RegistrationLogo />
+									<div className={styles.SubmittedForm}>
+										<div className={styles.ThankYouMessage}>
+											Congratulations!
+											<br />
+											You have been accepted to VandyHacks!
+											<div style={{ width: '100%', height: '16px' }}></div>
+											<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+												<Button size="large" type="link">
+													Click here to join our Discord
+												</Button>
+											</a>
+											<br />
+											<br />
+											More information will appear here as we get closer to the hackathon!
+											<div className={styles.SignInInfo}>
+												<div>Signed in as {session?.user?.email}</div>
+												<Button
+													style={{ marginTop: '8px' }}
+													size="small"
+													type="default"
+													onClick={() => signOut()}>
+													Sign out
+												</Button>
+											</div>
 										</div>
 									</div>
-								</div>
+								</>
 							)}
 						</>
 					)}
