@@ -11,9 +11,6 @@ import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-const DEV_DEPLOY =
-	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
-
 interface EventParams {
 	eventName: string;
 	eventImage: string;
