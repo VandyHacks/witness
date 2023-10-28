@@ -1,4 +1,6 @@
 import { SendEmailRequest, SES } from '@aws-sdk/client-ses';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 export const escapeChars = (str: string) => {
 	return str.replace(/[&<>"`=\/]/g, '');

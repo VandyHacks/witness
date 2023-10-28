@@ -1,9 +1,9 @@
 import { select } from '@inquirer/prompts';
-import dbConnect from '../../middleware/database';
 import User from '../../models/user';
 import Team from '../../models/team';
+import Schedule from '../../models/schedule';
 import { promptAction } from '../dev-cli';
-import { UserData, TeamData } from '../../types/database';
+import { UserData, TeamData, ScheduleData } from '../../types/database';
 
 export const handleGetTeam = async () => {
 	const teams: TeamData[] | null = await Team.find();
@@ -65,7 +65,22 @@ export const handleGetTeam = async () => {
 };
 
 const getSchedule = async (team: TeamData) => {
-	console.log('IN PROGRESS');
+	const schedules: ScheduleData[] | null = await Schedule.find({
+		team: team._id,
+	});
+	schedules.forEach(schedule => {
+		console.log('Schedule:');
+		console.log(`Table Number: ${team.locationNum}`);
+		console.log(`Time: ${schedule.time}`);
+		schedule.judges.forEach(async judgeId => {
+			const judge: UserData | null = await User.findOne({ _id: judgeId });
+			if (!judge) {
+				console.log('Judge not found');
+			} else {
+				console.log(`Judge: ${judge.name}`);
+			}
+		});
+	});
 	console.log('');
 	return promptAction();
 };

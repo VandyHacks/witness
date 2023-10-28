@@ -10,7 +10,7 @@ import { handleModifyTeam } from './cli-util/modify-team';
 dotenv.config();
 
 /**
- * NOTE: To use this CLI tool, run `ts-node scripts/dev-cli.ts` in your terminal.
+ * NOTE: To use this CLI tool, run `yarn dev-cli` in your terminal.
  *
  * executeCLI calls promptAction.
  *
@@ -127,6 +127,9 @@ export const promptAction = async () => {
 				break;
 			case 'clear-collection':
 				await handleDeleteCollection();
+				break;
+			case 'populate-collection':
+				await handlePopulateTeams();
 				break;
 			case 'quit':
 				process.exit(0);

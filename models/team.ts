@@ -19,7 +19,6 @@ const TeamSchema = new Schema(
 		},
 		devpost: {
 			type: String,
-			required: true,
 		},
 		members: {
 			type: [Schema.Types.ObjectId],

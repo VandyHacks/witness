@@ -12,6 +12,7 @@ import TextArea from 'antd/lib/input/TextArea';
 import { Content } from 'antd/lib/layout/layout';
 import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
+import TeamManagement from './hacking-start/TeamManagement';
 import Link from 'next/link';
 
 const DEV_DEPLOY =
@@ -25,13 +26,6 @@ type HackerProps = {
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
 	const { data: session, status } = useSession();
-	const { data: teamData, error: teamError } = useSWR('/api/team-management', async url => {
-		const res = await fetch(url, { method: 'GET' });
-		if (!res.ok) return;
-		const { members, ...rest } = await res.json();
-
-		return { members: members.map((member: any) => member.name), ...rest } as TeamProfile;
-	});
 
 	const { data: user } = useSWR(
 		'/api/user-data',
@@ -443,7 +437,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										<Button icon={<UploadOutlined />}>Upload résumé (PDF only)</Button>
 									</Upload>
 								</Form.Item>
-								{/* TODO: uncomment when application starts */}
+								{/* TODO: create a new time in hackathon-settings db collection for applyTravelReimbursement end date */}
 								{/* <Form.Item
 									label={
 										<p className={styles.Label}>
@@ -646,94 +640,52 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 							{/* Hacking Code */}
 							{hackathonStarted && (
 								<div style={{ padding: '20px' }}>
-									<Header user={user} signOut={signOut} />
+									<Header user={user} signOut={signOut} setting={setting as HackathonSettingsData} />
 
-									{/* TODO: add Your Team, Leaderboard, Judging Schedule */}
-									<Leaderboard />
+									<TeamManagement />
 									<JudgingSchedule judgingSessionData={judgingSessionData} />
+									<Leaderboard />
 
-									{/* TODO: remove once ready. placeholder */}
-									<div
-										style={{
-											display: 'flex',
-											flexDirection: 'column',
-											alignItems: 'center',
-											textAlign: 'center',
-											color: 'white',
-											fontSize: '10px',
-										}}>
-										<h1>Stay tuned! More info will appear here closer to the Hackathon!</h1>
-									</div>
 									<div className={styles['reportABugContainer']}>
 										<Link href="/report">
 											<div className={styles['reportABugText']}>Report a bug!</div>
 										</Link>
 										<BugOutlined />
 									</div>
-
-									{/* TODO: these are being refactored. should remove this after complete */}
-									{/* <div style={{ display: 'flex', justifyContent: 'center', paddingBottom: '10px' }}>
-										<Button size="small" type="default" onClick={() => signOut()}>
-											Sign out
-										</Button>
-										<div style={{ paddingLeft: '10px', color: 'white' }}>
-											Signed in as {session?.user?.email}
-										</div>
-										<div style={{ paddingLeft: '20px', color: 'white' }}>
-											Current NFC Points: {user.nfcPoints}
-										</div>
-									</div>
-									{!teamData && <TeamSetup />}
-									{teamData && (
-										<div style={{ width: '60vw', margin: 'auto' }}>
-											<Content style={{ width: '60vw', margin: 'auto' }}>
-												<Table
-													locale={{
-														emptyText: (
-															<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-																<h3>Stay tuned! You will see your schedule soon!</h3>
-															</div>
-														),
-													}}
-													columns={judgingSessionColumns}
-													dataSource={judgingSessionData}
-												/>
-												<Divider />
-											</Content>
-											<TeamManager profile={teamData} />
-										</div>
-									)} */}
 								</div>
 							)}
 
 							{/* Pre-hacking code */}
 							{!hackathonStarted && (
-								<div className={styles.SubmittedForm}>
-									<div className={styles.ThankYouMessage}>
-										Congratulations!
-										<br />
-										You have been accepted to VandyHacks!
-										<div style={{ width: '100%', height: '16px' }}></div>
-										<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
-											<Button size="large" type="link">
-												Click here to join our Discord
-											</Button>
-										</a>
-										<br />
-										<br />
-										More information will appear here as we get closer to the hackathon!
-										<div className={styles.SignInInfo}>
-											<div>Signed in as {session?.user?.email}</div>
-											<Button
-												style={{ marginTop: '8px' }}
-												size="small"
-												type="default"
-												onClick={() => signOut()}>
-												Sign out
-											</Button>
+								<>
+									<RegistrationLogo />
+									<div className={styles.SubmittedForm}>
+										<div className={styles.ThankYouMessage}>
+											Congratulations!
+											<br />
+											You have been accepted to VandyHacks!
+											<div style={{ width: '100%', height: '16px' }}></div>
+											<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+												<Button size="large" type="link">
+													Click here to join our Discord
+												</Button>
+											</a>
+											<br />
+											<br />
+											More information will appear here as we get closer to the hackathon!
+											<div className={styles.SignInInfo}>
+												<div>Signed in as {session?.user?.email}</div>
+												<Button
+													style={{ marginTop: '8px' }}
+													size="small"
+													type="default"
+													onClick={() => signOut()}>
+													Sign out
+												</Button>
+											</div>
 										</div>
 									</div>
-								</div>
+								</>
 							)}
 						</>
 					)}
