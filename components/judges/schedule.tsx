@@ -191,13 +191,14 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Time',
 			dataIndex: 'time',
 			key: 'time',
-			width: 100,
+			width: '10%',
 			render: (date: string) => DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE),
 		},
 		{
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
+			width: '40%',
 			render: ({ name, link, locationNum }: { name: string; link: URL; locationNum: number }) => (
 				<>
 					<td>
@@ -217,18 +218,21 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Team Members',
 			dataIndex: 'teamMembers',
 			key: 'teamMembers',
+			width: '30%',
 			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
 		},
 		{
 			title: 'Judge',
 			dataIndex: 'judge',
 			key: 'judge',
+			width: '10%',
 			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
 		},
 		{
 			title: 'Action',
 			dataIndex: 'teamId',
 			key: 'teamId',
+			width: '10%',
 			render: (teamId: any) => (
 				<Button type="primary" onClick={() => handleChange(teamId)}>
 					Judge Team
