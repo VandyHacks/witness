@@ -13,10 +13,13 @@ import SettingsTab from './SettingsTab/SettingsTab';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
 import { UserData } from '../../types/database';
 import BugReportsTab from './BugReportsTab/BugReportsTab';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function OrganizerDash() {
 	// Get session data
 	const { data: session, status } = useSession();
+	const router = useRouter();
 	const { accentColor, baseTheme, setAccentColor, setBaseTheme } = useContext(ThemeContext);
 
 	// User data
@@ -25,6 +28,10 @@ export default function OrganizerDash() {
 		method: RequestType.GET,
 		errorMessage: 'Failed to get user object.',
 	});
+
+	const redirectToEventPage = () => {
+		router.push('/event');
+	};
 
 	// Set theme
 	useEffect(() => {
@@ -45,6 +52,7 @@ export default function OrganizerDash() {
 		<div>
 			<div className={styles[getThemedClass('organizerHeader', baseTheme)]}>
 				<h1 className={styles[getThemedClass('organizerTitle', baseTheme)]}>Organizer Dashboard</h1>
+
 				<div className={styles[getThemedClass('organizerHeaderEmail', baseTheme)]}>
 					<div className={styles[getThemedClass('organizerHeaderEmailText', baseTheme)]}>
 						{session?.user?.email}
@@ -53,10 +61,18 @@ export default function OrganizerDash() {
 						<button
 							className={styles[getThemedClass('organizerButton', baseTheme)]}
 							style={{ backgroundColor: getAccentColor(accentColor, baseTheme) }}
+							onClick={() => redirectToEventPage()}>
+							Event Screen
+						</button>
+					</div>
+					<Link href="/event">
+						<button
+							className={styles[getThemedClass('organizerButton', baseTheme)]}
+							style={{ backgroundColor: '#888888' }}
 							onClick={() => signOut()}>
 							Sign out
 						</button>
-					</div>
+					</Link>
 				</div>
 			</div>
 			<Space direction="vertical">

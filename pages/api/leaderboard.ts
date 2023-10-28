@@ -6,7 +6,7 @@ import Team from '../../models/team';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
 	const session = await getSession({ req });
-	if (session?.userType !== 'HACKER') return res.status(403).send('Forbidden');
+	if (session?.userType !== 'HACKER' && session?.userType !== 'ORGANIZER') return res.status(403).send('Forbidden');
 
 	Team; // Don't remove or the import will get optimized out and the populate will fail
 	await dbConnect();
