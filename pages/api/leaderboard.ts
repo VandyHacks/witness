@@ -15,9 +15,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			const users = await User.find({ nfcPoints: { $exists: true } })
 				.sort({ nfcPoints: -1 })
 				.limit(10)
-				.populate('team');
+				.populate('team')
+				.select('name nfcPoints team');
 
-			return res.status(200).send(users);
+			const returnUser = users.map(user => {
+				return {
+					name: user.name,
+					nfcPoints: user.nfcPoints,
+					team: {
+						name: user.team?.name,
+					},
+				};
+			});
+
+			return res.status(200).send(returnUser);
 		default:
 			return res.status(405).send('Method not supported brother');
 	}
