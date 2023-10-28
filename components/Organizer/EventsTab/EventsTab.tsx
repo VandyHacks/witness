@@ -1,22 +1,32 @@
 import { Button, Input, InputRef, Modal, notification, Table, InputNumber } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { EventCountData, EventData } from '../../../types/database';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 import { mutate } from 'swr';
 import { ObjectId } from 'mongoose';
 import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
+import { useRouter } from 'next/router';
+import { ThemeContext, getAccentColor, getThemedClass } from '../../../theme/themeProvider';
+import styles from '../../../styles/Organizer.module.css';
 
 interface EventDisplay extends EventData {
 	setCurEvent: (open: EventDisplay) => void;
 }
 
 export default function Events() {
+	const router = useRouter();
 	const [curEvent, setCurEvent] = useState<EventDisplay | null>(null);
 	const [events, setEvents] = useState<EventDisplay[]>([]);
 	const [nfcId, setNfcId] = useState<string>('');
 	const [loading, setLoading] = useState(false);
 	const [showSaveButton, setShowSaveButton] = useState(false);
+
+	const { accentColor, baseTheme } = useContext(ThemeContext);
+
+	const redirectToEventPage = () => {
+		router.push('/event');
+	};
 
 	const columns: ColumnsType<EventDisplay> = [
 		{
@@ -240,6 +250,14 @@ export default function Events() {
 						Save Changes
 					</Button>
 				)}
+				<div>
+					<button
+						className={styles[getThemedClass('organizerButton', baseTheme)]}
+						style={{ backgroundColor: getAccentColor(accentColor, baseTheme) }}
+						onClick={() => redirectToEventPage()}>
+						Event Screen
+					</button>
+				</div>
 			</div>
 
 			<br />

@@ -40,26 +40,14 @@ const EventScreen = () => {
 	const [curEvent, setCurEvent] = useState<EventParams>(hackingBeginSoon);
 	const [timeLeft, setTimeLeft] = useState<string>('');
 
-	const { data: user } = useSWR(
-		'/api/user-data',
-		async url => {
-			const res = await fetch(url, { method: 'GET' });
-			return (await res.json()) as UserData;
-		},
-		{ revalidateOnFocus: false, revalidateOnMount: true }
-	);
-
 	const { data: setting } = useSWR(
 		'/api/hackathon-settings',
 		async url => {
 			const res = await fetch(url, { method: 'GET' });
 
-			const hackathongSetting = (await res.json()) as HackathonSettingsData;
-			const hackathonStartDate = new Date(Date.parse(hackathongSetting.HACKATHON_START));
-			const hackathonEndDate = new Date(Date.parse(hackathongSetting.HACKATHON_END));
-			const curDate = new Date();
+			const hackathonSetting = (await res.json()) as HackathonSettingsData;
 
-			return hackathongSetting;
+			return hackathonSetting;
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
@@ -147,8 +135,8 @@ const EventScreen = () => {
 	return (
 		<>
 			<Head>
-				<title>Report a bug!</title>
-				<meta property="og:title" content="VandyHacks X - Report a bug" />
+				<title>VandyHacks Event Display</title>
+				<meta property="og:title" content="VandyHacks - Event" />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://apply.vandyhacks.org" />
 				<meta property="og:image" content="/vh.png" />
@@ -156,8 +144,8 @@ const EventScreen = () => {
 				<meta name="twitter:site" content="@vandyhacks" />
 				<meta name="twitter:creator" content="@vandyhacks" />
 				<meta name="author" content="VandyHacks" />
-				<meta name="description" content="Event display for VHX!👨🏻‍💻" />
-				<meta property="og:description" content="Report a bug for the VandyHacks application!👨🏻‍💻" />
+				<meta name="description" content="Event display for VH!👨🏻‍💻" />
+				<meta property="og:description" content="VH Event!👨🏻‍💻" />
 			</Head>
 
 			<Layout

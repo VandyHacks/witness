@@ -29,10 +29,6 @@ export default function OrganizerDash() {
 		errorMessage: 'Failed to get user object.',
 	});
 
-	const redirectToEventPage = () => {
-		router.push('/event');
-	};
-
 	// Set theme
 	useEffect(() => {
 		if (userData && userData.settings && userData.settings.accentColor && userData.settings.baseTheme) {
@@ -56,14 +52,6 @@ export default function OrganizerDash() {
 				<div className={styles[getThemedClass('organizerHeaderEmail', baseTheme)]}>
 					<div className={styles[getThemedClass('organizerHeaderEmailText', baseTheme)]}>
 						{session?.user?.email}
-					</div>
-					<div>
-						<button
-							className={styles[getThemedClass('organizerButton', baseTheme)]}
-							style={{ backgroundColor: getAccentColor(accentColor, baseTheme) }}
-							onClick={() => redirectToEventPage()}>
-							Event Screen
-						</button>
 					</div>
 					<Link href="/event">
 						<button
