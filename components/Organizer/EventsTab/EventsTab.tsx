@@ -126,7 +126,7 @@ export default function Events() {
 				eventsData.map((event: EventData) => {
 					if (eventsCountData && eventsCountData.length > 0) {
 						// check counts data exist. if so, compute count for each event
-						const count = eventsCountData?.find((e: any) => e._id === event._id) || 0;
+						const count = eventsCountData?.find((e: any) => e._id === event._id)?.count ?? 0;
 
 						return {
 							key: event._id,
