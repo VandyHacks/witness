@@ -42,7 +42,6 @@ const EventScreen = () => {
 	const router = useRouter();
 	const [curEvent, setCurEvent] = useState<EventParams>(hackingBeginSoon);
 	const [timeLeft, setTimeLeft] = useState<string>('');
-	const [hackathonStarted, setHackathonStarted] = useState(false);
 
 	const { data: user } = useSWR(
 		'/api/user-data',
@@ -62,13 +61,6 @@ const EventScreen = () => {
 			const hackathonStartDate = new Date(Date.parse(hackathongSetting.HACKATHON_START));
 			const hackathonEndDate = new Date(Date.parse(hackathongSetting.HACKATHON_END));
 			const curDate = new Date();
-
-			// DEV_DEPLOY is true if we are in development or preview mode
-			if (DEV_DEPLOY) {
-				setHackathonStarted(true);
-			} else {
-				setHackathonStarted(curDate >= hackathonStartDate && curDate <= hackathonEndDate);
-			}
 
 			return hackathongSetting;
 		},

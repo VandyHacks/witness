@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 
 export default function OrganizerDash() {
 	// Get session data
-	const { data: session, status } = useSession();
+	const { data: session } = useSession();
 	const router = useRouter();
 	const { accentColor, baseTheme, setAccentColor, setBaseTheme } = useContext(ThemeContext);
 
