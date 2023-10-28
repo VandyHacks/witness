@@ -184,7 +184,7 @@ const EventScreen = () => {
 							</span>
 						</div>
 						<div className={styles.leaderboard}>
-							<Leaderboard />
+							<Leaderboard limit={1000} isRotating={true} />
 						</div>
 					</div>
 				) : (

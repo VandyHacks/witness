@@ -12,9 +12,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'GET':
+			const limit = parseInt(req.query.limit as string) || 10;
+
 			const users = await User.find({ nfcPoints: { $exists: true } })
 				.sort({ nfcPoints: -1 })
-				.limit(10)
+				.limit(limit)
 				.populate('team')
 				.select('name nfcPoints team');
 

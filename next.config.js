@@ -12,6 +12,12 @@ module.exports = {
 			);
 		}
 
+		// add fallback
+		config.resolve.fallback = {
+			child_process: false,
+			fs: false,
+		};
+
 		return config;
 	},
 	experimental: { nftTracing: true },
