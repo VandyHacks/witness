@@ -150,7 +150,6 @@ const EventScreen = () => {
 
 			<Layout
 				style={{
-					width: '100vw',
 					backgroundImage: 'url(background-1.png)',
 					backgroundRepeat: 'no-repeat',
 					backgroundPosition: `center`,
@@ -162,6 +161,7 @@ const EventScreen = () => {
 					alignItems: 'center',
 					overflow: 'hidden',
 					height: '100vh',
+					width: '100vw',
 				}}>
 				{!session ? null : session.userType === 'ORGANIZER' ? (
 					<div className={styles.eventContainer}>

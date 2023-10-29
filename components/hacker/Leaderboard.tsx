@@ -30,7 +30,7 @@ const Leaderboard = ({ limit = 10, isRotating = false }: { limit?: number; isRot
 				} else {
 					setCurrentPage(currentPage + 1);
 				}
-			}, 5000);
+			}, 3000);
 
 			return () => clearInterval(interval);
 		}
