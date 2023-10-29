@@ -19,7 +19,7 @@ export default function Scoreboard(props: AllScoresProps) {
 	let { scoreData, teamData } = data;
 
 	// fancy algorithm to compute scoreboard data
-	const teamScoreboardData = computeScoreboard(scoreData, teamData);
+	const { teamScoreboardData, teamsJudged } = computeScoreboard(scoreData, teamData);
 
 	const handleChange = (pagination: any, filters: any, sorter: any) => {
 		setSortedInfo(sorter as SorterResult<TeamData>);
@@ -185,7 +185,9 @@ export default function Scoreboard(props: AllScoresProps) {
 					width: '100%',
 					justifyContent: 'space-between',
 				}}>
-				<h2>Scoreboard ({teamScoreboardData.length ?? 0})</h2>
+				<h2>
+					Scoreboard ({teamsJudged} / {teamScoreboardData.length ?? 0})
+				</h2>
 				<Button type="primary" onClick={clearFilters}>
 					Clear filters
 				</Button>
@@ -264,7 +266,7 @@ const computeScoreboard = (scoreData: ScoreData[], teamData: TeamData[]) => {
 		};
 	});
 
-	teamScoreboardData = teamScoreboardData.filter(team => team.count > 0);
+	const teamsJudged = teamScoreboardData.filter(team => team.count > 0).length;
 
 	teamScoreboardData.sort((a, b) => b.norm_score - a.norm_score);
 	let diff = 0;
@@ -284,5 +286,5 @@ const computeScoreboard = (scoreData: ScoreData[], teamData: TeamData[]) => {
 		team.rank = index + 1 - diff;
 	});
 
-	return teamScoreboardData;
+	return { teamScoreboardData, teamsJudged };
 };
