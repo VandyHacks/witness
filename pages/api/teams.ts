@@ -26,7 +26,7 @@ export default async function handler(
 		let teams = await Team.find();
 
 		if (req.query.submitted) {
-			teams = teams.filter(team => team.devpost !== '');
+			teams = teams.filter(team => team.devpost !== '' && team.devpost !== undefined);
 		}
 
 		switch (session!.userType) {
