@@ -158,7 +158,7 @@ const EventScreen = () => {
 					backgroundSize: 'cover',
 					display: 'flex',
 					justifyContent: 'flex-start',
-					paddingTop: '5rem',
+					paddingTop: '8rem',
 					alignItems: 'center',
 					overflow: 'hidden',
 					height: '100vh',

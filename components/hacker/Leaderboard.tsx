@@ -2,6 +2,7 @@ import { UserData, TeamData } from '../../types/database';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
 import styles from '../../styles/hacker/Table.module.css';
 import { useEffect, useState } from 'react';
+import { set } from 'mongoose';
 
 interface LeaderboardData extends Omit<UserData, 'team'> {
 	team: TeamData;
@@ -10,7 +11,8 @@ interface LeaderboardData extends Omit<UserData, 'team'> {
 const Leaderboard = ({ limit = 10, isRotating = false }: { limit?: number; isRotating?: boolean }) => {
 	const [currentPage, setCurrentPage] = useState<number>(1);
 	const [totalPages, setTotalPages] = useState<number>(1);
-	const [currentLeaderboardData, setCurrentLeaderboardData] = useState<LeaderboardData[] | undefined>(undefined);
+	const [filteredData, setFilteredData] = useState<LeaderboardData[] | undefined>(undefined);
+	const [paginatedLeaderboardData, setPaginatedLeaderboardData] = useState<LeaderboardData[] | undefined>(undefined);
 
 	// Leaderboard data
 	const { data: leaderboardData, error: leaderboardError } = useCustomSWR<LeaderboardData[]>({
@@ -23,7 +25,7 @@ const Leaderboard = ({ limit = 10, isRotating = false }: { limit?: number; isRot
 	useEffect(() => {
 		if (isRotating) {
 			const interval = setInterval(() => {
-				if (currentPage === totalPages) {
+				if (currentPage >= totalPages) {
 					setCurrentPage(1);
 				} else {
 					setCurrentPage(currentPage + 1);
@@ -35,11 +37,21 @@ const Leaderboard = ({ limit = 10, isRotating = false }: { limit?: number; isRot
 	}, [currentPage, isRotating, totalPages]);
 
 	useEffect(() => {
-		if (leaderboardData) {
-			setCurrentLeaderboardData(leaderboardData.slice((currentPage - 1) * 10, currentPage * 10));
-			setTotalPages(Math.floor(leaderboardData.length / 15));
+		if (filteredData) {
+			setPaginatedLeaderboardData(undefined);
+			setPaginatedLeaderboardData(filteredData.slice((currentPage - 1) * 10, currentPage * 10));
+			setTotalPages(Math.floor(filteredData.length / 10));
 		}
-	}, [leaderboardData, currentPage]);
+		/* eslint-disable-next-line react-hooks/exhaustive-deps */
+	}, [currentPage, filteredData]);
+
+	useEffect(() => {
+		if (leaderboardData) {
+			// filter out the zeros
+			const filteredData = leaderboardData.filter(entry => entry.nfcPoints > 0);
+			setFilteredData(filteredData);
+		}
+	}, [leaderboardData]);
 
 	return (
 		<div className={styles.Container}>
@@ -49,7 +61,7 @@ const Leaderboard = ({ limit = 10, isRotating = false }: { limit?: number; isRot
 			</div>
 			{leaderboardError ? (
 				<div className={styles.Placeholder}>Failed to load data.</div>
-			) : !currentLeaderboardData ? (
+			) : !filteredData ? (
 				<div className={styles.Placeholder}>Loading...</div>
 			) : (
 				<div className={styles.TableContainer}>
@@ -63,8 +75,8 @@ const Leaderboard = ({ limit = 10, isRotating = false }: { limit?: number; isRot
 							</tr>
 						</thead>
 						<tbody>
-							{currentLeaderboardData?.map((entry, index) => (
-								<tr key={entry.name}>
+							{paginatedLeaderboardData?.map((entry, index) => (
+								<tr key={index}>
 									<td>{(currentPage - 1) * 10 + index + 1}</td>
 									<td>{entry.name}</td>
 									<td>{entry.team?.name}</td>
