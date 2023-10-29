@@ -50,7 +50,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			if (DEV_DEPLOY) {
 				setHackathonStarted(true);
 			} else {
-				setHackathonStarted(curDate >= hackathonStartDate && curDate <= hackathonEndDate);
+				setHackathonStarted(curDate >= hackathonStartDate);
 			}
 
 			return hackathongSetting;
