@@ -183,7 +183,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 }
 
 export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
-	const [showPast, setShowPast] = useState(false);
+	const [showPast, setShowPast] = useState(true);
 	const { accentColor, baseTheme } = useContext(ThemeContext);
 
 	const columns = [
