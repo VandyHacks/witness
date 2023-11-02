@@ -1,0 +1,60 @@
+.CurEvent {
+	width: 300px;
+	display: flex;
+	flex-direction: column;
+}
+
+.CurEventText {
+	color: #fff;
+	text-align: center;
+	font-family: Inter;
+	font-size: 20px;
+	font-weight: 700;
+	padding-top: 20px;
+}
+
+.CurEventThinText {
+	color: #fff;
+	text-align: center;
+	font-family: Inter;
+	font-size: 20px;
+	font-weight: 300;
+	padding-top: 20px;
+}
+
+.IconContainer {
+	position: relative;
+	width: 300px;
+	height: 300px;
+	margin: 0 auto;
+}
+
+.Timer {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: #fff;
+	text-align: center;
+	width: 100%;
+	font-size: 50px;
+	font-weight: 700;
+}
+
+.leaderboard {
+	padding-left: 5rem;
+	padding-right: 5rem;
+}
+
+.eventContainer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding-left: 5rem;
+}
+
+.goHomeButton {
+	background-color: rgba(0, 0, 0, 0);
+	border: none;
+	color: #999999;
+}

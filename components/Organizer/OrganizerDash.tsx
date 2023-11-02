@@ -13,10 +13,13 @@ import SettingsTab from './SettingsTab/SettingsTab';
 import { RequestType, useCustomSWR } from '../../utils/request-utils';
 import { UserData } from '../../types/database';
 import BugReportsTab from './BugReportsTab/BugReportsTab';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function OrganizerDash() {
 	// Get session data
-	const { data: session, status } = useSession();
+	const { data: session } = useSession();
+	const router = useRouter();
 	const { accentColor, baseTheme, setAccentColor, setBaseTheme } = useContext(ThemeContext);
 
 	// User data
@@ -45,18 +48,19 @@ export default function OrganizerDash() {
 		<div>
 			<div className={styles[getThemedClass('organizerHeader', baseTheme)]}>
 				<h1 className={styles[getThemedClass('organizerTitle', baseTheme)]}>Organizer Dashboard</h1>
+
 				<div className={styles[getThemedClass('organizerHeaderEmail', baseTheme)]}>
 					<div className={styles[getThemedClass('organizerHeaderEmailText', baseTheme)]}>
 						{session?.user?.email}
 					</div>
-					<div>
+					<Link href="/event">
 						<button
 							className={styles[getThemedClass('organizerButton', baseTheme)]}
-							style={{ backgroundColor: getAccentColor(accentColor, baseTheme) }}
+							style={{ backgroundColor: '#888888' }}
 							onClick={() => signOut()}>
 							Sign out
 						</button>
-					</div>
+					</Link>
 				</div>
 			</div>
 			<Space direction="vertical">
