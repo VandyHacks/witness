@@ -30,7 +30,7 @@
 		"faker": "^6.6.6",
 		"formidable": "^2.0.1",
 		"luxon": "^3.0.3",
-		"mongodb": "^4.9.1",
+		"mongodb": "^4.17.2",
 		"mongoose": "^6.6.1",
 		"nanoid": "^4.0.0",
 		"next": "12.2.5",
