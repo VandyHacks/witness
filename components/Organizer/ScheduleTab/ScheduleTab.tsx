@@ -124,12 +124,12 @@ const ScheduleTab = () => {
 						</Col>
 						<Col span={4}>
 							<Slider
-								min={1} 
-								max={10} 
-								onChange={setTimesJudged} 
+								min={1}
+								max={10}
+								onChange={setTimesJudged}
 								value={timesJudged}
-								style={{marginLeft: '20px'}}
-								 />
+								style={{ marginLeft: '20px' }}
+							/>
 						</Col>
 					</Row>
 					<br />
@@ -141,7 +141,7 @@ const ScheduleTab = () => {
 					{potentialSchedule && (
 						<Button
 							onClick={() => handleConfirmPotentialSchedules(potentialSchedule)}
-							style={{ marginBottom: '10px' , marginLeft: '10px'}}>
+							style={{ marginBottom: '10px', marginLeft: '10px' }}>
 							Confirm Schedule
 						</Button>
 					)}
