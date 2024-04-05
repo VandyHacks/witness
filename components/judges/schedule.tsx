@@ -1,4 +1,4 @@
-import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme } from 'antd';
+import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme, Radio } from 'antd';
 import React, { useContext, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
@@ -183,7 +183,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 }
 
 export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
-	const [showPast, setShowPast] = useState(true);
+	const [showPast, setShowPast] = useState(false);
 	const { accentColor, baseTheme } = useContext(ThemeContext);
 
 	const columns = [
@@ -275,13 +275,8 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 				<Table.Summary fixed={true}>
 					<Table.Summary.Row>
 						<Table.Summary.Cell index={0} colSpan={6}>
-							<Switch
-								checkedChildren="Hide past sessions"
-								unCheckedChildren="Include past sessions"
-								onChange={checked => {
-									setShowPast(checked);
-								}}
-							/>
+							<Radio checked={showPast} onClick={() => setShowPast(!showPast)} />
+							Show Past Sessions
 						</Table.Summary.Cell>
 					</Table.Summary.Row>
 				</Table.Summary>
