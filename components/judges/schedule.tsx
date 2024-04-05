@@ -89,7 +89,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 						.filter(x => x.team !== null && x.team.name !== null)
 						.find(x => x.team.name === teamName)?.team.locationNum;
 					return {
-						title: (teamName as string) + ' (Table ' + locationNum + ')',
+						title: teamName as string,
 						dataIndex: teamName as string,
 						key: teamName as string,
 						render: TableCell,
@@ -195,15 +195,20 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			render: (date: string) => DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE),
 		},
 		{
+			title: 'Table',
+			dataIndex: 'table',
+			key: 'table',
+			width: '10%',
+			render: (locationNum: number) => locationNum,
+		},
+		{
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			width: '40%',
-			render: ({ name, link, locationNum }: { name: string; link: URL; locationNum: number }) => (
+			width: '30%',
+			render: ({ name, link }: { name: string; link: URL }) => (
 				<>
-					<td>
-						{name} (Table {locationNum})
-					</td>
+					<td>{name}</td>
 					<Link href={link} passHref>
 						<a
 							style={{ color: getAccentColor(accentColor, baseTheme), textDecoration: 'underline' }}
@@ -243,7 +248,8 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
 		return {
 			time: item.time,
-			project: { name: item.team.name, link: new URL(item.team.devpost), locationNum: item.team.locationNum },
+			table: item.team.locationNum,
+			project: { name: item.team.name, link: new URL(item.team.devpost) },
 			teamMembers: item.team.members,
 			judge: item.judge,
 			teamId: item.team._id,
