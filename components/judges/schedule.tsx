@@ -262,7 +262,6 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			dataSource={dataSource}
 			columns={columns}
 			pagination={false}
-			sticky
 			bordered
 			scroll={{ x: true }}
 			summary={_ => (
