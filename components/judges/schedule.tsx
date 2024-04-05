@@ -251,8 +251,8 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 	});
 
 	const handleRowClick = (record: any) => {
-        handleChange(record.teamId);
-    };
+		handleChange(record.teamId);
+	};
 
 	return (
 		<Table
@@ -283,9 +283,9 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 					</Table.Summary.Row>
 				</Table.Summary>
 			)}
-			onRow={(record) => ({
-                onClick: () => handleRowClick(record),
-            })}
+			onRow={record => ({
+				onClick: () => handleRowClick(record),
+			})}
 		/>
 	);
 }
