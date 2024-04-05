@@ -258,6 +258,7 @@ export const ApplicantsTab = () => {
 		{
 			title: 'Login Name',
 			dataIndex: 'name',
+			...getColumnSearchProps('name'),
 		},
 		{
 			title: 'First Name',
