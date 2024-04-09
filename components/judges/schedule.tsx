@@ -1,5 +1,5 @@
 import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme, Radio } from 'antd';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { JudgingSessionData } from '../../types/database';
