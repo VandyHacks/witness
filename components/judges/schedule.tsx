@@ -1,5 +1,5 @@
 import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme, Radio } from 'antd';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
 import { JudgingSessionData } from '../../types/database';
@@ -205,7 +205,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			width: '30%',
+			width: '25%',
 			render: ({ name, link }: { name: string; link: URL }) => (
 				<>
 					<td>{name}</td>
@@ -223,7 +223,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Team Members',
 			dataIndex: 'teamMembers',
 			key: 'teamMembers',
-			width: '30%',
+			width: '25%',
 			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
 		},
 		{
@@ -244,6 +244,13 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 				</Button>
 			),
 		},
+		{
+			title: 'Judgement State',
+			dataIndex: 'scores',
+			key: 'scores',
+			width: '10%',
+			render: (scores: []) => <Tag>{scores.length ? 'Judged' : 'Without Judgement'}</Tag>,
+		},
 	];
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
 		return {
@@ -253,6 +260,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			teamMembers: item.team.members,
 			judge: item.judge,
 			teamId: item.team._id,
+			scores: item.team.scores,
 		};
 	});
 
