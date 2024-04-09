@@ -26,7 +26,7 @@ const optionComparator = (input: string, option: string) => {
 	const cin = input.toLowerCase();
 	const opt = option.toLowerCase();
 	for (let i = 0; i < opt.length; ++i) {
-		if (opt[i] === cin[searchPosition]) searchPosition++;
+		if (opt[i] === cin[searchPosition]) ++searchPosition;
 		else break;
 	}
 	return searchPosition === input.length;
