@@ -172,17 +172,6 @@ export const ApplicantsTab = () => {
 		setFilteredInfo(filters);
 	};
 
-	const handleSearch = (
-		selectedKeys: string[],
-		confirm: (param?: FilterConfirmProps) => void,
-		dataIndex: string,
-		closeDropDown: boolean
-	) => {
-		confirm({ closeDropdown: closeDropDown });
-		setSearchText(selectedKeys[0]);
-		setSearchedColumn(dataIndex);
-	};
-
 	const handleReset = (clearFilters: () => void) => {
 		clearFilters();
 		setSearchText('');
