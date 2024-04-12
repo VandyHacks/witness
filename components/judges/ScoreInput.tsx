@@ -1,4 +1,4 @@
-import { Slider, Radio , InputNumber, Row, Col } from 'antd';
+import { Slider, Radio, InputNumber, Row, Col } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import { IntegerType } from 'mongodb';
 import styles from '../../styles/Judge.module.css';
@@ -14,9 +14,9 @@ export default function ScoreInput(props: ScoreInputProps) {
 	const { value, onChange } = props;
 	const [min, max] = [0, 7];
 	const onRadioChange = (e: RadioChangeEvent) => {
-        onChange(e.target.value);
-    };
-	
+		onChange(e.target.value);
+	};
+
 	return (
 		<Row>
 			<Col flex={1/4}>
@@ -29,7 +29,6 @@ export default function ScoreInput(props: ScoreInputProps) {
       				<Radio className={styles.CustomRadio} value={6}>6</Radio>
       				<Radio className={styles.CustomRadio} value={7}>7</Radio>
 				</Radio.Group>
-				
 			</Col>
 			<Col span={4}>
 				<InputNumber
