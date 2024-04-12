@@ -1,7 +1,10 @@
 import { Slider, Radio , InputNumber, Row, Col } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import { IntegerType } from 'mongodb';
+import styles from '../../styles/Judge.module.css';
 import React from 'react';
+
+
 interface ScoreInputProps {
 	value: number;
 	onChange: (value: number | null) => void;
@@ -16,15 +19,15 @@ export default function ScoreInput(props: ScoreInputProps) {
 	
 	return (
 		<Row>
-			<Col span={20}>
-				<Radio.Group onChange={onRadioChange} value={value}>
-					<Radio style={{marginRight: '20px'}} value={1}>1</Radio>
-      				<Radio style={{marginRight: '20px'}} value={2}>2</Radio>
-      				<Radio style={{marginRight: '20px'}} value={3}>3</Radio>
-      				<Radio style={{marginRight: '20px'}} value={4}>4</Radio>
-					<Radio style={{marginRight: '20px'}} value={5}>5</Radio>
-      				<Radio style={{marginRight: '20px'}} value={6}>6</Radio>
-      				<Radio value={7}>7</Radio>
+			<Col flex={1/4}>
+				<Radio.Group  onChange={onRadioChange} value={value} style={{display: 'flex', flexDirection: 'row', alignItems:'center'}}>
+					<Radio className={styles.CustomRadio}  value={1}>1</Radio>
+      				<Radio className={styles.CustomRadio} value={2}>2</Radio>
+      				<Radio className={styles.CustomRadio} value={3}>3</Radio>
+      				<Radio className={styles.CustomRadio} value={4}>4</Radio>
+					<Radio className={styles.CustomRadio} value={5}>5</Radio>
+      				<Radio className={styles.CustomRadio} value={6}>6</Radio>
+      				<Radio className={styles.CustomRadio} value={7}>7</Radio>
 				</Radio.Group>
 				
 			</Col>
