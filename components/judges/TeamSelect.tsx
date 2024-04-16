@@ -20,6 +20,18 @@ function withCheckMark(value: string) {
 		</Row>
 	);
 }
+
+const optionComparator = (input: string, option: string) => {
+	let searchPosition = 0;
+	const cin = input.toLowerCase();
+	const opt = option.toLowerCase();
+	for (let i = 0; i < opt.length; ++i) {
+		if (opt[i] === cin[searchPosition]) ++searchPosition;
+		else break;
+	}
+	return searchPosition === input.length;
+};
+
 export default function TeamSelect(props: TeamSelectProps) {
 	const { teamsData, currentTeamID, handleChange } = props;
 	const { data: session } = useSession();
@@ -34,10 +46,12 @@ export default function TeamSelect(props: TeamSelectProps) {
 				Team:
 			</strong>
 			<Select
+				showSearch
 				value={currentTeamID ? currentTeamID : 'Select a team'}
 				style={{ width: 300, maxWidth: '60vw' }}
 				onChange={handleChange}
-				allowClear>
+				allowClear
+				filterOption={(input, option) => optionComparator(input, String(option?.children))}>
 				{session?.userType === 'JUDGE' && (
 					<OptGroup label="My Teams">
 						{teamsData
