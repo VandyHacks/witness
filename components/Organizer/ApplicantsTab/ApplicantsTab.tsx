@@ -415,10 +415,13 @@ export const ApplicantsTab = () => {
 					visible={isAppModalOpen}
 					onOk={handleAppCloseModal}
 					onCancel={handleAppCloseModal}>
-					{selectedApplicant &&
-						Object.entries(selectedApplicant.application!)
+					{selectedApplicant?.application ? (
+						Object.entries(selectedApplicant.application)
 							.filter(([field, _]) => field in APPLICATION_KEY_MAP)
-							.map(createSingleApplicantEntry)}
+							.map(createSingleApplicantEntry)
+					) : (
+						<p>Application details are not available.</p>
+					)}
 				</Modal>
 			)}
 			{isCheckinModalOpen && (
