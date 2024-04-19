@@ -172,17 +172,6 @@ export const ApplicantsTab = () => {
 		setFilteredInfo(filters);
 	};
 
-	const handleSearch = (
-		selectedKeys: string[],
-		confirm: (param?: FilterConfirmProps) => void,
-		dataIndex: string,
-		closeDropDown: boolean
-	) => {
-		confirm({ closeDropdown: closeDropDown });
-		setSearchText(selectedKeys[0]);
-		setSearchedColumn(dataIndex);
-	};
-
 	const handleReset = (clearFilters: () => void) => {
 		clearFilters();
 		setSearchText('');
@@ -207,9 +196,11 @@ export const ApplicantsTab = () => {
 					value={selectedKeys[0]}
 					onChange={e => {
 						setSelectedKeys(e.target.value ? [e.target.value] : []);
-						handleSearch(selectedKeys as string[], confirm, dataIndex, false);
+						confirm({ closeDropdown: false });
+						setSearchText(e.target.value);
+						setSearchedColumn(dataIndex);
 					}}
-					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
+					onPressEnter={() => confirm({ closeDropdown: true })}
 					style={{ marginBottom: 8, display: 'block' }}
 				/>
 				<Button
@@ -258,6 +249,7 @@ export const ApplicantsTab = () => {
 		{
 			title: 'Login Name',
 			dataIndex: 'name',
+			...getColumnSearchProps('name'),
 		},
 		{
 			title: 'First Name',
@@ -414,10 +406,13 @@ export const ApplicantsTab = () => {
 					visible={isAppModalOpen}
 					onOk={handleAppCloseModal}
 					onCancel={handleAppCloseModal}>
-					{selectedApplicant &&
-						Object.entries(selectedApplicant.application!)
+					{selectedApplicant?.application ? (
+						Object.entries(selectedApplicant.application)
 							.filter(([field, _]) => field in APPLICATION_KEY_MAP)
-							.map(createSingleApplicantEntry)}
+							.map(createSingleApplicantEntry)
+					) : (
+						<p>Application details are not available.</p>
+					)}
 				</Modal>
 			)}
 			{isCheckinModalOpen && (

@@ -1,4 +1,4 @@
-import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme } from 'antd';
+import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme, Radio } from 'antd';
 import React, { useContext, useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
 import Link from 'next/link';
@@ -89,7 +89,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 						.filter(x => x.team !== null && x.team.name !== null)
 						.find(x => x.team.name === teamName)?.team.locationNum;
 					return {
-						title: (teamName as string) + ' (Table ' + locationNum + ')',
+						title: teamName as string,
 						dataIndex: teamName as string,
 						key: teamName as string,
 						render: TableCell,
@@ -183,7 +183,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 }
 
 export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
-	const [showPast, setShowPast] = useState(true);
+	const [showPast, setShowPast] = useState(false);
 	const { accentColor, baseTheme } = useContext(ThemeContext);
 
 	const columns = [
@@ -195,15 +195,20 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			render: (date: string) => DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE),
 		},
 		{
+			title: 'Table',
+			dataIndex: 'table',
+			key: 'table',
+			width: '10%',
+			render: (locationNum: number) => locationNum,
+		},
+		{
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			width: '40%',
-			render: ({ name, link, locationNum }: { name: string; link: URL; locationNum: number }) => (
+			width: '25%',
+			render: ({ name, link }: { name: string; link: URL }) => (
 				<>
-					<td>
-						{name} (Table {locationNum})
-					</td>
+					<td>{name}</td>
 					<Link href={link} passHref>
 						<a
 							style={{ color: getAccentColor(accentColor, baseTheme), textDecoration: 'underline' }}
@@ -218,7 +223,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Team Members',
 			dataIndex: 'teamMembers',
 			key: 'teamMembers',
-			width: '30%',
+			width: '25%',
 			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
 		},
 		{
@@ -239,14 +244,23 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 				</Button>
 			),
 		},
+		{
+			title: 'Judgement State',
+			dataIndex: 'scores',
+			key: 'scores',
+			width: '10%',
+			render: (scores: []) => <Tag>{scores.length ? 'Judged' : 'Without Judgement'}</Tag>,
+		},
 	];
 	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
 		return {
 			time: item.time,
-			project: { name: item.team.name, link: new URL(item.team.devpost), locationNum: item.team.locationNum },
+			table: item.team.locationNum,
+			project: { name: item.team.name, link: new URL(item.team.devpost) },
 			teamMembers: item.team.members,
 			judge: item.judge,
 			teamId: item.team._id,
+			scores: item.team.scores,
 		};
 	});
 
@@ -272,13 +286,8 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 				<Table.Summary fixed={true}>
 					<Table.Summary.Row>
 						<Table.Summary.Cell index={0} colSpan={6}>
-							<Switch
-								checkedChildren="Hide past sessions"
-								unCheckedChildren="Include past sessions"
-								onChange={checked => {
-									setShowPast(checked);
-								}}
-							/>
+							<Radio checked={showPast} onClick={() => setShowPast(!showPast)} />
+							Show Past Sessions
 						</Table.Summary.Cell>
 					</Table.Summary.Row>
 				</Table.Summary>
