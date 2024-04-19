@@ -191,3 +191,10 @@
 .reportABugText:hover {
 	cursor: pointer;
 }
+
+.CustomRadio {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-right: 20px;
+}
