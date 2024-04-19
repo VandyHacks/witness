@@ -19,7 +19,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 	return (
 		<>
 			<Head>
-				<link rel="icon" type="image/x-icon" href="favicon.ico" />
+				<link rel="icon" type="image/x-icon" href="favicon.ico" media="(prefers-color-scheme: dark)" />
+				<link rel="icon" type="image/x-icon" href="favicon_black.ico" media="(prefers-color-scheme: light)" />
 				<title>{pageProps.title}</title>
 			</Head>
 			<SessionProvider session={pageProps.session}>
