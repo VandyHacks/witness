@@ -264,6 +264,10 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 		};
 	});
 
+	const handleRowClick = (record: any) => {
+		handleChange(record.teamId);
+	};
+
 	return (
 		<Table
 			locale={{
@@ -276,7 +280,6 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			dataSource={dataSource}
 			columns={columns}
 			pagination={false}
-			sticky
 			bordered
 			scroll={{ x: true }}
 			summary={_ => (
@@ -289,6 +292,9 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 					</Table.Summary.Row>
 				</Table.Summary>
 			)}
+			onRow={record => ({
+				onClick: () => handleRowClick(record),
+			})}
 		/>
 	);
 }
