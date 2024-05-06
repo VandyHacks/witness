@@ -95,7 +95,7 @@ export default async function auth(req: any, res: any) {
 
 		theme: {
 			colorScheme: 'dark',
-			logo: '/vhlogo-white.svg',
+			logo: '/vh-logo.png',
 		},
 	});
 }
