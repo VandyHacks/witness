@@ -1,6 +1,6 @@
 import { signIn } from 'next-auth/react';
 import { GoogleOutlined, GithubOutlined, MailOutlined } from '@ant-design/icons';
-import { Button, Space, Card, Image, Typography, Form, Input } from 'antd';
+import { Button, Space, Image, Form, Input } from 'antd';
 import styles from '../styles/Signin.module.css';
 
 const { Item } = Form;
@@ -11,70 +11,72 @@ const DEV_DEPLOY =
 export default function SignIn() {
 	return (
 		<div className={styles.SignIn}>
-			<Card bordered={false} className={styles.Card} style={{ height: DEV_DEPLOY ? '80%' : '70%' }}>
-				{/* <button onClick={() => signIn()}>Sign in</button> */}
-				<Space
-					direction="vertical"
-					size="small"
-					style={{
-						alignItems: 'center',
-					}}>
-					<Image className={styles.Logo} src="/vh-logo.png" alt="VandyHacks Logo" preview={false} />
-					<br />
-					<div className={styles.Title} style={{ color: 'white' }}>
-						VandyHacks X
-					</div>
-					<Button
-						size="large"
-						type="primary"
-						icon={<GoogleOutlined />}
-						className={styles.ButtonStyle}
-						onClick={() => signIn('google')}>
-						Sign in with Google
-					</Button>
-					<Button
-						size="large"
-						type="primary"
-						icon={<GithubOutlined />}
-						className={styles.ButtonStyle}
-						onClick={() => signIn('github')}>
-						Sign in with GitHub
-					</Button>
-					{DEV_DEPLOY && ( // email sign in only in dev
-						<Form
-							name="basic"
-							// labelCol={{ span: 8 }}
-							// wrapperCol={{ span: 16 }}
-							layout="vertical"
-							onFinish={values => signIn('credentials', { ...values })}
-							//   onFinishFailed={onFinishFailed}
-							autoComplete="off">
-							<Item
-								label={<label style={{ color: 'white' }}>Email</label>}
-								name="email"
-								rules={[{ required: true, message: 'Please input your email!' }]}>
-								<Input />
-							</Item>
+			<div className={styles.Card}>
+				<div className={styles.Logo}>
+					<Image src="/vh-logo.png" alt="VandyHacks Logo" preview={false} />
+				</div>
 
-							<Item
-								label={<label style={{ color: 'white' }}>Password</label>}
-								name="password"
-								rules={[{ required: true, message: 'Please input your password!' }]}>
-								<Input.Password />
-							</Item>
+				<br />
 
-							<Button
-								size="large"
-								type="primary"
-								icon={<MailOutlined />}
-								className={styles.ButtonStyle}
-								htmlType="submit">
-								Sign in with Email
-							</Button>
-						</Form>
-					)}
-				</Space>
-			</Card>
+				<div className={styles.Title}>VandyHacks X</div>
+
+				<div className={styles.SignInOptions}>
+					<Space direction="vertical" size="small" align="center">
+						{DEV_DEPLOY && ( // email sign in only in dev
+							<>
+								<Form
+									name="basic"
+									layout="vertical"
+									onFinish={values => signIn('credentials', { ...values })}
+									autoComplete="off"
+									style={{ display: 'flex', flexDirection: 'column' }}>
+									<Item
+										name="email"
+										rules={[{ required: true, message: 'Please input your email!' }]}>
+										<Input placeholder="Email" />
+									</Item>
+
+									<Item
+										name="password"
+										rules={[{ required: true, message: 'Please input your password!' }]}>
+										<Input.Password placeholder="Password" />
+									</Item>
+
+									<Button
+										size="large"
+										type="primary"
+										icon={<MailOutlined />}
+										className={styles.ButtonStyle}
+										htmlType="submit"
+										style={{ alignSelf: 'center' }}>
+										Sign in with Email
+									</Button>
+								</Form>
+
+								<div className={styles.Divider} />
+							</>
+						)}
+
+						<Button
+							size="large"
+							type="primary"
+							icon={<GoogleOutlined />}
+							className={styles.ButtonStyle}
+							onClick={() => signIn('google')}>
+							Sign in with Google
+						</Button>
+
+						<Button
+							size="large"
+							type="primary"
+							icon={<GithubOutlined />}
+							className={styles.ButtonStyle}
+							onClick={() => signIn('github')}>
+							Sign in with GitHub
+						</Button>
+					</Space>
+				</div>
+			</div>
 		</div>
 	);
 }
