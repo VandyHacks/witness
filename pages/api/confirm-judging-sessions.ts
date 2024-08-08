@@ -32,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			});
 
 			await Promise.all(promises);
-			await JudgingSession.remove();
+			await JudgingSession.deleteMany();
 			await JudgingSession.insertMany(newJudgingSessions);
 
 			return res.status(200).send(`Checked in new Judging Sessons into judgingSessions collection`);
