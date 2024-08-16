@@ -24,7 +24,7 @@ export interface ApplicationData {
 	dateOfBirth: string;
 	school: string;
 	major: string;
-	graduationYear: string;
+	yearOfStudy: string;
 	race: string[];
 	motivation: string[];
 	applyTravelReimbursement: boolean;
@@ -34,6 +34,7 @@ export interface ApplicationData {
 	city: string;
 	state: string;
 	zip: string;
+	country: string;
 	shirtSize: string;
 	mlhComms: boolean;
 }
