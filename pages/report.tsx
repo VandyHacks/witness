@@ -144,7 +144,7 @@ const ReportBug = () => {
 		<>
 			<Head>
 				<title>Report a bug!</title>
-				<meta property="og:title" content="VandyHacks X - Report a bug" />
+				<meta property="og:title" content="VandyHacks XI - Report a bug" />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://apply.vandyhacks.org" />
 				<meta property="og:image" content="/vh.png" />

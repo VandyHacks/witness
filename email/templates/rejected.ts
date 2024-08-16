@@ -26,7 +26,7 @@ export default async (user: UserData): Promise<SendEmailRequest> => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Hi ${escapeChars(user.name)},
-                Thank you for your interest in VandyHacks X: Neon Edition. Unfortunately, we are unable to offer you a spot at this year's event.
+                Thank you for your interest in VandyHacks XI: Racing Edition. Unfortunately, we are unable to offer you a spot at this year's event.
                 We really appreciate your interest and hope you will apply to another VandyHacks opportunity in the future.
                 Best,
                 The VandyHacks Team`,
