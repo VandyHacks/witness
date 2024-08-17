@@ -26,7 +26,7 @@ import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
 import TeamManagement from './hacking-start/TeamManagement';
 import Link from 'next/link';
-import Papa from 'papaparse'; 
+import Papa from 'papaparse';
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
@@ -101,7 +101,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		async url => {
 			const res = await fetch(url, { method: 'GET' });
 			const csvText = await res.text();
-			const schoolArr = csvText.split('\n').slice(1)
+			const schoolArr = csvText.split('\n').slice(1);
 
 			const schoolList = schoolArr.map((school: any) => {
 				return { label: school, value: school };
