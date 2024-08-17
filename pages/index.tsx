@@ -17,8 +17,8 @@ export default function Page() {
 	return (
 		<>
 			<Head>
-				<title>VandyHacks X</title>
-				<meta property="og:title" content="VandyHacks X" />
+				<title>VandyHacks XI</title>
+				<meta property="og:title" content="VandyHacks XI" />
 				<meta property="og:type" content="website" />
 				<meta property="og:url" content="https://apply.vandyhacks.org" />
 				<meta property="og:image" content="/vh.png" />

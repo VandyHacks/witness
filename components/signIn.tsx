@@ -22,7 +22,7 @@ export default function SignIn() {
 					<Image className={styles.Logo} src="/vh-logo.png" alt="VandyHacks Logo" preview={false} />
 					<br />
 					<div className={styles.Title} style={{ color: 'white' }}>
-						VandyHacks X
+						VandyHacks XI
 					</div>
 					<Button
 						size="large"

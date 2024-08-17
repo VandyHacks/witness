@@ -1,6 +1,18 @@
 import { useEffect, useState } from 'react';
 import { BugOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, DatePicker, Form, Input, Radio, Skeleton, Upload, UploadFile } from 'antd';
+import {
+	AutoComplete,
+	Button,
+	Checkbox,
+	DatePicker,
+	Dropdown,
+	Form,
+	Input,
+	Radio,
+	Skeleton,
+	Upload,
+	UploadFile,
+} from 'antd';
 import useSWR from 'swr';
 import Leaderboard from './Leaderboard';
 import JudgingSchedule from './JudgingSchedule';
@@ -21,6 +33,11 @@ const DEV_DEPLOY =
 type HackerProps = {
 	userApplicationStatus: number;
 	setUserApplicationStatus: (newType: number) => void;
+};
+
+type DropdownItem = {
+	label: string;
+	value: string;
 };
 
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
@@ -54,6 +71,40 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			}
 
 			return hackathongSetting;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
+
+	// get country options
+	const [countryOptions, setCountryOptions] = useState([]);
+	const [country, setCountry] = useState('');
+	const { data: countries } = useSWR(
+		'https://restcountries.com/v3.1/all',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+			const jsonRes = await res.json();
+			const countryList = jsonRes.map((country: any) => {
+				return { label: country.name.common, value: country.name.common };
+			});
+			setCountryOptions(countryList);
+			return countryList;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
+
+	// get school options
+	const [schoolOptions, setSchoolOptions] = useState([]);
+	const [school, setSchool] = useState('');
+	const { data: schools } = useSWR(
+		'http://universities.hipolabs.com/search',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+			const jsonRes = await res.json();
+			const schoolList = jsonRes.map((school: any) => {
+				return { label: school.name, value: school.name };
+			});
+			setSchoolOptions(schoolList);
+			return schoolList;
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
@@ -235,7 +286,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									label={<p className={styles.Label}>School</p>}
 									name="school"
 									rules={[{ required: true, message: 'Please input your school!' }]}>
-									<Input className={styles.Input} />
+									<AutoComplete
+										options={schoolOptions}
+										onSearch={text => {
+											setSchoolOptions(
+												schools.filter((school: DropdownItem) =>
+													school.label.toLowerCase().includes(text.toLowerCase())
+												)
+											);
+										}}
+										value={school}
+										onChange={data => setSchool(data)}
+										className={styles.Input}
+									/>
 								</Form.Item>
 								<Form.Item
 									label={<p className={styles.Label}>Major</p>}
@@ -245,14 +308,13 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item
 									label={<p className={styles.Label}>Graduation Year</p>}
-									name="graduationYear"
-									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
+									name="yearOfStudy"
+									rules={[{ required: true, message: 'Please select your year of study!' }]}>
 									<Radio.Group>
-										<Radio.Button value="2024">2024</Radio.Button>
-										<Radio.Button value="2025">2025</Radio.Button>
-										<Radio.Button value="2026">2026</Radio.Button>
-										<Radio.Button value="2027">2027</Radio.Button>
-										<Radio.Button value="other">Other</Radio.Button>
+										<Radio.Button value="freshman">Freshman</Radio.Button>
+										<Radio.Button value="sophomore">Sophomore</Radio.Button>
+										<Radio.Button value="junior">Junior</Radio.Button>
+										<Radio.Button value="senior">Senior</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
@@ -278,7 +340,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									rules={[{ required: true, message: 'Please input your state!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-
 								<Form.Item
 									label={<p className={styles.Label}>ZIP Code</p>}
 									name={'zip'}
@@ -297,6 +358,25 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										},
 									]}>
 									<Input className={styles.Input} />
+								</Form.Item>
+
+								<Form.Item
+									label={<p className={styles.Label}>Country</p>}
+									name={'country'}
+									rules={[{ required: true, message: 'Please input your country!' }]}>
+									<AutoComplete
+										options={countryOptions}
+										onSearch={text => {
+											setCountryOptions(
+												countries.filter((country: DropdownItem) =>
+													country.label.toLowerCase().includes(text.toLowerCase())
+												)
+											);
+										}}
+										value={country}
+										onChange={data => setCountry(data)}
+										className={styles.Input}
+									/>
 								</Form.Item>
 
 								<Form.Item
@@ -526,15 +606,14 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										},
 									]}>
 									<Checkbox style={{ color: 'white' }}>
-										I authorize you to share my application/registration information for event
-										administration, ranking, MLH administration, pre- and post-event informational
-										emails, and occasional emails about hackathons in line with the MLH Privacy
-										Policy. I further agree to the terms of both the{' '}
+										I authorize you to share my application/registration information with Major
+										League Hacking for event administration, ranking, and MLH administration in-line
+										with the MLH Privacy Policy. I further agree to the terms of both the{' '}
 										<a
 											style={{ color: '#027cff' }}
 											target="_blank"
 											rel="noopener noreferrer"
-											href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions">
+											href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">
 											MLH Contest Terms and Conditions
 										</a>{' '}
 										and the{' '}

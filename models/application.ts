@@ -36,7 +36,7 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		graduationYear: {
+		yearOfStudy: {
 			type: String,
 			required: true,
 		},
@@ -52,6 +52,10 @@ export const ApplicationSchema = new Schema(
 			required: true,
 		},
 		state: {
+			type: String,
+			required: true,
+		},
+		country: {
 			type: String,
 			required: true,
 		},
