@@ -15,7 +15,7 @@
 	padding: 1.5rem;
 	justify-content: center;
 	align-items: center;
-	background-color: #00000099;
+	background-color: rgba(15, 85, 94, 0.6);
 }
 
 .Logo {
@@ -27,6 +27,7 @@
 .Title {
 	font-size: 2.5rem;
 	font-weight: 550;
+	margin-top: 1rem;
 	margin-bottom: 1rem;
 }
 
