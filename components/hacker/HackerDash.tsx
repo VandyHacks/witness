@@ -40,7 +40,7 @@ type HackerProps = {
 type DropdownItem = {
 	label: string;
 	value: string;
-}
+};
 
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
 	const [loading, setLoading] = useState(false);
@@ -288,8 +288,12 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									rules={[{ required: true, message: 'Please input your school!' }]}>
 									<AutoComplete
 										options={schoolOptions}
-										onSearch={(text) => {
-											setSchoolOptions(schools.filter((school: DropdownItem) => school.label.toLowerCase().includes(text.toLowerCase())));
+										onSearch={text => {
+											setSchoolOptions(
+												schools.filter((school: DropdownItem) =>
+													school.label.toLowerCase().includes(text.toLowerCase())
+												)
+											);
 										}}
 										value={school}
 										onChange={data => setSchool(data)}
@@ -362,15 +366,18 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									rules={[{ required: true, message: 'Please input your country!' }]}>
 									<AutoComplete
 										options={countryOptions}
-										onSearch={(text) => {
-											setCountryOptions(countries.filter((country: DropdownItem) => country.label.toLowerCase().includes(text.toLowerCase())));
+										onSearch={text => {
+											setCountryOptions(
+												countries.filter((country: DropdownItem) =>
+													country.label.toLowerCase().includes(text.toLowerCase())
+												)
+											);
 										}}
 										value={country}
 										onChange={data => setCountry(data)}
 										className={styles.Input}
 									/>
 								</Form.Item>
-
 
 								<Form.Item
 									name="race"
