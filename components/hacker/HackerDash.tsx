@@ -26,7 +26,6 @@ import Header from './hacking-start/Header';
 import RegistrationLogo from './RegistrationLogo';
 import TeamManagement from './hacking-start/TeamManagement';
 import Link from 'next/link';
-import Papa from 'papaparse';
 
 const DEV_DEPLOY =
 	process.env.NODE_ENV === 'development' || ['preview', 'development'].includes(process.env.NEXT_PUBLIC_VERCEL_ENV!); // frontend env variable
