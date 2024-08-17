@@ -93,16 +93,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 	);
 
 	// get school options
-	const [schoolOptions, setSchoolOptions] = useState([]);
+	const [schoolOptions, setSchoolOptions] = useState<DropdownItem[]>([]);
 	const [school, setSchool] = useState('');
 	const { data: schools } = useSWR(
-		'http://universities.hipolabs.com/search',
+		'https://raw.githubusercontent.com/MLH/mlh-policies/main/schools.csv',
 		async url => {
 			const res = await fetch(url, { method: 'GET' });
-			const jsonRes = await res.json();
-			const schoolList = jsonRes.map((school: any) => {
-				return { label: school.name, value: school.name };
+			const csvText = await res.text();
+			const schoolArr = csvText.split('\n').slice(1);
+
+			const schoolList = schoolArr.map((school: string) => {
+				return { label: school, value: school };
 			});
+
 			setSchoolOptions(schoolList);
 			return schoolList;
 		},
@@ -290,9 +293,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										options={schoolOptions}
 										onSearch={text => {
 											setSchoolOptions(
-												schools.filter((school: DropdownItem) =>
+												schools?.filter((school: DropdownItem) =>
 													school.label.toLowerCase().includes(text.toLowerCase())
-												)
+												) || []
 											);
 										}}
 										value={school}
