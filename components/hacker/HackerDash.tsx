@@ -102,7 +102,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			const csvText = await res.text();
 			const schoolArr = csvText.split('\n').slice(1);
 
-			const schoolList = schoolArr.map((school: any) => {
+			const schoolList = schoolArr.map((school: string) => {
 				return { label: school, value: school };
 			});
 
