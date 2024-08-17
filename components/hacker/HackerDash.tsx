@@ -77,6 +77,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
 
+	// get country options
 	const [countryOptions, setCountryOptions] = useState([]);
 	const [country, setCountry] = useState('');
 	const { data: countries } = useSWR(
@@ -93,6 +94,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
 
+	// get school options
 	const [schoolOptions, setSchoolOptions] = useState([]);
 	const [school, setSchool] = useState('');
 	const { data: schools } = useSWR(
