@@ -611,7 +611,11 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Checkbox style={{ color: 'white' }}>
 										I authorize you to share my application/registration information with Major
 										League Hacking for event administration, ranking, and MLH administration in-line
-										with the MLH Privacy Policy. I further agree to the terms of both the{' '}
+										with the{' '}
+										<a target="_blank" rel="noopener noreferrer" href="https://mlh.io/privacy">
+											MLH Privacy Policy.
+										</a>{' '}
+										I further agree to the terms of both the{' '}
 										<a
 											style={{ color: '#027cff' }}
 											target="_blank"
@@ -628,8 +632,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item valuePropName="checked" name="mlhComms">
 									<Checkbox style={{ color: 'white' }}>
-										I authorize MLH to send me an email where I can further opt into the MLH Hacker,
-										Events, or Organizer Newsletters and other communications from MLH.
+										I authorize MLH to send me occasional emails about relevant events,
+										career opportunities, and community announcements.
 									</Checkbox>
 								</Form.Item>
 								<br />
