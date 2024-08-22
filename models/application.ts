@@ -20,8 +20,8 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		dateOfBirth: {
-			type: String,
+		age: {
+			type: Number,
 			required: true,
 		},
 		phoneNumber: {
@@ -36,7 +36,11 @@ export const ApplicationSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		yearOfStudy: {
+		levelOfStudy: {
+			type: String,
+			required: true,
+		},
+		graduationYear: {
 			type: String,
 			required: true,
 		},

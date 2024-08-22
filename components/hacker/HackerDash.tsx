@@ -160,6 +160,20 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ label: 'Other', value: 'other' },
 	];
 
+	const levelOfStudy = [
+		{ label: 'Less than Secondary / High School', value: 'less_than_high_school' },
+		{ label: 'Secondary / High School', value: 'high_school' },
+		{ label: 'Undergraduate University (2 year - community college or similar)', value: 'undergrad_2_year' },
+		{ label: 'Undergraduate University (3+ year)', value: 'undergrad_3_plus_year' },
+		{ label: 'Graduate University (Masters, Professional, Doctoral, etc)', value: 'graduate_university' },
+		{ label: 'Code School / Bootcamp', value: 'code_bootcamp' },
+		{ label: 'Other Vocational / Trade Program or Apprenticeship', value: 'vocational_trade' },
+		{ label: 'Post Doctorate', value: 'post_doctorate' },
+		{ label: 'Other', value: 'other' },
+		{ label: "I'm not currently a student", value: 'not_student' },
+		{ label: 'Prefer not to answer', value: 'prefer_not_to_answer' },
+	];
+
 	const [resumeFile, setResumeFile] = useState<UploadFile[]>([]);
 	const [resumeToUpload, setResumeToUpload] = useState<string | Blob>('');
 
@@ -274,10 +288,13 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									name="dateOfBirth"
-									label={<p className={styles.Label}>Date of Birth</p>}
-									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
-									<DatePicker placeholder="MM-DD-YYYY" format="MM-DD-YYYY" />
+									name="age"
+									label={<p className={styles.Label}>Age</p>}
+									rules={[{ required: true, message: 'Please input a valid age.', validator: (_, value) =>
+												value && value > 0 && value < 150
+													? Promise.resolve()
+													: Promise.reject(new Error('Please input a valid age.')), }]}>
+									<Input className={styles.Input} type="number" />
 								</Form.Item>
 								<Form.Item
 									label={<p className={styles.Label}>Phone Number</p>}
@@ -310,14 +327,29 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
-									label={<p className={styles.Label}>Graduation Year</p>}
-									name="yearOfStudy"
-									rules={[{ required: true, message: 'Please select your year of study!' }]}>
+									label={<p className={styles.Label}>Level of Study</p>}
+									name="levelOfStudy"
+									rules={[{ required: true, message: 'Please select your level of study!'}]}>
 									<Radio.Group>
-										<Radio.Button value="freshman">Freshman</Radio.Button>
-										<Radio.Button value="sophomore">Sophomore</Radio.Button>
-										<Radio.Button value="junior">Junior</Radio.Button>
-										<Radio.Button value="senior">Senior</Radio.Button>
+										{levelOfStudy.map((level: DropdownItem) => (
+											<Radio.Button key={level.value} value={level.value}>
+												{level.label}
+											</Radio.Button>
+										))}
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
+									label={<p className={styles.Label}>Graduation Year</p>}
+									name="graduationYear"
+									rules={[{ required: true, message: 'Please select the year you intend to graduate!' }]}>
+									<Radio.Group>
+										<Radio.Button value="2024">2024</Radio.Button>
+										<Radio.Button value="2025">2025</Radio.Button>
+										<Radio.Button value="2026">2026</Radio.Button>
+										<Radio.Button value="2027">2027</Radio.Button>
+										<Radio.Button value="2028">2028</Radio.Button>
+										<Radio.Button value="2029">2029</Radio.Button>
+										<Radio.Button value="other">Not sure/Other</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
