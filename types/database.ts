@@ -21,10 +21,11 @@ export interface ApplicationData {
 	dietaryRestrictions: string[];
 	accomodationNeeds: string;
 	phoneNumber: string;
-	dateOfBirth: string;
+	age: number;
 	school: string;
 	major: string;
-	yearOfStudy: string;
+	levelOfStudy: string;
+	graduationYear: string;
 	race: string[];
 	motivation: string[];
 	applyTravelReimbursement: boolean;
