@@ -160,6 +160,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ label: 'Other', value: 'other' },
 	];
 
+	// Level of study provided by MLH
 	const levelOfStudy = [
 		{ label: 'Less than Secondary / High School', value: 'less_than_high_school' },
 		{ label: 'Secondary / High School', value: 'high_school' },
