@@ -290,10 +290,16 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<Form.Item
 									name="age"
 									label={<p className={styles.Label}>Age</p>}
-									rules={[{ required: true, message: 'Please input a valid age.', validator: (_, value) =>
+									rules={[
+										{
+											required: true,
+											message: 'Please input a valid age.',
+											validator: (_, value) =>
 												value && value > 0 && value < 150
 													? Promise.resolve()
-													: Promise.reject(new Error('Please input a valid age.')), }]}>
+													: Promise.reject(new Error('Please input a valid age.')),
+										},
+									]}>
 									<Input className={styles.Input} type="number" />
 								</Form.Item>
 								<Form.Item
@@ -329,7 +335,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<Form.Item
 									label={<p className={styles.Label}>Level of Study</p>}
 									name="levelOfStudy"
-									rules={[{ required: true, message: 'Please select your level of study!'}]}>
+									rules={[{ required: true, message: 'Please select your level of study!' }]}>
 									<Radio.Group>
 										{levelOfStudy.map((level: DropdownItem) => (
 											<Radio.Button key={level.value} value={level.value}>
@@ -341,7 +347,9 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<Form.Item
 									label={<p className={styles.Label}>Graduation Year</p>}
 									name="graduationYear"
-									rules={[{ required: true, message: 'Please select the year you intend to graduate!' }]}>
+									rules={[
+										{ required: true, message: 'Please select the year you intend to graduate!' },
+									]}>
 									<Radio.Group>
 										<Radio.Button value="2024">2024</Radio.Button>
 										<Radio.Button value="2025">2025</Radio.Button>
@@ -664,8 +672,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item valuePropName="checked" name="mlhComms">
 									<Checkbox style={{ color: 'white' }}>
-										I authorize MLH to send me occasional emails about relevant events,
-										career opportunities, and community announcements.
+										I authorize MLH to send me occasional emails about relevant events, career
+										opportunities, and community announcements.
 									</Checkbox>
 								</Form.Item>
 								<br />
