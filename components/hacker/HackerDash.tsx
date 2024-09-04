@@ -1,6 +1,18 @@
 import { useEffect, useState } from 'react';
 import { BugOutlined, UploadOutlined } from '@ant-design/icons';
-import { Button, Checkbox, DatePicker, Form, Input, Radio, Skeleton, Upload, UploadFile } from 'antd';
+import {
+	AutoComplete,
+	Button,
+	Checkbox,
+	DatePicker,
+	Dropdown,
+	Form,
+	Input,
+	Radio,
+	Skeleton,
+	Upload,
+	UploadFile,
+} from 'antd';
 import useSWR from 'swr';
 import Leaderboard from './Leaderboard';
 import JudgingSchedule from './JudgingSchedule';
@@ -21,6 +33,11 @@ const DEV_DEPLOY =
 type HackerProps = {
 	userApplicationStatus: number;
 	setUserApplicationStatus: (newType: number) => void;
+};
+
+type DropdownItem = {
+	label: string;
+	value: string;
 };
 
 export default function HackerDash({ userApplicationStatus, setUserApplicationStatus }: HackerProps) {
@@ -54,6 +71,43 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 			}
 
 			return hackathongSetting;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
+
+	// get country options
+	const [countryOptions, setCountryOptions] = useState([]);
+	const [country, setCountry] = useState('');
+	const { data: countries } = useSWR(
+		'https://restcountries.com/v3.1/all',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+			const jsonRes = await res.json();
+			const countryList = jsonRes.map((country: any) => {
+				return { label: country.name.common, value: country.name.common };
+			});
+			setCountryOptions(countryList);
+			return countryList;
+		},
+		{ revalidateOnFocus: false, revalidateOnMount: true }
+	);
+
+	// get school options
+	const [schoolOptions, setSchoolOptions] = useState<DropdownItem[]>([]);
+	const [school, setSchool] = useState('');
+	const { data: schools } = useSWR(
+		'https://raw.githubusercontent.com/MLH/mlh-policies/main/schools.csv',
+		async url => {
+			const res = await fetch(url, { method: 'GET' });
+			const csvText = await res.text();
+			const schoolArr = csvText.split('\n').slice(1);
+
+			const schoolList = schoolArr.map((school: string) => {
+				return { label: school, value: school };
+			});
+
+			setSchoolOptions(schoolList);
+			return schoolList;
 		},
 		{ revalidateOnFocus: false, revalidateOnMount: true }
 	);
@@ -104,6 +158,21 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 		{ label: 'Have some fun with other people in the tech community', value: 'fun' },
 		{ label: 'Internship opportunities', value: 'internships' },
 		{ label: 'Other', value: 'other' },
+	];
+
+	// Level of study provided by MLH
+	const levelOfStudy = [
+		{ label: 'Less than Secondary / High School', value: 'less_than_high_school' },
+		{ label: 'Secondary / High School', value: 'high_school' },
+		{ label: 'Undergraduate University (2 year - community college or similar)', value: 'undergrad_2_year' },
+		{ label: 'Undergraduate University (3+ year)', value: 'undergrad_3_plus_year' },
+		{ label: 'Graduate University (Masters, Professional, Doctoral, etc)', value: 'graduate_university' },
+		{ label: 'Code School / Bootcamp', value: 'code_bootcamp' },
+		{ label: 'Other Vocational / Trade Program or Apprenticeship', value: 'vocational_trade' },
+		{ label: 'Post Doctorate', value: 'post_doctorate' },
+		{ label: 'Other', value: 'other' },
+		{ label: "I'm not currently a student", value: 'not_student' },
+		{ label: 'Prefer not to answer', value: 'prefer_not_to_answer' },
 	];
 
 	const [resumeFile, setResumeFile] = useState<UploadFile[]>([]);
@@ -220,10 +289,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
-									name="dateOfBirth"
-									label={<p className={styles.Label}>Date of Birth</p>}
-									rules={[{ required: true, message: 'Please select your date of birth!' }]}>
-									<DatePicker placeholder="MM-DD-YYYY" format="MM-DD-YYYY" />
+									name="age"
+									label={<p className={styles.Label}>Age</p>}
+									rules={[
+										{
+											required: true,
+											message: 'Please input a valid age.',
+											validator: (_, value) =>
+												value && value > 0 && value < 150
+													? Promise.resolve()
+													: Promise.reject(new Error('Please input a valid age.')),
+										},
+									]}>
+									<Input className={styles.Input} type="number" />
 								</Form.Item>
 								<Form.Item
 									label={<p className={styles.Label}>Phone Number</p>}
@@ -235,7 +313,19 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									label={<p className={styles.Label}>School</p>}
 									name="school"
 									rules={[{ required: true, message: 'Please input your school!' }]}>
-									<Input className={styles.Input} />
+									<AutoComplete
+										options={schoolOptions}
+										onSearch={text => {
+											setSchoolOptions(
+												schools?.filter((school: DropdownItem) =>
+													school.label.toLowerCase().includes(text.toLowerCase())
+												) || []
+											);
+										}}
+										value={school}
+										onChange={data => setSchool(data)}
+										className={styles.Input}
+									/>
 								</Form.Item>
 								<Form.Item
 									label={<p className={styles.Label}>Major</p>}
@@ -244,15 +334,31 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									<Input className={styles.Input} />
 								</Form.Item>
 								<Form.Item
+									label={<p className={styles.Label}>Level of Study</p>}
+									name="levelOfStudy"
+									rules={[{ required: true, message: 'Please select your level of study!' }]}>
+									<Radio.Group>
+										{levelOfStudy.map((level: DropdownItem) => (
+											<Radio.Button key={level.value} value={level.value}>
+												{level.label}
+											</Radio.Button>
+										))}
+									</Radio.Group>
+								</Form.Item>
+								<Form.Item
 									label={<p className={styles.Label}>Graduation Year</p>}
 									name="graduationYear"
-									rules={[{ required: true, message: 'Please select your graduation year!' }]}>
+									rules={[
+										{ required: true, message: 'Please select the year you intend to graduate!' },
+									]}>
 									<Radio.Group>
 										<Radio.Button value="2024">2024</Radio.Button>
 										<Radio.Button value="2025">2025</Radio.Button>
 										<Radio.Button value="2026">2026</Radio.Button>
 										<Radio.Button value="2027">2027</Radio.Button>
-										<Radio.Button value="other">Other</Radio.Button>
+										<Radio.Button value="2028">2028</Radio.Button>
+										<Radio.Button value="2029">2029</Radio.Button>
+										<Radio.Button value="other">Not sure/Other</Radio.Button>
 									</Radio.Group>
 								</Form.Item>
 								<Form.Item
@@ -278,7 +384,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 									rules={[{ required: true, message: 'Please input your state!' }]}>
 									<Input className={styles.Input} />
 								</Form.Item>
-
 								<Form.Item
 									label={<p className={styles.Label}>ZIP Code</p>}
 									name={'zip'}
@@ -297,6 +402,25 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										},
 									]}>
 									<Input className={styles.Input} />
+								</Form.Item>
+
+								<Form.Item
+									label={<p className={styles.Label}>Country</p>}
+									name={'country'}
+									rules={[{ required: true, message: 'Please input your country!' }]}>
+									<AutoComplete
+										options={countryOptions}
+										onSearch={text => {
+											setCountryOptions(
+												countries.filter((country: DropdownItem) =>
+													country.label.toLowerCase().includes(text.toLowerCase())
+												)
+											);
+										}}
+										value={country}
+										onChange={data => setCountry(data)}
+										className={styles.Input}
+									/>
 								</Form.Item>
 
 								<Form.Item
@@ -526,15 +650,18 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 										},
 									]}>
 									<Checkbox style={{ color: 'white' }}>
-										I authorize you to share my application/registration information for event
-										administration, ranking, MLH administration, pre- and post-event informational
-										emails, and occasional emails about hackathons in line with the MLH Privacy
-										Policy. I further agree to the terms of both the{' '}
+										I authorize you to share my application/registration information with Major
+										League Hacking for event administration, ranking, and MLH administration in-line
+										with the{' '}
+										<a target="_blank" rel="noopener noreferrer" href="https://mlh.io/privacy">
+											MLH Privacy Policy.
+										</a>{' '}
+										I further agree to the terms of both the{' '}
 										<a
 											style={{ color: '#027cff' }}
 											target="_blank"
 											rel="noopener noreferrer"
-											href="https://github.com/MLH/mlh-policies/tree/master/prize-terms-and-conditions">
+											href="https://github.com/MLH/mlh-policies/blob/main/contest-terms.md">
 											MLH Contest Terms and Conditions
 										</a>{' '}
 										and the{' '}
@@ -546,8 +673,8 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								</Form.Item>
 								<Form.Item valuePropName="checked" name="mlhComms">
 									<Checkbox style={{ color: 'white' }}>
-										I authorize MLH to send me an email where I can further opt into the MLH Hacker,
-										Events, or Organizer Newsletters and other communications from MLH.
+										I authorize MLH to send me occasional emails about relevant events, career
+										opportunities, and community announcements.
 									</Checkbox>
 								</Form.Item>
 								<br />

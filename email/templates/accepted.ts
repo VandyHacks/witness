@@ -26,7 +26,7 @@ export default async (user: UserData): Promise<SendEmailRequest> => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Hi ${escapeChars(user.name || user.name)},
-				Congratulations! You’re invited to be a part of VandyHacks X: Neon Edition! We enjoyed reading your application and would love to see your ideas come to life during our event on October 28th-29th!
+				Congratulations! You’re invited to be a part of VandyHacks XI: Racing Edition! We enjoyed reading your application and would love to see your ideas come to life during our event on October 28th-29th!
 
 				Head over to the application portal here and confirm your attendance by October 26th, 12:00 PM CDT.
 

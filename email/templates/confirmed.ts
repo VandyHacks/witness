@@ -26,7 +26,7 @@ export default async (user: UserData): Promise<SendEmailRequest> => ({
 			Text: {
 				Charset: 'UTF-8',
 				Data: `Hey ${escapeChars(user.name)},
-				We're so excited that you'll be joining us for VandyHacks X: Neon Edition!
+				We're so excited that you'll be joining us for VandyHacks XI: Racing Edition!
 
 				This email is just to confirm that you've RSVPed to our event. We'll be in touch again soon with more information on our opening ceremony, but as a reminder, festivities will start at 12:00 PM CDT Saturday, October 28th, and wrap up by 5:30 PM CDT Sunday, October 29th.
 

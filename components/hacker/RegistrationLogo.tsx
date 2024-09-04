@@ -8,7 +8,7 @@ const RegistrationLogo = () => {
 		<>
 			<Form.Item className={styles.TitleLogo}> </Form.Item>
 			<div className={styles.TitleContainer}>
-				<div className={styles.Title}>VandyHacks X Registration</div>
+				<div className={styles.Title}>VandyHacks XI Registration</div>
 			</div>
 		</>
 	);

@@ -27,7 +27,7 @@ export default async (user: UserData): Promise<SendEmailRequest> => ({
 				Charset: 'UTF-8',
 				Data: `Thank you for applying!
 				Hi ${escapeChars(user.name)},
-				Thanks for taking the time to complete your application! We’re so excited that you’re interested in being a part of VandyHacks X: Neon Edition.
+				Thanks for taking the time to complete your application! We’re so excited that you’re interested in being a part of VandyHacks XI: Racing Edition.
 				We will be reviewing your submission soon, so be on the lookout for another email regarding your status.
 				Until then, stay hyped about VandyHacks! Follow us on Instagram to get the latest VH updates!
 				Cheers,

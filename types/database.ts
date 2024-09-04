@@ -21,9 +21,10 @@ export interface ApplicationData {
 	dietaryRestrictions: string[];
 	accomodationNeeds: string;
 	phoneNumber: string;
-	dateOfBirth: string;
+	age: number;
 	school: string;
 	major: string;
+	levelOfStudy: string;
 	graduationYear: string;
 	race: string[];
 	motivation: string[];
@@ -34,6 +35,7 @@ export interface ApplicationData {
 	city: string;
 	state: string;
 	zip: string;
+	country: string;
 	shirtSize: string;
 	mlhComms: boolean;
 }
