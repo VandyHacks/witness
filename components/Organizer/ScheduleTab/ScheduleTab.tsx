@@ -67,14 +67,14 @@ const ScheduleTab = () => {
 		let judgingTimes = generateTimes(
 			new Date(hackathonSettings?.JUDGING_START as string),
 			new Date(hackathonSettings?.JUDGING_END as string),
-			10
+			5
 		);
 		setPotentialSchedule(matchTeams(teams, judges, judgingTimes, timesJudged));
 	};
 
 	useEffect(() => {
 		if (!teamsData || !judgesData) return;
-		setMaxTimesJudged(Math.floor((judgesData?.length * 12) / teamsData?.length));
+		setMaxTimesJudged(Math.floor((judgesData?.length * 24) / teamsData?.length));
 	}, [teamsData, judgesData]);
 
 	useEffect(() => {

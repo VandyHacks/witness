@@ -103,7 +103,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 
 	sessionTimeStart = sessionTimeStart || new Date();
 	sessionTimeEnd = sessionTimeEnd || new Date();
-	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, 10);
+	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, 5);
 
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
@@ -183,17 +183,10 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 }
 
 export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
-	const [showPast, setShowPast] = useState(false);
+	const [isJudged, setIsJudged] = useState(false);
 	const { accentColor, baseTheme } = useContext(ThemeContext);
 
 	const columns = [
-		{
-			title: 'Time',
-			dataIndex: 'time',
-			key: 'time',
-			width: '10%',
-			render: (date: string) => DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE),
-		},
 		{
 			title: 'Table',
 			dataIndex: 'table',
@@ -205,7 +198,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			width: '25%',
+			width: '40%',
 			render: ({ name, link }: { name: string; link: URL }) => (
 				<>
 					<td>{name}</td>
@@ -223,26 +216,8 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Team Members',
 			dataIndex: 'teamMembers',
 			key: 'teamMembers',
-			width: '25%',
+			width: '40%',
 			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
-		},
-		{
-			title: 'Judge',
-			dataIndex: 'judge',
-			key: 'judge',
-			width: '10%',
-			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
-		},
-		{
-			title: 'Action',
-			dataIndex: 'teamId',
-			key: 'teamId',
-			width: '10%',
-			render: (teamId: any) => (
-				<Button type="primary" onClick={() => handleChange(teamId)}>
-					Judge Team
-				</Button>
-			),
 		},
 		{
 			title: 'Judgement State',
@@ -252,17 +227,17 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			render: (scores: []) => <Tag>{scores.length ? 'Judged' : 'Without Judgement'}</Tag>,
 		},
 	];
-	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
-		return {
-			time: item.time,
+
+	const dataSource = data
+		.slice(cutoffIndex)
+		.filter(item => (isJudged ? item.team.scores.length : !item.team.scores.length))
+		.map(item => ({
 			table: item.team.locationNum,
 			project: { name: item.team.name, link: new URL(item.team.devpost) },
 			teamMembers: item.team.members,
-			judge: item.judge,
 			teamId: item.team._id,
 			scores: item.team.scores,
-		};
-	});
+		}));
 
 	const handleRowClick = (record: any) => {
 		handleChange(record.teamId);
@@ -286,8 +261,9 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 				<Table.Summary fixed={true}>
 					<Table.Summary.Row>
 						<Table.Summary.Cell index={0} colSpan={6}>
-							<Radio checked={showPast} onClick={() => setShowPast(!showPast)} />
-							Show Past Sessions
+							<Button type="primary" onClick={() => setIsJudged(!isJudged)} style={{ marginLeft: 8 }}>
+								{isJudged ? 'Judged' : 'WIthout Judgement'}
+							</Button>
 						</Table.Summary.Cell>
 					</Table.Summary.Row>
 				</Table.Summary>

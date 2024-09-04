@@ -45,6 +45,7 @@ async function handleSubmit(
 		mutate('/api/teams');
 		mutate('/api/judging-form');
 		handleSubmitSuccess(`Successfully ${isNewForm ? 'submitted' : 'updated'}!`);
+		if (isNewForm) window.location.reload();
 		setIsNewForm(false);
 	} else {
 		handleSubmitFailure(await res.text());
@@ -54,8 +55,8 @@ async function handleSubmit(
 export default function JudgeDash() {
 	const { data: session, status } = useSession();
 	const [teamID, setTeamID] = useState('');
-	const [currentScheduleItem, setCurrentScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
-	const [nextScheduleItem, setNextScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
+	// const [currentScheduleItem, setCurrentScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
+	// const [nextScheduleItem, setNextScheduleItem] = useState<JudgingSessionData | undefined>(undefined);
 	const [isNewForm, setIsNewForm] = useState(false);
 	const [nextIndex, setNextIndex] = useState(-1);
 	const { mutate } = useSWRConfig();
@@ -132,50 +133,59 @@ export default function JudgeDash() {
 		return (await res.json()) as JudgingSessionData[];
 	});
 
-	// Initialize state if data was just received
+	// // Initialize state if data was just received
+	// useEffect(() => {
+	// 	if (nextIndex === -1 && scheduleData) {
+	// 		const now = Date.now();
+	// 		let index = scheduleData.findIndex(el => now < new Date(el.time as string).getTime());
+	// 		if (index === -1) index = scheduleData.length;
+	// 		let currentlyGoingTime = new Date(scheduleData[index - 1]?.time as string).getTime() + judgingLength;
+	// 		setNextScheduleItem(scheduleData[index]);
+	// 		setCurrentScheduleItem(now < currentlyGoingTime ? scheduleData[index - 1] : undefined);
+	// 		setNextIndex(index);
+	// 	}
+	// }, [scheduleData, nextIndex, judgingLength]);
+
+	// // Loop to manage current schedule state
+	// useEffect(() => {
+	// 	const interval = setInterval(() => {
+	// 		const now = Date.now();
+	// 		if (scheduleData && nextIndex > -1) {
+	// 			// Data has been received and state is initialized
+	// 			let time2 = new Date(scheduleData[scheduleData.length - 1]?.time as string).getTime() + judgingLength;
+	// 			if (now <= time2) {
+	// 				// Not yet done judging
+	// 				let time3 = new Date((currentScheduleItem?.time as string) || 0).getTime() + judgingLength;
+
+	// 				if (
+	// 					nextIndex < scheduleData.length &&
+	// 					now >= new Date((nextScheduleItem?.time as string) || 0).getTime()
+	// 				) {
+	// 					// Next event should be current
+	// 					setNextScheduleItem(scheduleData[nextIndex + 1]);
+	// 					setCurrentScheduleItem(scheduleData[nextIndex]);
+	// 					setNextIndex(nextIndex + 1);
+	// 				} else if (now > time3) {
+	// 					// Next event has not yet arrived but current event is over
+	// 					setCurrentScheduleItem(undefined);
+	// 				}
+	// 			} else {
+	// 				// Done judging
+	// 				setCurrentScheduleItem(undefined);
+	// 			}
+	// 		}
+	// 	}, 1000);
+	// 	return () => clearInterval(interval);
+	// });
+
 	useEffect(() => {
 		if (nextIndex === -1 && scheduleData) {
-			const now = Date.now();
-			let index = scheduleData.findIndex(el => now < new Date(el.time as string).getTime());
+			const today = new Date().setHours(0, 0, 0, 0);
+			let index = scheduleData.findIndex(el => today < new Date(el.time as string).getTime());
 			if (index === -1) index = scheduleData.length;
-			let currentlyGoingTime = new Date(scheduleData[index - 1]?.time as string).getTime() + judgingLength;
-			setNextScheduleItem(scheduleData[index]);
-			setCurrentScheduleItem(now < currentlyGoingTime ? scheduleData[index - 1] : undefined);
 			setNextIndex(index);
 		}
 	}, [scheduleData, nextIndex, judgingLength]);
-
-	// Loop to manage current schedule state
-	useEffect(() => {
-		const interval = setInterval(() => {
-			const now = Date.now();
-			if (scheduleData && nextIndex > -1) {
-				// Data has been received and state is initialized
-				let time2 = new Date(scheduleData[scheduleData.length - 1]?.time as string).getTime() + judgingLength;
-				if (now <= time2) {
-					// Not yet done judging
-					let time3 = new Date((currentScheduleItem?.time as string) || 0).getTime() + judgingLength;
-
-					if (
-						nextIndex < scheduleData.length &&
-						now >= new Date((nextScheduleItem?.time as string) || 0).getTime()
-					) {
-						// Next event should be current
-						setNextScheduleItem(scheduleData[nextIndex + 1]);
-						setCurrentScheduleItem(scheduleData[nextIndex]);
-						setNextIndex(nextIndex + 1);
-					} else if (now > time3) {
-						// Next event has not yet arrived but current event is over
-						setCurrentScheduleItem(undefined);
-					}
-				} else {
-					// Done judging
-					setCurrentScheduleItem(undefined);
-				}
-			}
-		}, 1000);
-		return () => clearInterval(interval);
-	});
 
 	const handleTeamChange: Dispatch<SetStateAction<string>> = e => {
 		setTeamID(e);
