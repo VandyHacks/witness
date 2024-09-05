@@ -178,14 +178,14 @@ export default function JudgeDash() {
 	// 	return () => clearInterval(interval);
 	// });
 
-	useEffect(() => {
-		if (nextIndex === -1 && scheduleData) {
-			const today = new Date().setHours(0, 0, 0, 0);
-			let index = scheduleData.findIndex(el => today < new Date(el.time as string).getTime());
-			if (index === -1) index = scheduleData.length;
-			setNextIndex(index);
-		}
-	}, [scheduleData, nextIndex, judgingLength]);
+	// useEffect(() => {
+	// 	if (nextIndex === -1 && scheduleData) {
+	// 		const today = new Date().setHours(0, 0, 0, 0);
+	// 		let index = scheduleData.findIndex(el => today < new Date(el.time as string).getTime());
+	// 		if (index === -1) index = scheduleData.length;
+	// 		setNextIndex(index);
+	// 	}
+	// }, [scheduleData, nextIndex, judgingLength]);
 
 	const handleTeamChange: Dispatch<SetStateAction<string>> = e => {
 		setTeamID(e);
@@ -214,9 +214,7 @@ export default function JudgeDash() {
 					</div>
 				</div>
 			</div>
-			{scheduleData && (
-				<JudgeSchedule data={scheduleData} cutoffIndex={nextIndex} handleChange={handleTeamChange} />
-			)}
+			{scheduleData && <JudgeSchedule data={scheduleData} handleChange={handleTeamChange} />}
 			<br />
 			<br />
 			{teamsData && <TeamSelect teamsData={teamsData} currentTeamID={teamID} handleChange={handleTeamChange} />}
