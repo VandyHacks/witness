@@ -103,6 +103,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 
 	sessionTimeStart = sessionTimeStart || new Date();
 	sessionTimeEnd = sessionTimeEnd || new Date();
+	// 5 represents the amount of time a judge judges one group
 	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, 5);
 
 	// Reorganize data to be fed into table
@@ -229,7 +230,6 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 	];
 
 	const dataSource = data
-		.slice(cutoffIndex)
 		.filter(item => (isJudged ? item.team.scores.length : !item.team.scores.length))
 		.map(item => ({
 			table: item.team.locationNum,
@@ -248,7 +248,13 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			locale={{
 				emptyText: (
 					<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-						<h3>Stay tuned! You will see your teams that you will judge soon!</h3>
+						<h3>
+							{data.length == 0
+								? 'Stay tuned! You will see your teams that you will judge soon!'
+								: isJudged
+								? "You haven't started judging yet."
+								: "Hurraaaaarrgh! You're off duty!"}
+						</h3>
 					</div>
 				),
 			}}

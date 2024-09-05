@@ -64,6 +64,7 @@ const ScheduleTab = () => {
 		}
 
 		// Set that potential schedules as newly generated schedules
+		// 5 represents the amount of time a judge judges one group
 		let judgingTimes = generateTimes(
 			new Date(hackathonSettings?.JUDGING_START as string),
 			new Date(hackathonSettings?.JUDGING_END as string),
