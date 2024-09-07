@@ -268,7 +268,7 @@ export function JudgeSchedule({ data, handleChange }: ScheduleProps) {
 					<Table.Summary.Row>
 						<Table.Summary.Cell index={0} colSpan={6}>
 							<Button type="primary" onClick={() => setIsJudged(!isJudged)} style={{ marginLeft: 8 }}>
-								{isJudged ? 'Judged' : 'WIthout Judgement'}
+								{isJudged ? 'Judged' : 'Without Judgement'}
 							</Button>
 						</Table.Summary.Cell>
 					</Table.Summary.Row>
