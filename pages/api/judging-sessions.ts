@@ -3,6 +3,9 @@ import { getSession } from 'next-auth/react';
 import JudgingSession from '../../models/JudgingSession';
 import Team from '../../models/team';
 import User from '../../models/user';
+import Scores from '../../models/scores';
+import { ObjectId } from 'mongodb';
+import { ScoreData } from '../../types/database';
 
 /**
  * gets a judging schedule for a team
@@ -37,13 +40,20 @@ async function getOrganizerSchedule(res: NextApiResponse) {
  * @param userID ID of the judge
  * @returns response containing judging schedule for a judge
  */
-async function getJudgeSchedule(res: NextApiResponse, userID: string) {
+async function getJudgeSchedule(res: NextApiResponse, userID: ObjectId) {
 	Team;
 	User; // Don't remove or the import will get optimized out and the populate will fail
 	const data = await JudgingSession.find({ judge: userID })
 		.populate('team judge')
 		.populate({ path: 'team', populate: { path: 'members' } })
 		.lean();
+
+	// whether the team in the session is judged
+	const teamsJudged = await Scores.find({ judge: userID }).select('team');
+	const teamsJudgedIDs = teamsJudged.map(teamItem => teamItem.team.toString());
+	data.forEach(judgingSession => {
+		judgingSession.haveJudged = teamsJudgedIDs.includes(judgingSession.team._id.toString());
+	});
 	return res.status(200).send(data);
 }
 
@@ -62,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 		case 'ORGANIZER':
 			return getOrganizerSchedule(res);
 		case 'JUDGE':
-			return getJudgeSchedule(res, session?.userID as string);
+			return getJudgeSchedule(res, session?.userID as ObjectId);
 		default:
 			return res.status(403).send('Forbidden');
 	}

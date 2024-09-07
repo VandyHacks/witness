@@ -123,6 +123,7 @@ export interface JudgingSessionData {
 	_id?: mongoose.Schema.Types.ObjectId;
 	team: TeamData;
 	judge: UserData;
+	haveJudged?: Boolean;
 	time: String;
 }
 

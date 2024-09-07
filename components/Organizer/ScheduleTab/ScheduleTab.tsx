@@ -73,6 +73,7 @@ const ScheduleTab = () => {
 		setPotentialSchedule(matchTeams(teams, judges, judgingTimes, timesJudged));
 	};
 
+	// bug1: do not use the default 2 hours constant.
 	useEffect(() => {
 		if (!teamsData || !judgesData) return;
 		setMaxTimesJudged(Math.floor((judgesData?.length * 24) / teamsData?.length));

@@ -222,21 +222,21 @@ export function JudgeSchedule({ data, handleChange }: ScheduleProps) {
 		},
 		{
 			title: 'Judgement State',
-			dataIndex: 'scores',
-			key: 'scores',
+			dataIndex: 'haveJudged',
+			key: 'haveJudged',
 			width: '10%',
-			render: (scores: []) => <Tag>{scores.length ? 'Judged' : 'Without Judgement'}</Tag>,
+			render: (haveJudged: []) => <Tag>{haveJudged ? 'Judged' : 'Without Judgement'}</Tag>,
 		},
 	];
 
 	const dataSource = data
-		.filter(item => (isJudged ? item.team.scores.length : !item.team.scores.length))
+		.filter(item => (isJudged ? item.haveJudged : !item.haveJudged))
 		.map(item => ({
 			table: item.team.locationNum,
 			project: { name: item.team.name, link: new URL(item.team.devpost) },
 			teamMembers: item.team.members,
 			teamId: item.team._id,
-			scores: item.team.scores,
+			haveJudged: item.haveJudged,
 		}));
 
 	const handleRowClick = (record: any) => {
