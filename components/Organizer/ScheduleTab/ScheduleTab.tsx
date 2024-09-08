@@ -13,8 +13,25 @@ const ScheduleTab = () => {
 	const [timesJudged, setTimesJudged] = useState<number>(1);
 	const [maxTimesJudged, setMaxTimesJudged] = useState<number>(0);
 	const [potentialSchedule, setPotentialSchedule] = useState<JudgingSessionData[] | undefined>(undefined);
+	const [hackathonSettings, setHackathonSettings] = useState<HackathonSettingsData | undefined>(undefined);
 
 	const { baseTheme } = useContext(ThemeContext);
+
+	// Get hackathon settings
+	useEffect(() => {
+		const fetchHackathonSettings = async () => {
+			const res = await fetch('/api/hackathon-settings');
+			if (res.ok) {
+				const settings = await res.json();
+				setHackathonSettings(settings as HackathonSettingsData);
+			}
+		};
+		fetchHackathonSettings();
+	}, []);
+
+	const TimeForJudgeToScoreOneTeam = hackathonSettings?.JUDGING_TIME_PER_TEAM as number;
+	const JudgingDuration = hackathonSettings?.JUDGING_DURATION as number;
+	const MaximumNumberOfTeamsOneJudgeCanFinishInJudgingTime = JudgingDuration / TimeForJudgeToScoreOneTeam;
 
 	// Get judging sessions
 	const { data: judgingSessions, error: judgingSessionsError } = useCustomSWR<JudgingSessionData[]>({
@@ -37,13 +54,6 @@ const ScheduleTab = () => {
 		errorMessage: 'Failed to get list of teams.',
 	});
 
-	// Get hackathon settings
-	const { data: hackathonSettings, error: hackathonError } = useCustomSWR<HackathonSettingsData>({
-		url: '/api/hackathon-settings',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get hackathon times.',
-	});
-
 	// Confirm potential schedule
 	const handleConfirmPotentialSchedules = (potentialSchedule: JudgingSessionData[] | undefined) => {
 		// Exit early if we don't have data yet
@@ -64,20 +74,20 @@ const ScheduleTab = () => {
 		}
 
 		// Set that potential schedules as newly generated schedules
-		// 5 represents the amount of time a judge judges one group
 		let judgingTimes = generateTimes(
 			new Date(hackathonSettings?.JUDGING_START as string),
 			new Date(hackathonSettings?.JUDGING_END as string),
-			5
+			TimeForJudgeToScoreOneTeam
 		);
 		setPotentialSchedule(matchTeams(teams, judges, judgingTimes, timesJudged));
 	};
 
-	// bug1: do not use the default 2 hours constant.
 	useEffect(() => {
 		if (!teamsData || !judgesData) return;
-		setMaxTimesJudged(Math.floor((judgesData?.length * 24) / teamsData?.length));
-	}, [teamsData, judgesData]);
+		setMaxTimesJudged(
+			Math.floor((judgesData?.length * MaximumNumberOfTeamsOneJudgeCanFinishInJudgingTime) / teamsData?.length)
+		);
+	}, [teamsData, judgesData, hackathonSettings]);
 
 	useEffect(() => {
 		// Exit early if we don't have data yet
@@ -164,6 +174,7 @@ const ScheduleTab = () => {
 							handleChange={function (value: SetStateAction<string>): void {
 								throw new Error('Function not implemented.');
 							}}
+							TimeForJudgeToScoreOneTeam={hackathonSettings?.JUDGING_TIME_PER_TEAM as number}
 							sessionTimeStart={new Date(hackathonSettings?.JUDGING_START as string)}
 							sessionTimeEnd={new Date(hackathonSettings?.JUDGING_END as string)}
 						/>

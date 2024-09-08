@@ -1,4 +1,4 @@
-import { Button, DatePicker, Select, Space } from 'antd';
+import { Button, DatePicker, Input, Select, Space } from 'antd';
 import dayjs from 'dayjs';
 import React, { useContext, useEffect, useState } from 'react';
 import { handleSubmitFailure, handleSubmitSuccess } from '../../../lib/helpers';
@@ -89,6 +89,7 @@ const HackathonSettings = () => {
 				setHackathonSetting(settings as HackathonSettingsData);
 				setStatusMessage('Successfully saved to database!');
 				handleSubmitSuccess('Successfully saved to database!');
+				window.location.reload();
 			} else {
 				setStatusMessage('Failed to save to database!');
 				handleSubmitFailure('Failed to save to database!');
@@ -114,14 +115,16 @@ const HackathonSettings = () => {
 	};
 
 	const handleJudgingChange = (_: any, dateStrings: [string, string]) => {
-		const newJudgingStart = dayjs(dateStrings[0], { utc: true }).format('MM/DD/YYYY hh:mm A');
-		const newJudgingEnd = dayjs(dateStrings[1], { utc: true }).format('MM/DD/YYYY hh:mm A');
+		const newJudgingStart = dayjs(dateStrings[0], { utc: true });
+		const newJudgingEnd = dayjs(dateStrings[1], { utc: true });
+		const judgingDuration = newJudgingEnd.diff(newJudgingStart, 'minute');
 		setHackathonSetting(prev => {
 			if (prev)
 				return {
 					...prev,
-					JUDGING_START: newJudgingStart,
-					JUDGING_END: newJudgingEnd,
+					JUDGING_START: newJudgingStart.format('MM/DD/YYYY hh:mm A'),
+					JUDGING_END: newJudgingEnd.format('MM/DD/YYYY hh:mm A'),
+					JUDGING_DURATION: judgingDuration,
 				};
 			return undefined;
 		});
@@ -159,6 +162,26 @@ const HackathonSettings = () => {
 				showTime={{ format: 'hh:mm A' }}
 				onChange={handleJudgingChange}
 				defaultValue={[dayjs(hackathonSetting?.JUDGING_START), dayjs(hackathonSetting?.JUDGING_END)]}
+			/>
+
+			<br />
+
+			<div>Time for Judge to Score One Team (minutes):</div>
+			<Input
+				value={hackathonSetting?.JUDGING_TIME_PER_TEAM}
+				onChange={e => {
+					setHackathonSetting(prev => {
+						if (prev) {
+							return {
+								...prev,
+								JUDGING_TIME_PER_TEAM: e.target.value,
+							};
+						}
+						return prev;
+					});
+				}}
+				placeholder="Enter time in minutes"
+				style={{ width: 138 }}
 			/>
 
 			<br />

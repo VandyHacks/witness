@@ -8,7 +8,7 @@ import { ThemeContext, getAccentColor } from '../../theme/themeProvider';
 
 interface ScheduleProps {
 	data: JudgingSessionData[];
-	cutoffIndex?: number;
+	TimeForJudgeToScoreOneTeam?: number;
 	handleChange: (teamId: string) => void;
 	sessionTimeStart?: Date;
 	sessionTimeEnd?: Date;
@@ -67,7 +67,7 @@ export function generateTimes(start: Date, end: Date, interval: number) {
 }
 
 export default function OrganizerSchedule(props: ScheduleProps) {
-	let { data, sessionTimeStart, sessionTimeEnd } = props;
+	let { data, TimeForJudgeToScoreOneTeam, sessionTimeStart, sessionTimeEnd } = props;
 
 	const teams = useMemo(
 		() => [...new Set(data.filter(x => x.team !== null && x.team.name !== null).map(x => x.team.name))],
@@ -103,8 +103,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 
 	sessionTimeStart = sessionTimeStart || new Date();
 	sessionTimeEnd = sessionTimeEnd || new Date();
-	// 5 represents the amount of time a judge judges one group
-	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, 5);
+	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, TimeForJudgeToScoreOneTeam as number);
 
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {

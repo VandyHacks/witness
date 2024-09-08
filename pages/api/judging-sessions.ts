@@ -48,7 +48,7 @@ async function getJudgeSchedule(res: NextApiResponse, userID: ObjectId) {
 		.populate({ path: 'team', populate: { path: 'members' } })
 		.lean();
 
-	// whether the team in the session is judged
+	// whether the team in the session has judged by the specific judge
 	const teamsJudged = await Scores.find({ judge: userID }).select('team');
 	const teamsJudgedIDs = teamsJudged.map(teamItem => teamItem.team.toString());
 	data.forEach(judgingSession => {
