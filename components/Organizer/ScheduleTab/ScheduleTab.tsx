@@ -29,7 +29,7 @@ const ScheduleTab = () => {
 		fetchHackathonSettings();
 	}, []);
 
-	const TimeForJudgeToScoreOneTeam = hackathonSettings?.JUDGING_TIME_PER_TEAM as number;
+	const TimeForJudgeToScoreOneTeam = parseInt(hackathonSettings?.JUDGING_TIME_PER_TEAM as string, 10);
 	const JudgingDuration = hackathonSettings?.JUDGING_DURATION as number;
 	const MaximumNumberOfTeamsOneJudgeCanFinishInJudgingTime = JudgingDuration / TimeForJudgeToScoreOneTeam;
 
@@ -174,7 +174,7 @@ const ScheduleTab = () => {
 							handleChange={function (value: SetStateAction<string>): void {
 								throw new Error('Function not implemented.');
 							}}
-							TimeForJudgeToScoreOneTeam={hackathonSettings?.JUDGING_TIME_PER_TEAM as number}
+							TimeForJudgeToScoreOneTeam={TimeForJudgeToScoreOneTeam}
 							sessionTimeStart={new Date(hackathonSettings?.JUDGING_START as string)}
 							sessionTimeEnd={new Date(hackathonSettings?.JUDGING_END as string)}
 						/>
