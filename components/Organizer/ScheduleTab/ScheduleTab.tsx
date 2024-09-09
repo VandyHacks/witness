@@ -92,20 +92,8 @@ const ScheduleTab = () => {
 	useEffect(() => {
 		// Exit early if we don't have data yet
 		if (!judgingSessions) return;
-
-		// Sort judging sessions by time
-		const time = new Date('2022-10-23T11:00:00').getTime();
-
-		// Set the data after filtering it by time
-		setPotentialSchedule(
-			judgingSessions.filter(judgingSession => {
-				let time = new Date(judgingSession.time as string);
-				return (
-					new Date(hackathonSettings?.JUDGING_START as string) <= time &&
-					time <= new Date(hackathonSettings?.JUDGING_END as string)
-				);
-			})
-		);
+		// Set the data
+		setPotentialSchedule(judgingSessions);
 	}, [judgingSessions, hackathonSettings]);
 
 	// Combine all the loading, null, and error states
