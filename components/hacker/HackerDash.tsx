@@ -792,7 +792,7 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 											<br />
 											You have been accepted to VandyHacks!
 											<div style={{ width: '100%', height: '16px' }}></div>
-											<a href="https://vhl.ink/discord" target="_blank" rel="noreferrer">
+											<a href="https://discord.gg/WUMXjsZ6SF" target="_blank" rel="noreferrer">
 												<Button size="large" type="link">
 													Click here to join our Discord
 												</Button>
