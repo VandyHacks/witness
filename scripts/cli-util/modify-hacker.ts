@@ -6,7 +6,6 @@ import { promptAction } from '../dev-cli';
 import { ApplicationStatus, TeamData, UserData } from '../../types/database';
 import { ObjectId } from 'mongoose';
 
-// TODO: zi
 /**
  * Quickly change the application status of hacker.
  * A hacker has multiple application statuses.
