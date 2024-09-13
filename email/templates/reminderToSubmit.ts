@@ -28,7 +28,7 @@ export default async (user: UserData): Promise<SendEmailRequest> => ({
 				Data: `Applications Closing Soon!
 				Hi ${escapeChars(user.name)},
 				We’ve noticed you’ve created an application with us, but we do not have a record of your submission. We would love to have you join VandyHacks XI: Racing Edition!
-				Make sure you apply at vandyhacks.org by October 16th, at 11:59pm to have the chance to create unique projects, win prizes, attend workshops/speaker events, network with our sponsors, receive cool swag, eat free food, and so much more! 
+				Make sure you apply at vandyhacks.org by September 16th, at 11:59pm to have the chance to create unique projects, win prizes, attend workshops/speaker events, network with our sponsors, receive cool swag, eat free food, and so much more! 
 				Feel free to email us at info@vandyhacks.org if you have any questions
 				Cheers,
 				The VandyHacks Team`,

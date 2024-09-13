@@ -146,7 +146,7 @@ const TeamManagement = () => {
 			Team
 			<div className={styles.Description}>
 				You can create a team or join a team (1 - 4 people per team). Devpost link must be submitted by 12:30 PM
-				on October 29th.
+				on September 29th.
 			</div>
 			{!teamData && (
 				<>
