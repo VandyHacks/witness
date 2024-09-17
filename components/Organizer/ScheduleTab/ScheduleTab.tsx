@@ -13,8 +13,25 @@ const ScheduleTab = () => {
 	const [timesJudged, setTimesJudged] = useState<number>(1);
 	const [maxTimesJudged, setMaxTimesJudged] = useState<number>(0);
 	const [potentialSchedule, setPotentialSchedule] = useState<JudgingSessionData[] | undefined>(undefined);
+	const [hackathonSettings, setHackathonSettings] = useState<HackathonSettingsData | undefined>(undefined);
 
 	const { baseTheme } = useContext(ThemeContext);
+
+	// Get hackathon settings
+	useEffect(() => {
+		const fetchHackathonSettings = async () => {
+			const res = await fetch('/api/hackathon-settings');
+			if (res.ok) {
+				const settings = await res.json();
+				setHackathonSettings(settings as HackathonSettingsData);
+			}
+		};
+		fetchHackathonSettings();
+	}, []);
+
+	const TimeForJudgeToScoreOneTeam = parseInt(hackathonSettings?.JUDGING_TIME_PER_TEAM as string, 10);
+	const JudgingDuration = hackathonSettings?.JUDGING_DURATION as number;
+	const MaximumNumberOfTeamsOneJudgeCanFinishInJudgingTime = JudgingDuration / TimeForJudgeToScoreOneTeam;
 
 	// Get judging sessions
 	const { data: judgingSessions, error: judgingSessionsError } = useCustomSWR<JudgingSessionData[]>({
@@ -35,13 +52,6 @@ const ScheduleTab = () => {
 		url: '/api/teams?submitted=true',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of teams.',
-	});
-
-	// Get hackathon settings
-	const { data: hackathonSettings, error: hackathonError } = useCustomSWR<HackathonSettingsData>({
-		url: '/api/hackathon-settings',
-		method: RequestType.GET,
-		errorMessage: 'Failed to get hackathon times.',
 	});
 
 	// Confirm potential schedule
@@ -67,33 +77,23 @@ const ScheduleTab = () => {
 		let judgingTimes = generateTimes(
 			new Date(hackathonSettings?.JUDGING_START as string),
 			new Date(hackathonSettings?.JUDGING_END as string),
-			10
+			TimeForJudgeToScoreOneTeam
 		);
 		setPotentialSchedule(matchTeams(teams, judges, judgingTimes, timesJudged));
 	};
 
 	useEffect(() => {
 		if (!teamsData || !judgesData) return;
-		setMaxTimesJudged(Math.floor((judgesData?.length * 12) / teamsData?.length));
-	}, [teamsData, judgesData]);
+		setMaxTimesJudged(
+			Math.floor((judgesData?.length * MaximumNumberOfTeamsOneJudgeCanFinishInJudgingTime) / teamsData?.length)
+		);
+	}, [teamsData, judgesData, hackathonSettings]);
 
 	useEffect(() => {
 		// Exit early if we don't have data yet
 		if (!judgingSessions) return;
-
-		// Sort judging sessions by time
-		const time = new Date('2022-10-23T11:00:00').getTime();
-
-		// Set the data after filtering it by time
-		setPotentialSchedule(
-			judgingSessions.filter(judgingSession => {
-				let time = new Date(judgingSession.time as string);
-				return (
-					new Date(hackathonSettings?.JUDGING_START as string) <= time &&
-					time <= new Date(hackathonSettings?.JUDGING_END as string)
-				);
-			})
-		);
+		// Set the data
+		setPotentialSchedule(judgingSessions);
 	}, [judgingSessions, hackathonSettings]);
 
 	// Combine all the loading, null, and error states
@@ -162,6 +162,7 @@ const ScheduleTab = () => {
 							handleChange={function (value: SetStateAction<string>): void {
 								throw new Error('Function not implemented.');
 							}}
+							TimeForJudgeToScoreOneTeam={TimeForJudgeToScoreOneTeam}
 							sessionTimeStart={new Date(hackathonSettings?.JUDGING_START as string)}
 							sessionTimeEnd={new Date(hackathonSettings?.JUDGING_END as string)}
 						/>

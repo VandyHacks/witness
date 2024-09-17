@@ -63,13 +63,6 @@ export default function TeamSelect(props: TeamSelectProps) {
 							))}
 					</OptGroup>
 				)}
-				<OptGroup label="All Teams">
-					{teamsData.map(team => (
-						<Option value={team._id} key={`${team._id}ALL`}>
-							{team.haveJudged ? withCheckMark(team.name) : team.name}
-						</Option>
-					))}
-				</OptGroup>
 			</Select>
 		</Space>
 	);
