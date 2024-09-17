@@ -1,9 +1,11 @@
 import { Table } from 'antd';
 
 import useSWR from 'swr';
-import { DietaryData, ResponseError } from '../../../types/database';
+import { DietaryData, ResponseError, UserData } from '../../../types/database';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 import React, { useState, useRef, useEffect } from 'react';
+
+
 
 export default function Analytics() {
 	const { data: dietaryData, error: dietaryError } = useCustomSWR<DietaryData[]>({
