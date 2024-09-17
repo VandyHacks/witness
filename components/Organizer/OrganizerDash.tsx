@@ -6,6 +6,7 @@ import ManageUsersTab from './ManageUsersTab/ManageUsersTab';
 import PreAddUsersTab from './PreAddUsersTab/PreAddUsersTab';
 import ApplicantsTab from './ApplicantsTab/ApplicantsTab';
 import EventsTab from './EventsTab/EventsTab';
+import AnalyticsTab from './AnalyticsTab/AnalyticsTab';
 import styles from '../../styles/Organizer.module.css';
 import { AccentColor, Theme, ThemeContext, getAccentColor, getThemedClass } from '../../theme/themeProvider';
 import { useContext, useEffect } from 'react';
@@ -100,13 +101,18 @@ export default function OrganizerDash() {
 							children: <EventsTab />,
 						},
 						{
-							label: 'Bug Reports',
+							label: `Analytics`,
 							key: '7',
+							children: <AnalyticsTab />,
+						},
+						{
+							label: 'Bug Reports',
+							key: '8',
 							children: <BugReportsTab />,
 						},
 						{
 							label: `Settings`,
-							key: '8',
+							key: '9',
 							children: <SettingsTab />,
 						},
 					]}

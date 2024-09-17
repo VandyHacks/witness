@@ -127,6 +127,11 @@ export interface JudgingSessionData {
 	time: String;
 }
 
+export interface DietaryData {
+	_id: mongoose.Schema.Types.ObjectId;
+	count: number;
+}
+
 export interface HackathonSettingsData {
 	_id: mongoose.Schema.Types.ObjectId;
 	HACKATHON_START: string; // MM/DD/YYYY HH:mm A
