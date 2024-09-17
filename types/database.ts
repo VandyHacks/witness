@@ -123,6 +123,7 @@ export interface JudgingSessionData {
 	_id?: mongoose.Schema.Types.ObjectId;
 	team: TeamData;
 	judge: UserData;
+	haveJudged?: Boolean;
 	time: String;
 }
 
@@ -132,5 +133,7 @@ export interface HackathonSettingsData {
 	HACKATHON_END: string; // MM/DD/YYYY hh:mm A
 	JUDGING_START: string; // MM/DD/YYYY hh:mm A
 	JUDGING_END: string; // MM/DD/YYYY hh:mm A
+	JUDGING_DURATION: number;
+	JUDGING_TIME_PER_TEAM: string;
 	ON_CALL_DEV: string;
 }

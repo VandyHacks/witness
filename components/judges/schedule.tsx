@@ -8,7 +8,7 @@ import { ThemeContext, getAccentColor } from '../../theme/themeProvider';
 
 interface ScheduleProps {
 	data: JudgingSessionData[];
-	cutoffIndex?: number;
+	TimeForJudgeToScoreOneTeam?: number;
 	handleChange: (teamId: string) => void;
 	sessionTimeStart?: Date;
 	sessionTimeEnd?: Date;
@@ -67,7 +67,7 @@ export function generateTimes(start: Date, end: Date, interval: number) {
 }
 
 export default function OrganizerSchedule(props: ScheduleProps) {
-	let { data, sessionTimeStart, sessionTimeEnd } = props;
+	let { data, TimeForJudgeToScoreOneTeam, sessionTimeStart, sessionTimeEnd } = props;
 
 	const teams = useMemo(
 		() => [...new Set(data.filter(x => x.team !== null && x.team.name !== null).map(x => x.team.name))],
@@ -103,7 +103,7 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 
 	sessionTimeStart = sessionTimeStart || new Date();
 	sessionTimeEnd = sessionTimeEnd || new Date();
-	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, 10);
+	const sessionTimes = generateTimes(sessionTimeStart, sessionTimeEnd, TimeForJudgeToScoreOneTeam as number);
 
 	// Reorganize data to be fed into table
 	const tableData = useMemo(() => {
@@ -182,18 +182,11 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 	);
 }
 
-export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps) {
-	const [showPast, setShowPast] = useState(false);
+export function JudgeSchedule({ data, handleChange }: ScheduleProps) {
+	const [isJudged, setIsJudged] = useState(false);
 	const { accentColor, baseTheme } = useContext(ThemeContext);
 
 	const columns = [
-		{
-			title: 'Time',
-			dataIndex: 'time',
-			key: 'time',
-			width: '10%',
-			render: (date: string) => DateTime.fromISO(date).toLocaleString(DateTime.TIME_SIMPLE),
-		},
 		{
 			title: 'Table',
 			dataIndex: 'table',
@@ -205,7 +198,7 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Project',
 			dataIndex: 'project',
 			key: 'project',
-			width: '25%',
+			width: '40%',
 			render: ({ name, link }: { name: string; link: URL }) => (
 				<>
 					<td>{name}</td>
@@ -223,46 +216,27 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			title: 'Team Members',
 			dataIndex: 'teamMembers',
 			key: 'teamMembers',
-			width: '25%',
+			width: '40%',
 			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
 		},
 		{
-			title: 'Judge',
-			dataIndex: 'judge',
-			key: 'judge',
-			width: '10%',
-			render: (judge: User) => <Tag key={judge.id}>{judge.name}</Tag>,
-		},
-		{
-			title: 'Action',
-			dataIndex: 'teamId',
-			key: 'teamId',
-			width: '10%',
-			render: (teamId: any) => (
-				<Button type="primary" onClick={() => handleChange(teamId)}>
-					Judge Team
-				</Button>
-			),
-		},
-		{
 			title: 'Judgement State',
-			dataIndex: 'scores',
-			key: 'scores',
+			dataIndex: 'haveJudged',
+			key: 'haveJudged',
 			width: '10%',
-			render: (scores: []) => <Tag>{scores.length ? 'Judged' : 'Without Judgement'}</Tag>,
+			render: (haveJudged: []) => <Tag>{haveJudged ? 'Judged' : 'Without Judgement'}</Tag>,
 		},
 	];
-	const dataSource = data.slice(showPast ? 0 : cutoffIndex).map(item => {
-		return {
-			time: item.time,
+
+	const dataSource = data
+		.filter(item => (isJudged ? item.haveJudged : !item.haveJudged))
+		.map(item => ({
 			table: item.team.locationNum,
 			project: { name: item.team.name, link: new URL(item.team.devpost) },
 			teamMembers: item.team.members,
-			judge: item.judge,
 			teamId: item.team._id,
-			scores: item.team.scores,
-		};
-	});
+			haveJudged: item.haveJudged,
+		}));
 
 	const handleRowClick = (record: any) => {
 		handleChange(record.teamId);
@@ -273,7 +247,13 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 			locale={{
 				emptyText: (
 					<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-						<h3>Stay tuned! You will see your teams that you will judge soon!</h3>
+						<h3>
+							{data.length == 0
+								? 'Stay tuned! You will see your teams that you will judge soon!'
+								: isJudged
+								? "You haven't started judging yet."
+								: "Hurraaaaarrgh! You're off duty!"}
+						</h3>
 					</div>
 				),
 			}}
@@ -286,8 +266,9 @@ export function JudgeSchedule({ data, cutoffIndex, handleChange }: ScheduleProps
 				<Table.Summary fixed={true}>
 					<Table.Summary.Row>
 						<Table.Summary.Cell index={0} colSpan={6}>
-							<Radio checked={showPast} onClick={() => setShowPast(!showPast)} />
-							Show Past Sessions
+							<Button type="primary" onClick={() => setIsJudged(!isJudged)} style={{ marginLeft: 8 }}>
+								{isJudged ? 'Judged' : 'Without Judgement'}
+							</Button>
 						</Table.Summary.Cell>
 					</Table.Summary.Row>
 				</Table.Summary>

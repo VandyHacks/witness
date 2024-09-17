@@ -12,7 +12,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 	await dbConnect();
 	switch (req.method) {
 		case 'GET':
-			const users = await User.find({ nfcPoints: { $exists: true } })
+			const users = await User.find({
+				userType: 'HACKER',
+				nfcPoints: { $exists: true },
+			})
 				.sort({ nfcPoints: -1 })
 				.limit(10)
 				.populate('team')
