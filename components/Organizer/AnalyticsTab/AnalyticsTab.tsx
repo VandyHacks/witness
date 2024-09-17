@@ -1,7 +1,7 @@
 import { Table } from 'antd';
 
 import useSWR from 'swr';
-import { DietaryData, ResponseError } from '../../../types/database';
+import { DietaryData, ResponseError, UserData } from '../../../types/database';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';
 import React, { useState, useRef, useEffect } from 'react';
 
@@ -34,9 +34,17 @@ export default function Analytics() {
 		  }))
 		: undefined;
 
+	// Hacker data
+	const { data: hackersData, error: hackersError } = useCustomSWR<UserData[]>({
+		url: '/api/users?usertype=HACKER',
+		method: RequestType.GET,
+		errorMessage: 'Failed to get list of hackers.',
+	});
+
 	return (
 		<>
 			<Table columns={columns} dataSource={formattedDietaryData}></Table>
+			<p>Hacker Count: {hackersData?.length}</p>
 		</>
 	);
 }
