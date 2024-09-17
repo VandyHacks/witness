@@ -28,8 +28,6 @@ export default function Analytics() {
 		},
 	];
 
-
-
 	// Format the dietary data to add a unique 'key' for each row
 	const formattedDietaryData = dietaryData
 		? dietaryData.map((restriction: DietaryData) => ({
@@ -38,22 +36,17 @@ export default function Analytics() {
 		  }))
 		: undefined;
 
-	
 	// Hacker data
 	const { data: hackersData, error: hackersError } = useCustomSWR<UserData[]>({
 		url: '/api/users?usertype=HACKER',
 		method: RequestType.GET,
 		errorMessage: 'Failed to get list of hackers.',
-		});
-		
-	
+	});
+
 	return (
 		<>
 			<Table columns={columns} dataSource={formattedDietaryData}></Table>
 			<p>Hacker Count: {hackersData?.length}</p>
 		</>
-		
 	);
-
-
 }
