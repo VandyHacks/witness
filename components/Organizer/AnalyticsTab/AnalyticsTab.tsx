@@ -37,6 +37,15 @@ export default function Analytics() {
           }))
         : undefined;
       
+    // Hacker data
+    const { data: hackersData, error: hackersError } = useCustomSWR<UserData[]>({
+      url: '/api/users?usertype=HACKER',
+      method: RequestType.GET,
+      errorMessage: 'Failed to get list of hackers.',
+    });
+
+
+    
     
     
     
@@ -45,6 +54,7 @@ export default function Analytics() {
             <Table columns = {columns} dataSource={formattedDietaryData} >
                 
             </Table>
+            <p>Hacker Count: {hackersData?.length}</p>
         </>
     );
     
