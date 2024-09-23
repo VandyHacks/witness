@@ -1,7 +1,7 @@
 import { Button, InputNumber, Slider, Row, Col } from 'antd';
 import { SetStateAction, useContext, useEffect, useState } from 'react';
 import { matchTeams, handleConfirmSchedule } from '../../../utils/organizer-utils';
-import OrganizerSchedule, { generateTimes } from '../../judges/schedule';
+import OrganizerSchedule, { generateTimes } from './OrganizerSchedule';
 import { ResponseError, JudgingSessionData, UserData, TeamData, HackathonSettingsData } from '../../../types/database';
 import Title from 'antd/lib/typography/Title';
 import { RequestType, useCustomSWR } from '../../../utils/request-utils';

@@ -1,7 +1,6 @@
-import { Slider, Radio, InputNumber, Row, Col } from 'antd';
+import { Radio, InputNumber, Row, Col } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
-import { IntegerType } from 'mongodb';
-import styles from '../../styles/Judge.module.css';
+import styles from '../../../styles/Judge.module.css';
 import React from 'react';
 
 interface ScoreInputProps {

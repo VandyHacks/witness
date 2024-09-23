@@ -1,9 +1,9 @@
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Row, Select, Space } from 'antd';
 import React, { Dispatch, SetStateAction, useContext } from 'react';
-import { TeamSelectData } from '../../types/client';
+import { TeamSelectData } from '../../../types/client';
 import { useSession } from 'next-auth/react';
-import { ThemeContext, getBaseColor } from '../../theme/themeProvider';
+import { ThemeContext, getBaseColor } from '../../../theme/themeProvider';
 const { Option, OptGroup } = Select;
 
 interface TeamSelectProps {

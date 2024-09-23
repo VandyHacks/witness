@@ -1,10 +1,7 @@
-import { Space, Table, Collapse, Tag, Switch, Button, notification, Upload, Spin, theme, Radio } from 'antd';
-import React, { useContext, useMemo, useState } from 'react';
+import { Space, Table, Tag } from 'antd';
+import React, { useMemo, useState } from 'react';
 import { DateTime } from 'luxon';
-import Link from 'next/link';
-import { JudgingSessionData } from '../../types/database';
-import { User } from 'next-auth';
-import { ThemeContext, getAccentColor } from '../../theme/themeProvider';
+import { JudgingSessionData } from '../../../types/database';
 
 interface ScheduleProps {
 	data: JudgingSessionData[];
@@ -179,103 +176,5 @@ export default function OrganizerSchedule(props: ScheduleProps) {
 				)}*/
 			/>
 		</div>
-	);
-}
-
-export function JudgeSchedule({ data, handleChange }: ScheduleProps) {
-	const [isJudged, setIsJudged] = useState(false);
-	const { accentColor, baseTheme } = useContext(ThemeContext);
-
-	const columns = [
-		{
-			title: 'Table',
-			dataIndex: 'table',
-			key: 'table',
-			width: '10%',
-			render: (locationNum: number) => locationNum,
-		},
-		{
-			title: 'Project',
-			dataIndex: 'project',
-			key: 'project',
-			width: '40%',
-			render: ({ name, link }: { name: string; link: URL }) => (
-				<>
-					<td>{name}</td>
-					<Link href={link} passHref>
-						<a
-							style={{ color: getAccentColor(accentColor, baseTheme), textDecoration: 'underline' }}
-							target="_blank">
-							Devpost
-						</a>
-					</Link>
-				</>
-			),
-		},
-		{
-			title: 'Team Members',
-			dataIndex: 'teamMembers',
-			key: 'teamMembers',
-			width: '40%',
-			render: (members: User[]) => members.map(member => <Tag key={member.id}>{member.name}</Tag>),
-		},
-		{
-			title: 'Judgement State',
-			dataIndex: 'haveJudged',
-			key: 'haveJudged',
-			width: '10%',
-			render: (haveJudged: []) => <Tag>{haveJudged ? 'Judged' : 'Without Judgement'}</Tag>,
-		},
-	];
-
-	const dataSource = data
-		.filter(item => (isJudged ? item.haveJudged : !item.haveJudged))
-		.map(item => ({
-			table: item.team.locationNum,
-			project: { name: item.team.name, link: new URL(item.team.devpost) },
-			teamMembers: item.team.members,
-			teamId: item.team._id,
-			haveJudged: item.haveJudged,
-		}));
-
-	const handleRowClick = (record: any) => {
-		handleChange(record.teamId);
-	};
-
-	return (
-		<Table
-			locale={{
-				emptyText: (
-					<div style={{ paddingTop: '50px', paddingBottom: '50px' }}>
-						<h3>
-							{data.length == 0
-								? 'Stay tuned! You will see your teams that you will judge soon!'
-								: isJudged
-								? "You haven't started judging yet."
-								: "Hurraaaaarrgh! You're off duty!"}
-						</h3>
-					</div>
-				),
-			}}
-			dataSource={dataSource}
-			columns={columns}
-			pagination={false}
-			bordered
-			scroll={{ x: true }}
-			summary={_ => (
-				<Table.Summary fixed={true}>
-					<Table.Summary.Row>
-						<Table.Summary.Cell index={0} colSpan={6}>
-							<Button type="primary" onClick={() => setIsJudged(!isJudged)} style={{ marginLeft: 8 }}>
-								{isJudged ? 'Judged' : 'Without Judgement'}
-							</Button>
-						</Table.Summary.Cell>
-					</Table.Summary.Row>
-				</Table.Summary>
-			)}
-			onRow={record => ({
-				onClick: () => handleRowClick(record),
-			})}
-		/>
 	);
 }
