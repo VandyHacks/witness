@@ -37,18 +37,18 @@ export const handleModifyTeam = async () => {
 				name: 'Change Team Name',
 				value: 'change-name',
 			},
-			{
-				name: 'Remove a member',
-				value: 'remove-member',
-			},
-			{
-				name: 'Add a member',
-				value: 'add-member',
-			},
-			{
-				name: 'Change invite code',
-				value: 'change-invite-code',
-			},
+			// {
+			// 	name: 'Remove a member',
+			// 	value: 'remove-member',
+			// },
+			// {
+			// 	name: 'Add a member',
+			// 	value: 'add-member',
+			// },
+			// {
+			// 	name: 'Change invite code',
+			// 	value: 'change-invite-code',
+			// },
 			{
 				name: 'Change devpost link',
 				value: 'change-devpost-link',
@@ -64,15 +64,15 @@ export const handleModifyTeam = async () => {
 		case 'change-name':
 			await changeName(team);
 			break;
-		case 'remove-member':
-			await removeMember(team);
-			break;
-		case 'add-member':
-			await addMember(team);
-			break;
-		case 'change-invite-code':
-			await changeInviteCode(team);
-			break;
+		// case 'remove-member':
+		// 	await removeMember(team);
+		// 	break;
+		// case 'add-member':
+		// 	await addMember(team);
+		// 	break;
+		// case 'change-invite-code':
+		// 	await changeInviteCode(team);
+		// 	break;
 		case 'change-devpost-link':
 			await changeDevpostLink(team);
 			break;
@@ -92,79 +92,79 @@ const changeName = async (team: TeamData) => {
 	return promptAction();
 };
 
-const removeMember = async (team: TeamData) => {
-	const memberIds = team.members;
+// const removeMember = async (team: TeamData) => {
+// 	const memberIds = team.members;
 
-	if (memberIds.length === 0) {
-		console.log('Team has no members');
-		return promptAction();
-	}
+// 	if (memberIds.length === 0) {
+// 		console.log('Team has no members');
+// 		return promptAction();
+// 	}
 
-	const members: UserData[] = await User.find({ _id: { $in: memberIds } });
+// 	const members: UserData[] = await User.find({ _id: { $in: memberIds } });
 
-	const member = await select({
-		message: `Select member to remove from ${team.name}`,
-		choices: [
-			{
-				name: '⏪ Back',
-				value: null,
-			},
-			...members.map((mem, index) => ({
-				name: `${index + 1}) ${mem.name}`,
-				value: mem._id,
-			})),
-		],
-	});
+// 	const member = await select({
+// 		message: `Select member to remove from ${team.name}`,
+// 		choices: [
+// 			{
+// 				name: '⏪ Back',
+// 				value: null,
+// 			},
+// 			...members.map((mem, index) => ({
+// 				name: `${index + 1}) ${mem.name}`,
+// 				value: mem._id,
+// 			})),
+// 		],
+// 	});
 
-	if (!member) {
-		return promptAction();
-	}
+// 	if (!member) {
+// 		return promptAction();
+// 	}
 
-	await Team.updateOne({ _id: team._id }, { $pull: { members: member } });
+// 	await Team.updateOne({ _id: team._id }, { $pull: { members: member } });
 
-	console.log(`Member [${member}] removed from team [${team.name}]`);
-	return promptAction();
-};
+// 	console.log(`Member [${member}] removed from team [${team.name}]`);
+// 	return promptAction();
+// };
 
-const addMember = async (team: TeamData) => {
-	const memberIds = team.members;
+// const addMember = async (team: TeamData) => {
+// 	const memberIds = team.members;
 
-	const members: UserData[] = await User.find({ _id: { $nin: memberIds }, team: null });
+// 	const members: UserData[] = await User.find({ _id: { $nin: memberIds }, team: null });
 
-	const member = await select({
-		message: `Select member to add to ${team.name}`,
-		choices: [
-			{
-				name: '⏪ Back',
-				value: null,
-			},
-			...members.map((mem, index) => ({
-				name: `${index}) ${mem.name}`,
-				value: mem._id,
-			})),
-		],
-	});
+// 	const member = await select({
+// 		message: `Select member to add to ${team.name}`,
+// 		choices: [
+// 			{
+// 				name: '⏪ Back',
+// 				value: null,
+// 			},
+// 			...members.map((mem, index) => ({
+// 				name: `${index}) ${mem.name}`,
+// 				value: mem._id,
+// 			})),
+// 		],
+// 	});
 
-	if (!member) {
-		return promptAction();
-	}
+// 	if (!member) {
+// 		return promptAction();
+// 	}
 
-	await Team.updateOne({ _id: team._id }, { $push: { members: member } });
+// 	await Team.updateOne({ _id: team._id }, { $push: { members: member } });
 
-	console.log(`Member [${member}] added to team [${team.name}]`);
-	return promptAction();
-};
+// 	console.log(`Member [${member}] added to team [${team.name}]`);
+// 	return promptAction();
+// };
 
-const changeInviteCode = async (team: TeamData) => {
-	const newInviteCode = await input({
-		message: `Enter new invite code for ${team.name}`,
-	});
+// const changeInviteCode = async (team: TeamData) => {
+// 	const newInviteCode = await input({
+// 		message: `Enter new invite code for ${team.name}`,
+// 	});
 
-	await Team.updateOne({ _id: team._id }, { joinCode: newInviteCode });
+// 	await Team.updateOne({ _id: team._id }, { joinCode: newInviteCode });
 
-	console.log('Invite code changed successfully');
-	return promptAction();
-};
+// 	console.log('Invite code changed successfully');
+// 	return promptAction();
+// };
 
 const changeDevpostLink = async (team: TeamData) => {
 	const newDevpostLink = await input({
