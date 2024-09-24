@@ -59,7 +59,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			// update the scores for the team
 			const team = await Team.findById(teamID);
 			team.scores = scores.id;
-			await log(judgeID, `Submitted scores for team ${team.name} (join code ${team.joinCode})`);
+			await log(judgeID, `Submitted scores for team ${team.name}`);
 			await team.save();
 			return res.status(201).send(scores);
 		}
@@ -77,7 +77,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 			);
 
 			const team = await Team.findById(teamID);
-			await log(judgeID, `Update scores for team ${team.name} (join code ${team.joinCode})`);
+			await log(judgeID, `Update scores for team ${team.name}`);
 			if (scores) {
 				return res.status(200).send(scores);
 			} else {

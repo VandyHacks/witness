@@ -71,10 +71,10 @@ export interface PreAddData {
 export interface TeamData {
 	_id: mongoose.Schema.Types.ObjectId;
 	name: string;
-	joinCode: string;
+	joinCode?: string;
 	devpost: string;
-	members: mongoose.Schema.Types.ObjectId[];
-	scores: mongoose.Schema.Types.ObjectId[];
+	members?: mongoose.Schema.Types.ObjectId[];
+	scores?: mongoose.Schema.Types.ObjectId[];
 	locationNum?: number;
 	createdAt: Date;
 }
