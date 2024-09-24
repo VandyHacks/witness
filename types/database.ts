@@ -76,7 +76,7 @@ export interface TeamData {
 	members?: mongoose.Schema.Types.ObjectId[];
 	scores?: mongoose.Schema.Types.ObjectId[];
 	locationNum?: number;
-	createdAt: Date;
+	createdAt?: Date;
 }
 
 export interface ScoreData {
