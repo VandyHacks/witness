@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 				teamsByID.set(judgingSession.team._id.toString(), judgingSession.team);
 			});
 			const allTeams = [...teamsByID.values()];
-			allTeams.sort(team => new Date(team.createdAt).getTime());
+			// allTeams.sort(team => new Date(team.createdAt).getTime());
 
 			const promises: any[] = [];
 			[...allTeams.entries()].forEach(async ([i, team]) => {
