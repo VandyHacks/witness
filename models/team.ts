@@ -14,7 +14,7 @@ const TeamSchema = new Schema(
 		},
 		joinCode: {
 			type: String,
-			required: true,
+			required: false,
 			unique: true,
 		},
 		devpost: {
@@ -23,18 +23,18 @@ const TeamSchema = new Schema(
 		members: {
 			type: [Schema.Types.ObjectId],
 			ref: 'User',
-			required: true,
+			required: false,
 			validate: {
 				// check team size
 				validator: (arr: Array<Schema.Types.ObjectId>) => arr.length <= 4,
 				message: 'Max team size is 4 members.',
 			},
 		},
-		scores: { type: [Schema.Types.ObjectId], ref: 'Scores' },
+		scores: { type: [Schema.Types.ObjectId], ref: 'Scores', required: false },
 		locationNum: { type: Number, reqiured: false },
 	},
 	{
-		timestamps: true,
+		timestamps: false,
 	}
 );
 

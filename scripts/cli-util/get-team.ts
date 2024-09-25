@@ -38,10 +38,10 @@ export const handleGetTeam = async () => {
 				name: 'Get schedule',
 				value: 'get-schedule',
 			},
-			{
-				name: 'Get members',
-				value: 'get-members',
-			},
+			// {
+			// 	name: 'Get members',
+			// 	value: 'get-members',
+			// },
 			{
 				name: 'Get document',
 				value: 'get-document',
@@ -53,9 +53,9 @@ export const handleGetTeam = async () => {
 		case 'get-schedule':
 			await getSchedule(team);
 			break;
-		case 'get-members':
-			await getMembers(team);
-			break;
+		// case 'get-members':
+		// 	await getMembers(team);
+		// 	break;
 		case 'get-document':
 			await getDocument(team);
 			break;
@@ -85,24 +85,24 @@ const getSchedule = async (team: TeamData) => {
 	return promptAction();
 };
 
-const getMembers = async (team: TeamData) => {
-	const memberIds = team.members;
+// const getMembers = async (team: TeamData) => {
+// 	const memberIds = team.members;
 
-	let count = 1;
-	for (const memberId of memberIds) {
-		const member: UserData | null = await User.findOne({ _id: memberId });
-		if (!member) {
-			console.log(`Member ${count++}:`);
-			console.log('Member not found');
-		} else {
-			console.log(`Member ${count++}:`);
-			console.log(`Name: ${member.name}`);
-			console.log(`Email: ${member.email}`);
-		}
-	}
+// 	let count = 1;
+// 	for (const memberId of memberIds) {
+// 		const member: UserData | null = await User.findOne({ _id: memberId });
+// 		if (!member) {
+// 			console.log(`Member ${count++}:`);
+// 			console.log('Member not found');
+// 		} else {
+// 			console.log(`Member ${count++}:`);
+// 			console.log(`Name: ${member.name}`);
+// 			console.log(`Email: ${member.email}`);
+// 		}
+// 	}
 
-	return promptAction();
-};
+// 	return promptAction();
+// };
 
 const getDocument = async (team: TeamData) => {
 	console.log('Team Document:');

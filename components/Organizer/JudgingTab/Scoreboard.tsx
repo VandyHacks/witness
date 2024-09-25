@@ -32,17 +32,6 @@ export default function Scoreboard(props: AllScoresProps) {
 		setSearchText('');
 	};
 
-	const handleSearch = (
-		selectedKeys: string[],
-		confirm: (param?: FilterConfirmProps) => void,
-		dataIndex: string,
-		closeDropDown: boolean
-	) => {
-		confirm({ closeDropdown: closeDropDown });
-		setSearchText(selectedKeys[0]);
-		setSearchedColumn(dataIndex);
-	};
-
 	const handleReset = (clearFilters: () => void) => {
 		clearFilters();
 		setSearchText('');
@@ -67,9 +56,11 @@ export default function Scoreboard(props: AllScoresProps) {
 					value={selectedKeys[0]}
 					onChange={e => {
 						setSelectedKeys(e.target.value ? [e.target.value] : []);
-						handleSearch(selectedKeys as string[], confirm, dataIndex, false);
+						confirm({ closeDropdown: false });
+						setSearchText(e.target.value);
+						setSearchedColumn(dataIndex);
 					}}
-					onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex, true)}
+					onPressEnter={() => confirm({ closeDropdown: true })}
 					style={{ marginBottom: 8, display: 'block' }}
 				/>
 				<Button
