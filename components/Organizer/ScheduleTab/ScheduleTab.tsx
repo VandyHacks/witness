@@ -85,7 +85,12 @@ const ScheduleTab = () => {
 	useEffect(() => {
 		if (!teamsData || !judgesData) return;
 		setMaxTimesJudged(
-			Math.floor((judgesData?.length * MaximumNumberOfTeamsOneJudgeCanFinishInJudgingTime) / teamsData?.length)
+			Math.min(
+				judgesData?.length,
+				Math.floor(
+					(judgesData?.length * MaximumNumberOfTeamsOneJudgeCanFinishInJudgingTime) / teamsData?.length
+				)
+			)
 		);
 	}, [teamsData, judgesData, hackathonSettings]);
 
