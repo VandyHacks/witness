@@ -769,8 +769,6 @@ export default function HackerDash({ userApplicationStatus, setUserApplicationSt
 								<div style={{ padding: '20px' }}>
 									<Header user={user} signOut={signOut} setting={setting as HackathonSettingsData} />
 
-									{/* <TeamManagement /> */}
-									<JudgingSchedule judgingSessionData={judgingSessionData} />
 									<Leaderboard />
 
 									<div className={styles['reportABugContainer']}>
